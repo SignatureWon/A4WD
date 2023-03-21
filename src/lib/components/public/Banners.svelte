@@ -1,14 +1,14 @@
 <script>
-  import Carousel from "svelte-carousel";
+  // import Carousel from "svelte-carousel";
   import { browser } from "$app/environment";
   import { env } from "$env/dynamic/public";
   import { Button } from "carbon-components-svelte";
   let carousel; // for calling methods of the carousel instance
 
-  export let records = [];
+  export const records = [];
 </script>
 
-{#if browser}
+<!-- {#if browser}
   <Carousel
     let:showPrevPage
     let:showNextPage
@@ -18,7 +18,6 @@
     pauseOnFocus={true}
     bind:this={carousel}
   >
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div
       slot="prev"
       on:click={showPrevPage}
@@ -54,7 +53,6 @@
         </div>
       </div>
     {/each}
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div
       slot="next"
       on:click={showNextPage}
@@ -73,4 +71,4 @@
       >
     </div>
   </Carousel>
-{/if}
+{/if} -->

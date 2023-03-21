@@ -16,7 +16,7 @@
 
   export let table = "";
   export let fields = "*";
-  export let pageSize = 20;
+  export let pageSize = 100;
   export let page = 1;
   export let title = "";
   export let description = "";

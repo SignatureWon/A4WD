@@ -1,7 +1,7 @@
 <script>
-  import Carousel from "svelte-carousel";
+  // import Carousel from "svelte-carousel";
   import { browser } from "$app/environment";
-  export let records = [];
+  export const records = [];
 
   let carousel;
 
@@ -52,7 +52,7 @@
     </div>
     <!-- END Heading -->
 
-    {#if browser}
+    <!-- {#if browser}
       <Carousel
         let:showPrevPage
         let:showNextPage
@@ -60,7 +60,6 @@
         particlesToShow={slide}
         bind:this={carousel}
       >
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
         <div
           slot="prev"
           on:click={showPrevPage}
@@ -151,7 +150,6 @@
             </blockquote>
           </div>
         {/each}
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
         <div
           slot="next"
           on:click={showNextPage}
@@ -170,6 +168,6 @@
           >
         </div>
       </Carousel>
-    {/if}
+    {/if} -->
   </div>
 </div>

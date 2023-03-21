@@ -4,9 +4,9 @@
     OverflowMenu,
     OverflowMenuItem,
   } from "carbon-components-svelte";
-  import Carousel from "svelte-carousel";
-  import { browser } from "$app/environment";
-  let carousel; // for calling methods of the carousel instance
+  // import Carousel from "svelte-carousel";
+  // import { browser } from "$app/environment";
+  // let carousel; // for calling methods of the carousel instance
 
   export let data;
 

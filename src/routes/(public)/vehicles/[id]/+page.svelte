@@ -1,6 +1,6 @@
 <script>
   import SearchForm from "$lib/components/public/SearchForm.svelte";
-  import Carousel from "svelte-carousel";
+  // import Carousel from "svelte-carousel";
   import { browser } from "$app/environment";
   import { env } from "$env/dynamic/public";
   import { Button, Tab, TabContent, Tabs } from "carbon-components-svelte";
@@ -137,7 +137,7 @@
 </section>
 <section class="bg-white">
   <div class="max-w-6xl mx-auto">
-    {#if browser}
+    <!-- {#if browser}
       <Carousel
         let:showPrevPage
         let:showNextPage
@@ -147,7 +147,6 @@
         pauseOnFocus={true}
         bind:this={carousel}
       >
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
         <div
           slot="prev"
           on:click={showPrevPage}
@@ -174,7 +173,6 @@
             <div class="text-center p-4">{item.caption}</div>
           </div>
         {/each}
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
         <div
           slot="next"
           on:click={showNextPage}
@@ -193,7 +191,7 @@
           >
         </div>
       </Carousel>
-    {/if}
+    {/if} -->
   </div>
 </section>
 <section class="py-10 px-4">

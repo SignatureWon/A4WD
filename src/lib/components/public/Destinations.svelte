@@ -1,11 +1,11 @@
 <script>
-  import Carousel from "svelte-carousel";
+  // import Carousel from "svelte-carousel";
   import { browser } from "$app/environment";
   import { env } from "$env/dynamic/public";
   import { Button } from "carbon-components-svelte";
   let carousel; // for calling methods of the carousel instance
 
-  export let records = [];
+  export const records = [];
 
   let innerWidth = 0;
   let slide = 1;
@@ -30,7 +30,7 @@
     <div class="text-sm font-bold tracking-wider text-brand-600">Popular</div>
     <h2 class="text-3xl font-medium">Destinations</h2>
   </div>
-  {#if browser}
+  <!-- {#if browser}
     <Carousel
       let:showPrevPage
       let:showNextPage
@@ -38,7 +38,6 @@
       particlesToShow={slide}
       bind:this={carousel}
     >
-      <!-- svelte-ignore a11y-click-events-have-key-events -->
       <div
         slot="prev"
         on:click={showPrevPage}
@@ -58,7 +57,6 @@
       </div>
       {#each records as item}
         <div class="px-2 group">
-          <!-- svelte-ignore a11y-invalid-attribute -->
           <a href="#">
             <div class="h-40 overflow-hidden rounded">
               <div
@@ -74,7 +72,6 @@
           </a>
         </div>
       {/each}
-      <!-- svelte-ignore a11y-click-events-have-key-events -->
       <div
         slot="next"
         on:click={showNextPage}
@@ -93,5 +90,5 @@
         >
       </div>
     </Carousel>
-  {/if}
+  {/if} -->
 </section>
