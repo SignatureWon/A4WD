@@ -1,0 +1,8 @@
+@import "base.css";
+@import "carbon.css";
+@import "fileicon.css";
+@import "public.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

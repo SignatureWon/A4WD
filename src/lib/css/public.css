@@ -1,0 +1,15 @@
+.aside_search {
+    @apply fixed bg-brand-600 w-96 top-32 left-0 overflow-y-auto p-4;
+    @apply hidden;
+    @apply md:block;
+    height: calc(100vh - 128px)
+}
+.main_content {
+    @apply fixed w-full top-32 left-0 ;
+    @apply md:pl-96;
+}
+
+.section_results {
+    @apply overflow-y-auto p-4;
+    height: calc(100vh - 176px)
+}

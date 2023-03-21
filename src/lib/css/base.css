@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap');
+
+:root {
+  --brand-color: #EA580C;
+  --brand-color-hover: #9A3412;
+}
+
+body {
+    font-family: 'DM Sans', sans-serif;
+}
+.content h1 {
+  @apply text-2xl font-bold
+}
+.content h2 {
+  @apply text-lg font-bold
+}
+.content ul {
+  @apply list-disc pl-4
+}
+.content ol {
+  @apply list-decimal pl-4
+}
+/* h1 {
+  @apply !text-2xl !font-bold !mb-4
+} */
+/* 
+.file {
+  @apply bg-gray-500;
+}
+.file.ai,
+.file.svg {
+  @apply bg-amber-500;
+}
+.file.doc,
+.file.docx,
+.file.pages {
+  @apply bg-blue-500;
+}
+.file.xls,
+.file.xlsx,
+.file.csv,
+.file.numbers {
+  @apply bg-green-500;
+}
+.file.ppt,
+.file.pptx,
+.file.pdf,
+.file.key {
+  @apply bg-red-500;
+}
+.file.jpg,
+.file.jpeg,
+.file.gif,
+.file.png,
+.file.webp,
+.file.tiff {
+  @apply bg-lime-500;
+}
+.file.mov,
+.file.avi,
+.file.mp4,
+.file.mpg,
+.file.mpeg,
+.file.m4a,
+.file.ogg,
+.file.webm,
+.file.wmv,
+.file.mkv {
+  @apply bg-pink-500;
+}
+.file.mp3,
+.file.wav,
+.file.wma,
+.file.aac {
+  @apply bg-purple-500;
+}
+.file.zip,
+.file.rar {
+  @apply bg-yellow-500;
+} */
