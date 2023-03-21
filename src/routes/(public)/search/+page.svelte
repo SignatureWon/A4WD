@@ -1,9 +1,6 @@
 <script>
   import { Button, Modal, TextInput } from "carbon-components-svelte";
 
-  /** @type {import('./$types').PageData} */
-  export let data;
-
   let open = false;
 </script>
 

@@ -58,6 +58,7 @@
       </div>
       {#each records as item}
         <div class="px-2 group">
+          <!-- svelte-ignore a11y-invalid-attribute -->
           <a href="#">
             <div class="h-40 overflow-hidden rounded">
               <div

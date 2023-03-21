@@ -9,8 +9,6 @@
   } from "carbon-components-svelte";
   import UserAvatar from "carbon-icons-svelte/lib/UserAvatar.svelte";
 
-  export let data;
-
   import { supabase } from "$lib/supabaseClient";
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";

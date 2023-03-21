@@ -1,9 +1,6 @@
 <script>
   import { Button, Checkbox, Modal, TextInput } from "carbon-components-svelte";
 
-  /** @type {import('./$types').PageData} */
-  export let data;
-
   let open = false;
 </script>
 
@@ -80,6 +77,7 @@
   >
     Accident Liability
   </div>
+  <!-- svelte-ignore a11y-invalid-attribute -->
   <div class="mb-3">Select your level of liability from the options below. <a href="#">See Terms here</a></div>
   <div class="grid grid-cols-3 gap-4">
     <div class="border border-gray-200 p-3 flex flex-col">
