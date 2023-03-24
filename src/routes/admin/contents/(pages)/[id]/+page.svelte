@@ -5,7 +5,7 @@
     name: "Page",
     groups: [
       {
-        name: "Content",
+        name: "",
         description: "",
         fields: [
           {
@@ -15,9 +15,14 @@
             required: true,
           },
           {
-            name: "content",
+            name: "richtext",
             label: "Content",
             type: "richtext",
+          },
+          {
+            name: "content",
+            label: "Content",
+            type: "richtextold",
           },
           {
             name: "image",

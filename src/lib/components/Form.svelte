@@ -27,6 +27,7 @@
   import InputText from "./input/InputText.svelte";
   import InputImage from "./input/InputImage.svelte";
   import InputRichtext from "./input/InputRichtext.svelte";
+  import InputRichtextOld from "./input/InputRichtextOld.svelte";
   import InputDateRange from "./input/InputDateRange.svelte";
   import InputHidden from "./input/InputHidden.svelte";
   import InputSwitch from "./input/InputSwitch.svelte";
@@ -312,8 +313,10 @@
                     <InputHidden {field} bind:record />
                   {:else if field.type === "daterange"}
                     <InputDateRange {field} bind:record />
-                  {:else if field.type === "richtext"}
+                    {:else if field.type === "richtext"}
                     <InputRichtext {field} bind:record />
+                    {:else if field.type === "richtextold"}
+                    <InputRichtextOld {field} bind:record />
                   {:else}
                     <InputText {field} bind:record />
                   {/if}

@@ -2,6 +2,7 @@
 @import "carbon.css";
 @import "fileicon.css";
 @import "public.css";
+@import "editorjs.css";
 
 @tailwind base;
 @tailwind components;

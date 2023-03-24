@@ -95,6 +95,7 @@
         field.bucket
       }/${record[field.name] || ""}`}
       alt=""
+      class="w-auto h-16"
     />
   </div>
 {/if}
@@ -117,9 +118,6 @@
       const ext = filename.substring(lastDot + 1);
       filename = `${uuidv4()}.${ext}`;
 
-      console.log("exisintg", record[field.name]);
-      console.log("filename", filename);
-
       // const filename = `${record.id}.png`;
       if (record[field.name] !== null || record[field.name] !== "") {
         const { data, error } = await supabase.storage
@@ -128,11 +126,10 @@
       }
 
       await saveImage(file, filename, 800, 600);
-      await saveImage(file, `thumb-${filename}`, 350, 263);
+      await saveImage(file, `thumb-${filename}`, 400, 300);
 
       if (!errors) {
         record[field.name] = filename;
-
         updateRecord();
       }
     }}

@@ -2,10 +2,10 @@
   import PageHeader from "$lib/components/PageHeader.svelte";
   import Form from "$lib/components/Form.svelte";
   const form = {
-    name: "General",
+    name: "",
     groups: [
       {
-        name: "Info",
+        name: "",
         description: "",
         fields: [
           {
@@ -15,10 +15,9 @@
             required: true,
           },
           {
-            name: "currency",
-            label: "Currency",
-            type: "text",
-            required: true,
+            name: "type",
+            default: "countries",
+            type: "hidden",
           },
         ],
       },
@@ -26,5 +25,5 @@
   };
 </script>
 
-<PageHeader name="Country" />
-<Form {form} table="countries" />
+<PageHeader name="Country" table="constants" />
+<Form {form} table="constants" />

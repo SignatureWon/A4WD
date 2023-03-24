@@ -6,12 +6,12 @@
       key: "name",
       value: "Name",
     },
-    {
-      key: "currency",
-      value: "Currency",
-    },
   ];
 </script>
 
-<PageHeader name="Countries" />
-<Table table="countries" {headers} />
+<PageHeader name="Licenses" table="constants" />
+<Table
+  table="constants"
+  filters={[{ type: "eq", column: "type", value: "licenses" }]}
+  {headers}
+/>

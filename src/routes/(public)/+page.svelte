@@ -25,6 +25,7 @@
 
   export let data;
 
+
   const getContent = (contentType) => {
     let resp = data.contents.filter(function (item) {
       return item.type === contentType;
@@ -91,6 +92,8 @@
       discount: "-20% off",
     },
   ];
+
+  console.log(getContent("destinations"));
 </script>
 
 <section class="bg-brand-600 p-5">
