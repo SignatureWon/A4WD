@@ -1,7 +1,7 @@
 <script>
   import PageHeader from "$lib/components/PageHeader.svelte";
   import Form from "$lib/components/Form.svelte";
-  import InputFlex from "$lib/components/InputFlex.svelte";
+  import InputSeasonal from "$lib/components/InputSeasonal.svelte";
   import { Tab, TabContent, Tabs } from "carbon-components-svelte";
   import { page } from "$app/stores";
 
@@ -26,6 +26,13 @@
             type: "related",
             related: "suppliers",
           },
+          {
+            name: "date_start",
+            label: "Start date",
+            name2: "date_end",
+            label2: "End date",
+            type: "daterange",
+          },
         ],
       },
       {
@@ -37,14 +44,14 @@
             label: "License",
             type: "related",
             related: "constants",
-            filters: [{ type: "eq", column: "type", value: "licenses" }]
+            filters: [{ type: "eq", column: "type", value: "licenses" }],
           },
           {
             name: "age",
             label: "Age",
             type: "related",
             related: "constants",
-            filters: [{ type: "eq", column: "type", value: "ages" }]
+            filters: [{ type: "eq", column: "type", value: "ages" }],
           },
           // {
           //   name: "license",
@@ -108,31 +115,13 @@
             step: 0.01,
             default: 1,
           },
+          {
+            name: "type",
+            type: "hidden",
+            default: "seasonal",
+          },
         ],
       },
-      // {
-      //   name: "Rate",
-      //   description: "",
-      //   fields: [
-      //     {
-      //       name: "matrix",
-      //       label: "Matrix",
-      //       type: "textarea",
-      //       required: true,
-      //     },
-      //     {
-      //       name: "data",
-      //       label: "Data",
-      //       type: "textarea",
-      //       required: true,
-      //     },
-      //     {
-      //       name: "zero",
-      //       label: "Matrix starts from zero",
-      //       type: "switch",
-      //     },
-      //   ],
-      // },
     ],
   };
   let updateFlex = 1;
@@ -143,7 +132,7 @@
 <Tabs autoWidth class="border-b border-gray-200">
   <Tab label="General" />
   {#if id !== "add"}
-    <Tab label="Fees" />
+    <Tab label="Rates" />
   {/if}
   <svelte:fragment slot="content">
     <TabContent>
@@ -151,7 +140,7 @@
     </TabContent>
     {#if id !== "add"}
       <TabContent>
-        <InputFlex bind:update={updateFlex} />
+        <InputSeasonal />
       </TabContent>
     {/if}
   </svelte:fragment>

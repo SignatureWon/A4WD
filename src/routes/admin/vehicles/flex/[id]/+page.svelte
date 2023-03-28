@@ -35,44 +35,16 @@
           {
             name: "license",
             label: "License",
-            type: "select",
-            options: [
-              {
-                id: "All",
-                name: "All",
-              },
-              {
-                id: "International",
-                name: "International",
-              },
-              {
-                id: "AU/NZ",
-                name: "AU/NZ",
-              },
-            ],
+            type: "related",
+            related: "constants",
+            filters: [{ type: "eq", column: "type", value: "licenses" }]
           },
           {
             name: "age",
             label: "Age",
-            type: "select",
-            options: [
-              {
-                id: "All",
-                name: "All",
-              },
-              {
-                id: "18-21",
-                name: "18-21",
-              },
-              {
-                id: "21+",
-                name: "21+",
-              },
-              {
-                id: "25+",
-                name: "25+",
-              },
-            ],
+            type: "related",
+            related: "constants",
+            filters: [{ type: "eq", column: "type", value: "ages" }]
           },
         ],
       },
@@ -117,6 +89,11 @@
             label: "Matrix starts from zero",
             type: "switch",
           },
+          {
+            name: "type",
+            type: "hidden",
+            default: "flex",
+          },
         ],
       },
     ],
@@ -124,7 +101,7 @@
   let updateFlex = 1;
 </script>
 
-<PageHeader name="Flex" table="flex" />
+<PageHeader name="Flex" table="rates" />
 
 <Tabs autoWidth class="border-b border-gray-200">
   <Tab label="General" />
@@ -133,7 +110,7 @@
   {/if}
   <svelte:fragment slot="content">
     <TabContent>
-      <Form form={formGeneral} table="flex" bind:update={updateFlex} />
+      <Form form={formGeneral} table="rates" bind:update={updateFlex} />
     </TabContent>
     {#if id !== "add"}
       <TabContent>

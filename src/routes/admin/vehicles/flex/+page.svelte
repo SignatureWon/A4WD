@@ -13,9 +13,10 @@
   ];
 </script>
 
-<PageHeader name="Flex" table="flex" />
+<PageHeader name="Flex" table="rates" />
 <Table
-  table="flex"
+  table="rates"
   fields="id, name, suppliers (name)"
+  filters={[{ type: "eq", column: "type", value: "flex" }]}
   {headers}
 />

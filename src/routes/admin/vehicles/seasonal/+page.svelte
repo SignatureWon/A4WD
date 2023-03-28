@@ -25,6 +25,6 @@
 <Table
   table="rates"
   fields="id, name, suppliers (name), date_start, date_end"
-  filters={[{ type: "eq", column: "type", value: "Seasonal" }]}
+  filters={[{ type: "eq", column: "type", value: "seasonal" }]}
   {headers}
 />

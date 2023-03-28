@@ -82,7 +82,7 @@
     try {
       loading = true;
       const { data, error } = await supabase
-        .from("flex")
+        .from("rates")
         .select("matrix, data, zero, suppliers, fees, matrixTable")
         .eq("id", id)
         .single();

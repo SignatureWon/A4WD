@@ -70,5 +70,8 @@
   </PageHeader>
   <div class="max-w-5xl py-10 px-5 mx-auto">
     {@html record.content}
-    </div>
+
+    {@html record.description}
+
+  </div>
 {/if}
