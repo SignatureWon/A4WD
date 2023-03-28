@@ -24599,12 +24599,13 @@ screen and (prefers-contrast) {
 }
 
 .bx--toggle__switch {
+    @apply mt-2;
     position: relative;
     display: flex;
     width: 3rem;
     height: 1.5rem;
     align-items: center;
-    cursor: pointer
+    cursor: pointer;
 }
 
 .bx--toggle__switch::before {

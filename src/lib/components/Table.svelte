@@ -22,6 +22,7 @@
   export let description = "";
   export let headers = [{ key: "name", value: "Name" }];
   export let filters = [];
+  export let orders = [];
   // export let rows = [{ name: "Name" }];
 
   let rows = [];
@@ -45,6 +46,12 @@
           query = query.eq(filter.column, filter.value);
         }
       });
+
+      orders.forEach((order) => {
+        query = query.order(order.column, { ascending: order.ascend });
+      });
+
+      query = query.order("updated_at", { ascending: false })
 
       const { data, error } = await query;
 

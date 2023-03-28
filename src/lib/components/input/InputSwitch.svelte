@@ -10,7 +10,8 @@
 </script>
 
 <Toggle
-  labelA={field.label}
-  labelB={field.label}
+  labelText={field.label}
+  labelA={field.toggle || "No"}
+  labelB={field.toggle || "Yes"}
   bind:toggled={record[field.name]}
 />

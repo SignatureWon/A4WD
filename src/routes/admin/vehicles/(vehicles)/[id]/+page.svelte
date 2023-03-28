@@ -33,10 +33,24 @@
             type: "related",
             related: "suppliers",
           },
+      //   ],
+      // },
+      // {
+      //   name: "Status",
+      //   description: "",
+      //   fields: [
           {
             name: "status",
-            label: "Active",
+            label: "Status",
+            toggle: "Active",
             type: "switch",
+            size: "half",
+          },
+          {
+            name: "rank",
+            label: "Rank",
+            type: "number",
+            size: "half",
           },
         ],
       },
@@ -158,7 +172,7 @@
   {/if}
   <svelte:fragment slot="content">
     <TabContent>
-      <Form form={formGeneral} table="vehicles" />
+      <Form form={formGeneral} table="vehicles" duplicate={true} />
     </TabContent>
     {#if id !== "add"}
       <TabContent>
