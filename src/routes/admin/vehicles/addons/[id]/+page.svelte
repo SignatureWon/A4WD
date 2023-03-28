@@ -90,31 +90,37 @@
             },
             {
               name: "Nett Rate",
+              label: "Nett Rate",
               type: "number",
               size: "half",
             },
             {
               name: "Gross Rate",
+              label: "Gross Rate",
               type: "number",
               size: "half",
             },
             {
               name: "Nett Cap",
+              label: "Nett Cap",
               type: "number",
               size: "half",
             },
             {
               name: "Gross Cap",
+              label: "Gross Cap",
               type: "number",
               size: "half",
             },
             {
-              name: "Maximum Quatity",
+              name: "Maximum Quantity",
+              label: "Maximum Quantity",
               type: "number",
               size: "half",
             },
             {
               name: "Included in inclusive",
+              label: "Included in inclusive",
               type: "switch",
               size: "half",
             },

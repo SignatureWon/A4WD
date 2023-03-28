@@ -66,7 +66,7 @@
           },
           {
             name: "deposit",
-            label: "Deposit",
+            label: "Security Deposit",
             type: "number",
             size: "half",
           },
