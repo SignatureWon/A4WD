@@ -20,6 +20,11 @@
             type: "related",
             related: "categories",
           },
+          // {
+          //   name: "richtext",
+          //   label: "Content",
+          //   type: "editorjs",
+          // },
           {
             name: "content",
             label: "Content",

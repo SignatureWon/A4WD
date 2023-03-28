@@ -5,6 +5,11 @@
   import { env } from "$env/dynamic/public";
 
   export let records = [];
+  export let title = {
+    name: "",
+    subtitle: "",
+    description: "",
+  };
 
   onMount(() => {
     new Splide(".carousel-testimonials", {
@@ -12,13 +17,13 @@
       drag: true,
       autoplay: true,
       interval: 5000,
-      perPage: 4,
+      perPage: 3,
       breakpoints: {
         640: {
-          perPage: 2,
+          perPage: 1,
         },
         1024: {
-          perPage: 3,
+          perPage: 2,
         },
       },
     }).mount();
@@ -31,12 +36,12 @@
       <div
         class="text-sm uppercase font-bold tracking-wider mb-1 text-brand-600"
       >
-        Testimonials
+        {title.name}
       </div>
       <h2
         class="text-3xl md:text-4xl font-extrabold mb-4 flex items-center justify-center"
       >
-        Our customers love us
+        {title.subtitle}
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -49,6 +54,13 @@
           /></svg
         >
       </h2>
+      {#if title.description}
+        <p
+          class="mb-4 text-lg md:text-xl md:leading-relaxed font-medium text-gray-600"
+        >
+          {@html title.description}
+        </p>
+      {/if}
     </div>
 
     <section class="splide carousel-testimonials">

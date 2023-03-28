@@ -1,5 +1,10 @@
 <script>
   export let records = [];
+  export let title = {
+    name: "",
+    subtitle: "",
+    description: "",
+  };
 </script>
 
 <div class="bg-white">
@@ -11,18 +16,18 @@
       <div
         class="text-sm uppercase font-bold tracking-wider mb-1 text-brand-600"
       >
-        We Answer
+        {title.name}
       </div>
       <h2 class="text-3xl md:text-4xl font-extrabold mb-4">
-        Frequently Asked Questions
+        {title.subtitle}
       </h2>
-      <h3
-        class="text-lg md:text-xl md:leading-relaxed font-medium text-gray-600"
-      >
-        Be sure to <a href="/" class="text-brand-600 hover:text-brand-400"
-          >get in touch</a
-        > and let us know if you have any further questions.
-      </h3>
+      {#if title.description}
+        <p
+          class="mb-4 text-lg md:text-xl md:leading-relaxed font-medium text-gray-600"
+        >
+          {@html title.description}
+        </p>
+      {/if}
     </div>
     <!-- END Heading -->
 

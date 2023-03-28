@@ -120,6 +120,11 @@
             label: "Short Description",
             type: "text",
           },
+          // {
+          //   name: "richtext",
+          //   label: "Description",
+          //   type: "richtext",
+          // },
           {
             name: "description",
             label: "Description",
@@ -175,10 +180,12 @@
           structure={[
             {
               name: "Title",
+              placeholder: "Title",
               type: "text",
             },
             {
               name: "Description",
+              placeholder: "Description",
               type: "textarea",
             },
           ]}
@@ -191,14 +198,17 @@
           structure={[
             {
               name: "Title",
+              placeholder: "Title",
               type: "text",
             },
             {
               name: "Question",
+              placeholder: "Question",
               type: "textarea",
             },
             {
               name: "Answer",
+              placeholder: "Answer",
               type: "textarea",
             },
           ]}

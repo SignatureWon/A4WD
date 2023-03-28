@@ -1,6 +1,6 @@
 import { supabase } from "$lib/supabaseClient";
 export async function load() {
-    const { data: contents } = await supabase
+  const { data: contents } = await supabase
     .from("contents")
     .select()
     .in("type", [
@@ -9,14 +9,26 @@ export async function load() {
       "destinations",
       "testimonials",
       "faqs",
+      "features",
     ])
     .eq("status", true);
 
-const { data: blog } = await supabase
+  const { data: blog } = await supabase
     .from("contents")
     .select()
     .eq("type", "articles")
     .eq("status", true)
-    .limit(3)
-  return { contents, blog };
+    .limit(3);
+
+  const { data: constants } = await supabase
+    .from("constants")
+    .select("type, name, subtitle, description")
+    .in("type", ["destinations", "features", "blog", "testimonials", "faqs"]);
+
+  let site = {};
+  constants.forEach((item) => {
+    site[item.type] = item;
+  });
+
+  return { contents, blog, site };
 }

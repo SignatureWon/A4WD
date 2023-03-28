@@ -17,23 +17,12 @@
           {
             name: "content",
             label: "Content",
-            type: "richtext",
-          },
-          {
-            name: "description",
-            label: "Embed Map",
             type: "textarea",
-          },
-          {
-            name: "image",
-            label: "Image",
-            type: "image",
-            bucket: "contents",
           },
           {
             name: "type",
             type: "hidden",
-            default: "destinations",
+            default: "features",
           },
         ],
       },
@@ -41,5 +30,5 @@
   };
 </script>
 
-<PageHeader name="Destinations" table="contents" />
+<PageHeader name="Features" table="contents" />
 <Form {form} table="contents" />

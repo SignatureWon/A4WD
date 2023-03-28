@@ -1,15 +1,33 @@
 import { supabase } from "$lib/supabaseClient";
 export async function load() {
-  const { data: contents, error } = await supabase
+  const { data: contents } = await supabase
     .from("contents")
-    .select()
-    .in("type", [
-      "announcements",
-      //   "banners",
-      //   "destinations",
-      //   "testimonials",
-      //   "faqs",
-    ])
+    .select("type, name, featured, slug, categories (name)")
+    .in("type", ["announcements", "pages"])
     .eq("status", true);
-  return { contents };
+
+  const { data: constants } = await supabase
+    .from("constants")
+    .select("type, name, subtitle, description")
+    .in("type", [
+      "title",
+      "description",
+      "keywords",
+      "hotline",
+      "logo",
+      "icon",
+      "color",
+      "contact",
+    ]);
+
+  let site = {};
+  constants.forEach((item) => {
+    if (item.type === "contact") {
+      site[item.type] = item;
+    } else {
+      site[item.type] = item.name;
+    }
+  });
+
+  return { contents, site };
 }

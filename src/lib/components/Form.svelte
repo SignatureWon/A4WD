@@ -26,8 +26,8 @@
   } from "carbon-components-svelte";
   import InputText from "./input/InputText.svelte";
   import InputImage from "./input/InputImage.svelte";
+  import InputEditorJs from "./input/InputEditorJs.svelte";
   import InputRichtext from "./input/InputRichtext.svelte";
-  import InputRichtextOld from "./input/InputRichtextOld.svelte";
   import InputDateRange from "./input/InputDateRange.svelte";
   import InputHidden from "./input/InputHidden.svelte";
   import InputSwitch from "./input/InputSwitch.svelte";
@@ -117,6 +117,14 @@
     return error;
   };
 
+  const slugify = str =>
+  str
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
   const getRecord = async () => {
     try {
       loading = true;
@@ -145,9 +153,12 @@
       for (const [key, value] of Object.entries(record)) {
         if (["vehicles", "depots", "suppliers"].includes(key)) {
           if (value === "") {
-            delete record[key]; 
+            delete record[key];
           }
         }
+      }
+      if (["contents", "vehicles"].includes(table)) {
+        record.slug = slugify(record.name)
       }
       const { data, error } = await supabase
         .from(table)
@@ -171,10 +182,14 @@
       for (const [key, value] of Object.entries(record)) {
         if (["vehicles", "depots", "suppliers"].includes(key)) {
           if (value === "") {
-            delete record[key]; 
+            delete record[key];
           }
         }
       }
+      if (["contents", "vehicles"].includes(table)) {
+        record.slug = slugify(record.name)
+      }
+
       const { data, error } = await supabase
         .from(table)
         .insert([record])
@@ -212,11 +227,22 @@
     }
   };
 
-  const getRelated = async (related_table) => {
+  const getRelated = async (table, filters = []) => {
     let records = [];
     try {
       loading = true;
-      const { data, error } = await supabase.from(related_table).select(fields);
+
+      let query = supabase.from(table).select();
+
+      filters.forEach((filter) => {
+        if (filter.type === "eq") {
+          query = query.eq(filter.column, filter.value);
+        }
+      });
+
+      const { data, error } = await query;
+
+      // const { data, error } = await supabase.from(related_table).select(fields);
 
       if (data) {
         records = data;
@@ -313,10 +339,10 @@
                     <InputHidden {field} bind:record />
                   {:else if field.type === "daterange"}
                     <InputDateRange {field} bind:record />
-                    {:else if field.type === "richtext"}
+                  {:else if field.type === "richtext"}
                     <InputRichtext {field} bind:record />
-                    {:else if field.type === "richtextold"}
-                    <InputRichtextOld {field} bind:record />
+                  {:else if field.type === "editorjs"}
+                    <InputEditorJs {field} bind:record />
                   {:else}
                     <InputText {field} bind:record />
                   {/if}

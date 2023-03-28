@@ -35,7 +35,6 @@
     if (error) {
       console.log(error);
     }
-    console.log(data.name);
     return data.name;
   };
 </script>

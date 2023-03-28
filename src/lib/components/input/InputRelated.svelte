@@ -13,7 +13,7 @@
   required={field.required || false}
 >
   <SelectItem value="" text="Select {field.name}" />
-  {#await getRelated(field.related) then related}
+  {#await getRelated(field.related, field.filters) then related}
     {#each related as option}
       <SelectItem value={option.id} text={option.name} />
     {/each}

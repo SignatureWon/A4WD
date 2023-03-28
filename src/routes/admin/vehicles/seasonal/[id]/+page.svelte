@@ -35,45 +35,59 @@
           {
             name: "license",
             label: "License",
-            type: "select",
-            options: [
-              {
-                id: "All",
-                name: "All",
-              },
-              {
-                id: "International",
-                name: "International",
-              },
-              {
-                id: "AU/NZ",
-                name: "AU/NZ",
-              },
-            ],
+            type: "related",
+            related: "constants",
+            filters: [{ type: "eq", column: "type", value: "licenses" }]
           },
           {
             name: "age",
             label: "Age",
-            type: "select",
-            options: [
-              {
-                id: "All",
-                name: "All",
-              },
-              {
-                id: "18-21",
-                name: "18-21",
-              },
-              {
-                id: "21+",
-                name: "21+",
-              },
-              {
-                id: "25+",
-                name: "25+",
-              },
-            ],
+            type: "related",
+            related: "constants",
+            filters: [{ type: "eq", column: "type", value: "ages" }]
           },
+          // {
+          //   name: "license",
+          //   label: "License",
+          //   type: "select",
+          //   options: [
+          //     {
+          //       id: "All",
+          //       name: "All",
+          //     },
+          //     {
+          //       id: "International",
+          //       name: "International",
+          //     },
+          //     {
+          //       id: "AU/NZ",
+          //       name: "AU/NZ",
+          //     },
+          //   ],
+          // },
+          // {
+          //   name: "age",
+          //   label: "Age",
+          //   type: "select",
+          //   options: [
+          //     {
+          //       id: "All",
+          //       name: "All",
+          //     },
+          //     {
+          //       id: "18-21",
+          //       name: "18-21",
+          //     },
+          //     {
+          //       id: "21+",
+          //       name: "21+",
+          //     },
+          //     {
+          //       id: "25+",
+          //       name: "25+",
+          //     },
+          //   ],
+          // },
         ],
       },
       {
@@ -96,29 +110,29 @@
           },
         ],
       },
-      {
-        name: "Rate",
-        description: "",
-        fields: [
-          {
-            name: "matrix",
-            label: "Matrix",
-            type: "textarea",
-            required: true,
-          },
-          {
-            name: "data",
-            label: "Data",
-            type: "textarea",
-            required: true,
-          },
-          {
-            name: "zero",
-            label: "Matrix starts from zero",
-            type: "switch",
-          },
-        ],
-      },
+      // {
+      //   name: "Rate",
+      //   description: "",
+      //   fields: [
+      //     {
+      //       name: "matrix",
+      //       label: "Matrix",
+      //       type: "textarea",
+      //       required: true,
+      //     },
+      //     {
+      //       name: "data",
+      //       label: "Data",
+      //       type: "textarea",
+      //       required: true,
+      //     },
+      //     {
+      //       name: "zero",
+      //       label: "Matrix starts from zero",
+      //       type: "switch",
+      //     },
+      //   ],
+      // },
     ],
   };
   let updateFlex = 1;

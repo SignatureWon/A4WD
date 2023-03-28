@@ -2,6 +2,11 @@
   import { env } from "$env/dynamic/public";
   import dayjs from "dayjs";
   export let records = [];
+  export let title = {
+    name: "",
+    subtitle: "",
+    description: "",
+  };
 </script>
 
 <section class="bg-white">
@@ -13,14 +18,19 @@
         Blog
       </div>
       <h2 class="text-3xl md:text-4xl font-extrabold mb-4">
-        Our latest travel tips
+        {title.subtitle}
       </h2>
+      {#if title.description}
+      <p class="mb-4 text-lg md:text-xl md:leading-relaxed font-medium text-gray-600">
+        {@html title.description}
+      </p>
+    {/if}
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2">
       {#each records as item, index}
         <div class="group {index === 0 ? 'md:col-span-2' : ''}">
-          <a href="/blog/{item.id}">
+          <a href="/blog/{item.slug}">
             <div class={index === 0 ? "md:flex" : ""}>
               <div
                 class="{index === 0

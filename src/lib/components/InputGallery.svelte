@@ -15,12 +15,12 @@
 
   export let table = "table";
   export let field = "field";
-//   export let structure = [
-//     {
-//       name: "Name",
-//       type: "text",
-//     },
-//   ];
+  //   export let structure = [
+  //     {
+  //       name: "Name",
+  //       type: "text",
+  //     },
+  //   ];
 
   const id = $page.params.id;
 
@@ -209,9 +209,16 @@
         <div class="md:flex p-4 border-b border-gray-200">
           <div class="flex-1">
             <div class="flex ">
-              <div class="w-8 text-right pr-2 mt-2">
-                {itemIndex + 1}
+              <div class="mr-1 mt-1">
+                <div
+                  class="w-8 h-8 leading-8 text-center rounded bg-brand-600 text-white"
+                >
+                  {itemIndex + 1}
+                </div>
               </div>
+              <!-- <div class="w-8 text-right pr-2 mt-2">
+                {itemIndex + 1}
+              </div> -->
               <div class="w-40 pr-2">
                 <img src={item.thumb} alt={item.caption} />
               </div>
@@ -266,14 +273,14 @@
               iconDescription="Delete"
               on:click={async () => {
                 console.log(item.name);
-                
+
                 const { data, error } = await supabase.storage
                   .from("gallery")
                   .remove([item.name, `thumb-${item.name}`]);
 
                 records = [...remove(records, itemIndex)];
 
-                updateRecord()
+                updateRecord();
               }}
             >
               <svg
@@ -311,20 +318,22 @@
             filename = `${table}-${uuidv4()}.${ext}`;
 
             await saveImage(file, filename, 800, 600);
-            await saveImage(file, `thumb-${filename}`, 200, 150);
+            await saveImage(file, `thumb-${filename}`, 400, 300);
 
             if (!errors) {
-              records = [
-                ...records,
-                {
-                  name: filename,
-                  url: `${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/gallery/${filename}`,
-                  thumb: `${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/gallery/thumb-${filename}`,
-                  caption: "",
-                },
-              ];
+              setTimeout(() => {
+                records = [
+                  ...records,
+                  {
+                    name: filename,
+                    url: `${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/gallery/${filename}`,
+                    thumb: `${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/gallery/thumb-${filename}`,
+                    caption: "",
+                  },
+                ];
 
-              updateRecord();
+                updateRecord();
+              }, "500");
             }
 
             // console.log(filename);
