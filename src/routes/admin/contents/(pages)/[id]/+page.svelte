@@ -15,6 +15,11 @@
             required: true,
           },
           // {
+          //   name: "content",
+          //   label: "Content",
+          //   type: "quill",
+          // },
+          // {
           //   name: "richtext",
           //   label: "Content",
           //   type: "richtext",
@@ -22,7 +27,7 @@
           {
             name: "content",
             label: "Content",
-            type: "richtext",
+            type: "trixeditor",
           },
         ],
       },

@@ -26,6 +26,7 @@
   import InputNumber from "./input/InputNumber.svelte";
   import InputRelated from "./input/InputRelated.svelte";
   import InputFile from "./input/InputFile.svelte";
+  import InputTrixEditor from "./input/InputTrixEditor.svelte";
 
   export let form = {
     name: "",
@@ -117,20 +118,27 @@
   const updateRecord = async () => {
     try {
       loading = true;
+
+      let obj = {}
       // remove foreign keys if null
       for (const [key, value] of Object.entries(record)) {
-        if (["vehicles", "depots", "suppliers"].includes(key)) {
-          if (value === "") {
-            delete record[key];
+        if (["vehicles", "depots", "suppliers", "categories"].includes(key)) {
+          if (value !== "") {
+            obj[key] = value
+          } else {
+            obj[key] = null
           }
+        } else {
+          obj[key] = value
         }
       }
       if (["contents", "vehicles"].includes(table)) {
-        record.slug = slugify(record.name);
+        obj.slug = slugify(obj.name);
       }
+
       const { data, error } = await supabase
         .from(table)
-        .update(record)
+        .update(obj)
         .eq("id", id);
 
       if (error) throw error;
@@ -352,8 +360,10 @@
                     <InputDateRange {field} bind:record />
                   {:else if field.type === "richtext"}
                     <InputRichtext {field} bind:record />
-                  {:else if field.type === "editorjs"}
-                    <InputEditorJs {field} bind:record />
+                    <!-- {:else if field.type === "editorjs"}
+                    <InputEditorJs {field} bind:record /> -->
+                    {:else if field.type === "trixeditor"}
+                    <InputTrixEditor {field} bind:record />
                   {:else}
                     <InputText {field} bind:record />
                   {/if}

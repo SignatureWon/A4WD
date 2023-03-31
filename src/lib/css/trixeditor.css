@@ -1,0 +1,16 @@
+.trixtoolbar {
+    @apply border border-gray-200 flex flex-wrap divide-x divide-gray-200;
+}
+.trixtoolbar > div {
+    @apply flex;
+}
+.trixtoolbar button {
+    @apply p-3 block hover:bg-gray-100;
+}
+.trixtoolbar svg {
+    @apply w-4 h-4;
+}
+
+trix-editor {
+    @apply !border-t-0 !border-gray-200 !rounded-none;
+}

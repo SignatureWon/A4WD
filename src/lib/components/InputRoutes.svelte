@@ -70,6 +70,7 @@
           records.routes.forEach((exist) => {
             if (route.code === exist.code) {
               route.days = exist.days;
+              route.fee = exist.fee;
             }
           });
         });
@@ -82,7 +83,7 @@
       loading = false;
     }
   };
-  const updateRecord = async (record) => {
+  const updateRecord = async () => {
     try {
       loading = true;
       const { data, error } = await supabase

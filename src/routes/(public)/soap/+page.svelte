@@ -5,7 +5,7 @@
   const url = "https://otautils.thlonline.com/Aurora_OTA.asmx";
   const hdr = {
     "Content-Type": "text/xml;charset=UTF-8",
-    // soapAction: "http://www.thlrentals.com/Aurora/OTA/LoginOk",
+    "soapAction": "http://www.thlrentals.com/Aurora/OTA/LoginOk",
   };
   const xml = `<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                xmlns:xsd="http://www.w3.org/2001/XMLSchema"
@@ -19,9 +19,9 @@
                               Target="Test"
                               Version="1.1"
                               xmlns="http://www.opentravel.org/OTA/2003/05">
-                              <email>info@australia4wdrentals.com</email>
+                              <email>demo.ota@thlonline.com</email>
                               <IsAgent>true</IsAgent>
-                              <password>20joey18louise</password>
+                              <password>3"$r$#3>)+\kgC*m</password>
                           </THL_LoginOkRQ>
                       </LoginOk>
                   </soap:Body>

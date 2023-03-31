@@ -65,13 +65,39 @@
     }
   };
 
+  const feeStructure = {
+    Europcar: [
+      {
+        from: 2,
+        to: 3,
+        fee: 0,
+      },
+      {
+        from: 4,
+        to: 6,
+        fee: 0,
+      },
+      {
+        from: 7,
+        to: 13,
+        fee: 0,
+      },
+      {
+        from: 14,
+        to: 9999,
+        fee: 0,
+      },
+    ],
+  };
+
   const addRecord = () => {
     rates.fees = [
       ...rates.fees,
       {
         depots: "",
         vehicles: "",
-        fees: 0,
+        fee: 0,
+        specials: feeStructure[suppliers.name]
       },
     ];
   };
@@ -86,6 +112,7 @@
       updateRecord();
     }}
   >
+    {suppliers.name}
     {#if rates.fees.length === 0}
       <div class="px-4 py-20 text-center border-b border-gray-200">
         <div class="pb-4">No records yet</div>
@@ -96,7 +123,7 @@
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="md:col-span-1">
               <Select
-                labelText=""
+                labelText="Depot"
                 name="depots"
                 bind:selected={fee.depots}
                 required={true}
@@ -112,7 +139,7 @@
             </div>
             <div class="md:col-span-1">
               <Select
-                labelText=""
+                labelText="Vehicle"
                 name="vehicles"
                 bind:selected={fee.vehicles}
                 required={true}
@@ -126,14 +153,25 @@
             <div class="md:col-span-1">
               <div class="pt-2">
                 <NumberInput
-                  placeholder="Fee"
-                  label=""
+                  label="Daily"
                   name="fees"
                   bind:value={fee.fees}
                   step={1}
                 />
               </div>
             </div>
+            {#each feeStructure[suppliers.name] as special, specialIndex}
+            <div class="md:col-span-1">
+              <div class="pt-2">
+                <NumberInput
+                  label="{special.from}{special.to === 9999 ? '+' : ` - ${special.to}`} days"
+                  name="fees"
+                  bind:value={fee.fees}
+                  step={1}
+                />
+              </div>
+            </div>
+            {/each}
           </div>
         </div>
       {/each}
