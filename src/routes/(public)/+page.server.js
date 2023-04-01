@@ -11,13 +11,15 @@ export async function load() {
       "faqs",
       "features",
     ])
-    .eq("status", true);
+    .eq("status", true)
+    .order("rank", { ascending: true })
 
   const { data: blog } = await supabase
     .from("contents")
     .select()
     .eq("type", "articles")
     .eq("status", true)
+    .order("rank", { ascending: true })
     .limit(3);
 
   const { data: constants } = await supabase

@@ -2,7 +2,7 @@
   import PageHeader from "$lib/components/PageHeader.svelte";
   import Form from "$lib/components/Form.svelte";
   const form = {
-    name: "",
+    name: "Destination",
     groups: [
       {
         name: "",
@@ -17,7 +17,26 @@
           {
             name: "content",
             label: "Content",
-            type: "richtext",
+            type: "trixeditor",
+          },
+        ],
+      },
+      {
+        name: "",
+        description: "",
+        fields: [
+          {
+            name: "status",
+            label: "Status",
+            toggle: "Active",
+            type: "switch",
+            size: "half",
+          },
+          {
+            name: "rank",
+            label: "Rank",
+            type: "number",
+            size: "half",
           },
           {
             name: "description",

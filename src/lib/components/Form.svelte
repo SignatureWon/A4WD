@@ -26,6 +26,7 @@
   import InputNumber from "./input/InputNumber.svelte";
   import InputRelated from "./input/InputRelated.svelte";
   import InputFile from "./input/InputFile.svelte";
+  import InputLink from "./input/InputLink.svelte";
   import InputTrixEditor from "./input/InputTrixEditor.svelte";
 
   export let form = {
@@ -119,17 +120,17 @@
     try {
       loading = true;
 
-      let obj = {}
+      let obj = {};
       // remove foreign keys if null
       for (const [key, value] of Object.entries(record)) {
         if (["vehicles", "depots", "suppliers", "categories"].includes(key)) {
           if (value !== "") {
-            obj[key] = value
+            obj[key] = value;
           } else {
-            obj[key] = null
+            obj[key] = null;
           }
         } else {
-          obj[key] = value
+          obj[key] = value;
         }
       }
       if (["contents", "vehicles"].includes(table)) {
@@ -362,8 +363,10 @@
                     <InputRichtext {field} bind:record />
                     <!-- {:else if field.type === "editorjs"}
                     <InputEditorJs {field} bind:record /> -->
-                    {:else if field.type === "trixeditor"}
+                  {:else if field.type === "trixeditor"}
                     <InputTrixEditor {field} bind:record />
+                  {:else if field.type === "link"}
+                    <InputLink {field} bind:record />
                   {:else}
                     <InputText {field} bind:record />
                   {/if}

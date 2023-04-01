@@ -6,6 +6,14 @@
       key: "name",
       value: "Question",
     },
+    {
+      key: "status",
+      value: "Status",
+    },
+    {
+      key: "rank",
+      value: "Rank",
+    },
   ];
 </script>
 
@@ -13,5 +21,11 @@
 <Table
   table="contents"
   filters={[{ type: "eq", column: "type", value: "faqs" }]}
+  orders={[
+    {
+      column: "rank",
+      ascend: true
+    }
+  ]}
   {headers}
 />

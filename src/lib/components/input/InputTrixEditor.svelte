@@ -1,28 +1,20 @@
 <script>
   export let field = {};
   export let record = {};
-  import { browser } from "$app/environment";
+  // import { browser } from "$app/environment";
 
   let ready = false;
+  let value = record[field.name]
+  $: value = record[field.name]
 
   setTimeout(() => {
     ready = true;
-  }, 500);
-
-  import "$lib/css/trixeditor.css";
-  import { TextArea } from "carbon-components-svelte";
+  }, 1000);
 </script>
 
 <svelte:head>
-  <link
-    rel="stylesheet"
-    type="text/css"
-    href="https://unpkg.com/trix@2.0.0/dist/trix.css"
-  />
-  <script
-    type="text/javascript"
-    src="https://unpkg.com/trix@2.0.0/dist/trix.umd.min.js"
-  ></script>
+  <link rel="stylesheet" type="text/css" href="/packages/trix/trix.css" />
+  <script type="text/javascript" src="/packages/trix/trix.umd.min.js"></script>
 
   <script>
     Trix.config.blockAttributes.heading2 = {
@@ -86,12 +78,11 @@
   {field.label}
 </div>
 <div class="content">
-  <input type="hidden" id="x" value={record[field.name]} />
+  <input type="hidden" id="x" value={value} />
   {#if ready}
     <trix-editor
       input="x"
       on:blur={(e) => {
-        console.log(e.target.innerHTML);
         record[field.name] = e.target.innerHTML;
       }}
     />

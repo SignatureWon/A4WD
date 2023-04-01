@@ -15,20 +15,34 @@
             required: true,
           },
           {
+            name: "content",
+            label: "Content",
+            type: "trixeditor",
+          },
+        ],
+      },
+      {
+        name: "",
+        description: "",
+        fields: [
+          {
             name: "categories",
             label: "Category",
             type: "related",
             related: "categories",
           },
-          // {
-          //   name: "richtext",
-          //   label: "Content",
-          //   type: "editorjs",
-          // },
           {
-            name: "content",
-            label: "Content",
-            type: "richtext",
+            name: "status",
+            label: "Status",
+            toggle: "Active",
+            type: "switch",
+            size: "half",
+          },
+          {
+            name: "rank",
+            label: "Rank",
+            type: "number",
+            size: "half",
           },
           {
             name: "image",

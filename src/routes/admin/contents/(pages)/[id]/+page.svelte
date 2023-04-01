@@ -2,7 +2,7 @@
   import PageHeader from "$lib/components/PageHeader.svelte";
   import Form from "$lib/components/Form.svelte";
   const form = {
-    name: "",
+    name: "Page",
     groups: [
       {
         name: "",
@@ -32,7 +32,32 @@
         ],
       },
       {
-        name: "Info",
+        name: "",
+        description: "",
+        fields: [
+          {
+            name: "status",
+            label: "Status",
+            toggle: "Active",
+            type: "switch",
+            size: "half",
+          },
+          {
+            name: "rank",
+            label: "Rank",
+            type: "number",
+            size: "half",
+          },
+          {
+            name: "image",
+            label: "Image",
+            type: "image",
+            bucket: "contents",
+          },
+        ],
+      },
+      {
+        name: "",
         description: "",
         fields: [
           {
@@ -40,18 +65,12 @@
             label: "Category",
             type: "related",
             related: "categories",
-            filters: [{ type: "eq", column: "type", value: "pages" }]
+            filters: [{ type: "eq", column: "type", value: "pages" }],
           },
           {
             name: "featured",
             label: "Show on top navigation",
             type: "switch",
-          },
-          {
-            name: "image",
-            label: "Image",
-            type: "image",
-            bucket: "contents",
           },
           {
             name: "type",

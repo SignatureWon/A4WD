@@ -2,10 +2,10 @@
   import PageHeader from "$lib/components/PageHeader.svelte";
   import Form from "$lib/components/Form.svelte";
   const form = {
-    name: "General",
+    name: "Testimonial",
     groups: [
       {
-        name: "Info",
+        name: "",
         description: "",
         fields: [
           {
@@ -24,12 +24,25 @@
             label: "Message",
             type: "textarea",
           },
-          // {
-          //   name: "image",
-          //   label: "Image",
-          //   type: "image",
-          //   bucket: "contents",
-          // },
+          {
+            name: "status",
+            label: "Status",
+            toggle: "Active",
+            type: "switch",
+            size: "half",
+          },
+          {
+            name: "rank",
+            label: "Rank",
+            type: "number",
+            size: "half",
+          },
+          {
+            name: "image",
+            label: "Image",
+            type: "image",
+            bucket: "contents",
+          },
           {
             name: "type",
             type: "hidden",

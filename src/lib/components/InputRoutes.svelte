@@ -3,7 +3,7 @@
   import { page } from "$app/stores";
   import Loading from "$lib/components/Loading.svelte";
   import Toast from "$lib/components/Toast.svelte";
-  import { Button, NumberInput } from "carbon-components-svelte";
+  import { Button, NumberInput, Toggle } from "carbon-components-svelte";
 
   export let update = 1;
 
@@ -62,15 +62,18 @@
               to: dropoff.Depots,
               days: 0,
               fee: 0,
+              active: true,
             });
           });
         });
+
 
         routes.forEach((route) => {
           records.routes.forEach((exist) => {
             if (route.code === exist.code) {
               route.days = exist.days;
               route.fee = exist.fee;
+              route.active = exist.active;
             }
           });
         });
@@ -151,10 +154,18 @@
               </div>
             </div>
             <div class="flex">
-              <div class="w-1/2 md:w-40 px-2">
+              <div class="w-1/5 md:w-20 px-2">
+                <Toggle
+                  labelText="Active"
+                  labelA=""
+                  labelB=""
+                  bind:toggled={item.active}
+                />
+              </div>
+              <div class="w-2/5 md:w-40 px-2">
                 <NumberInput label="Minimum Days" bind:value={item.days} />
               </div>
-              <div class="w-1/2 md:w-40 px-2">
+              <div class="w-2/5 md:w-40 px-2">
                 <NumberInput label="One-way Fee" bind:value={item.fee} />
               </div>
             </div>

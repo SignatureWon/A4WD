@@ -2,7 +2,7 @@ import { supabase } from "$lib/supabaseClient";
 export async function load() {
   const { data: contents } = await supabase
     .from("contents")
-    .select("type, name, featured, slug, categories (name)")
+    .select("type, name, featured, slug, categories (name), content")
     .in("type", ["announcements", "pages"])
     .eq("status", true);
 

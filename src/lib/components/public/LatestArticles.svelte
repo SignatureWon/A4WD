@@ -1,5 +1,6 @@
 <script>
   import { env } from "$env/dynamic/public";
+  import { Button } from "carbon-components-svelte";
   import dayjs from "dayjs";
   export let records = [];
   export let title = {
@@ -59,6 +60,9 @@
           </a>
         </div>
       {/each}
+    </div>
+    <div class="text-center pt-8">
+      <Button href="/blog" class="inline-block">More Articles</Button>
     </div>
   </div>
 </section>

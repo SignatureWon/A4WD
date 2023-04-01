@@ -2,10 +2,10 @@
   import PageHeader from "$lib/components/PageHeader.svelte";
   import Form from "$lib/components/Form.svelte";
   const form = {
-    name: "General",
+    name: "Announcement",
     groups: [
       {
-        name: "Info",
+        name: "",
         description: "",
         fields: [
           {
@@ -17,12 +17,20 @@
           {
             name: "content",
             label: "Link",
-            type: "text",
+            type: "link",
           },
           {
             name: "status",
-            label: "Active",
+            label: "Status",
+            toggle: "Active",
             type: "switch",
+            size: "half",
+          },
+          {
+            name: "rank",
+            label: "Rank",
+            type: "number",
+            size: "half",
           },
           {
             name: "type",

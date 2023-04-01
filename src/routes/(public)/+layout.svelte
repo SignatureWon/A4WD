@@ -7,6 +7,7 @@
     TextInput,
   } from "carbon-components-svelte";
   import { env } from "$env/dynamic/public";
+  import Announcements from "$lib/components/public/Announcements.svelte";
   // import Carousel from "svelte-carousel";
   // import { browser } from "$app/environment";
   // let carousel; // for calling methods of the carousel instance
@@ -38,9 +39,10 @@
   class="bg-gray-800 text-white p-2 text-sm lg:flex items-center"
 >
   <div class="flex-1 h-8 overflow-hidden hidden lg:block">
-    {#each getContent("announcements") as announcement}
+    <Announcements records={getContent("announcements")} />
+    <!-- {#each getContent("announcements") as announcement}
       <div class="h-8 leading-8">{announcement.name}</div>
-    {/each}
+    {/each} -->
   </div>
   <!-- <div class="flex-1 h-8 leading-8">
     Book your next 2023 rental for only $100 deposit. No booking fees!
