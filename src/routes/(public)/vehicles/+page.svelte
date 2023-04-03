@@ -9,7 +9,7 @@
     InlineNotification,
     NotificationActionButton,
   } from "carbon-components-svelte";
-  let archives = "destinations"
+  let archives = "vehicles"
   let records = [];
   let errors = {};
   let loading = false;
@@ -21,7 +21,7 @@
       const { data: dataConstants, error: errorConstants } = await supabase
         .from("constants")
         .select()
-        .eq("type", "destinations")
+        .eq("type", "vehicles")
         .single();
 
       if (errorConstants) throw error;
@@ -31,7 +31,7 @@
       }
 
       const { data: dataContents, error: errorContents } =
-        await supabase.from("contents").select().eq("type", "destinations");
+        await supabase.from("vehicles").select().eq("status", true);
 
       if (errorContents) throw error;
 

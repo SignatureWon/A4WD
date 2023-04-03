@@ -52,6 +52,12 @@
             type: "number",
             size: "half",
           },
+          {
+            name: "image",
+            label: "Image",
+            type: "image",
+            bucket: "contents",
+          },
         ],
       },
       {

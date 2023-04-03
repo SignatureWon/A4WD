@@ -7,12 +7,14 @@ export async function load() {
       "announcements",
       "banners",
       "destinations",
+      "attractions",
+      "routes",
       "testimonials",
       "faqs",
       "features",
     ])
     .eq("status", true)
-    .order("rank", { ascending: true })
+    .order("rank", { ascending: true });
 
   const { data: blog } = await supabase
     .from("contents")
@@ -20,12 +22,22 @@ export async function load() {
     .eq("type", "articles")
     .eq("status", true)
     .order("rank", { ascending: true })
-    .limit(3);
+    .limit(5);
 
   const { data: constants } = await supabase
     .from("constants")
     .select("type, name, subtitle, description")
-    .in("type", ["destinations", "features", "blog", "testimonials", "faqs"]);
+    .in("type", [
+      "about",
+      "destinations",
+      "attractions",
+      "routes",
+      "specials",
+      "features",
+      "blog",
+      "testimonials",
+      "faqs",
+    ]);
 
   let site = {};
   constants.forEach((item) => {

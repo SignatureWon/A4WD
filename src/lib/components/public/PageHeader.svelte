@@ -3,7 +3,7 @@
 </script>
 
 <section class="bg-brand-600 p-5">
-  <div class="max-w-7xl mx-auto">
+  <div class="container xl:max-w-7xl mx-auto">
     <div class="grid grid-cols-1 lg:grid-cols-3">
       <SearchForm />
 

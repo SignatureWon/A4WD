@@ -117,12 +117,12 @@
 <slot />
 <div
   class="bg-cover"
-  style="background-image: url('https://storea4wdr1.blob.core.windows.net/billboard-lg/9dd5501f-244e-4912-ab24-83672d46bcf2');"
+  style="background-image: url('/img/bg-contact.jpg');"
 >
   <div class="bg-brand-700/90">
     <div class="container xl:max-w-7xl mx-auto px-4 py-16 lg:px-8 lg:py-32">
       <div
-        class="flex flex-col lg:flex-row lg:items-center space-y-16 lg:space-y-0 lg:space-x-16"
+        class="flex flex-col lg:flex-row space-y-16 lg:space-y-0 lg:space-x-16"
       >
         <!-- Heading with Company Info -->
         <div class="lg:w-2/5 text-white">
@@ -134,7 +134,7 @@
           <h2 class="text-3xl md:text-4xl font-extrabold mb-4">
             {data.site.contact.subtitle}
           </h2>
-          <div class="text-white/60">
+          <div class="text-white/60 text-xl">
             {@html data.site.contact.description}
           </div>
         </div>

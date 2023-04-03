@@ -13,7 +13,7 @@
   export let records = [];
 
   onMount(() => {
-    new Splide(".carousel-destinations", {
+    new Splide(".carousel-attractions", {
       type: "loop",
       drag: true,
       autoplay: true,
@@ -32,7 +32,7 @@
   });
 </script>
 
-<section class="pt-5 pb-10 bg-white">
+<section class="pt-5 pb-10 bg-white border-t border-gray-200">
   <div class="container xl:max-w-7xl mx-auto p-5">
     <div class="md:flex items-end">
       <div class="flex-1">
@@ -47,19 +47,19 @@
         {/if}
       </div>
       <div class="text-center hidden md:block pl-8 pb-8">
-        <Button href="/destinations" class="inline-block">
-          More Destinations
+        <Button href="/attractions" class="inline-block">
+          More Attractions
         </Button>
       </div>
     </div>
-    <section class="splide carousel-destinations">
+    <section class="splide carousel-attractions">
       <div class="splide__track">
         <ul class="splide__list">
           {#each records as item, itemIndex}
             {#if itemIndex <= 10}
               <li class="splide__slide">
                 <div class="px-2 group">
-                  <a href="/destinations/{item.slug}">
+                  <a href="/attractions/{item.slug}">
                     <div class="h-40 overflow-hidden rounded">
                       <div
                         class="h-40 bg-cover bg-center transition-all group-hover:scale-125"
@@ -80,8 +80,8 @@
       </div>
     </section>
     <div class="text-center md:hidden pt-8">
-      <Button href="/destinations" class="inline-block">
-        More Destinations
+      <Button href="/attractions" class="inline-block">
+        More Attractions
       </Button>
     </div>
 </div>

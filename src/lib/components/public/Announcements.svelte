@@ -6,8 +6,6 @@
 
   export let records = [];
 
-  console.log(records);
-
   onMount(() => {
     new Splide(".carousel-announcements", {
       type: "loop",

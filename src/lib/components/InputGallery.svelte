@@ -272,7 +272,7 @@
               kind="ghost"
               iconDescription="Delete"
               on:click={async () => {
-                console.log(item.name);
+                // console.log(item.name);
 
                 const { data, error } = await supabase.storage
                   .from("gallery")

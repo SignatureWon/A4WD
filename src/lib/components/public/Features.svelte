@@ -40,7 +40,7 @@
           </h2>
           {#if title.description}
             <p
-              class="text-lg md:text-xl md:leading-relaxed font-medium text-gray-600"
+              class="text-xl text-gray-600"
             >
               {title.description}
             </p>

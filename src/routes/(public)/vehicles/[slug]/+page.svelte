@@ -1,51 +1,95 @@
 <script>
-  import SearchForm from "$lib/components/public/SearchForm.svelte";
-  // import Carousel from "svelte-carousel";
-  import { browser } from "$app/environment";
+  import { supabase } from "$lib/supabaseClient";
+  // import { browser } from "$app/environment";
+  // import "@splidejs/splide/css";
+  // import Splide from "@splidejs/splide";
+  import { onMount } from "svelte";
   import { env } from "$env/dynamic/public";
+  import { page } from "$app/stores";
+  import { goto } from "$app/navigation";
+  import Loading from "$lib/components/Loading.svelte";
+  import PageHeader from "$lib/components/public/PageHeader.svelte";
+  import Gallery from "$lib/components/public/Gallery.svelte";
   import { Button, Tab, TabContent, Tabs } from "carbon-components-svelte";
-  let carousel; // for calling methods of the carousel instance
+  import {
+    InlineNotification,
+    NotificationActionButton,
+  } from "carbon-components-svelte";
+  let slug = $page.params.slug;
+  let record = {
+    specifications: [],
+    images: [],
+  };
+  let errors = {};
+  let loading = false;
 
-  let records = [
-    {
-      image: "068128de-4238-4b60-a683-a102659b8e0b.jpg",
-      caption: "Image 1 caption",
-    },
-    {
-      image: "vehicles-2b25d7e9-74df-4986-b578-78535c9034e5.jpg",
-      caption: "Image 2 caption",
-    },
-    {
-      image: "vehicles-b7326230-1235-48ac-89c0-57ddbb35c0f8.jpg",
-      caption: "Image 3 caption",
-    },
-  ];
+  onMount(async () => {
+    try {
+      loading = true;
+      const { data, error } = await supabase
+        .from("vehicles")
+        .select()
+        .eq("slug", slug)
+        .single();
+
+      record = data;
+      // console.log(record.specifications.length);
+
+      if (error) throw error;
+
+      if (data) {
+        record = data;
+      }
+    } catch (error) {
+      errors = error;
+    } finally {
+      loading = false;
+    }
+
+    // new Splide(".carousel-vgallery", {
+    //   type: "loop",
+    //   drag: true,
+    //   autoplay: true,
+    //   interval: 5000,
+    // }).mount();
+  });
 </script>
 
-<section class="bg-brand-600 p-5">
-  <div class="max-w-6xl mx-auto">
-    <div class="grid grid-cols-1 lg:grid-cols-3">
-      <SearchForm />
-
+<Loading {loading} />
+{#if errors.code}
+  <InlineNotification
+    hideCloseButton
+    lowContrast
+    kind="error"
+    title="Error:"
+    subtitle={errors.message}
+  >
+    <svelte:fragment slot="actions">
+      <NotificationActionButton on:click={() => goto("/")}>
+        Back to home
+      </NotificationActionButton>
+    </svelte:fragment>
+  </InlineNotification>
+{:else}
+  <PageHeader>
+    <div
+      class="h-96 bg-cover bg-center"
+      style={record.image
+        ? `background-image: url('${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/${record.image}');`
+        : ""}
+    >
       <div
-        class="col-span-2 bg-cover bg-center bg-no-repeat"
-        style="background-image: url('https://rixauffklvvhkfkwrpme.supabase.co/storage/v1/object/public/gallery/vehicles-2b25d7e9-74df-4986-b578-78535c9034e5.jpg');"
+        class="w-full h-full bg-black/20 flex flex-col items-center justify-center text-center p-10"
       >
-        <div
-          class="flex items-center justify-center w-full h-full text-white bg-black/20 p-5"
-        >
-          <h2 class="text-4xl font-bold">Apollo Adventure Camper</h2>
-        </div>
+        <h1 class="text-4xl font-bold text-white">{record.name}</h1>
       </div>
     </div>
-  </div>
-</section>
+  </PageHeader>
+{/if}
 <section class="bg-white px-4">
   <div class="py-10 max-w-3xl mx-auto">
     <p class="text-xl mb-8">
-      The compact Adventure Camper is perfect for those interested in a real
-      outback adventure. Roomier, more fuel capacity and cooking facilities make
-      this 4WD campervan ideal for thrill seeking couples.
+      {record.excerpt}
     </p>
     <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
       <div class="flex items-center">
@@ -60,7 +104,7 @@
             /></svg
           >
         </div>
-        <div class="flex-1">4 Bed</div>
+        <div class="flex-1">{record.pax} Bed</div>
       </div>
       <div class="flex items-center">
         <div class="mr-2">
@@ -74,7 +118,7 @@
             /></svg
           >
         </div>
-        <div class="flex-1">4 Wheel</div>
+        <div class="flex-1">{record.wheel}</div>
       </div>
       <div class="flex items-center">
         <div class="mr-2">
@@ -88,7 +132,7 @@
             /></svg
           >
         </div>
-        <div class="flex-1">Manual</div>
+        <div class="flex-1">{record.transmission}</div>
       </div>
       <div class="flex items-center">
         <div class="mr-2">
@@ -102,7 +146,7 @@
             /></svg
           >
         </div>
-        <div class="flex-1">Diesel</div>
+        <div class="flex-1">{record.fuel}</div>
       </div>
       <div class="flex items-center">
         <div class="mr-2">
@@ -116,7 +160,7 @@
             /></svg
           >
         </div>
-        <div class="flex-1">Toilet</div>
+        <div class="flex-1">{record.toilet ? "Toilet" : "N/A"}</div>
       </div>
       <div class="flex items-center">
         <div class="mr-2">
@@ -130,149 +174,60 @@
             /></svg
           >
         </div>
-        <div class="flex-1">Shower</div>
+        <div class="flex-1">{record.shower ? "Shower" : "N/A"}</div>
       </div>
     </div>
   </div>
 </section>
-<section class="bg-white">
-  <div class="max-w-6xl mx-auto">
-    <!-- {#if browser}
-      <Carousel
-        let:showPrevPage
-        let:showNextPage
-        autoplay
-        autoplayDuration={5000}
-        dots={false}
-        pauseOnFocus={true}
-        bind:this={carousel}
-      >
-        <div
-          slot="prev"
-          on:click={showPrevPage}
-          class="absolute top-0 left-0 h-full z-10 flex items-center text-white opacity-50 hover:opacity-100"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            width="24"
-            height="24"
-            class="w-8 h-8"
-            fill="currentColor"
-            ><path fill="none" d="M0 0h24v24H0z" /><path
-              d="M10.828 12l4.95 4.95-1.414 1.414L8 12l6.364-6.364 1.414 1.414z"
-            /></svg
-          >
-        </div>
-        {#each records as item}
-          <div>
+<Gallery records={record.images} />
+<!-- <section class="container xl:max-w-7xl mx-auto mt-8">
+  <div class="splide carousel-vgallery">
+    <div class="splide__track">
+      <ul class="splide__list">
+        {#each record.images as item}
+          <li class="splide__slide">
             <div
               class="h-96 bg-cover bg-center"
-              style="background-image: url('{env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/gallery/{item.image}');"
-            />
-            <div class="text-center p-4">{item.caption}</div>
-          </div>
+              style="background-image: url('{env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/gallery/{item.name}');"
+            >
+              <div
+                class="w-full h-full bg-black/20 flex flex-col items-center justify-center text-center p-10"
+              >
+                <div class="text-4xl font-bold text-white">{item.caption}</div>
+              </div>
+            </div>
+          </li>
         {/each}
-        <div
-          slot="next"
-          on:click={showNextPage}
-          class="absolute top-0 right-0 h-full z-10 flex items-center text-white opacity-50 hover:opacity-100"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            width="24"
-            height="24"
-            class="w-8 h-8"
-            fill="currentColor"
-            ><path fill="none" d="M0 0h24v24H0z" /><path
-              d="M13.172 12l-4.95-4.95 1.414-1.414L16 12l-6.364 6.364-1.414-1.414z"
-            /></svg
-          >
-        </div>
-      </Carousel>
-    {/if} -->
+      </ul>
+    </div>
+  </div>
+</section> -->
+<section class="container xl:max-w-6xl mx-auto bg-white p-4">
+  <h3 class="text-lg font-bold mb-4">Specifications</h3>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-4">
+    {#each record.specifications as spec}
+      <div class="grid grid-cols-2 gap-2 py-2 border-b border-gray-200">
+        <div class="font-bold">{spec.Title}</div>
+        <div class="">{spec.Description}</div>
+      </div>
+    {/each}
   </div>
 </section>
-<section class="py-10 px-4">
-  <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-5 gap-8">
-    <div class="md:col-span-2 bg-white p-4 divide-y divide-gray-200">
-        <h3 class="text-lg font-bold mb-4">Specifications</h3>
-      {#each Array(5) as _}
-        <div class="grid grid-cols-2 gap-2 py-2">
-          <div class="font-bold">Water Supply</div>
-          <div class="">Cold only</div>
-        </div>
-        <div class="grid grid-cols-2 gap-2 py-2">
-          <div class="font-bold">Fresh Water Tank</div>
-          <div class="">10 Litres</div>
-        </div>
-        <div class="grid grid-cols-2 gap-2 py-2">
-          <div class="font-bold">Fresh Water Tank</div>
-          <div class="">10 Litres</div>
-        </div>
-      {/each}
-    </div>
-    <div class="md:col-span-3 bg-white p-4">
-      <Tabs>
-        <Tab label="Description" />
-        <Tab label="Restrictions" />
-        <Tab label="Notes" />
-        <svelte:fragment slot="content">
-          <TabContent class="p-4">
-            <p>
-              The compact Adventure Camper is perfect for those interested in a
-              real outback adventure. Far roomier than similar vehicles, this
-              4WD campervan is ideal for thrill seeking couples.
-            </p>
-            <p>
-              The extra fuel capacity means you can travel for longer without
-              having to stop and the outdoor cooking facilities allows you to
-              enjoy a dinner under the stars.
-            </p>
-            <p>
-              Please note: Children under the age of 8 years old cannot travel
-              in this vehicle.
-            </p>
-            <p>
-              The extra fuel capacity means you can travel for longer without
-              having to stop and the outdoor cooking facilities allows you to
-              enjoy a dinner under the stars.
-            </p>
-            <p>
-              Please Note: Vehicle specifications, floor plans, interior
-              layouts, and specific measurements are subject to change without
-              notice and may vary due to modifications and/or upgrades. Apollo
-              Motorhome Holidays cannot be held liable for any such variance.
-              Make/model may vary and cannot be guaranteed. **Media Player not
-              available for all vehicle groups. Subject to change without
-              notice. apollo for the most recent specifications.
-            </p>
-          </TabContent>
-          <TabContent class="p-4">
-            <p>
-              Please note: Children under the age of 8 years old cannot travel
-              in this vehicle.
-            </p>
-            <p>
-              The extra fuel capacity means you can travel for longer without
-              having to stop and the outdoor cooking facilities allows you to
-              enjoy a dinner under the stars.
-            </p>
-          </TabContent>
-          <TabContent class="p-4">
-            <p>
-              Please Note: Vehicle specifications, floor plans, interior
-              layouts, and specific measurements are subject to change without
-              notice and may vary due to modifications and/or upgrades. Apollo
-              Motorhome Holidays cannot be held liable for any such variance.
-              Make/model may vary and cannot be guaranteed. **Media Player not
-              available for all vehicle groups. Subject to change without
-              notice. apollo for the most recent specifications.
-            </p>
-          </TabContent>
-        </svelte:fragment>
-      </Tabs>
-    </div>
-  </div>
+<section class="p-4 container xl:max-w-7xl mx-auto bg-white my-8">
+  <Tabs>
+    <Tab label="Description" />
+    <Tab label="Restrictions" />
+    <Tab label="Notes" />
+    <svelte:fragment slot="content">
+      <TabContent class="p-4">
+        {@html record.description}
+      </TabContent>
+      <TabContent class="p-4">
+        {@html record.restrictions}
+      </TabContent>
+      <TabContent class="p-4">
+        {@html record.notes}
+      </TabContent>
+    </svelte:fragment>
+  </Tabs>
 </section>

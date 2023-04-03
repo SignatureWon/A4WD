@@ -275,7 +275,7 @@
 
   $: {
     if (id !== $page.params.id) {
-      console.log("changed");
+      // console.log("changed");
       id = $page.params.id;
       getRecord();
     }

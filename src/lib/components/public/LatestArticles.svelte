@@ -22,7 +22,7 @@
         {title.subtitle}
       </h2>
       {#if title.description}
-      <p class="mb-4 text-lg md:text-xl md:leading-relaxed font-medium text-gray-600">
+      <p class="mb-4 text-xl text-gray-600">
         {@html title.description}
       </p>
     {/if}

@@ -35,6 +35,11 @@
             label2: "End date",
             type: "daterange",
           },
+          {
+            name: "link",
+            label: "Link",
+            type: "text",
+          },
         ],
       },
     ],

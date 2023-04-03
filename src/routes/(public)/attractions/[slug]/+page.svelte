@@ -1,42 +1,36 @@
 <script>
   import { supabase } from "$lib/supabaseClient";
   import { onMount } from "svelte";
+  import { env } from "$env/dynamic/public";
+  import { page } from "$app/stores";
   import { goto } from "$app/navigation";
   import Loading from "$lib/components/Loading.svelte";
   import PageHeader from "$lib/components/public/PageHeader.svelte";
-  import ArchiveList from "$lib/components/public/ArchiveList.svelte";
   import {
     InlineNotification,
     NotificationActionButton,
   } from "carbon-components-svelte";
-  let archives = "destinations"
-  let records = [];
+  let slug = $page.params.slug;
+  let record = {};
   let errors = {};
   let loading = false;
-  let info = {};
 
   onMount(async () => {
     try {
       loading = true;
-      const { data: dataConstants, error: errorConstants } = await supabase
-        .from("constants")
+      const { data, error } = await supabase
+        .from("contents")
         .select()
-        .eq("type", "destinations")
+        .eq("slug", slug)
         .single();
 
-      if (errorConstants) throw error;
+      record = data;
+      // console.log(record);
 
-      if (dataConstants) {
-        info = dataConstants;
-      }
+      if (error) throw error;
 
-      const { data: dataContents, error: errorContents } =
-        await supabase.from("contents").select().eq("type", "destinations");
-
-      if (errorContents) throw error;
-
-      if (dataContents) {
-        records = dataContents;
+      if (data) {
+        record = data;
       }
     } catch (error) {
       errors = error;
@@ -63,16 +57,21 @@
   </InlineNotification>
 {:else}
   <PageHeader>
-    <div class="h-96 bg-cover bg-center">
+    <div
+      class="h-96 bg-cover bg-center"
+      style="background-image: url('{env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/{record.image}');"
+    >
       <div
         class="w-full h-full bg-black/20 flex flex-col items-center justify-center text-center p-10"
       >
-        <h1 class="text-4xl font-bold text-white mb-4">{info.name}</h1>
-        <div class="text-brand-200 text-2xl mb-4">
-          {info.subtitle}
-        </div>
+        <h1 class="text-4xl font-bold text-white">{record.name}</h1>
       </div>
     </div>
   </PageHeader>
-  <ArchiveList {records} {archives} />
+  <div class="max-w-5xl py-10 px-5 mx-auto">
+    {@html record.content}
+
+    {@html record.description}
+
+  </div>
 {/if}

@@ -4,12 +4,12 @@
   // import { browser } from "$app/environment";
 
   let ready = false;
-  let value = record[field.name]
-  $: value = record[field.name]
+  let value = record[field.name];
+  $: value = record[field.name];
 
   setTimeout(() => {
     ready = true;
-  }, 1000);
+  }, 500);
 </script>
 
 <svelte:head>
@@ -17,15 +17,16 @@
   <script type="text/javascript" src="/packages/trix/trix.umd.min.js"></script>
 
   <script>
-    Trix.config.blockAttributes.heading2 = {
-      tagName: "h2",
-      terminal: true,
-      breakOnReturn: true,
-      group: false,
-    };
+    if (Trix) {
+      Trix.config.blockAttributes.heading2 = {
+        tagName: "h2",
+        terminal: true,
+        breakOnReturn: true,
+        group: false,
+      };
 
-    Trix.config.toolbar.getDefaultHTML = function () {
-      return `
+      Trix.config.toolbar.getDefaultHTML = function () {
+        return `
           <div class="trixtoolbar">
             <div>
               <button type="button" data-trix-attribute="bold" data-trix-key="b" title="Bold" tabindex="-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M8 11h4.5a2.5 2.5 0 1 0 0-5H8v5zm10 4.5a4.5 4.5 0 0 1-4.5 4.5H6V4h6.5a4.5 4.5 0 0 1 3.256 7.606A4.498 4.498 0 0 1 18 15.5zM8 13v5h5.5a2.5 2.5 0 1 0 0-5H8z"/></svg></button>
@@ -60,7 +61,11 @@
             </div>
           </div> 
       `;
-    };
+      };
+    }
+
+    // document.addEventListener("DOMContentLoaded", () => {
+    // });
     // <button type="button" data-trix-action="attachFiles" title="Attach File" tabindex="-1"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M4.828 21l-.02.02-.021-.02H2.992A.993.993 0 0 1 2 20.007V3.993A1 1 0 0 1 2.992 3h18.016c.548 0 .992.445.992.993v16.014a1 1 0 0 1-.992.993H4.828zM20 15V5H4v14L14 9l6 6zm0 2.828l-6-6L6.828 19H20v-1.172zM8 11a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/></svg></button>
 
     // addEventListener("trix-attachment-add", function (event) {
@@ -78,7 +83,7 @@
   {field.label}
 </div>
 <div class="content">
-  <input type="hidden" id="x" value={value} />
+  <input type="hidden" id="x" {value} />
   {#if ready}
     <trix-editor
       input="x"
