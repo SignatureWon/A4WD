@@ -131,10 +131,10 @@
           >
             {data.site.contact.name}
           </div>
-          <h2 class="text-3xl md:text-4xl font-extrabold mb-4">
+          <h2 class="text-xl font-extrabold mb-4">
             {data.site.contact.subtitle}
           </h2>
-          <div class="text-white/60 text-xl">
+          <div class="text-white/60 leading-relaxed">
             {@html data.site.contact.description}
           </div>
         </div>

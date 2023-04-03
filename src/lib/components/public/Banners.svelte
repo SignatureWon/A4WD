@@ -29,8 +29,8 @@
             <div
               class="w-full h-full bg-black/20 flex flex-col items-center justify-center text-center p-10"
             >
-              <div class="text-4xl font-bold text-white">{item.name}</div>
-              <div class="text-brand-200 text-2xl mb-4">
+              <div class="text-2xl font-bold text-white">{item.name}</div>
+              <div class="text-brand-200 text-lg mb-4">
                 {item.description}
               </div>
               {#if item.content !== null || item.content !== ""}

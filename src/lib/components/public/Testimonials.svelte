@@ -39,7 +39,7 @@
         {title.name}
       </div>
       <h2
-        class="text-3xl md:text-4xl font-extrabold mb-4 flex items-center justify-center"
+        class="text-xl font-extrabold mb-4 flex items-center justify-center"
       >
         {title.subtitle}
         <svg
@@ -47,7 +47,7 @@
           viewBox="0 0 24 24"
           width="24"
           height="24"
-          class="text-red-600 w-8 h-8 ml-2"
+          class="text-red-600 w-6 h-6 ml-2"
           fill="currentColor"
           ><path fill="none" d="M0 0H24V24H0z" /><path
             d="M16.5 3C19.538 3 22 5.5 22 9c0 7-7.5 11-10 12.5C9.5 20 2 16 2 9c0-3.5 2.5-6 5.5-6C9.36 3 11 4 12 5c1-1 2.64-2 4.5-2z"
@@ -56,7 +56,7 @@
       </h2>
       {#if title.description}
         <p
-          class="mb-8 text-xl text-gray-600"
+          class="mb-8 leading-relaxed text-gray-600"
         >
           {@html title.description}
         </p>

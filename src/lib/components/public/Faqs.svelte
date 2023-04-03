@@ -18,12 +18,12 @@
       >
         {title.name}
       </div>
-      <h2 class="text-3xl md:text-4xl font-extrabold mb-4">
+      <h2 class="text-xl font-extrabold mb-4">
         {title.subtitle}
       </h2>
       {#if title.description}
         <p
-          class="mb-4 text-xl text-gray-600"
+          class="mb-4 leading-relaxed text-gray-600"
         >
           {@html title.description}
         </p>
