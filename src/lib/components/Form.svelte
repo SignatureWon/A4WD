@@ -108,6 +108,7 @@
 
       if (data) {
         record = data;
+        console.log(record);
       }
     } catch (error) {
       errors = handleError(error);
