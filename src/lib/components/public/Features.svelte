@@ -26,7 +26,7 @@
 <div class="bg-gray-100 overflow-hidden">
   <div class="container xl:max-w-7xl mx-auto px-4 py-12">
     <div
-      class="flex flex-col lg:flex-row lg:items-center space-y-12 lg:space-y-0 lg:space-x-20"
+      class="flex flex-col lg:flex-row space-y-12 lg:space-y-0 lg:space-x-20"
     >
       <div class="lg:w-5/12 xl:w-5/12 md:py-12 space-y-10">
         <div>
@@ -35,12 +35,12 @@
           >
             {title.name}
           </div>
-          <h2 class="text-3xl md:text-4xl font-extrabold mb-4">
+          <h2 class="text-xl font-extrabold mb-4">
             {title.subtitle}
           </h2>
           {#if title.description}
             <p
-              class="text-xl text-gray-600"
+              class="leading-relaxed text-gray-600"
             >
               {title.description}
             </p>
