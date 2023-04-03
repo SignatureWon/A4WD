@@ -18,7 +18,7 @@
       >
         Blog
       </div>
-      <h2 class="text-xl font-extrabold mb-4">
+      <h2 class="text-xl font-extrabold mb-2">
         {title.subtitle}
       </h2>
       {#if title.description}
@@ -61,7 +61,7 @@
         </div>
       {/each}
     </div>
-    <div class="text-center pt-8">
+    <div class="text-center pt-4">
       <Button href="/blog" class="inline-block">More Articles</Button>
     </div>
   </div>

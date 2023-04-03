@@ -13,14 +13,14 @@
 </script>
 
 <section>
-  <div class="pt-5 pb-10">
-    <div class="container xl:max-w-7xl mx-auto py-10 px-5">
+  <div class="pt-5">
+    <div class="container xl:max-w-7xl mx-auto pt-10 px-4">
       <div class="text-sm font-bold tracking-wider text-brand-600">
         {title.name}
       </div>
       <h2 class="text-xl font-extrabold mb-4">{title.subtitle}</h2>
       {#if title.description}
-        <p class="px-2 text-gray-600 leading-relaxed">
+        <p class="text-gray-600 leading-relaxed">
           {@html title.description}
         </p>
       {/if}
