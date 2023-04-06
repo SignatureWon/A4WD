@@ -16,7 +16,6 @@
   } from "carbon-components-svelte";
   import InputText from "./input/InputText.svelte";
   import InputImage from "./input/InputImage.svelte";
-  import InputEditorJs from "./input/InputEditorJs.svelte";
   import InputRichtext from "./input/InputRichtext.svelte";
   import InputDateRange from "./input/InputDateRange.svelte";
   import InputHidden from "./input/InputHidden.svelte";
@@ -362,8 +361,6 @@
                     <InputDateRange {field} bind:record />
                   {:else if field.type === "richtext"}
                     <InputRichtext {field} bind:record />
-                    <!-- {:else if field.type === "editorjs"}
-                    <InputEditorJs {field} bind:record /> -->
                   {:else if field.type === "trixeditor"}
                     <InputTrixEditor {field} bind:record />
                   {:else if field.type === "link"}
