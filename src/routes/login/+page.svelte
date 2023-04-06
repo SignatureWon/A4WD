@@ -25,11 +25,12 @@
         password: password,
       });
       if (error) throw error;
-      goto("/admin");
+      setTimeout(() => goto("/admin"), 300);
     } catch (error) {
       if (error instanceof Error) {
         errors = error;
       }
+      console.log("errorserrors", errors);
     } finally {
       loading = false;
     }

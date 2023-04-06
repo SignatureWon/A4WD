@@ -38,9 +38,7 @@
       >
         {title.name}
       </div>
-      <h2
-        class="text-xl font-extrabold mb-4 flex items-center justify-center"
-      >
+      <h2 class="text-xl font-extrabold mb-4 flex items-center justify-center">
         {title.subtitle}
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -55,9 +53,7 @@
         >
       </h2>
       {#if title.description}
-        <p
-          class="mb-8 leading-relaxed text-gray-600"
-        >
+        <p class="mb-8 leading-relaxed text-gray-600">
           {@html title.description}
         </p>
       {/if}
@@ -66,86 +62,88 @@
     <section class="splide carousel-testimonials">
       <div class="splide__track">
         <ul class="splide__list">
-          {#each records as item}
-            <li class="splide__slide">
-              <div
-                class="group flex flex-col p-5 relative bg-white rounded-xl mx-4"
-              >
+          {#each records as item, itemIndex}
+            {#if itemIndex < 10}
+              <li class="splide__slide">
                 <div
-                  class="absolute top-0 right-0 text-7xl mt-3 mr-4 text-gray-200 opacity-75 font-serif"
+                  class="group flex flex-col p-5 relative bg-white rounded-xl mx-4"
                 >
-                  “
-                </div>
-                <blockquote class="grow flex flex-col relative">
-                  <div class="mb-6">
-                    <div
-                      class="inline-flex items-center text-brand-600 bg-brand-50 border border-brand-100 px-2 py-1 rounded-lg transition ease-out origin-top-left group-hover:scale-110"
-                    >
-                      <svg
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="hi-solid hi-star inline-block w-5 h-5"
-                        ><path
-                          d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                        /></svg
-                      >
-                      <svg
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="hi-solid hi-star inline-block w-5 h-5"
-                        ><path
-                          d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                        /></svg
-                      >
-                      <svg
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="hi-solid hi-star inline-block w-5 h-5"
-                        ><path
-                          d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                        /></svg
-                      >
-                      <svg
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="hi-solid hi-star inline-block w-5 h-5"
-                        ><path
-                          d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                        /></svg
-                      >
-                      <svg
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="hi-solid hi-star inline-block w-5 h-5"
-                        ><path
-                          d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                        /></svg
-                      >
-                    </div>
-                  </div>
-                  <p
-                    class="grow text-sm text-gray-700 font-medium leading-relaxed mb-5"
+                  <div
+                    class="absolute top-0 right-0 text-7xl mt-3 mr-4 text-gray-200 opacity-75 font-serif"
                   >
-                    {item.content}
-                  </p>
-                  <footer>
-                    <div
-                      class="font-semibold text-brand-600 hover:text-brand-400"
+                    “
+                  </div>
+                  <blockquote class="grow flex flex-col relative">
+                    <div class="mb-6">
+                      <div
+                        class="inline-flex items-center text-brand-600 bg-brand-50 border border-brand-100 px-2 py-1 rounded-lg transition ease-out origin-top-left group-hover:scale-110"
+                      >
+                        <svg
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="hi-solid hi-star inline-block w-5 h-5"
+                          ><path
+                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                          /></svg
+                        >
+                        <svg
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="hi-solid hi-star inline-block w-5 h-5"
+                          ><path
+                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                          /></svg
+                        >
+                        <svg
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="hi-solid hi-star inline-block w-5 h-5"
+                          ><path
+                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                          /></svg
+                        >
+                        <svg
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="hi-solid hi-star inline-block w-5 h-5"
+                          ><path
+                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                          /></svg
+                        >
+                        <svg
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="hi-solid hi-star inline-block w-5 h-5"
+                          ><path
+                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                          /></svg
+                        >
+                      </div>
+                    </div>
+                    <p
+                      class="grow text-sm text-gray-700 font-medium leading-relaxed mb-5"
                     >
-                      {item.name}
-                    </div>
-                    <div class="text-gray-400 text-sm">
-                      {item.description}
-                    </div>
-                  </footer>
-                </blockquote>
-              </div>
-            </li>
+                      {item.content}
+                    </p>
+                    <footer>
+                      <div
+                        class="font-semibold text-brand-600 hover:text-brand-400"
+                      >
+                        {item.name}
+                      </div>
+                      <div class="text-gray-400 text-sm">
+                        {item.description}
+                      </div>
+                    </footer>
+                  </blockquote>
+                </div>
+              </li>
+            {/if}
           {/each}
         </ul>
       </div>

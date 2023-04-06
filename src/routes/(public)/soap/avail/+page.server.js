@@ -37,9 +37,9 @@ export async function load() {
             </Source>
           </POS>
           <VehAvailRQCore Status="Available">
-            <VehRentalCore PickUpDateTime="2023-05-17T08:00:00" ReturnDateTime="2023-05-26T08:00:00">
-              <PickUpLocation LocationCode="ADL" CodeContext="ADL">ADL</PickUpLocation>
-              <ReturnLocation LocationCode="SYD" CodeContext="SYD">SYD</ReturnLocation>
+            <VehRentalCore PickUpDateTime="2023-08-17T08:00:00" ReturnDateTime="2023-08-26T08:00:00">
+              <PickUpLocation LocationCode="DRW" CodeContext="DRW">DRW</PickUpLocation>
+              <ReturnLocation LocationCode="DRW" CodeContext="DRW">DRW</ReturnLocation>
             </VehRentalCore>
             <VendorPrefs>
               <VendorPref CompanyShortName="NA" PreferLevel="Only" />

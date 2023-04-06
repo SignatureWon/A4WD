@@ -4,6 +4,11 @@
   import { goto } from "$app/navigation";
   onMount(async () => {
     const { error } = await supabase.auth.signOut();
-    goto(`/login`);
+    if (error) {
+      console.log("error", error);
+    } else {
+      setTimeout(() => goto('/login'), 300);
+
+    }
   });
 </script>

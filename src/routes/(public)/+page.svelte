@@ -2,6 +2,7 @@
   // import SearchForm from "$lib/components/public/SearchForm.svelte";
   import Banners from "$lib/components/public/Banners.svelte";
   import Destinations from "$lib/components/public/Destinations.svelte";
+  import Vehicles from "$lib/components/public/Vehicles.svelte";
   import TravelRoutes from "$lib/components/public/TravelRoutes.svelte";
   import Attractions from "$lib/components/public/Attractions.svelte";
   import About from "$lib/components/public/About.svelte";
@@ -89,6 +90,7 @@
 </PageHeader>
 
 <Destinations records={getContent("destinations")} title={data.site.destinations} />
+<Vehicles records={data.vehicles} title={data.site.vehicles} />
 <TravelRoutes records={getContent("routes")} title={data.site.routes} />
 <Attractions records={getContent("attractions")} title={data.site.attractions} />
 <About title={data.site.about} />

@@ -1,175 +1,47 @@
 <script>
+  import { onMount } from "svelte";
   import { page } from "$app/stores";
-  import PageHeader from "$lib/components/PageHeader.svelte";
-  import Form from "$lib/components/Form.svelte";
+  import Feedback from "$lib/components/Feedback.svelte";
+  import Title from "$lib/admin/Title.svelte";
+  import Form from "$lib/admin/input/Form.svelte";
+  import ManyToMany from "$lib/admin/input/ManyToMany.svelte";
   import { Tab, TabContent, Tabs } from "carbon-components-svelte";
-  import InputMany from "$lib/components/InputMany.svelte";
-  import InputJson from "$lib/components/InputJson.svelte";
-  import InputGallery from "$lib/components/InputGallery.svelte";
+  import { db } from "$lib/db";
+  import { vehicles } from "$lib/schema/vehicles";
 
-  const id = $page.params.id;
-  const formGeneral = {
-    name: "",
-    groups: [
-      {
-        name: "Info",
-        description: "",
-        fields: [
-          {
-            name: "name",
-            label: "Name",
-            type: "text",
-            required: true,
-          },
-          {
-            name: "code",
-            label: "Code",
-            type: "text",
-            required: true,
-          },
-          {
-            name: "suppliers",
-            label: "Supplier",
-            type: "related",
-            related: "suppliers",
-          },
-      //   ],
-      // },
-      // {
-      //   name: "Status",
-      //   description: "",
-      //   fields: [
-          {
-            name: "status",
-            label: "Status",
-            toggle: "Active",
-            type: "switch",
-            size: "half",
-          },
-          {
-            name: "rank",
-            label: "Rank",
-            type: "number",
-            size: "half",
-          },
-          {
-            name: "image",
-            label: "Image",
-            type: "image",
-            bucket: "contents",
-          },
-        ],
-      },
-      {
-        name: "Features",
-        description: "",
-        fields: [
-          {
-            name: "pax",
-            label: "Pax",
-            type: "number",
-          },
-          {
-            name: "transmission",
-            label: "Transmission",
-            type: "select",
-            options: [
-              {
-                id: "Automatic",
-                name: "Automatic",
-              },
-              {
-                id: "Manual",
-                name: "Manual",
-              },
-            ],
-          },
-          {
-            name: "fuel",
-            label: "Fuel",
-            type: "select",
-            options: [
-              {
-                id: "Diesel",
-                name: "Diesel",
-              },
-              {
-                id: "Petrol",
-                name: "Petrol",
-              },
-            ],
-          },
-          {
-            name: "wheel",
-            label: "Driven Wheel",
-            type: "select",
-            options: [
-              {
-                id: "4WD",
-                name: "4WD",
-              },
-              {
-                id: "2WD",
-                name: "2WD",
-              },
-            ],
-          },
-          {
-            name: "shower",
-            label: "Shower",
-            type: "switch",
-          },
-          {
-            name: "toilet",
-            label: "Toilet",
-            type: "switch",
-          },
-        ],
-      },
-    ],
+  const title = "Vehicle";
+  let fetch = {
+    from: "vehicles",
+    select: "*",
+    id: $page.params.id,
+    url: $page.url.pathname,
+    parent: $page.url.pathname.replace(`/${$page.params.id}`, ""),
   };
-  const formContents = {
-    name: "",
-    groups: [
-      {
-        name: "",
-        description: "",
-        fields: [
-          {
-            name: "excerpt",
-            label: "Short Description",
-            type: "text",
-          },
-          // {
-          //   name: "richtext",
-          //   label: "Description",
-          //   type: "richtext",
-          // },
-          {
-            name: "description",
-            label: "Description",
-            type: "richtext",
-          },
-          {
-            name: "restrictions",
-            label: "Restrictions",
-            type: "richtext",
-          },
-          {
-            name: "notes",
-            label: "Notes",
-            type: "richtext",
-          },
-        ],
-      },
-    ],
+
+  let data = db.default(vehicles);
+
+  onMount(async () => {
+    if (fetch.id !== "add") {
+      data = await db.one(fetch);
+      console.log(data);
+    }
+  });
+
+  $: fetch = {
+    from: "vehicles",
+    select: "*",
+    id: $page.params.id,
+    url: $page.url.pathname,
+    parent: $page.url.pathname.replace(`/${$page.params.id}`, ""),
   };
 </script>
 
-<PageHeader name="Vehicle" table="vehicles" />
+<Feedback {data} />
+
+<Title {title} {data} />
 <Tabs autoWidth class="border-b border-gray-200">
   <Tab label="General" />
-  {#if id !== "add"}
+  {#if fetch.id !== "add"}
     <Tab label="Contents" />
     <Tab label="Categories" />
     <Tab label="Specifications" />
@@ -178,14 +50,61 @@
   {/if}
   <svelte:fragment slot="content">
     <TabContent>
-      <Form form={formGeneral} table="vehicles" duplicate={true} />
+      <Form
+        structure={{
+          name: "",
+          sections: [
+            {
+              name: "Info",
+              fields: ["name", "code", "suppliers"],
+            },
+            {
+              name: "Publish",
+              fields: ["status", "rank"],
+            },
+            {
+              name: "Image",
+              fields: ["image", "caption"],
+            },
+            {
+              name: "Features",
+              fields: [
+                "pax",
+                "transmission",
+                "fuel",
+                "wheel",
+                "shower",
+                "toilet",
+              ],
+            },
+          ],
+        }}
+        {fetch}
+        bind:data
+        schema={vehicles}
+        duplicate={true}
+      />
     </TabContent>
-    {#if id !== "add"}
+    {#if fetch.id !== "add"}
       <TabContent>
-        <Form form={formContents} table="vehicles" />
+        <Form
+          structure={{
+            name: "",
+            sections: [
+              {
+                name: "",
+                fields: ["excerpt", "description", "restrictions", "notes"],
+              },
+            ],
+          }}
+          {fetch}
+          bind:data
+          schema={vehicles}
+          duplicate={true}
+        />
       </TabContent>
       <TabContent>
-        <InputMany
+        <ManyToMany
           table="vehicles_categories"
           options={{
             field: "type",
@@ -194,48 +113,55 @@
         />
       </TabContent>
       <TabContent>
-        <InputJson
-          table="vehicles"
-          field="specifications"
-          structure={[
-            {
-              name: "Title",
-              placeholder: "Title",
-              type: "text",
-            },
-            {
-              name: "Description",
-              placeholder: "Description",
-              type: "textarea",
-            },
-          ]}
+        <Form
+          structure={{
+            name: "",
+            sections: [
+              {
+                name: "",
+                fields: ["specifications"],
+              },
+            ],
+          }}
+          {fetch}
+          bind:data
+          schema={vehicles}
+          duplicate={true}
         />
       </TabContent>
       <TabContent>
-        <InputJson
-          table="vehicles"
-          field="faqs"
-          structure={[
-            {
-              name: "Title",
-              placeholder: "Title",
-              type: "text",
-            },
-            {
-              name: "Question",
-              placeholder: "Question",
-              type: "textarea",
-            },
-            {
-              name: "Answer",
-              placeholder: "Answer",
-              type: "textarea",
-            },
-          ]}
+        <Form
+          structure={{
+            name: "",
+            sections: [
+              {
+                name: "",
+                fields: ["faqs"],
+              },
+            ],
+          }}
+          {fetch}
+          bind:data
+          schema={vehicles}
+          duplicate={true}
         />
       </TabContent>
       <TabContent>
-        <InputGallery table="vehicles" field="images" />
+        <Form
+          structure={{
+            name: "",
+            sections: [
+              {
+                name: "",
+                fields: ["images"],
+              },
+            ],
+          }}
+          {fetch}
+          bind:data
+          schema={vehicles}
+          duplicate={true}
+        />
       </TabContent>
     {/if}
   </svelte:fragment>

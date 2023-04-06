@@ -24,12 +24,22 @@ export async function load() {
     .order("rank", { ascending: true })
     .limit(5);
 
+  const { data: vehicles } = await supabase
+    .from("vehicles")
+    .select()
+    .eq("status", true)
+    .order("rank", { ascending: true })
+    .limit(10);
+
+    console.log("vehicles", vehicles);
+
   const { data: constants } = await supabase
     .from("constants")
     .select("type, name, subtitle, description")
     .in("type", [
       "about",
       "destinations",
+      "vehicles",
       "attractions",
       "routes",
       "specials",
@@ -44,5 +54,5 @@ export async function load() {
     site[item.type] = item;
   });
 
-  return { contents, blog, site };
+  return { contents, blog, vehicles, site };
 }
