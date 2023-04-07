@@ -10,10 +10,11 @@
     subtitle: "",
     description: "",
   };
-  export let records = [];
+  export let record4 = [];
+  export let record2 = [];
 
   onMount(() => {
-    new Splide(".carousel-destinations", {
+    new Splide(".carousel-vehicles", {
       type: "loop",
       drag: true,
       autoplay: true,
@@ -32,7 +33,7 @@
   });
 </script>
 
-<section class="pt-5 pb-10 bg-white">
+<section class="pt-5 pb-10 bg-gray-100">
   <div class="container xl:max-w-7xl mx-auto p-5">
     <div class="md:flex items-end">
       <div class="flex-1">
@@ -47,42 +48,71 @@
         {/if}
       </div>
       <div class="text-center hidden md:block pl-8 pb-8">
-        <Button href="/destinations" class="inline-block">
-          More Destinations
-        </Button>
+        <Button href="/vehicles" class="inline-block">More Vehicles</Button>
       </div>
     </div>
-    <section class="splide carousel-destinations">
-      <div class="splide__track">
-        <ul class="splide__list">
-          {#each records as item, itemIndex}
-            {#if itemIndex <= 10}
-              <li class="splide__slide">
-                <div class="px-2 group">
-                  <a href="/destinations/{item.slug}">
-                    <div class="h-40 overflow-hidden rounded">
-                      <div
-                        class="h-40 bg-cover bg-center transition-all group-hover:scale-125"
-                        style="background-image: url('{env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/{item.image}');"
-                      />
-                    </div>
-                    <div
-                      class="text-lg font-medium px-2 h-8 leading-8 -mt-8 bg-white inline-block absolute"
-                    >
-                      {item.name}
-                    </div>
-                  </a>
-                </div>
-              </li>
-            {/if}
-          {/each}
-        </ul>
-      </div>
-    </section>
+    <div class="rounded bg-white p-4">
+      <div class="mb-4 font-bold text-center">4WD Vehicles</div>
+      <section class="splide carousel-vehicles">
+        <div class="splide__track">
+          <ul class="splide__list">
+            {#each record4 as item, itemIndex}
+              {#if itemIndex <= 10}
+                <li class="splide__slide">
+                  <div class="px-2 group">
+                    <a href="/vehicles/{item.slug}">
+                      <div class="h-40 overflow-hidden rounded relative">
+                        <div
+                          class="text-lg font-medium px-2 bg-white inline-block absolute bottom-0 z-10"
+                        >
+                          {item.name}
+                        </div>
+                        <div
+                          class="h-40 bg-cover bg-center transition-all group-hover:scale-125 bg-gray-200"
+                          style="background-image: url('{env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/{item.image}');"
+                        />
+                      </div>
+                    </a>
+                  </div>
+                </li>
+              {/if}
+            {/each}
+          </ul>
+        </div>
+      </section>
+    </div>
+    <div class="rounded bg-white p-4">
+      <div class="mb-4 font-bold text-center">2WD Vehicles</div>
+      <section class="splide carousel-vehicles">
+        <div class="splide__track">
+          <ul class="splide__list">
+            {#each record2 as item, itemIndex}
+              {#if itemIndex <= 10}
+                <li class="splide__slide">
+                  <div class="px-2 group">
+                    <a href="/vehicles/{item.slug}">
+                      <div class="h-40 overflow-hidden rounded relative">
+                        <div
+                          class="text-lg font-medium px-2 bg-white inline-block absolute bottom-0 z-10"
+                        >
+                          {item.name}
+                        </div>
+                        <div
+                          class="h-40 bg-cover bg-center transition-all group-hover:scale-125 bg-gray-200"
+                          style="background-image: url('{env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/{item.image}');"
+                        />
+                      </div>
+                    </a>
+                  </div>
+                </li>
+              {/if}
+            {/each}
+          </ul>
+        </div>
+      </section>
+    </div>
     <div class="text-center md:hidden pt-8">
-      <Button href="/destinations" class="inline-block">
-        More Destinations
-      </Button>
+      <Button href="/vehicles" class="inline-block">More Vehicles</Button>
     </div>
-</div>
+  </div>
 </section>

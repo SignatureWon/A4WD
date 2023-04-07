@@ -44,7 +44,7 @@
                 />
               </div>
               <div
-                class="{index === 0 ? 'md:w-1/3' : ''} m-4 h-80 overflow-hidden"
+                class="{index === 0 ? 'md:w-1/3 h-80' : 'h-64'} m-4 overflow-hidden"
               >
                 <p class="text-gray-400 text-sm font-medium">
                   {dayjs(item.created_at).format("MMM D, YYYY")}
@@ -54,6 +54,7 @@
                 </h3>
                 <div class="text-base text-gray-600">
                   {@html item.content}
+                  <span class="text-brand-500">Read more</span>
                 </div>
               </div>
             </div>
