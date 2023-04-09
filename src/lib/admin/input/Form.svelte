@@ -12,7 +12,9 @@
   import File from "./File.svelte";
   import RichText from "./RichText.svelte";
   import Link from "./Link.svelte";
+  import DateRange from "./DateRange.svelte";
   import Json from "./Json.svelte";
+  import Seasonal from "./Seasonal.svelte";
   import Gallery from "./Gallery.svelte";
   import Hidden from "./Hidden.svelte";
   import { Button, Modal } from "carbon-components-svelte";
@@ -87,6 +89,8 @@
                   <Related {key} field={schema[key]} bind:data />
                 {:else if schema[key].type === "select"}
                   <Select {key} field={schema[key]} bind:data />
+                {:else if schema[key].type === "daterange"}
+                  <DateRange {key} field={schema[key]} bind:data />
                 {:else if schema[key].type === "switch"}
                   <Switch {key} field={schema[key]} bind:data />
                 {:else if schema[key].type === "image"}
@@ -99,6 +103,8 @@
                   <Link {key} field={schema[key]} bind:data />
                 {:else if schema[key].type === "json"}
                   <Json {key} field={schema[key]} bind:data />
+                {:else if schema[key].type === "seasonal"}
+                  <Seasonal {key} field={schema[key]} bind:data />
                 {:else if schema[key].type === "gallery"}
                   <Gallery {key} {fetch} bind:data />
                 {:else if schema[key].type === "hidden"}
@@ -113,7 +119,7 @@
       </div>
     {/each}
   {/if}
-  <footer class="flex p-4  bg-gray-50">
+  <footer class="flex p-4 bg-gray-50">
     <div class="flex-1">
       <div class="flex">
         {#if fetch.id !== "add"}
@@ -133,24 +139,24 @@
               >
             </span>
           </Button>
-        {/if}
-        {#if duplicate}
-          <Button kind="ghost" on:click={() => (modalDuplicate = true)}>
-            <span class="hidden md:inline-block">Duplicate</span>
-            <span class="inline-block md:hidden">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                width="24"
-                height="24"
-                class="w-5 h-5"
-                fill="currentColor"
-                ><path fill="none" d="M0 0h24v24H0z" /><path
-                  d="M7 6V3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-3v3c0 .552-.45 1-1.007 1H4.007A1.001 1.001 0 0 1 3 21l.003-14c0-.552.45-1 1.006-1H7zM5.002 8L5 20h10V8H5.002zM9 6h8v10h2V4H9v2zm-2 5h6v2H7v-2zm0 4h6v2H7v-2z"
-                /></svg
-              >
-            </span>
-          </Button>
+          {#if duplicate}
+            <Button kind="ghost" on:click={() => (modalDuplicate = true)}>
+              <span class="hidden md:inline-block">Duplicate</span>
+              <span class="inline-block md:hidden">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+                  class="w-5 h-5"
+                  fill="currentColor"
+                  ><path fill="none" d="M0 0h24v24H0z" /><path
+                    d="M7 6V3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-3v3c0 .552-.45 1-1.007 1H4.007A1.001 1.001 0 0 1 3 21l.003-14c0-.552.45-1 1.006-1H7zM5.002 8L5 20h10V8H5.002zM9 6h8v10h2V4H9v2zm-2 5h6v2H7v-2zm0 4h6v2H7v-2z"
+                  /></svg
+                >
+              </span>
+            </Button>
+          {/if}
         {/if}
       </div>
     </div>

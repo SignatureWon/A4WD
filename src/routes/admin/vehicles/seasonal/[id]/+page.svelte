@@ -1,4 +1,100 @@
 <script>
+  import { onMount } from "svelte";
+  import { page } from "$app/stores";
+  import Feedback from "$lib/components/Feedback.svelte";
+  import Title from "$lib/admin/Title.svelte";
+  import Form from "$lib/admin/input/Form.svelte";
+  import { Tab, TabContent, Tabs } from "carbon-components-svelte";
+  import { db } from "$lib/db";
+  import { rates } from "$lib/schema/rates";
+
+  const title = "Seasonal";
+  let fetch = {
+    from: "rates",
+    select: "*",
+    id: $page.params.id,
+    url: $page.url.pathname,
+    parent: $page.url.pathname.replace(`/${$page.params.id}`, ""),
+  };
+
+  // set default
+  rates.type.default = "seasonal"
+
+  let data = db.default(rates);
+
+  onMount(async () => {
+    if (fetch.id !== "add") {
+      data = await db.one(fetch);
+      rates.fees.type = "seasonal"
+      rates.fees.related = data.suppliers
+    }
+  });
+
+  $: fetch = {
+    from: "rates",
+    select: "*",
+    id: $page.params.id,
+    url: $page.url.pathname,
+    parent: $page.url.pathname.replace(`/${$page.params.id}`, ""),
+  };
+</script>
+<Feedback {data} />
+
+<Title {title} {data} />
+<Tabs autoWidth class="border-b border-gray-200">
+  <Tab label="General" />
+  {#if fetch.id !== "add"}
+    <Tab label="Rates" />
+  {/if}
+  <svelte:fragment slot="content">
+    <TabContent>
+      <Form
+        structure={{
+          name: "",
+          sections: [
+            {
+              name: "Info",
+              fields: ["name", "suppliers", "date_start", "calendar"],
+            },
+            {
+              name: "Driver",
+              fields: ["license", "age"],
+            },
+            {
+              name: "Factors",
+              fields: ["nett", "gross", "type"],
+            },
+          ],
+        }}
+        {fetch}
+        bind:data
+        schema={rates}
+        duplicate={true}
+      />
+    </TabContent>
+    {#if fetch.id !== "add"}
+      <TabContent>
+        <Form
+          structure={{
+            name: "",
+            sections: [
+              {
+                name: "",
+                fields: ["fees"],
+              },
+            ],
+          }}
+          {fetch}
+          bind:data
+          schema={rates}
+          duplicate={true}
+        />
+      </TabContent>
+    {/if}
+  </svelte:fragment>
+</Tabs>
+
+<!-- <script>
   import PageHeader from "$lib/components/PageHeader.svelte";
   import Form from "$lib/components/Form.svelte";
   import InputSeasonal from "$lib/components/InputSeasonal.svelte";
@@ -144,4 +240,4 @@
       </TabContent>
     {/if}
   </svelte:fragment>
-</Tabs>
+</Tabs> -->

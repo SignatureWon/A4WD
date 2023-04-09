@@ -4,35 +4,36 @@
   import customParseFormat from "dayjs/plugin/customParseFormat";
   dayjs.extend(customParseFormat);
 
+  export let key = "";
   export let field = {};
-  export let record = {};
+  export let data = {};
 
-  // if (!record[field.name]) {
-  //   record[field.name] = dayjs();
-  // }
-  // if (!record[field.name2]) {
-  //   record[field.name2] = dayjs();
-  // }
+  const key2 = {
+    date_start: "date_end"
+  }
+  const label2 = {
+    date_start: "End Date"
+  }
 </script>
 
 <DatePicker
   datePickerType="range"
   dateFormat="d/m/Y"
   on:change={(e) => {
-    record[field.name] = dayjs(e.detail.selectedDates[0]);
-    record[field.name2] = dayjs(e.detail.selectedDates[1]);
+    data[key] = dayjs(e.detail.selectedDates[0]);
+    data[key2[key]] = dayjs(e.detail.selectedDates[1]);
   }}
-  valueFrom={dayjs(record[field.name]).format("DD/MM/YYYY")}
-  valueTo={dayjs(record[field.name2]).format("DD/MM/YYYY")}
+  valueFrom={dayjs(data[key]).format("DD/MM/YYYY")}
+  valueTo={dayjs(data[key2[key]]).format("DD/MM/YYYY")}
 >
   <DatePickerInput
     labelText={field.label}
-    name={field.name}
+    name={key}
     placeholder="dd/mm/yyyy"
   />
   <DatePickerInput
-    labelText={field.label2}
-    name={field.name2}
+    labelText={label2[key]}
+    name={key2[key]}
     placeholder="dd/mm/yyyy"
   />
 </DatePicker>

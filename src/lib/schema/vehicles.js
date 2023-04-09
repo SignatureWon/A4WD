@@ -26,7 +26,7 @@ export const vehicles = {
     default: null,
     required: false,
     related: "suppliers",
-    options: false,
+    options: [],
     half: false,
   },
   status: {

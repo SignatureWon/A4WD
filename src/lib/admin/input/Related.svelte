@@ -14,7 +14,7 @@
   required={field.required || false}
 >
   <SelectItem value="" text="Select {field.label}" />
-  {#await db.all({ from: field.related, select: "id, name" }) then related}
+  {#await db.all({ from: field.related, select: "id, name",  eq: field.options}) then related}
     {#each related as option}
       <SelectItem value={option.id} text={option.name} />
     {/each}
