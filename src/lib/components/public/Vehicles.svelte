@@ -14,7 +14,23 @@
   export let record2 = [];
 
   onMount(() => {
-    new Splide(".carousel-vehicles", {
+    new Splide(".carousel-2wd", {
+      type: "loop",
+      drag: true,
+      autoplay: true,
+      interval: 5000,
+      pagination: false,
+      perPage: 4,
+      breakpoints: {
+        640: {
+          perPage: 2,
+        },
+        1024: {
+          perPage: 3,
+        },
+      },
+    }).mount();
+    new Splide(".carousel-4wd", {
       type: "loop",
       drag: true,
       autoplay: true,
@@ -53,7 +69,7 @@
     </div>
     <div class="rounded bg-white p-4">
       <div class="mb-4 font-bold text-center">4WD Vehicles</div>
-      <section class="splide carousel-vehicles">
+      <section class="splide carousel-4wd">
         <div class="splide__track">
           <ul class="splide__list">
             {#each record4 as item, itemIndex}
@@ -83,7 +99,7 @@
     </div>
     <div class="rounded bg-white p-4">
       <div class="mb-4 font-bold text-center">2WD Vehicles</div>
-      <section class="splide carousel-vehicles">
+      <section class="splide carousel-2wd">
         <div class="splide__track">
           <ul class="splide__list">
             {#each record2 as item, itemIndex}

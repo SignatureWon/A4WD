@@ -51,7 +51,7 @@
     {data.site.hotline}
   </div>
 </section>
-<header id="header" class="flex justify-between p-5">
+<header id="header" class="flex justify-between p-5 bg-white">
   <div>
     <a href="/">
       <img
