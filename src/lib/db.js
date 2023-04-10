@@ -17,14 +17,15 @@ const removeEmptyForeignKeys = (data) => {
   // }
 };
 const slugifyName = (fetch, data) => {
-  if (["contents", "vehicles"].includes(fetch.table)) {
+  if (["contents", "vehicles"].includes(fetch.from)) {
+    console.log("SLUGG", data)
     data.slug = data.name
       .toLowerCase()
       .trim()
       .replace(/[^\w\s-]/g, "")
       .replace(/[\s_-]+/g, "-")
       .replace(/^-+|-+$/g, "");
-  }
+    }
 };
 const sanitize = (data) => {
   [
