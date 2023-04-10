@@ -54,6 +54,11 @@
             type: "image",
             bucket: "contents",
           },
+          {
+            name: "caption",
+            label: "Image Caption",
+            type: "text",
+          },
         ],
       },
       {

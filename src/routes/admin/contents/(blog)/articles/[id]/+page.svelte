@@ -51,6 +51,11 @@
             bucket: "contents",
           },
           {
+            name: "caption",
+            label: "Image Caption",
+            type: "text",
+          },
+          {
             name: "type",
             type: "hidden",
             default: "articles",

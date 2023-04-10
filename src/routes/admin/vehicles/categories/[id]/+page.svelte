@@ -20,6 +20,11 @@
             type: "textarea",
           },
           {
+            name: "rank",
+            label: "Rank",
+            type: "number",
+          },
+          {
             name: "type",
             default: "vehicles",
             type: "hidden",
