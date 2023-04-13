@@ -3,22 +3,7 @@
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
 
-  export let filters = [
-    {
-      key: "wheel",
-      label: "Type",
-      options: [
-        {
-          key: "4WD",
-          label: "4WD",
-        },
-        {
-          key: "2WD",
-          label: "2WD",
-        },
-      ],
-    },
-  ];
+  export let filters = [];
 
   let url = $page.url;
   let searchParams = {};

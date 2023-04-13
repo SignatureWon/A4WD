@@ -127,24 +127,24 @@ export const db = {
       .eq("id", fetch.id)
       .single();
 
-    if ("image" in selected) {
-      let file = selected["image"];
-      if (file !== null || file !== "") {
-        const { data, error } = await supabase.storage
-          .from("contents")
-          .remove([file, `thumb-${file}`]);
-      }
-    }
+    // if ("image" in selected) {
+    //   let file = selected["image"];
+    //   if (file !== null || file !== "") {
+    //     const { data, error } = await supabase.storage
+    //       .from("contents")
+    //       .remove([file, `thumb-${file}`]);
+    //   }
+    // }
 
-    ["images", "gallery"].forEach((key) => {
-      if (key in selected) {
-        selected[key].forEach(async (item) => {
-          const { data, error } = await supabase.storage
-            .from("gallery")
-            .remove([item.name, `thumb-${item.name}`]);
-        });
-      }
-    });
+    // ["images", "gallery"].forEach((key) => {
+    //   if (key in selected) {
+    //     selected[key].forEach(async (item) => {
+    //       const { data, error } = await supabase.storage
+    //         .from("gallery")
+    //         .remove([item.name, `thumb-${item.name}`]);
+    //     });
+    //   }
+    // });
 
     const { error } = await supabase
       .from(fetch.from)

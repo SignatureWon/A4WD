@@ -11,7 +11,24 @@
 <PageHeader>
   <ListTitle type="vehicles" />
 </PageHeader>
-<ListFilter />
+<ListFilter
+  filters={[
+    {
+      key: "wheel",
+      label: "Type",
+      options: [
+        {
+          key: "4WD",
+          label: "4WD",
+        },
+        {
+          key: "2WD",
+          label: "2WD",
+        },
+      ],
+    },
+  ]}
+/>
 <List
   bind:records
   fetch={{

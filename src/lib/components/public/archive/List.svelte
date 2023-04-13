@@ -25,6 +25,12 @@
       .select(fetch.select, { count: "exact" })
       .eq("status", true);
 
+    if (fetch.eq) {
+      fetch.eq.forEach((col) => {
+        query = query.eq(col.name, col.value);
+      });
+    }
+
     ["type", "wheel", "categories"].forEach((key) => {
       if (key in searchParams) {
         query = query.eq(key, searchParams[key]);
