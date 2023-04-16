@@ -13,6 +13,7 @@
   import RichText from "./RichText.svelte";
   import Link from "./Link.svelte";
   import DateRange from "./DateRange.svelte";
+  import Date from "./Date.svelte";
   import Json from "./Json.svelte";
   import Seasonal from "./Seasonal.svelte";
   import Gallery from "./Gallery.svelte";
@@ -89,6 +90,8 @@
                   <Related {key} field={schema[key]} bind:data />
                 {:else if schema[key].type === "select"}
                   <Select {key} field={schema[key]} bind:data />
+                {:else if schema[key].type === "date"}
+                  <Date {key} field={schema[key]} bind:data />
                 {:else if schema[key].type === "daterange"}
                   <DateRange {key} field={schema[key]} bind:data />
                 {:else if schema[key].type === "switch"}

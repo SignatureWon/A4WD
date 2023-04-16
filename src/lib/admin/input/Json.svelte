@@ -1,5 +1,11 @@
 <script>
-  import { Button, TextArea, TextInput } from "carbon-components-svelte";
+  import {
+    Button,
+    Select,
+    SelectItem,
+    TextArea,
+    TextInput,
+  } from "carbon-components-svelte";
 
   export let key = "";
   export let field = {};
@@ -28,7 +34,7 @@
 </script>
 
 <div class="bg-white">
-  {#if data[key].length === 0}
+  {#if !data[key]}
     <div class="px-4 py-20 text-center">
       <div class="pb-4">No records yet</div>
     </div>
@@ -56,6 +62,18 @@
                         bind:value={row[inputField.key]}
                         required={inputField.required}
                       />
+                    {:else if inputField.type === "select"}
+                      <Select
+                        labelText={inputField.label}
+                        name={inputField.name}
+                        bind:selected={row[inputField.key]}
+                        required={inputField.required}
+                      >
+                        <SelectItem value="" text="Select {inputField.label}" />
+                        {#each inputField.options as option}
+                          <SelectItem value={option.id} text={option.name} />
+                        {/each}
+                      </Select>
                     {:else}
                       <TextInput
                         labelText={inputField.label}

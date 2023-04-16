@@ -18,7 +18,7 @@ const removeEmptyForeignKeys = (data) => {
 };
 const slugifyName = (fetch, data) => {
   if (["contents", "vehicles"].includes(fetch.from)) {
-    console.log("SLUGG", data)
+    // console.log("SLUGG", data)
     data.slug = data.name
       .toLowerCase()
       .trim()
@@ -72,6 +72,16 @@ export const db = {
     if (fetch.eq) {
       fetch.eq.forEach((col) => {
         query = query.eq(col.name, col.value);
+      });
+    }
+    if (fetch.in) {
+      fetch.in.forEach((col) => {
+        query = query.in(col.name, col.value);
+      });
+    }
+    if (fetch.order) {
+      fetch.order.forEach((col) => {
+        query = query.order(col.name, { ascending: col.ascend });
       });
     }
 

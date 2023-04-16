@@ -28,7 +28,7 @@
   orders={[
     {
       column: "rank",
-      ascend: false
+      ascend: true
     }
   ]}
   {headers}

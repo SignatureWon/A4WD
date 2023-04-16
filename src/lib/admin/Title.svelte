@@ -46,7 +46,7 @@
         href={item.link}
         class="capitalize inline text-xs [&>a]:text-sm"
       >
-        {item.label}
+        {item.label.replace("_", " ")}
       </BreadcrumbItem>
     {/each}
   </Breadcrumb>
@@ -54,7 +54,7 @@
       {#if id === "add"}
         Add {title}
       {:else}
-        {data.name}
+        {data.name || data.reference}
       {/if}
   </h2>
 </div>
