@@ -23,7 +23,6 @@
   onMount(async () => {
     if (fetch.id !== "add") {
       data = await db.one(fetch);
-      console.log(data);
     }
   });
 

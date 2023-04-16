@@ -8,6 +8,7 @@
   import Related from "./Related.svelte";
   import Select from "./Select.svelte";
   import Switch from "./Switch.svelte";
+  import Many from "./Many.svelte";
   import Image from "./Image.svelte";
   import File from "./File.svelte";
   import RichText from "./RichText.svelte";
@@ -55,12 +56,20 @@
     data = await db.duplicate(fetch, data);
     modalDuplicate = false;
     if (!data.error) {
-      goto(`${fetch.parent}/${data.id}`);
+      setTimeout(() => {
+        goto(`${fetch.parent}/${data.id}`);
+      }, 500);
     }
   };
 </script>
 
-<form class="bg-white" on:submit={() => handleSubmit()}>
+<form
+  class="bg-white"
+  on:submit={(e) => {
+    e.preventDefault();
+    handleSubmit();
+  }}
+>
   {#if structure}
     {#if structure.name !== ""}
       <h3 class="font-medium text-lg p-4 border-b border-gray-200 bg-gray-50">
@@ -83,13 +92,15 @@
             {#each section.fields as key}
               <div class={schema[key].half ? "col-span-1" : "col-span-2"}>
                 {#if schema[key].type === "textarea"}
-                  <TextArea {key} field={schema[key]} bind:data />
+                  <TextArea field={schema[key]} bind:data />
                 {:else if schema[key].type === "number"}
                   <Number {key} field={schema[key]} bind:data />
                 {:else if schema[key].type === "related"}
                   <Related {key} field={schema[key]} bind:data />
                 {:else if schema[key].type === "select"}
                   <Select {key} field={schema[key]} bind:data />
+                {:else if schema[key].type === "many"}
+                  <Many {key} field={schema[key]} bind:data />
                 {:else if schema[key].type === "date"}
                   <Date {key} field={schema[key]} bind:data />
                 {:else if schema[key].type === "daterange"}

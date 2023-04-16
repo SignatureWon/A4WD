@@ -1,4 +1,72 @@
 <script>
+  import { onMount } from "svelte";
+  import { page } from "$app/stores";
+  import Feedback from "$lib/components/Feedback.svelte";
+  import Title from "$lib/admin/Title.svelte";
+  import Form from "$lib/admin/input/Form.svelte";
+  // import ManyToMany from "$lib/admin/input/ManyToMany.svelte";
+  // import { Tab, TabContent, Tabs } from "carbon-components-svelte";
+  import { db } from "$lib/db";
+  import { fees } from "$lib/schema/fees";
+
+  const title = "Vehicle";
+  let fetch = {
+    from: "fees",
+    select: "*",
+    id: $page.params.id,
+    url: $page.url.pathname,
+    parent: $page.url.pathname.replace(`/${$page.params.id}`, ""),
+  };
+  let data = {};
+
+  onMount(async () => {
+    data = db.default(fees);
+    if (fetch.id !== "add") {
+      data = await db.one(fetch);
+    }
+  });
+
+  $: {
+    fetch = {
+    from: "fees",
+    select: "*",
+    id: $page.params.id,
+    url: $page.url.pathname,
+    parent: $page.url.pathname.replace(`/${$page.params.id}`, ""),
+  };
+  
+}
+</script>
+
+<Feedback {data} />
+
+<Title {title} {data} />
+
+<Form
+  structure={{
+    name: "",
+    sections: [
+      {
+        name: "Info",
+        fields: ["name", "description", "date_start"],
+      },
+      {
+        name: "Criteria",
+        fields: ["all_vehicles", "all_depots", "all_suppliers"],
+      },
+      {
+        name: "Charge on",
+        fields: ["pickup", "dropoff", "return"],
+      },
+    ],
+  }}
+  {fetch}
+  bind:data
+  schema={fees}
+  duplicate={true}
+/>
+
+<!-- <script>
   import PageHeader from "$lib/components/PageHeader.svelte";
   import Form from "$lib/components/Form.svelte";
   const form = {
@@ -100,4 +168,4 @@
 </script>
 
 <PageHeader name="Fee" table="fees" />
-<Form {form} table="fees" />
+<Form {form} table="fees" /> -->

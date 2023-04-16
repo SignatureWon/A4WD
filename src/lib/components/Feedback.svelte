@@ -1,4 +1,5 @@
 <script>
+  import { goto } from "$app/navigation";
   import {
     InlineNotification,
     NotificationActionButton,
@@ -23,7 +24,14 @@
       class="mx-auto"
     >
       <svelte:fragment slot="actions">
-        <NotificationActionButton href={backUrl} class="!py-1.5">
+        <NotificationActionButton
+          class="!py-1.5"
+          on:click={(e) => {
+            setTimeout(() => {
+              goto(backUrl);
+            }, 500);
+          }}
+        >
           Back
         </NotificationActionButton>
       </svelte:fragment>
@@ -33,32 +41,32 @@
   <ToastNotification
     lowContrast
     kind="success"
-    title="Created successfully"
-    timeout={3000}
+    title="Created"
+    timeout={2000}
     class="fixed top-1 right-1 z-[9999]"
   />
 {:else if data.updated}
   <ToastNotification
     lowContrast
     kind="success"
-    title="Updated successfully"
-    timeout={3000}
+    title="Updated"
+    timeout={2000}
     class="fixed top-1 right-1 z-[9999]"
   />
 {:else if data.deleted}
   <ToastNotification
     lowContrast
     kind="success"
-    title="Deleted successfully"
-    timeout={3000}
+    title="Deleted"
+    timeout={2000}
     class="fixed top-1 right-1 z-[9999]"
   />
 {:else if data.duplicated}
   <ToastNotification
     lowContrast
     kind="success"
-    title="Duplicated successfully"
-    timeout={3000}
+    title="Duplicated"
+    timeout={2000}
     class="fixed top-1 right-1 z-[9999]"
   />
 {/if}

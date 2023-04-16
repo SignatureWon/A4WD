@@ -25,7 +25,7 @@ const slugifyName = (fetch, data) => {
       .replace(/[^\w\s-]/g, "")
       .replace(/[\s_-]+/g, "-")
       .replace(/^-+|-+$/g, "");
-    }
+  }
 };
 const sanitize = (data) => {
   [
@@ -34,7 +34,7 @@ const sanitize = (data) => {
     "updated",
     "error",
     "duplicated",
-    "id",
+    // "id",
     "created_at",
     "updated_at",
   ].forEach((key) => {
@@ -131,11 +131,11 @@ export const db = {
 
   delete: async (fetch, data) => {
     // check uploaded images
-    const { data: selected } = await supabase
-      .from(fetch.from)
-      .select()
-      .eq("id", fetch.id)
-      .single();
+    // const { data: selected } = await supabase
+    //   .from(fetch.from)
+    //   .select()
+    //   .eq("id", fetch.id)
+    //   .single();
 
     // if ("image" in selected) {
     //   let file = selected["image"];
@@ -170,6 +170,9 @@ export const db = {
   },
 
   duplicate: async (fetch, data) => {
+    const sourceId = data.id;
+    delete data.id;
+
     data.name += " Copy";
     sanitize(data);
     removeEmptyForeignKeys(data);
@@ -185,6 +188,24 @@ export const db = {
       error.error = true;
       return error;
     }
+
+    ["all_depots", "all_suppliers", "all_vehicles", "all_categories"].forEach(
+      async (key) => {
+        if (key in data) {
+          const manyTable = `${fetch.from}_${key.replace("all_", "")}`;
+          const { data: manyData } = await supabase
+            .from(manyTable)
+            .select()
+            .eq(fetch.from, sourceId);
+          let newItem = [];
+          manyData.forEach(async (item) => {
+            item[fetch.from] = inserted.id;
+            newItem.push(item);
+          });
+          await supabase.from(manyTable).insert(newItem);
+        }
+      }
+    );
 
     inserted.duplicated = true;
     return inserted;
