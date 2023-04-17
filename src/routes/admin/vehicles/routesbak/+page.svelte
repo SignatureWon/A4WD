@@ -8,11 +8,11 @@
     },
     {
       key: "date_start",
-      value: "Start Date",
+      value: "Date start",
     },
     {
       key: "date_end",
-      value: "End Date",
+      value: "Date end",
     },
   ];
 </script>

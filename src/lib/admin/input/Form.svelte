@@ -32,8 +32,6 @@
   let modalDelete = false;
   let modalDuplicate = false;
 
-  console.log(fetch);
-
   const handleSubmit = async () => {
     if (fetch.id === "add") {
       data = await db.insert(fetch, data);

@@ -8,11 +8,11 @@
     },
     {
       key: "date_start",
-      value: "Date start",
+      value: "Start Date",
     },
     {
       key: "date_end",
-      value: "Date end",
+      value: "End Date",
     },
   ];
 </script>
@@ -20,5 +20,12 @@
 <PageHeader name="Routes" table="routes" />
 <Table
   table="routes"
+  filters={[
+    {
+      type: "eq",
+      column: "status",
+      value: true,
+    },
+  ]}
   {headers}
 />

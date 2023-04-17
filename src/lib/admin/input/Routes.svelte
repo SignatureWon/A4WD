@@ -11,16 +11,14 @@
 
   //   export let key = "";
   //   export let field = {};
-  export let data = {
-    routes: [],
-  };
+  export let data = {};
 
   let open = false;
 
   const genRoutes = async () => {
     const dataDepots = await db.all({
       from: "routes_depots",
-      select: "routes, depots, depots (name, code)",
+      select: "routes, depots (id, code, name)",
       eq: [
         {
           name: "routes",
@@ -30,13 +28,16 @@
     });
 
     let newRoutes = [];
+    if (!data.routes) {
+      data.routes = []
+    }
 
     dataDepots.forEach((pickup) => {
       dataDepots.forEach((dropoff) => {
         newRoutes.push({
           code: `${pickup.depots.code}-${dropoff.depots.code}`,
-          from: pickup.depots.name,
-          to: dropoff.depots.name,
+          from: pickup.depots,
+          to: dropoff.depots,
           days: 0,
           fee: 0,
           active: true,
@@ -111,7 +112,7 @@
           <div class="md:flex flex-1">
             <div class="flex-1 flex px-2 pb-4">
               <div class="py-2">
-                {item.from}
+                {item.from.name}
               </div>
               <div class="text-gray-400 px-2 pt-3">
                 <svg
@@ -127,7 +128,7 @@
                 >
               </div>
               <div class="py-2">
-                {item.to}
+                {item.to.name}
               </div>
             </div>
             <div class="flex">

@@ -15,6 +15,7 @@
 
   let selections = [];
   let selected = [];
+  let selectAll = [];
   let manyTable = "";
   let table = [];
 
@@ -39,11 +40,13 @@
         ],
       });
       selections = [];
+      selectAll = [];
       dataSelections.forEach((item) => {
         selections.push({
           id: item.id,
           text: item.name,
         });
+        selectAll.push(item.id);
       });
 
       const dataSelected = await db.all({
@@ -86,6 +89,25 @@
       newData[key] = e.detail.toggled;
       data.updated = false;
       await db.update(fetch, newData);
+
+      if (e.detail.toggled) {
+        selectAll.forEach(async (item) => {
+          if (!selected.includes(item)) {
+            data.updated = false;
+            let fetch = {
+              from: manyTable,
+            };
+            let newData = {};
+
+            newData[table[0]] = data.id;
+            newData[table[1]] = item;
+
+            await db.insert(fetch, newData);
+            selected.push(item)
+            data.updated = true;
+          }
+        });
+      }
       data.updated = true;
     }}
   />
@@ -112,7 +134,7 @@
             }
           });
           e.detail.unselected.forEach(async (item) => {
-            if (selected.includes(item.id)) {
+            if (selected.includes(item.id)) {              
               data.updated = false;
               await supabase
                 .from(manyTable)
