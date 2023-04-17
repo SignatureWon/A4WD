@@ -291,7 +291,7 @@
     count_adults: 0,
     count_children: 0,
     guests: [],
-    type: "quotations"
+    type: "quotations",
   };
 
   const dateKey = ["arrival_date", "pickup_date", "dropoff_date"];
@@ -516,12 +516,12 @@
         <div class="md:col-span-2">
           <div class="max-w-md">
             <div class="flex-1 grid grid-cols-1 gap-6">
-              <div>
+              <!-- <div>
                 <TextInput
                   labelText="Quote No."
                   bind:value={record.reference}
                 />
-              </div>
+              </div> -->
               <div>
                 <Select labelText="Title" bind:selected={record.title}>
                   <SelectItem value="" text="Select title" />
@@ -598,72 +598,12 @@
         class="grid md:grid-cols-3 gap-10 p-5 py-8 border-b border-gray-200"
       >
         <div>
-          <h3 class="font-bold mb-4">Arrival Information</h3>
-        </div>
-        <div class="md:col-span-2">
-          <div class="max-w-md">
-            <div class="flex-1 grid grid-cols-1 gap-6">
-              <div>
-                <Select
-                  labelText="Means of Travel"
-                  bind:selected={record.arrival_by}
-                >
-                  <SelectItem value="Not specified" text="Not specified" />
-                  <SelectItem value="Arriving by air" text="Arriving by air" />
-                  <SelectItem value="Arriving by bus" text="Arriving by bus" />
-                  <SelectItem
-                    value="Arriving by rail / train"
-                    text="Arriving by rail / train"
-                  />
-                  <SelectItem value="Driving" text="Driving" />
-                </Select>
-              </div>
-              <div>
-                <Select
-                  labelText="Flexibility"
-                  bind:selected={record.flexibility}
-                >
-                  <SelectItem value="Not flexible" text="Not flexible" />
-                  <SelectItem value="1 day" text="1 day" />
-                  <SelectItem value="2 days" text="2 days" />
-                  <SelectItem value="3 days" text="3 days" />
-                  <SelectItem value="4 - 6 days" text="4 - 6 days" />
-                  <SelectItem value="1 week or more" text="1 week or more" />
-                </Select>
-              </div>
-              <div>
-                <DatePicker
-                  dateFormat="d/m/Y"
-                  datePickerType="single"
-                  bind:value={record.arrival_date}
-                >
-                  <DatePickerInput
-                    labelText="Arrival Date"
-                    bind:value={record.arrival_date}
-                  />
-                </DatePicker>
-              </div>
-              <div>
-                <TextArea
-                  labelText="Flight Arrival Details"
-                  bind:value={record.arrival_flight}
-                  helperText="Please indicate your flight number and arrival time if you are hiring a car"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      <section
-        class="grid md:grid-cols-3 gap-10 p-5 py-8 border-b border-gray-200"
-      >
-        <div>
           <h3 class="font-bold mb-4">Vehicle Information</h3>
         </div>
         <div class="md:col-span-2">
           <div class="max-w-md">
             <div class="flex-1 grid grid-cols-1 gap-6">
-              <div>
+              <!-- <div>
                 <Select
                   labelText="Search Options"
                   bind:selected={searchOptions}
@@ -674,39 +614,39 @@
                     text="Choose vehicle by supplier"
                   />
                 </Select>
+              </div> -->
+              <!-- {#if searchOptions === "type"} -->
+              <div>
+                <Select
+                  labelText="Vehicle Category"
+                  bind:selected={record.categories}
+                >
+                  <SelectItem value="" text="Select a category" />
+                  {#each categories as cat}
+                    <SelectItem value={cat.id} text={cat.name} />
+                  {/each}
+                </Select>
               </div>
-              {#if searchOptions === "type"}
-                <div>
-                  <Select
-                    labelText="Vehicle Category"
-                    bind:selected={record.categories}
-                  >
-                    <SelectItem value="" text="Select a category" />
-                    {#each categories as cat}
-                      <SelectItem value={cat.id} text={cat.name} />
-                    {/each}
-                  </Select>
-                </div>
-                <div>
-                  <Select
-                    labelText="Name of Vehicle"
-                    bind:selected={record.vehicles}
-                  >
-                    <SelectItem value="" text="Select a vehicle" />
-                    {#each vehicles as veh}
-                      <SelectItem
-                        value={veh.id}
-                        text={veh.name}
-                        class={getIdArray(veh.categories).includes(
-                          record.categories
-                        )
-                          ? "block"
-                          : "hidden"}
-                      />
-                    {/each}
-                  </Select>
-                </div>
-              {:else}
+              <div>
+                <Select
+                  labelText="Name of Vehicle"
+                  bind:selected={record.vehicles}
+                >
+                  <SelectItem value="" text="Select a vehicle" />
+                  {#each vehicles as veh}
+                    <SelectItem
+                      value={veh.id}
+                      text={veh.name}
+                      class={getIdArray(veh.categories).includes(
+                        record.categories
+                      )
+                        ? "block"
+                        : "hidden"}
+                    />
+                  {/each}
+                </Select>
+              </div>
+              <!-- {:else}
                 <div>
                   <Select
                     labelText="Vehicle Supplier"
@@ -735,7 +675,7 @@
                     {/each}
                   </Select>
                 </div>
-              {/if}
+              {/if} -->
             </div>
           </div>
         </div>
@@ -763,14 +703,15 @@
                 </Select>
               </div>
               <div>
-                <Select labelText="Driver's Age" bind:selected={record.ages}>
+                <TextInput labelText="Driver's Age" bind:value={record.ages} />
+                <!-- <Select labelText="Driver's Age" bind:selected={record.ages}>
                   <SelectItem value="" text="Select age" />
                   {#each constants as con}
                     {#if con.type === "ages"}
                       <SelectItem value={con.id} text={con.name} />
                     {/if}
                   {/each}
-                </Select>
+                </Select> -->
               </div>
             </div>
           </div>
@@ -838,7 +779,7 @@
               </div>
               <div>
                 <Select
-                  labelText="Children (< 12 years)"
+                  labelText="Children (8 and under)"
                   bind:selected={record.count_children}
                   on:change={(e) => {
                     record.guests = genGuests();
@@ -848,6 +789,66 @@
                     <SelectItem value={no} text={no} />
                   {/each}
                 </Select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section
+        class="grid md:grid-cols-3 gap-10 p-5 py-8 border-b border-gray-200"
+      >
+        <div>
+          <h3 class="font-bold mb-4">Arrival Information</h3>
+        </div>
+        <div class="md:col-span-2">
+          <div class="max-w-md">
+            <div class="flex-1 grid grid-cols-1 gap-6">
+              <div>
+                <Select
+                  labelText="Means of Travel"
+                  bind:selected={record.arrival_by}
+                >
+                  <SelectItem value="Not specified" text="Not specified" />
+                  <SelectItem value="Arriving by air" text="Arriving by air" />
+                  <SelectItem value="Arriving by bus" text="Arriving by bus" />
+                  <SelectItem
+                    value="Arriving by rail / train"
+                    text="Arriving by rail / train"
+                  />
+                  <SelectItem value="Driving" text="Driving" />
+                </Select>
+              </div>
+              <div>
+                <Select
+                  labelText="Flexibility"
+                  bind:selected={record.flexibility}
+                >
+                  <SelectItem value="Not flexible" text="Not flexible" />
+                  <SelectItem value="1 day" text="1 day" />
+                  <SelectItem value="2 days" text="2 days" />
+                  <SelectItem value="3 days" text="3 days" />
+                  <SelectItem value="4 - 6 days" text="4 - 6 days" />
+                  <SelectItem value="1 week or more" text="1 week or more" />
+                </Select>
+              </div>
+              <div>
+                <DatePicker
+                  dateFormat="d/m/Y"
+                  datePickerType="single"
+                  bind:value={record.arrival_date}
+                >
+                  <DatePickerInput
+                    labelText="Arrival Date"
+                    bind:value={record.arrival_date}
+                  />
+                </DatePicker>
+              </div>
+              <div>
+                <TextArea
+                  labelText="Flight Arrival Details"
+                  bind:value={record.arrival_flight}
+                  helperText="Please indicate your flight number and arrival time if you are hiring a car"
+                />
               </div>
             </div>
           </div>

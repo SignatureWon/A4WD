@@ -6,16 +6,19 @@
       key: "name",
       value: "Name",
     },
-    // {
-    //   key: "suppliers.name",
-    //   value: "Suppliers",
-    // },
+    {
+      key: "date_start",
+      value: "Start Date",
+    },
+    {
+      key: "date_end",
+      value: "End Date",
+    },
   ];
 </script>
 
 <PageHeader name="Addons" table="addons" />
 <Table
   table="addons"
-  fields="id, name"
   {headers}
 />

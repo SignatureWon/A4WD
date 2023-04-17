@@ -41,7 +41,7 @@ export const addons = {
     half: false,
   },
   all_vehicles: {
-    label: "vehicles",
+    label: "Vehicles",
     placeholder: "",
     type: "many",
     default: false,

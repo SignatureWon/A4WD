@@ -21,9 +21,9 @@
   ];
 </script>
 
-<PageHeader name="Guests" table="profiles" field="first_name" />
+<PageHeader name="Affiliates" table="profiles" field="first_name" />
 <Table
   table="profiles"
-  filters={[{ type: "eq", column: "role", value: "Guest" }]}
+  filters={[{ type: "eq", column: "role", value: "Affiliate" }]}
   {headers}
 />

@@ -149,7 +149,7 @@
                   <div>
                     <NumberInput
                       label={fee.from === 0
-                        ? "Daily fee"
+                        ? "Nett Daily Rate"
                         : `${fee.from} ${
                             fee.to === 9999 ? "+" : `- ${fee.to} days`
                           }`}

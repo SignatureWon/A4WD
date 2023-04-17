@@ -21,7 +21,7 @@
   ];
 </script>
 
-<PageHeader name="Members" table="profiles" field="first_name" />
+<PageHeader name="Pax Booked" table="profiles" field="first_name" />
 <Table
   table="profiles"
   filters={[{ type: "eq", column: "role", value: "Member" }]}
