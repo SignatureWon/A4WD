@@ -5,11 +5,11 @@
   import Title from "$lib/admin/Title.svelte";
   import Form from "$lib/admin/input/Form.svelte";
   import { db } from "$lib/db";
-  import { fees } from "$lib/schema/fees";
+  import { routes } from "$lib/schema/routes";
 
-  const title = "Fee";
+  const title = "Route";
   let fetch = {
-    from: "fees",
+    from: "routes",
     select: "*",
     id: $page.params.id,
     url: $page.url.pathname,
@@ -18,7 +18,7 @@
   let data = {};
 
   onMount(async () => {
-    data = db.default(fees);
+    data = db.default(routes);
     if (fetch.id !== "add") {
       data = await db.one(fetch);
     }
@@ -26,7 +26,7 @@
 
   $: {
     fetch = {
-    from: "fees",
+    from: "routes",
     select: "*",
     id: $page.params.id,
     url: $page.url.pathname,
@@ -46,20 +46,20 @@
     sections: [
       {
         name: "Info",
-        fields: ["name", "description", "date_start"],
+        fields: ["name", "date_start"],
       },
       {
         name: "Criteria",
-        fields: ["all_vehicles", "all_depots", "all_suppliers"],
+        fields: ["all_depots", "all_suppliers"],
       },
       {
-        name: "Charge on",
-        fields: ["pickup", "dropoff", "return", "fee"],
+        name: "Routes",
+        fields: ["routes"],
       },
     ],
   }}
   {fetch}
   bind:data
-  schema={fees}
+  schema={routes}
   duplicate={true}
 />

@@ -15617,7 +15617,7 @@ screen and (-ms-high-contrast: none) {
 .bx--modal .bx--number input[type=number],
 .bx--modal .bx--date-picker__input,
 .bx--modal .bx--multi-select {
-    background-color: #f4f4f4
+    background-color: #fff;
 }
 
 .bx--modal.is-visible .bx--modal-container {

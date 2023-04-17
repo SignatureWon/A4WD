@@ -100,4 +100,14 @@ export const fees = {
     options: false,
     half: false,
   },
+  fee: {
+    label: "Fee",
+    placeholder: "",
+    type: "number",
+    default: false,
+    required: false,
+    related: false,
+    options: 0.1,
+    half: false,
+  },
 };

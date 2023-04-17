@@ -5,20 +5,21 @@
   import Title from "$lib/admin/Title.svelte";
   import Form from "$lib/admin/input/Form.svelte";
   import { db } from "$lib/db";
-  import { fees } from "$lib/schema/fees";
+  import { addons } from "$lib/schema/addons";
 
-  const title = "Fee";
+  const title = "Addon";
   let fetch = {
-    from: "fees",
+    from: "addons",
     select: "*",
     id: $page.params.id,
     url: $page.url.pathname,
-    parent: $page.url.pathname.replace(`/${$page.params.id}`, ""),
+    parent: $page.url.pathname.slice(0, $page.url.pathname.lastIndexOf(`/${$page.params.id}`))
+    // parent: $page.url.pathname.replace(new RegExp(`/${$page.params.id}` + '$'), ""),
   };
   let data = {};
 
   onMount(async () => {
-    data = db.default(fees);
+    data = db.default(addons);
     if (fetch.id !== "add") {
       data = await db.one(fetch);
     }
@@ -26,11 +27,12 @@
 
   $: {
     fetch = {
-    from: "fees",
+    from: "addons",
     select: "*",
     id: $page.params.id,
     url: $page.url.pathname,
-    parent: $page.url.pathname.replace(`/${$page.params.id}`, ""),
+    parent: $page.url.pathname.slice(0, $page.url.pathname.lastIndexOf(`/${$page.params.id}`))
+    // parent: $page.url.pathname.replace(`/${$page.params.id}`, ""),
   };
   
 }
@@ -46,20 +48,20 @@
     sections: [
       {
         name: "Info",
-        fields: ["name", "description", "date_start"],
+        fields: ["name", "date_start", "link"],
       },
       {
         name: "Criteria",
-        fields: ["all_vehicles", "all_depots", "all_suppliers"],
+        fields: ["all_suppliers", "all_vehicles"],
       },
       {
-        name: "Charge on",
-        fields: ["pickup", "dropoff", "return", "fee"],
+        name: "Addons",
+        fields: ["addons"],
       },
     ],
   }}
   {fetch}
   bind:data
-  schema={fees}
+  schema={addons}
   duplicate={true}
 />

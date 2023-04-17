@@ -16,6 +16,8 @@
   import DateRange from "./DateRange.svelte";
   import Date from "./Date.svelte";
   import Json from "./Json.svelte";
+  import Routes from "./Routes.svelte";
+  import Addons from "./Addons.svelte";
   import Seasonal from "./Seasonal.svelte";
   import Gallery from "./Gallery.svelte";
   import Hidden from "./Hidden.svelte";
@@ -29,6 +31,8 @@
 
   let modalDelete = false;
   let modalDuplicate = false;
+
+  console.log(fetch);
 
   const handleSubmit = async () => {
     if (fetch.id === "add") {
@@ -117,6 +121,10 @@
                   <Link {key} field={schema[key]} bind:data />
                 {:else if schema[key].type === "json"}
                   <Json {key} field={schema[key]} bind:data />
+                {:else if schema[key].type === "routes"}
+                  <Routes bind:data />
+                {:else if schema[key].type === "addons"}
+                  <Addons bind:data />
                 {:else if schema[key].type === "seasonal"}
                   <Seasonal {key} field={schema[key]} bind:data />
                 {:else if schema[key].type === "gallery"}
