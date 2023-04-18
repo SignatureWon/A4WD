@@ -110,7 +110,7 @@
   };
 </script>
 
-<PageHeader name="Packages" table="packages" />
+<PageHeader name="Bond" table="packages" />
 <Tabs autoWidth class="border-b border-gray-200">
   <Tab label="General" />
   {#if id !== "add"}

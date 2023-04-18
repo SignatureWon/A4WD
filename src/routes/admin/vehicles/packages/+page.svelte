@@ -13,7 +13,7 @@
   ];
 </script>
 
-<PageHeader name="Packages" table="packages" />
+<PageHeader name="Bonds" table="packages" />
 <Table
   table="packages"
   fields="id, name, suppliers (name)"
