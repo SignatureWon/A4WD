@@ -223,7 +223,9 @@
       modalDuplicate = false;
       // update++;
       // window.location.href =
-      goto(`${path}/${duplicatedRecord.id}`);
+      setTimeout(() => {
+        goto(`${path}/${duplicatedRecord.id}`);
+      }, 500);
     }
   };
 

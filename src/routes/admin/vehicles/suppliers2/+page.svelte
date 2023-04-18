@@ -6,25 +6,11 @@
       key: "name",
       value: "Name",
     },
-    {
-      key: "status",
-      value: "Status",
-    },
-    {
-      key: "rank",
-      value: "Rank",
-    },
   ];
 </script>
 
 <PageHeader name="Suppliers" table="suppliers" />
 <Table
   table="suppliers"
-  orders={[
-    {
-      column: "rank",
-      ascend: true,
-    },
-  ]}
   {headers}
 />

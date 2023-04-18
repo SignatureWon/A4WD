@@ -28,6 +28,19 @@
             label: "Customer Service Number",
             type: "text",
           },
+          {
+            name: "status",
+            label: "Status",
+            toggle: "Active",
+            type: "switch",
+            size: "half",
+          },
+          {
+            name: "rank",
+            label: "Rank",
+            type: "number",
+            size: "half",
+          },
         ],
       },
     ],
@@ -43,7 +56,7 @@
   {/if}
   <svelte:fragment slot="content">
     <TabContent>
-      <Form {form} table="suppliers" />
+      <Form {form} table="suppliers" duplicate={true} />
     </TabContent>
     {#if id !== "add"}
       <TabContent>

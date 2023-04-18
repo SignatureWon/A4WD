@@ -1,4 +1,5 @@
 <script>
+  import { supabase } from "$lib/supabaseClient";
   import {
     Button,
     Select,
@@ -30,6 +31,27 @@
     let newArr = arr;
     newArr.splice(index, 1);
     return newArr;
+  };
+  let related = {};
+  schema.forEach((item) => {
+    if (item.type === "related") {
+      related[item.related] = {};
+    }
+  });
+  const getRelated = async (related_table) => {
+    if (related[related_table].length > 0) {
+      return related[related_table];
+    } else {
+      const { data, error } = await supabase.from(related_table).select();
+
+      if (data) {
+        related[related_table] = data;
+      }
+      if (error) {
+        console.log(error);
+      }
+      return related[related_table];
+    }
   };
 </script>
 
@@ -73,6 +95,40 @@
                         {#each inputField.options as option}
                           <SelectItem value={option.id} text={option.name} />
                         {/each}
+                      </Select>
+                    {:else if inputField.type === "related"}
+                      <Select
+                        labelText={inputField.label}
+                        name={inputField.name}
+                        bind:selected={row[inputField.key].id}
+                        required={inputField.required}
+                        on:change={(e) => {
+                          if (inputField.related === "depots") {
+                            let selected = related[inputField.related].filter(
+                              function (row) {
+                                return row.id === e.target.value;
+                              }
+                            )[0];
+
+                            row[inputField.key] = {
+                              id: selected.id,
+                              code: selected.code,
+                              label: selected.name,
+                            };
+                          } else {
+                            row[inputField.key] = e.target.value;
+                          }
+                        }}
+                      >
+                        <SelectItem value="" text="Select {inputField.label}" />
+                        {#await getRelated(inputField.related) then related}
+                          {#each related as option}
+                            <SelectItem value={option.id} text={option.name} />
+                          {/each}
+                        {/await}
+                        <!-- {#each inputField.options as option}
+                          <SelectItem value={option.id} text={option.name} />
+                        {/each} -->
                       </Select>
                     {:else}
                       <TextInput
