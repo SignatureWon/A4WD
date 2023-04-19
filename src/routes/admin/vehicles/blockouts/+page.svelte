@@ -14,6 +14,10 @@
       key: "date_end",
       value: "End Date",
     },
+    {
+      key: "status",
+      value: "Status",
+    },
   ];
 </script>
 

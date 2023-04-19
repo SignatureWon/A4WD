@@ -6,9 +6,17 @@
       key: "name",
       value: "Name",
     },
+    // {
+    //   key: "suppliers",
+    //   value: "Suppliers",
+    // },
     {
-      key: "suppliers.name",
-      value: "Suppliers",
+      key: "status",
+      value: "Status",
+    },
+    {
+      key: "rank",
+      value: "Rank",
     },
   ];
 </script>
@@ -16,6 +24,6 @@
 <PageHeader name="Bonds" table="packages" />
 <Table
   table="packages"
-  fields="id, name, suppliers (name)"
+  fields="id, name, status, rank"
   {headers}
 />

@@ -1,4 +1,106 @@
 <script>
+  import { onMount } from "svelte";
+  import { page } from "$app/stores";
+  import Feedback from "$lib/components/Feedback.svelte";
+  import Title from "$lib/admin/Title.svelte";
+  import Form from "$lib/admin/input/Form.svelte";
+  import { db } from "$lib/db";
+  import { packages } from "$lib/schema/packages";
+  import { Tab, TabContent, Tabs } from "carbon-components-svelte";
+
+  const title = "Package";
+  let fetch = {
+    from: "packages",
+    select: "*",
+    id: $page.params.id,
+    url: $page.url.pathname,
+    parent: $page.url.pathname.replace(`/${$page.params.id}`, ""),
+  };
+  let data = {};
+
+  onMount(async () => {
+    data = db.default(packages);
+    if (fetch.id !== "add") {
+      data = await db.one(fetch);
+    }
+  });
+
+  $: {
+    fetch = {
+      from: "packages",
+      select: "*",
+      id: $page.params.id,
+      url: $page.url.pathname,
+      parent: $page.url.pathname.replace(`/${$page.params.id}`, ""),
+    };
+  }
+</script>
+
+<Feedback {data} />
+
+<Title {title} {data} />
+<Tabs autoWidth class="border-b border-gray-200">
+  <Tab label="General" />
+  {#if fetch.id !== "add"}
+    <Tab label="Compulsory" />
+  {/if}
+  <svelte:fragment slot="content">
+    <TabContent>
+      <Form
+        structure={{
+          name: "",
+          sections: [
+            {
+              name: "Info",
+              fields: ["name", "display_name", "code", "date_start"],
+            },
+            {
+              name: "Criteria",
+              fields: ["all_suppliers", "all_vehicles"],
+            },
+            {
+              name: "Rate",
+              fields: ["nett", "gross", "cap", "deposit", "liability", "bond"],
+            },
+            {
+              name: "Contents",
+              fields: ["description", "inclusions"],
+            },
+            {
+              name: "Publish",
+              fields: ["status", "rank"],
+            },
+          ],
+        }}
+        {fetch}
+        bind:data
+        schema={packages}
+        duplicate={true}
+      />
+    </TabContent>
+    {#if fetch.id !== "add"}
+      <TabContent>
+        <Form
+          structure={{
+            name: "",
+            sections: [
+              {
+                name: "",
+                fields: ["compulsory"],
+              },
+            ],
+          }}
+          {fetch}
+          bind:data
+          schema={packages}
+          duplicate={true}
+        />
+      </TabContent>
+    {/if}
+  </svelte:fragment>
+</Tabs>
+
+<!-- <script>
   import { page } from "$app/stores";
   import PageHeader from "$lib/components/PageHeader.svelte";
   import Form from "$lib/components/Form.svelte";
@@ -170,4 +272,4 @@
       </TabContent>
     {/if}
   </svelte:fragment>
-</Tabs>
+</Tabs> -->

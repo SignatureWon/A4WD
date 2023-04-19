@@ -59,6 +59,8 @@
 
       if (data) {
         rows = data;
+      console.log(rows);
+
       }
     } catch (error) {
       errors = error;
