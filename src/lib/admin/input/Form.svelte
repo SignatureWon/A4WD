@@ -94,7 +94,7 @@
             {#each section.fields as key}
               <div class={schema[key].half ? "col-span-1" : "col-span-2"}>
                 {#if schema[key].type === "textarea"}
-                  <TextArea field={schema[key]} bind:data />
+                  <TextArea {key} field={schema[key]} bind:data />
                 {:else if schema[key].type === "number"}
                   <Number {key} field={schema[key]} bind:data />
                 {:else if schema[key].type === "related"}

@@ -19,8 +19,13 @@
 
   onMount(async () => {
     data = db.default(blockouts);
+    console.log("default", data);
     if (fetch.id !== "add") {
       data = await db.one(fetch);
+      ["depots", "suppliers", "vehicles"].forEach(key => {
+        delete data[key]
+      })
+      console.log("fetch", data);
     }
   });
 
