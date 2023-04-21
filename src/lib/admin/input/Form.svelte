@@ -19,6 +19,7 @@
   import Routes from "./Routes.svelte";
   import Addons from "./Addons.svelte";
   import Seasonal from "./Seasonal.svelte";
+  import SeasonalTiers from "./SeasonalTiers.svelte";
   import Gallery from "./Gallery.svelte";
   import Hidden from "./Hidden.svelte";
   import { Button, Modal } from "carbon-components-svelte";
@@ -125,6 +126,8 @@
                   <Addons bind:data />
                 {:else if schema[key].type === "seasonal"}
                   <Seasonal {key} field={schema[key]} bind:data />
+                {:else if schema[key].type === "seasonal_tiers"}
+                  <SeasonalTiers bind:data />
                 {:else if schema[key].type === "gallery"}
                   <Gallery {key} {fetch} bind:data />
                 {:else if schema[key].type === "hidden"}

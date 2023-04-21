@@ -8,7 +8,7 @@
   import { packages } from "$lib/schema/packages";
   import { Tab, TabContent, Tabs } from "carbon-components-svelte";
 
-  const title = "Package";
+  const title = "Bond";
   let fetch = {
     from: "packages",
     select: "*",
@@ -22,6 +22,9 @@
     data = db.default(packages);
     if (fetch.id !== "add") {
       data = await db.one(fetch);
+      ["suppliers"].forEach(key => {
+        delete data[key]
+      })
     }
   });
 

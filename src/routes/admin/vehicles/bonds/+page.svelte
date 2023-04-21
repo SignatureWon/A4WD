@@ -6,10 +6,10 @@
       key: "name",
       value: "Name",
     },
-    // {
-    //   key: "suppliers",
-    //   value: "Suppliers",
-    // },
+    {
+      key: "display_name",
+      value: "Display Name",
+    },
     {
       key: "status",
       value: "Status",
@@ -24,6 +24,6 @@
 <PageHeader name="Bonds" table="packages" />
 <Table
   table="packages"
-  fields="id, name, status, rank"
+  fields="id, name, display_name, status, rank"
   {headers}
 />

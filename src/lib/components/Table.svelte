@@ -59,7 +59,7 @@
 
       if (data) {
         rows = data;
-      console.log(rows);
+      // console.log(rows);
 
       }
     } catch (error) {

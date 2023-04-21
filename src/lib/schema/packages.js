@@ -121,7 +121,7 @@ export const packages = {
     half: false,
   },
   inclusions: {
-    label: "inclusions",
+    label: "Inclusions",
     placeholder: "",
     type: "textarea",
     default: null,

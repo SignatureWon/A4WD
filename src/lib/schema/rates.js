@@ -53,7 +53,7 @@ export const rates = {
   fees: {
     label: "Fees",
     placeholder: "",
-    type: "json",
+    type: "seasonal",
     default: [],
     required: false,
     related: false,
@@ -112,6 +112,15 @@ export const rates = {
     related: false,
     options: false,
     half: false,
+  },
+  tiers: {
+    label: "Tiered-rates",
+    placeholder: "",
+    type: "seasonal_tiers",
+    default: [],
+    required: false,
+    related: false,
+    options: false,
   },
   calendar: {
     label: "Calendar Day",

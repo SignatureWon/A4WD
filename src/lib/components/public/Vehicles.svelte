@@ -13,6 +13,24 @@
   export let record4 = [];
   export let record2 = [];
 
+  const preload = async (src) => {
+    const resp = await fetch(src);
+    const blob = await resp.blob();
+    let img =
+      "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+
+    if (blob.type !== "application/json") {
+      img = await new Promise(function (resolve) {
+        let reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onload = () => {
+          resolve(reader.result);
+        };
+      });
+    }
+    return img;
+  };
+
   onMount(() => {
     new Splide(".carousel-2wd", {
       type: "loop",
@@ -68,25 +86,38 @@
       </div>
     </div>
     <div class="rounded bg-white p-4">
-      <div class="mb-4 font-bold text-center">4WD Vehicles</div>
-      <section class="splide carousel-4wd">
-        <div class="splide__track">
+      <div class="mb-4 font-bold text-center">
+        <a href="/vehicles?wheel=4WD">4WD Vehicles</a>
+      </div>
+      <section class="splide carousel-4wd -mx-10">
+        <div class="splide__track mx-10">
           <ul class="splide__list">
             {#each record4 as item, itemIndex}
               {#if itemIndex <= 10}
                 <li class="splide__slide">
                   <div class="px-2 group">
                     <a href="/vehicles/{item.slug}">
-                      <div class="h-40 overflow-hidden rounded relative">
-                        <div
-                          class="text-lg font-medium px-2 bg-white inline-block absolute bottom-0 z-10"
-                        >
-                          {item.name}
-                        </div>
-                        <div
-                          class="h-40 bg-cover bg-center transition-all group-hover:scale-125 bg-gray-200"
-                          style="background-image: url('{env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/{item.image}');"
-                        />
+                      <div
+                        class="h-44 overflow-hidden rounded relative flex items-center"
+                      >
+                        {#if item.image}
+                          {#await preload(`${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/${item.image}`) then base64}
+                            <div
+                              class="bg-cover bg-center blur-md absolute w-full h-full scale-110 -z-10 bg-gray-200"
+                              style="background-image: url('{base64}');"
+                            />
+                            <img
+                              src={base64}
+                              alt={item.name}
+                              class="transition-all group-hover:scale-125"
+                            />
+                          {/await}
+                        {:else}
+                          <div class="absolute w-full h-full bg-gray-200" />
+                        {/if}
+                      </div>
+                      <div class="text-lg font-medium py-2 bg-white">
+                        {item.name}
                       </div>
                     </a>
                   </div>
@@ -98,25 +129,38 @@
       </section>
     </div>
     <div class="rounded bg-white p-4">
-      <div class="mb-4 font-bold text-center">2WD Vehicles</div>
-      <section class="splide carousel-2wd">
-        <div class="splide__track">
+      <div class="mb-4 font-bold text-center">
+        <a href="/vehicles?wheel=2WD">2WD Vehicles</a>
+      </div>
+      <section class="splide carousel-2wd -mx-10">
+        <div class="splide__track mx-10">
           <ul class="splide__list">
             {#each record2 as item, itemIndex}
               {#if itemIndex <= 10}
                 <li class="splide__slide">
                   <div class="px-2 group">
                     <a href="/vehicles/{item.slug}">
-                      <div class="h-40 overflow-hidden rounded relative">
-                        <div
-                          class="text-lg font-medium px-2 bg-white inline-block absolute bottom-0 z-10"
-                        >
-                          {item.name}
-                        </div>
-                        <div
-                          class="h-40 bg-cover bg-center transition-all group-hover:scale-125 bg-gray-200"
-                          style="background-image: url('{env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/{item.image}');"
-                        />
+                      <div
+                        class="h-44 overflow-hidden rounded relative flex items-center"
+                      >
+                        {#if item.image}
+                          {#await preload(`${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/${item.image}`) then base64}
+                            <div
+                              class="bg-cover bg-center blur-md absolute w-full h-full scale-110 -z-10 bg-gray-200"
+                              style="background-image: url('{base64}');"
+                            />
+                            <img
+                              src={base64}
+                              alt={item.name}
+                              class="transition-all group-hover:scale-125"
+                            />
+                          {/await}
+                        {:else}
+                          <div class="absolute w-full h-full bg-gray-200" />
+                        {/if}
+                      </div>
+                      <div class="text-lg font-medium py-2 bg-white">
+                        {item.name}
                       </div>
                     </a>
                   </div>
