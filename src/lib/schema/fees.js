@@ -107,7 +107,7 @@ export const fees = {
     default: false,
     required: false,
     related: false,
-    options: 0.1,
+    options: 0.01,
     half: false,
   },
 };

@@ -17,7 +17,7 @@ export const rates = {
     default: null,
     required: false,
     related: false,
-    options: 0.1,
+    options: 0.01,
     half: true,
   },
   gross: {
@@ -27,7 +27,7 @@ export const rates = {
     default: null,
     required: false,
     related: false,
-    options: 0.1,
+    options: 0.01,
     half: true,
   },
   date_start: {

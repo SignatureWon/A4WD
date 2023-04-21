@@ -57,7 +57,7 @@ export const packages = {
     default: null,
     required: false,
     related: false,
-    options: 0.1,
+    options: 0.01,
     half: true,
   },
   gross: {
@@ -67,7 +67,7 @@ export const packages = {
     default: null,
     required: false,
     related: false,
-    options: 0.1,
+    options: 0.01,
     half: true,
   },
   cap: {
@@ -87,7 +87,7 @@ export const packages = {
     default: null,
     required: false,
     related: false,
-    options: 0.1,
+    options: 0.01,
     half: true,
   },
   liability: {
@@ -97,7 +97,7 @@ export const packages = {
     default: null,
     required: false,
     related: false,
-    options: 0.1,
+    options: 0.01,
     half: true,
   },
   bond: {
@@ -107,7 +107,7 @@ export const packages = {
     default: null,
     required: false,
     related: false,
-    options: 0.1,
+    options: 0.01,
     half: true,
   },
   waive_one_way: {
@@ -178,7 +178,7 @@ export const packages = {
         default: null,
         required: false,
         related: false,
-        options: 0.1,
+        options: 0.01,
         half: true,
       },
       {
@@ -189,7 +189,7 @@ export const packages = {
         default: null,
         required: false,
         related: false,
-        options: 0.1,
+        options: 0.01,
         half: true,
       },
       {
