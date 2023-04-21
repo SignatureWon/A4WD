@@ -25,5 +25,11 @@
 <Table
   table="packages"
   fields="id, name, display_name, status, rank"
+  orders={[
+    {
+      column: "rank",
+      ascend: true
+    }
+  ]}
   {headers}
 />
