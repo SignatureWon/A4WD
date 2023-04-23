@@ -1,6 +1,6 @@
 <script>
-  import { supabase } from "$lib/supabaseClient";
-  import { goto } from "$app/navigation";
+  // import { supabase } from "$lib/supabaseClient";
+  // import { goto } from "$app/navigation";
   import Loading from "$lib/components/Loading.svelte";
   // import AlertError from "$lib/components/AlertError.svelte";
   import {
@@ -16,25 +16,25 @@
   let email = "";
   let password = "";
 
-  const handleForm = async () => {
-    try {
-      errors = null;
-      loading = true;
-      let { data, error } = await supabase.auth.signInWithPassword({
-        email: email,
-        password: password,
-      });
-      if (error) throw error;
-      setTimeout(() => goto("/admin"), 300);
-    } catch (error) {
-      if (error instanceof Error) {
-        errors = error;
-      }
-      console.log("errorserrors", errors);
-    } finally {
-      loading = false;
-    }
-  };
+  // const handleForm = async () => {
+  //   try {
+  //     errors = null;
+  //     loading = true;
+  //     let { data, error } = await supabase.auth.signInWithPassword({
+  //       email: email,
+  //       password: password,
+  //     });
+  //     if (error) throw error;
+  //     setTimeout(() => goto("/admin"), 300);
+  //   } catch (error) {
+  //     if (error instanceof Error) {
+  //       errors = error;
+  //     }
+  //     console.log("errorserrors", errors);
+  //   } finally {
+  //     loading = false;
+  //   }
+  // };
 </script>
 
 <Loading {loading} />
@@ -74,8 +74,9 @@
                 />
               {/if}
 
-              <form on:submit|preventDefault={handleForm} class="my-6">
+              <form action="?/login" method="POST" class="my-6">
                 <TextInput
+                  name="email"
                   labelText="Email"
                   placeholder="Enter your email"
                   required
@@ -84,6 +85,7 @@
                   class="mb-5"
                 />
                 <PasswordInput
+                  name="password"
                   labelText="Password"
                   placeholder="Enter your password"
                   required
