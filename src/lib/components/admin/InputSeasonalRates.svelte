@@ -29,7 +29,20 @@
 
   if (!value) {
     value = [];
+  } else {
+    value.forEach((season) => {
+      let newTiers = [];
+      tiers.forEach((tier, index) => {
+        newTiers.push({
+          from: tier.from,
+          to: tier.to,
+          fee: season.tiers.length > index ? season.tiers[index].fee : 0,
+        });
+      });
+      season.tiers = newTiers;
+    });
   }
+
   let jsonTiers = JSON.stringify(value);
 
   const addRecords = () => {

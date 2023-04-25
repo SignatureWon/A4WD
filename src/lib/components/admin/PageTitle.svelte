@@ -10,12 +10,14 @@
   let pages = [];
   let link = "";
   level.forEach((item, index) => {
-    if (index > 0 && index < 4) {
-      link += `/${item}`;
-      pages.push({
-        name: item,
-        link: link,
-      });
+    if (index > 0 && index < level.length - 1) {
+      if (index < 4) {
+        link += `/${item}`;
+        pages.push({
+          name: item,
+          link: link,
+        });
+      }
     }
   });
 </script>

@@ -5,14 +5,14 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
 
 const convertToDate = (data) => {
-  ["date_start", "date_end"].forEach((key) => {
+  ["date_start", "date_end", "travel_start", "travel_end", "booking_start", "booking_end"].forEach((key) => {
     if (key in data) {
       data[key] = dayjs(data[key], "DD/MM/YYYY");
     }
   });
 };
 const convertToJson = (data) => {
-  ["tiers"].forEach((key) => {
+  ["tiers", "json_details"].forEach((key) => {
     if (key in data) {
       data[key] = JSON.parse(data[key]);
     }

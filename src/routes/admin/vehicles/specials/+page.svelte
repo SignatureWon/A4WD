@@ -5,7 +5,7 @@
   export let data;
 </script>
 
-<PageTitle title="Seasonal" path={data.path} />
+<PageTitle title="Specials" path={data.path} />
 
 <SectionDataTable
   rows={data.data}
@@ -16,8 +16,16 @@
       value: "Name",
     },
     {
-      key: "suppliers.name",
-      value: "Suppliers",
+      key: "type",
+      value: "Type",
+    },
+    {
+      key: "travel_start",
+      value: "Travel Start",
+    },
+    {
+      key: "travel_end",
+      value: "Travel End",
     },
   ]}
 />
