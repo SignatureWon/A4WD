@@ -1,11 +1,12 @@
 import { db } from "$lib/server/db";
 export async function load({ url, params }) {
-  const keys = ["id", "name", "type", "travel_start", "travel_end"];
+  const keys = ["id", "name", "suppliers (name)"];
 
   return {
     data: db.all({
-      table: "specials",
+      table: "rates",
       keys: keys,
+      eq: [{ name: "type", value: "flex" }],
     }),
     path: url.pathname,
   };

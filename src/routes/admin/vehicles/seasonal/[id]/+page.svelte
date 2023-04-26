@@ -60,12 +60,12 @@
       bind:value={data.data.license}
       options={data.licenses}
     />
-    <InputSelect
+    <!-- <InputSelect
       name="age"
       label="Age"
       bind:value={data.data.age}
       options={data.ages}
-    />
+    /> -->
   </FormSection>
   <FormSection title="Factors">
     <InputNumber

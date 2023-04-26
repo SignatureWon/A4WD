@@ -4,7 +4,7 @@ export async function load({ url, params }) {
 
   return {
     data: db.all({
-      table: "specials",
+      table: "terms",
       keys: keys,
     }),
     path: url.pathname,

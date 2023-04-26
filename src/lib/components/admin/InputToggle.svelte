@@ -12,11 +12,11 @@
 
 <div class={half ? "" : "md:col-span-2"}>
   <Toggle
-    {name}
     labelText={label}
     labelA={a || "No"}
     labelB={b || "Yes"}
     bind:toggled={value}
     {required}
   />
+  <input type="hidden" {name} bind:value={value} />
 </div>

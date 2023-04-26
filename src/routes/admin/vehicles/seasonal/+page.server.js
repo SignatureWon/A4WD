@@ -3,7 +3,7 @@ export async function load({ url, params }) {
   const keys = ["id", "name", "suppliers (name)"];
 
   return {
-    data: db.all.load({
+    data: db.all({
       table: "rates",
       keys: keys,
       eq: [{ name: "type", value: "seasonal" }],

@@ -16,31 +16,31 @@ const keys = [
 ];
 export async function load({ url, params, locals }) {
   return {
-    data: db.one.load({
+    data: db.one({
       table: "specials",
       id: params.id,
       keys: keys,
     }),
-    suppliers: db.related.load({
+    suppliers: db.related({
       table: "suppliers",
     }),
-    depots: db.related.load({
+    depots: db.related({
       table: "depots",
     }),
-    vehicles: db.related.load({
+    vehicles: db.related({
       table: "vehicles",
     }),
-    suppliers_selected: db.all.load({
+    suppliers_selected: db.all({
       table: "specials_suppliers",
       keys: ["suppliers"],
       eq: [{ name: "specials", value: params.id }],
     }),
-    depots_selected: db.all.load({
+    depots_selected: db.all({
       table: "specials_depots",
       keys: ["depots"],
       eq: [{ name: "specials", value: params.id }],
     }),
-    vehicles_selected: db.all.load({
+    vehicles_selected: db.all({
       table: "specials_vehicles",
       keys: ["vehicles"],
       eq: [{ name: "specials", value: params.id }],

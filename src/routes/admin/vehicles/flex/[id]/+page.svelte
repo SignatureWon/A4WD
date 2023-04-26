@@ -1,121 +1,92 @@
 <script>
-  import PageHeader from "$lib/components/PageHeader.svelte";
-  import Form from "$lib/components/Form.svelte";
-  import InputFlex from "$lib/components/InputFlex.svelte";
-  import { Tab, TabContent, Tabs } from "carbon-components-svelte";
-  import { page } from "$app/stores";
-
-  const id = $page.params.id;
-
-  const formGeneral = {
-    name: "",
-    groups: [
-      {
-        name: "Info",
-        description: "",
-        fields: [
-          {
-            name: "name",
-            label: "Name",
-            type: "text",
-            required: true,
-          },
-          {
-            name: "suppliers",
-            label: "Supplier",
-            type: "related",
-            related: "suppliers",
-          },
-        ],
-      },
-      {
-        name: "Driver",
-        description: "",
-        fields: [
-          {
-            name: "license",
-            label: "License",
-            type: "related",
-            related: "constants",
-            filters: [{ type: "eq", column: "type", value: "licenses" }]
-          },
-          {
-            name: "age",
-            label: "Age",
-            type: "related",
-            related: "constants",
-            filters: [{ type: "eq", column: "type", value: "ages" }]
-          },
-        ],
-      },
-      {
-        name: "Factors",
-        description: "",
-        fields: [
-          {
-            name: "nett",
-            label: "Nett Factor (Percentage)",
-            type: "number",
-            step: 0.01,
-            default: 1,
-          },
-          {
-            name: "gross",
-            label: "Gross Factor (Percentage)",
-            type: "number",
-            step: 0.01,
-            default: 1,
-          },
-        ],
-      },
-      {
-        name: "Rate",
-        description: "",
-        fields: [
-          {
-            name: "matrix",
-            label: "Matrix",
-            type: "textarea",
-            required: true,
-          },
-          {
-            name: "data",
-            label: "Data",
-            type: "textarea",
-            required: true,
-          },
-          {
-            name: "zero",
-            label: "Matrix starts from zero",
-            type: "switch",
-          },
-          {
-            name: "type",
-            type: "hidden",
-            default: "flex",
-          },
-        ],
-      },
-    ],
-  };
-  let updateFlex = 1;
+  import PageTitle from "$lib/components/admin/PageTitle.svelte";
+  import Form from "$lib/components/admin/Form.svelte";
+  import FormSection from "$lib/components/admin/FormSection.svelte";
+  import InputText from "$lib/components/admin/InputText.svelte";
+  import InputSelect from "$lib/components/admin/InputSelect.svelte";
+  import InputDateRange from "$lib/components/admin/InputDateRange.svelte";
+  import InputNumber from "$lib/components/admin/InputNumber.svelte";
+  import InputHidden from "$lib/components/admin/InputHidden.svelte";
+  import InputToggle from "$lib/components/admin/InputToggle.svelte";
+  import InputSeasonalTiers from "$lib/components/admin/InputSeasonalTiers.svelte";
+  import Tabs from "$lib/components/admin/Tabs.svelte";
+  export let data;
+  let tabs = [
+    {
+      name: "General",
+      link: "#"
+    },
+    {
+      name: "Seasons",
+      link: `${data.path}/seasons`
+    },
+  ]
 </script>
 
-<PageHeader name="Flex" table="rates" />
-
-<Tabs autoWidth class="border-b border-gray-200">
-  <Tab label="General" />
-  {#if id !== "add"}
-    <Tab label="Fees" />
-  {/if}
-  <svelte:fragment slot="content">
-    <TabContent>
-      <Form form={formGeneral} table="rates" bind:update={updateFlex} />
-    </TabContent>
-    {#if id !== "add"}
-      <TabContent>
-        <InputFlex bind:update={updateFlex} />
-      </TabContent>
-    {/if}
-  </svelte:fragment>
-</Tabs>
+<PageTitle title="Flex" path={data.path} data={data.data} id={data.id} />
+<Tabs {tabs} />
+<Form id={data.id} path={data.path}>
+  <FormSection title="Info">
+    <InputText
+      name="name"
+      label="Name"
+      bind:value={data.data.name}
+      required={true}
+    />
+    <InputSelect
+      name="suppliers"
+      label="Supplier"
+      bind:value={data.data.suppliers}
+      options={data.suppliers}
+    />
+    <!-- <InputDateRange
+      nameFrom="date_start"
+      nameTo="date_end"
+      labelFrom="Start Date"
+      labelTo="End Date"
+      bind:valueFrom={data.data.date_start}
+      bind:valueTo={data.data.date_end}
+    /> -->
+    <!-- <InputToggle
+      name="calendar"
+      label="Calendar Day"
+      bind:value={data.data.calendar}
+    /> -->
+  </FormSection>
+  <FormSection title="Driver">
+    <InputSelect
+      name="license"
+      label="License"
+      bind:value={data.data.license}
+      options={data.licenses}
+    />
+    <!-- <InputSelect
+      name="age"
+      label="Age"
+      bind:value={data.data.age}
+      options={data.ages}
+    /> -->
+  </FormSection>
+  <FormSection title="Factors">
+    <InputNumber
+      name="nett"
+      label="Nett Factor (Percentage)"
+      bind:value={data.data.nett}
+      step={0.05}
+      half={true}
+    />
+    <InputNumber
+      name="gross"
+      label="Gross Factor (Percentage)"
+      bind:value={data.data.gross}
+      step={0.05}
+      half={true}
+    />
+  </FormSection>
+  <!-- <FormSection title="Tiered-rates">
+    <InputSeasonalTiers
+      bind:value={data.data.tiers}
+    />
+  </FormSection> -->
+  <InputHidden name="type" value="flex" />
+</Form>

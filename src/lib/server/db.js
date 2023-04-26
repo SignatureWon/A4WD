@@ -4,8 +4,25 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
 
+const removeEmptyForeignKeys = (data) => {
+  ["vehicles", "depots", "suppliers", "categories"].forEach((key) => {
+    if (key in data) {
+      if (data[key] === "") {
+        delete data[key];
+      }
+    }
+  });
+};
+
 const convertToDate = (data) => {
-  ["date_start", "date_end", "travel_start", "travel_end", "booking_start", "booking_end"].forEach((key) => {
+  [
+    "date_start",
+    "date_end",
+    "travel_start",
+    "travel_end",
+    "booking_start",
+    "booking_end",
+  ].forEach((key) => {
     if (key in data) {
       data[key] = dayjs(data[key], "DD/MM/YYYY");
     }
@@ -46,88 +63,104 @@ const sanitize = (data) => {
 };
 
 export const db = {
-  one: {
-    load: async (fetch) => {
-      let record = {};
-      fetch.keys.forEach((key) => {
-        record[key] = null;
-      });
+  one: async (fetch) => {
+    let record = {};
+    fetch.keys.forEach((key) => {
+      record[key] = null;
+    });
 
-      if (fetch.id !== "add") {
-        const { data, error: err } = await supabase
-          .from(fetch.table)
-          .select(fetch.keys.join(",") || "*")
-          .eq("id", fetch.id)
-          .single();
-
-        if (err) {
-          throw error(404, {
-            message: err.message,
-          });
-        }
-        record = data;
-      }
-      return record;
-    },
-  },
-  all: {
-    load: async (fetch) => {
-      let query = supabase
+    if (fetch.id !== "add") {
+      const { data, error: err } = await supabase
         .from(fetch.table)
-        .select(fetch.keys.join(",") || "*");
-
-      if (fetch.eq) {
-        fetch.eq.forEach((col) => {
-          query = query.eq(col.name, col.value);
-        });
-      }
-      if (fetch.keys.includes("status")) {
-        query.eq("status", true);
-      }
-      if (fetch.keys.includes("rank")) {
-        query.order("rank", { ascending: true });
-      }
-      const { data, error: err } = await query;
+        .select(fetch.keys.join(",") || "*")
+        .eq("id", fetch.id)
+        .single();
 
       if (err) {
         throw error(404, {
           message: err.message,
         });
       }
-
-      return data;
-    },
+      record = data;
+    }
+    return record;
   },
-  related: {
-    load: async (fetch) => {
-      let query = supabase.from(fetch.table).select("id, name");
+  all: async (fetch) => {
+    let query = supabase.from(fetch.table).select(fetch.keys.join(",") || "*");
 
-      if (fetch.eq) {
-        fetch.eq.forEach((col) => {
-          query = query.eq(col.name, col.value);
-        });
-      }
-      if (fetch.in) {
-        fetch.in.forEach((col) => {
-          query = query.in(col.name, col.value);
-        });
-      }
-      if (fetch.order) {
-        fetch.order.forEach((col) => {
-          query = query.order(col.name, { ascending: col.ascend });
-        });
-      }
+    if (fetch.eq) {
+      fetch.eq.forEach((col) => {
+        query = query.eq(col.name, col.value);
+      });
+    }
+    if (fetch.keys.includes("status")) {
+      query.eq("status", true);
+    }
+    if (fetch.keys.includes("rank")) {
+      query.order("rank", { ascending: true });
+    }
+    const { data, error: err } = await query;
 
-      const { data, error: err } = await query;
+    if (err) {
+      throw error(404, {
+        message: err.message,
+      });
+    }
 
-      if (err) {
-        throw error(404, {
-          message: err.message,
-        });
-      }
+    return data;
+  },
+  related: async (fetch) => {
+    let query = supabase.from(fetch.table).select("id, name");
 
-      return data;
-    },
+    if (fetch.eq) {
+      fetch.eq.forEach((col) => {
+        query = query.eq(col.name, col.value);
+      });
+    }
+    if (fetch.in) {
+      fetch.in.forEach((col) => {
+        query = query.in(col.name, col.value);
+      });
+    }
+    if (fetch.order) {
+      fetch.order.forEach((col) => {
+        query = query.order(col.name, { ascending: col.ascend });
+      });
+    }
+
+    const { data, error: err } = await query;
+
+    if (err) {
+      throw error(404, {
+        message: err.message,
+      });
+    }
+
+    return data;
+  },
+  insert: async (locals, fetch) => {
+    const { data, error: err } = await locals.sb
+      .from(fetch.table)
+      .insert(fetch.data)
+      .select();
+
+    if (err) {
+      throw error(404, {
+        message: err.message,
+      });
+    }
+  },
+  delete: async (locals, fetch) => {
+    const { data, error: err } = await locals.sb
+      .from(fetch.table)
+      .delete()
+      .eq(fetch.key, fetch.value);
+
+    if (err) {
+      throw error(404, {
+        message: err.message,
+      });
+    }
   },
   actions: {
     insert: async (request, url, locals, fetch) => {
@@ -160,14 +193,15 @@ export const db = {
       throw redirect(303, `${path.join("/")}/${data.id}`);
     },
     update: async (request, url, locals, fetch) => {
-      let newData = {};
       const formData = await request.formData();
-      for (const pair of formData.entries()) {
-        if (pair[1]) {
-          newData[pair[0]] = pair[1];
-        }
-      }
+      // for (const pair of formData.entries()) {
+      //   if (pair[1]) {
+      //     newData[pair[0]] = pair[1];
+      //   }
+      // }
+      let newData = Object.fromEntries(formData.entries());
 
+      removeEmptyForeignKeys(newData);
       convertToDate(newData);
       convertToJson(newData);
       slugifyName(fetch, newData);
@@ -183,7 +217,7 @@ export const db = {
         });
       }
 
-      throw redirect(303, url.pathname);
+      return newData;
     },
     delete: async (request, url, locals, fetch) => {
       const { error: err } = await locals.sb

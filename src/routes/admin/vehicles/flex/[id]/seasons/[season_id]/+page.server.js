@@ -1,5 +1,8 @@
 import { db } from "$lib/server/db";
 import { redirect } from "@sveltejs/kit";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+dayjs.extend(customParseFormat);
 
 export async function load({ url, params }) {
   let seasonal = await db.one({
@@ -13,14 +16,7 @@ export async function load({ url, params }) {
     season: db.one({
       table: "ratesSeasons",
       id: params.season_id,
-      keys: ["name", "rates", "date_start", "date_end", "tiers"],
-    }),
-    depots: db.related({
-      table: "depots",
-    }),
-    vehicles: db.related({
-      table: "vehicles",
-      eq: [{ name: "suppliers", value: seasonal.suppliers }],
+      keys: ["name", "rates", "flex", "matrix", "zero"],
     }),
     path: url.pathname,
     id: params.id,
@@ -39,26 +35,46 @@ export const actions = {
       table: "ratesSeasons",
     });
 
-    let ratesList = [];
+    let az = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+    let zero = resp.zero === "true" ? 0 : 1;
+    let matrix = {};
+    resp.matrix.split(/\r?\n/).forEach((row, rowIndex) => {
+      row.split(",").forEach((col, colIndex) => {
+        matrix[`${az[rowIndex]}${colIndex + zero}`] = Number(col);
+      });
+    });
 
-    let objSeason = {
-      rates: resp.rates,
-      ratesSeasons: params.season_id,
-      date_start: resp.date_start,
-      date_end: resp.date_end,
-    };
-    resp.tiers.forEach((tier) => {
-      let objAddRates = objSeason;
-      objAddRates.daily = tier.daily;
-      objAddRates.tiers = tier.tiers;
-      tier.depots.forEach((depot) => {
-        let objAddDepot = objAddRates;
-        objAddDepot.depots = depot;
-        tier.vehicles.forEach((vehicle) => {
-          let objAddVehicle = objAddDepot;
-          objAddVehicle.vehicles = vehicle;
-          ratesList.push(objAddVehicle);
-        });
+    const dbDepots = await db.all({
+      table: "depots",
+      keys: ["id", "code"],
+    });
+    let depots = {};
+    dbDepots.forEach((d) => {
+      depots[d.code] = d.id;
+    });
+
+    const dbVehicles = await db.all({
+      table: "vehicles",
+      keys: ["id", "code"],
+    });
+    let vehicles = {};
+    dbVehicles.forEach((d) => {
+      vehicles[d.code] = d.id;
+    });
+
+    let ratesList = [];
+    resp.flex.split(/\r?\n/).forEach((row, rowIndex) => {
+      let col = row.split(";");
+      // console.log();
+      ratesList.push({
+        rates: params.id,
+        ratesSeasons: params.season_id,
+        depots: depots[col[0].trim()] || null,
+        vehicles: vehicles[col[1].trim()] || null,
+        date_start: dayjs(col[2].trim(), "DD/MM/YYYY"),
+        date_end: dayjs(col[2].trim(), "DD/MM/YYYY").add(7, "day"),
+        daily: matrix[col[3].trim()],
+        flex: col[3].trim(),
       });
     });
 
@@ -72,9 +88,6 @@ export const actions = {
       table: "ratesList",
       data: ratesList,
     });
-
-    // console.log("resp", resp);
-    // console.log("ratesBuilder", ratesBuilder);
 
     throw redirect(303, url.pathname);
   },
