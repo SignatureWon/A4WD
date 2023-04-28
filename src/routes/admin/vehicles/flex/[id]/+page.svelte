@@ -72,14 +72,14 @@
       name="nett"
       label="Nett Factor (Percentage)"
       bind:value={data.data.nett}
-      step={0.05}
+      step={0.01}
       half={true}
     />
     <InputNumber
       name="gross"
       label="Gross Factor (Percentage)"
       bind:value={data.data.gross}
-      step={0.05}
+      step={0.01}
       half={true}
     />
   </FormSection>

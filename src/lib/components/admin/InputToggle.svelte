@@ -3,11 +3,15 @@
 
   export let name = "";
   export let label = "";
-  export let value = true;
+  export let value = false;
   export let a = null;
   export let b = null;
   export let half = false;
   export let required = false;
+
+  if (!value) {
+    value = false
+  }
 </script>
 
 <div class={half ? "" : "md:col-span-2"}>

@@ -7,7 +7,7 @@
   let action = "?/insert";
 </script>
 
-<form method="POST" {action} class="bg-white divide-y divide-gray-200">
+<form method="POST" {action} enctype="multipart/form-data" class="bg-white divide-y divide-gray-200">
   <slot />
   <footer class="flex justify-between p-5">
     <div class="flex">

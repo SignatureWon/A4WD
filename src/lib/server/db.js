@@ -62,6 +62,31 @@ const sanitize = (data) => {
   });
 };
 
+// const uploadFiles = async (data, locals) => {
+//   for (const key in data) {
+//     if (key.indexOf("fileUpload_") === 0) {
+//       console.log("found", key);
+//       const field = key.replace("fileUpload_", "");
+//       if (data[key].size) {
+//         console.log("to upload", key);
+
+//         const { data: dataFile, error: errFile } = await locals.sb.storage
+//           .from(data[`fileBucket_${field}`])
+//           .upload(data[`fileName_${field}`], data[`fileUpload_${field}`]);
+//         if (errFile) {
+//           throw error(404, {
+//             message: errFile.message,
+//           });
+//         }
+//       }
+//       delete data[`fileUpload_${field}`];
+//       delete data[`fileName_${field}`];
+//       delete data[`fileBucket_${field}`];
+//     }
+//   }
+//   return data
+// };
+
 export const db = {
   one: async (fetch) => {
     let record = {};
@@ -164,17 +189,44 @@ export const db = {
   },
   actions: {
     insert: async (request, url, locals, fetch) => {
-      let newData = {};
+      // let newData = {};
       const formData = await request.formData();
-      for (const pair of formData.entries()) {
-        if (pair[1]) {
-          newData[pair[0]] = pair[1];
-        }
-      }
+      let newData = Object.fromEntries(formData.entries());
+      // for (const pair of formData.entries()) {
+      //   if (pair[1]) {
+      //     newData[pair[0]] = pair[1];
+      //   }
+      // }
 
+      removeEmptyForeignKeys(newData);
       convertToDate(newData);
       convertToJson(newData);
       slugifyName(fetch, newData);
+      // uploadFiles(newData, locals);
+
+      // console.log("newData", newData);
+
+      for (const key in newData) {
+        if (key.indexOf("fileUpload_") === 0) {
+          const field = key.replace("fileUpload_", "");
+          if (newData[key].size) {
+            const { data: dataFile, error: errFile } = await locals.sb.storage
+              .from(newData[`fileBucket_${field}`])
+              .upload(
+                newData[`fileName_${field}`],
+                newData[`fileUpload_${field}`]
+              );
+            if (errFile) {
+              throw error(404, {
+                message: errFile.message,
+              });
+            }
+          }
+          delete newData[`fileUpload_${field}`];
+          delete newData[`fileName_${field}`];
+          delete newData[`fileBucket_${field}`];
+        }
+      }
 
       const { data, error: err } = await locals.sb
         .from(fetch.table)
@@ -194,17 +246,35 @@ export const db = {
     },
     update: async (request, url, locals, fetch) => {
       const formData = await request.formData();
-      // for (const pair of formData.entries()) {
-      //   if (pair[1]) {
-      //     newData[pair[0]] = pair[1];
-      //   }
-      // }
       let newData = Object.fromEntries(formData.entries());
 
       removeEmptyForeignKeys(newData);
       convertToDate(newData);
       convertToJson(newData);
       slugifyName(fetch, newData);
+      // newData = uploadFiles(newData, locals);
+
+      for (const key in newData) {
+        if (key.indexOf("fileUpload_") === 0) {
+          const field = key.replace("fileUpload_", "");
+          if (newData[key].size) {
+            const { data: dataFile, error: errFile } = await locals.sb.storage
+              .from(newData[`fileBucket_${field}`])
+              .upload(
+                newData[`fileName_${field}`],
+                newData[`fileUpload_${field}`]
+              );
+            if (errFile) {
+              throw error(404, {
+                message: errFile.message,
+              });
+            }
+          }
+          delete newData[`fileUpload_${field}`];
+          delete newData[`fileName_${field}`];
+          delete newData[`fileBucket_${field}`];
+        }
+      }
 
       const { error: err } = await locals.sb
         .from(fetch.table)
