@@ -14,19 +14,23 @@
 
   console.log("init", valueFrom, valueTo);
 
-  valueFrom = dayjs(valueFrom).format("DD/MM/YYYY");
-  valueTo = dayjs(valueTo).format("DD/MM/YYYY");
+  // valueFrom = dayjs(valueFrom).format("DD/MM/YYYY");
+  // valueTo = dayjs(valueTo).format("DD/MM/YYYY");
 
-  console.log("dayjs", valueFrom, valueTo);
+  // console.log("dayjs", valueFrom, valueTo);
 </script>
 
 <div class={half ? "" : "md:col-span-2"}>
   <DatePicker
     datePickerType="range"
     dateFormat="d/m/Y"
-    bind:valueFrom
-    bind:valueTo
-  >
+    on:change={(e) => {
+      valueFrom = dayjs(e.detail.selectedDates[0]);
+      valueTo = dayjs(e.detail.selectedDates[1]);
+    }}
+    valueFrom={dayjs(valueFrom).format("DD/MM/YYYY")}
+    valueTo={dayjs(valueTo).format("DD/MM/YYYY")}
+    >
     <DatePickerInput
       name={nameFrom}
       labelText={labelFrom}
@@ -39,3 +43,5 @@
     />
   </DatePicker>
 </div>
+    <!-- bind:valueFrom
+    bind:valueTo -->
