@@ -12,18 +12,26 @@
   export let valueTo = "";
   export let half = false;
 
-  valueFrom = dayjs(valueFrom).format("DD/MM/YYYY")
-  valueTo = dayjs(valueTo).format("DD/MM/YYYY")
+  valueFrom = dayjs(valueFrom).format("DD/MM/YYYY");
+  valueTo = dayjs(valueTo).format("DD/MM/YYYY");
 </script>
 
 <div class={half ? "" : "md:col-span-2"}>
   <DatePicker
     datePickerType="range"
     dateFormat="d/m/Y"
-    bind:valueFrom={valueFrom}
-    bind:valueTo={valueTo}
+    bind:valueFrom
+    bind:valueTo
   >
-    <DatePickerInput name={nameFrom} labelText={labelFrom} placeholder="dd/mm/yyyy" />
-    <DatePickerInput name={nameTo} labelText={labelTo} placeholder="dd/mm/yyyy" />
+    <DatePickerInput
+      name={nameFrom}
+      labelText={labelFrom}
+      placeholder="dd/mm/yyyy"
+    />
+    <DatePickerInput
+      name={nameTo}
+      labelText={labelTo}
+      placeholder="dd/mm/yyyy"
+    />
   </DatePicker>
 </div>

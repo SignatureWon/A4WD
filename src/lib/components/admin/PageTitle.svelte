@@ -38,7 +38,7 @@
       {#if id === "add"}
         Add {title}
       {:else}
-        Edit {data.name || data.reference}
+        {data.name || data.reference}
       {/if}
     {:else}
       {title}

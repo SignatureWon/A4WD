@@ -24,7 +24,7 @@ const convertToDate = (data) => {
     "booking_end",
   ].forEach((key) => {
     if (key in data) {
-      data[key] = dayjs(data[key], "DD/MM/YYYY");
+      data[key] = dayjs(data[key], "DD/MM/YYYY").format("MM/DD/YYYY");
     }
   });
 };
@@ -118,12 +118,17 @@ export const db = {
         query = query.eq(col.name, col.value);
       });
     }
-    if (fetch.keys.includes("status")) {
-      query.eq("status", true);
+    if (fetch.order) {
+      fetch.order.forEach((col) => {
+        query = query.order(col.name, { ascending: col.ascend });
+      });
     }
-    if (fetch.keys.includes("rank")) {
-      query.order("rank", { ascending: true });
-    }
+    // if (fetch.keys.includes("status")) {
+    //   query.eq("status", true);
+    // }
+    // if (fetch.keys.includes("rank")) {
+    //   query.order("rank", { ascending: true });
+    // }
     const { data, error: err } = await query;
 
     if (err) {

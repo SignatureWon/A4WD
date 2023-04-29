@@ -11,7 +11,7 @@
 
 <div class={half ? "" : "md:col-span-2"}>
   <Select {name} labelText={label} bind:selected={value} {required}>
-    <SelectItem value="" text="Select {name}" />
+    <SelectItem value="" text="Select {label}" />
     {#each options as item}
       <SelectItem value={item.id} text={item.name} />
     {/each}
