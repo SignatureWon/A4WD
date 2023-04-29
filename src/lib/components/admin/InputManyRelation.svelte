@@ -31,6 +31,9 @@
     labelA="All {label}"
     labelB="All {label}"
     bind:toggled={value}
+    on:toggle={e => {
+      
+    }}
   />
   {#if !value}
     <div class="mb-4">
