@@ -16,7 +16,7 @@
     },
     {
       name: "Seasons",
-      link: `#`,
+      link: `${data.path.split("/seasons")[0]}/seasons`,
     },
   ];
 </script>
