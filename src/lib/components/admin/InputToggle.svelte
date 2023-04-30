@@ -8,9 +8,10 @@
   export let b = null;
   export let half = false;
   export let required = false;
+  export let init = false;
 
   if (!value) {
-    value = false
+    value = init
   }
 </script>
 

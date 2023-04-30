@@ -8,6 +8,10 @@
   export let selected = [];
   export let options = [];
 
+  let currentSelected = []
+  let userSelected = [];
+  let userUnselected = [];
+
   const toMultiSelectItem = (arr) => {
     let resp = [];
     arr.forEach((obj) => {
@@ -19,9 +23,22 @@
     return resp;
   };
 
-  console.log("table", table);
-  console.log("selected", selected);
-  console.log("options", options);
+  const getIds = (arr) => {
+    let resp = [];
+    arr.forEach((obj) => {
+      resp.push(obj.id);
+    });
+    return resp.join(",");
+  };
+
+  selected.forEach(item => {
+    currentSelected.push(item[table.split("_")[1]])
+  })
+
+
+  // console.log("table", table);
+  // console.log("selected", selected);
+  // console.log("options", options);
 </script>
 
 <div class="md:col-span-2">
@@ -31,19 +48,38 @@
     labelA="All {label}"
     labelB="All {label}"
     bind:toggled={value}
-    on:toggle={e => {
-      
-    }}
+    on:toggle={(e) => {}}
   />
   {#if !value}
     <div class="mb-4">
       <MultiSelect
         filterable
         titleText=""
-        selectedIds={selected}
+        selectedIds={currentSelected}
         placeholder="Select {label}"
         items={toMultiSelectItem(options)}
+        on:select={(e) => {
+          userSelected = getIds(e.detail.selected);
+          userUnselected = getIds(e.detail.unselected);
+        }}
       />
+      <input
+        type="hidden"
+        name="manySelected_{name}"
+        value={selected.join(",")}
+      />
+      <input
+        type="hidden"
+        name="manyNewSelected_{name}"
+        value={userSelected}
+      />
+      <input
+        type="hidden"
+        name="manyUnSelected_{name}"
+        value={userUnselected}
+      />
+      <input type="hidden" name="manyTable_{name}" value={table} />
+      <!-- <input type="hidden" name="manyID_{name}" value={id} /> -->
     </div>
   {/if}
 </div>

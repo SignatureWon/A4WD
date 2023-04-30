@@ -7,25 +7,30 @@
   import InputManyRelation from "$lib/components/admin/InputManyRelation.svelte";
   import InputDateRange from "$lib/components/admin/InputDateRange.svelte";
   import InputNumber from "$lib/components/admin/InputNumber.svelte";
+  import InputImage from "$lib/components/admin/InputImage.svelte";
   import InputHidden from "$lib/components/admin/InputHidden.svelte";
   import InputToggle from "$lib/components/admin/InputToggle.svelte";
   import InputSeasonalTiers from "$lib/components/admin/InputSeasonalTiers.svelte";
   import Tabs from "$lib/components/admin/Tabs.svelte";
+  import {PageTabs} from "../tabs"
   export let data;
-  let tabs = [
-    {
-      name: "General",
-      link: "#",
-    },
-    // {
-    //   name: "Seasons",
-    //   link: `${data.path}/seasons`
-    // },
-  ];
+
+  // console.log(PageTabs(data.id));
+
+  // let tabs = [
+  //   {
+  //     name: "General",
+  //     link: "#",
+  //   },
+  //   // {
+  //   //   name: "Seasons",
+  //   //   link: `${data.path}/seasons`
+  //   // },
+  // ];
 </script>
 
-<PageTitle title="Seasonal" path={data.path} data={data.data} id={data.id} />
-<Tabs {tabs} />
+<PageTitle title="Vehicle" path={data.path} data={data.data} id={data.id} />
+<Tabs tabs={PageTabs(data.id)} />
 <Form id={data.id} path={data.path}>
   <FormSection title="Info">
     <InputText
@@ -66,6 +71,7 @@
       name="status"
       label="Status"
       bind:value={data.data.status}
+      init="true"
       half={true}
     />
     <InputNumber
@@ -75,7 +81,17 @@
       half={true}
     />
   </FormSection>
-  <FormSection title="Info">
+  <FormSection title="Image">
+    <InputImage
+      name="image"
+      label="Featured Image"
+      bind:value={data.data.image}
+      bucket="contents"
+      fetch={{
+        table: "vehicles",
+        id: data.id,
+      }}
+    />
     <InputText name="caption" label="Caption" bind:value={data.data.caption} />
   </FormSection>
   <FormSection title="Features">
@@ -193,5 +209,5 @@
       bind:value={data.data.tiers}
     />
   </FormSection> -->
-  <InputHidden name="type" value="seasonal" />
+  <!-- <InputHidden name="type" value="seasonal" /> -->
 </Form>

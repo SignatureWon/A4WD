@@ -3,19 +3,10 @@ import { db } from "$lib/server/db";
 
 const keys = [
   "name",
-  "code",
-  "suppliers",
-  "age",
-  "status",
-  "rank",
-  "image",
-  "caption",
-  "pax",
-  "transmission",
-  "wheel",
-  "fuel",
-  "shower",
-  "toilet",
+  "excerpt",
+  "description",
+  "restrictions",
+  "notes",
 ];
 export async function load({ url, params, locals }) {
   return {
@@ -23,26 +14,6 @@ export async function load({ url, params, locals }) {
       table: "vehicles",
       id: params.id,
       keys: keys,
-    }),
-    suppliers: db.related({
-      table: "suppliers",
-    }),
-    categories: db.related({
-      table: "categories",
-      eq: [{ name: "type", value: "vehicles" }],
-      order: [{ name: "rank", ascend: true }],
-    }),
-    categories_selected:
-      params.id === "add"
-        ? []
-        : db.all({
-            table: "vehicles_categories",
-            keys: ["categories"],
-            eq: [{ name: "vehicles", value: params.id }],
-          }),
-    ages: db.related({
-      table: "constants",
-      eq: [{ name: "type", value: "ages" }],
     }),
     path: url.pathname,
     id: params.id,
