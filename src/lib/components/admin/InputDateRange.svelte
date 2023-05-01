@@ -11,13 +11,6 @@
   export let valueFrom = "";
   export let valueTo = "";
   export let half = false;
-
-  console.log("init", valueFrom, valueTo);
-
-  // valueFrom = dayjs(valueFrom).format("DD/MM/YYYY");
-  // valueTo = dayjs(valueTo).format("DD/MM/YYYY");
-
-  // console.log("dayjs", valueFrom, valueTo);
 </script>
 
 <div class={half ? "" : "md:col-span-2"}>
@@ -43,5 +36,3 @@
     />
   </DatePicker>
 </div>
-    <!-- bind:valueFrom
-    bind:valueTo -->

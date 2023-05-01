@@ -28,6 +28,7 @@ const keys = [
   "summary_terms",
   "counter",
   "counter_terms",
+  "pay_counter",
 ];
 export async function load({ url, params, locals }) {
   return {

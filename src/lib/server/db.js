@@ -4,17 +4,17 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
 
-const removeEmptyForeignKeys = (data) => {
-  ["vehicles", "depots", "suppliers", "categories", "age", "license"].forEach(
-    (key) => {
-      if (key in data) {
-        if (data[key] === "") {
-          delete data[key];
-        }
-      }
-    }
-  );
-};
+// const removeEmptyForeignKeys = (data) => {
+//   ["vehicles", "depots", "suppliers", "categories", "age", "license"].forEach(
+//     (key) => {
+//       if (key in data) {
+//         if (data[key] === "") {
+//           delete data[key];
+//         }
+//       }
+//     }
+//   );
+// };
 
 const setNull = (data) => {
   for (const key in data) {
@@ -40,7 +40,17 @@ const convertToDate = (data) => {
   });
 };
 const convertToJson = (data) => {
-  ["tiers", "json_details"].forEach((key) => {
+  [
+    "tiers",
+    "json_details",
+    "specifications",
+    "faqs",
+    "images",
+    "addons",
+    "compulsory",
+    "routes",
+    "depots",
+  ].forEach((key) => {
     if (key in data) {
       data[key] = JSON.parse(data[key]);
     }
@@ -207,23 +217,13 @@ export const db = {
   },
   actions: {
     insert: async (request, url, locals, fetch) => {
-      // let newData = {};
       const formData = await request.formData();
       let newData = Object.fromEntries(formData.entries());
-      // for (const pair of formData.entries()) {
-      //   if (pair[1]) {
-      //     newData[pair[0]] = pair[1];
-      //   }
-      // }
 
-      // removeEmptyForeignKeys(newData);
       setNull(newData);
       convertToDate(newData);
       convertToJson(newData);
       slugifyName(fetch, newData);
-      // uploadFiles(newData, locals);
-
-      // console.log("newData", newData);
 
       let manyTables = {};
 
@@ -251,27 +251,22 @@ export const db = {
         if (key.indexOf("imageUpload_") === 0) {
           const field = key.replace("imageUpload_", "");
           if (newData[key].size) {
-            await img.upload(
-              newData[`imageUpload_${field}`],
-              newData[`imageName_${field}`],
-              newData[`imageBucket_${field}`],
-              800,
-              600
-            );
-            await img.upload(
-              newData[`imageThumb_${field}`],
-              `thumb-${newData[`imageName_${field}`]}`,
-              newData[`imageBucket_${field}`],
-              400,
-              300
-            );
+            const { data: imageFile, error: errFile } = await locals.sb.storage
+              .from(newData[`imageBucket_${field}`])
+              .upload(
+                newData[`imageName_${field}`],
+                newData[`imageUpload_${field}`]
+              );
+            if (errFile) {
+              throw error(404, {
+                message: errFile.message,
+              });
+            }
           }
           delete newData[`imageUpload_${field}`];
-          delete newData[`imageThumb_${field}`];
           delete newData[`imageName_${field}`];
           delete newData[`imageBucket_${field}`];
         }
-
         if (key.indexOf("manySelected_") === 0) {
           const field = key.replace("manySelected_", "");
           manyTables[field] = {
@@ -279,17 +274,13 @@ export const db = {
             newselected: newData[`manyNewSelected_${field}`],
             unselected: newData[`manyUnSelected_${field}`],
             table: newData[`manyTable_${field}`],
-            // id: newData[`manyID_${field}`],
           };
           delete newData[`manySelected_${field}`];
           delete newData[`manyUnSelected_${field}`];
           delete newData[`manyNewSelected_${field}`];
           delete newData[`manyTable_${field}`];
-          // delete newData[`manyID_${field}`];
         }
       }
-
-      // console.log("newData", newData);
 
       const { data, error: err } = await locals.sb
         .from(fetch.table)
@@ -298,12 +289,11 @@ export const db = {
         .single();
 
       if (err) {
+        console.log("err", err);
         throw error(404, {
           message: err.message,
         });
       }
-
-      // console.log("manydata", data);
 
       for (const key in manyTables) {
         const table = manyTables[key].table;
@@ -376,42 +366,20 @@ export const db = {
 
         if (key.indexOf("imageUpload_") === 0) {
           const field = key.replace("imageUpload_", "");
-
-          const { data: imageFile, error: errFile } = await locals.sb.storage
-            .from(newData[`imageBucket_${field}`])
-            .upload(
-              newData[`imageName_${field}`],
-              newData[`imageUpload_${field}`]
-            );
-          if (errFile) {
-            throw error(404, {
-              message: errFile.message,
-            });
+          if (newData[key].size) {
+            const { data: imageFile, error: errFile } = await locals.sb.storage
+              .from(newData[`imageBucket_${field}`])
+              .upload(
+                newData[`imageName_${field}`],
+                newData[`imageUpload_${field}`]
+              );
+            if (errFile) {
+              throw error(404, {
+                message: errFile.message,
+              });
+            }
           }
-
-          // let uploadImage = JSON.parse(newData[`imageUpload_${field}`])
-          // let uploadThumb = JSON.parse(newData[`imageThumb_${field}`])
-
-          // console.log("newData[`imageUpload_${field}`]", newData[`imageUpload_${field}`]);
-
-          // if (newData[`imageUpload_${field}`].size) {
-          //   await img.upload(
-          //     newData[`imageUpload_${field}`],
-          //     newData[`imageName_${field}`],
-          //     newData[`imageBucket_${field}`],
-          //     800,
-          //     600
-          //   );
-          //   await img.upload(
-          //     newData[`imageThumb_${field}`],
-          //     `thumb-${newData[`imageName_${field}`]}`,
-          //     newData[`imageBucket_${field}`],
-          //     400,
-          //     300
-          //   );
-          // }
           delete newData[`imageUpload_${field}`];
-          // delete newData[`imageThumb_${field}`];
           delete newData[`imageName_${field}`];
           delete newData[`imageBucket_${field}`];
         }
@@ -423,7 +391,6 @@ export const db = {
             newselected: newData[`manyNewSelected_${field}`],
             unselected: newData[`manyUnSelected_${field}`],
             table: newData[`manyTable_${field}`],
-            // id: newData[`manyID_${field}`],
           };
           delete newData[`manySelected_${field}`];
           delete newData[`manyUnSelected_${field}`];
@@ -476,7 +443,9 @@ export const db = {
         });
       }
 
-      return newData;
+      // let path = url.pathname.split("/");
+      throw redirect(303, url.pathname);
+      // return newData;
     },
     delete: async (request, url, locals, fetch) => {
       const { error: err } = await locals.sb
@@ -503,6 +472,7 @@ export const db = {
         .eq("id", fetch.id)
         .single();
 
+      // get only valued fields, remove all null fields
       for (const key in dataOri) {
         if (dataOri[key]) {
           newData[key] = dataOri[key];
@@ -522,6 +492,87 @@ export const db = {
       if (errNew) {
         throw error(404, {
           message: errNew.message,
+        });
+      }
+
+      if ("all_depots" in dataNew) {
+        const { data: dataDepots, error: errDepots } = await locals.sb
+          .from(`${fetch.table}_depots`)
+          .select()
+          .eq(fetch.table, fetch.id);
+
+        dataDepots.forEach(async (row) => {
+          row[fetch.table] = dataNew.id;
+          const { data: dataNewDepot, error: errNewDepot } = await locals.sb
+            .from(`${fetch.table}_depots`)
+            .insert(row)
+            .select()
+            .single();
+        });
+      }
+      if ("all_vehicles" in dataNew) {
+        const { data: datavehicles, error: errvehicles } = await locals.sb
+          .from(`${fetch.table}_vehicles`)
+          .select()
+          .eq(fetch.table, fetch.id);
+
+        datavehicles.forEach(async (row) => {
+          row[fetch.table] = dataNew.id;
+          const { data: dataNewvehicles, error: errNewvehicles } =
+            await locals.sb
+              .from(`${fetch.table}_vehicles`)
+              .insert(row)
+              .select()
+              .single();
+        });
+      }
+      if ("all_suppliers" in dataNew) {
+        const { data: datasuppliers, error: errsuppliers } = await locals.sb
+          .from(`${fetch.table}_suppliers`)
+          .select()
+          .eq(fetch.table, fetch.id);
+
+        datasuppliers.forEach(async (row) => {
+          row[fetch.table] = dataNew.id;
+          const { data: dataNewsuppliers, error: errNewsuppliers } =
+            await locals.sb
+              .from(`${fetch.table}_suppliers`)
+              .insert(row)
+              .select()
+              .single();
+        });
+      }
+      if ("all_categories" in dataNew) {
+        const { data: datacategories, error: errcategories } = await locals.sb
+          .from(`${fetch.table}_categories`)
+          .select()
+          .eq(fetch.table, fetch.id);
+
+        datacategories.forEach(async (row) => {
+          row[fetch.table] = dataNew.id;
+          const { data: dataNewcategories, error: errNewcategories } =
+            await locals.sb
+              .from(`${fetch.table}_categories`)
+              .insert(row)
+              .select()
+              .single();
+        });
+      }
+
+      if (fetch.table === "rates") {
+        const { data: dataSeasons, error: errSeasons } = await locals.sb
+          .from("ratesSeasons")
+          .select()
+          .eq("rates", fetch.id);
+
+        dataSeasons.forEach(async (season) => {
+          sanitize(season);
+          season.rates = dataNew.id;
+          const { data: dataNewSeason, error: errNewSeason } = await locals.sb
+            .from("ratesSeasons")
+            .insert(season)
+            .select()
+            .single();
         });
       }
 

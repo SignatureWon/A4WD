@@ -148,6 +148,11 @@
       bind:value={data.data.reminder}
       half={true}
     />
+    <InputToggle
+      name="pay_counter"
+      label="Pay balance at counter"
+      bind:value={data.data.pay_counter}
+    />
   </FormSection>
   <FormSection title="Summary of Terms">
     <InputRichText

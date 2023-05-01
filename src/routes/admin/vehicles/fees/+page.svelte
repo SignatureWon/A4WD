@@ -1,7 +1,16 @@
 <script>
-  import PageHeader from "$lib/components/PageHeader.svelte";
-  import Table from "$lib/components/Table.svelte";
-  const headers = [
+  import PageTitle from "$lib/components/admin/PageTitle.svelte";
+  import SectionDataTable from "$lib/components/admin/SectionDataTable.svelte";
+
+  export let data;
+</script>
+
+<PageTitle title="Fees" path={data.path} />
+
+<SectionDataTable
+  rows={data.data}
+  path={data.path}
+  headers={[
     {
       key: "name",
       value: "Name",
@@ -14,11 +23,5 @@
       key: "date_end",
       value: "End Date",
     },
-  ];
-</script>
-
-<PageHeader name="Fees" table="fees" />
-<Table
-  table="fees"
-  {headers}
+  ]}
 />

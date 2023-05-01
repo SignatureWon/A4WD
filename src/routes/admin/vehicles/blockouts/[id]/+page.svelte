@@ -1,144 +1,71 @@
 <script>
-  import { onMount } from "svelte";
-  import { page } from "$app/stores";
-  import Feedback from "$lib/components/Feedback.svelte";
-  import Title from "$lib/admin/Title.svelte";
-  import Form from "$lib/admin/input/Form.svelte";
-  import { db } from "$lib/db";
-  import { blockouts } from "$lib/schema/blockouts";
-
-  const title = "Blockout";
-  let fetch = {
-    from: "blockouts",
-    select: "*",
-    id: $page.params.id,
-    url: $page.url.pathname,
-    parent: $page.url.pathname.replace(`/${$page.params.id}`, ""),
-  };
-  let data = {};
-
-  onMount(async () => {
-    data = db.default(blockouts);
-    if (fetch.id !== "add") {
-      data = await db.one(fetch);
-      ["depots", "suppliers", "vehicles"].forEach(key => {
-        delete data[key]
-      })
-    }
-  });
-
-  $: {
-    fetch = {
-    from: "blockouts",
-    select: "*",
-    id: $page.params.id,
-    url: $page.url.pathname,
-    parent: $page.url.pathname.replace(`/${$page.params.id}`, ""),
-  };
-  
-}
+  import PageTitle from "$lib/components/admin/PageTitle.svelte";
+  import Form from "$lib/components/admin/Form.svelte";
+  import FormSection from "$lib/components/admin/FormSection.svelte";
+  import InputText from "$lib/components/admin/InputText.svelte";
+  import InputTextArea from "$lib/components/admin/InputTextArea.svelte";
+  import InputToggle from "$lib/components/admin/InputToggle.svelte";
+  import InputManyRelation from "$lib/components/admin/InputManyRelation.svelte";
+  import InputDateRange from "$lib/components/admin/InputDateRange.svelte";
+  export let data;
 </script>
 
-<Feedback {data} />
-
-<Title {title} {data} />
-
-<Form
-  structure={{
-    name: "",
-    sections: [
-      {
-        name: "Info",
-        fields: ["name", "description", "date_start"],
-      },
-      {
-        name: "Criteria",
-        fields: ["all_depots", "all_suppliers", "all_vehicles"],
-      },
-      {
-        name: "Publish",
-        fields: ["status"],
-      },
-    ],
-  }}
-  {fetch}
-  bind:data
-  schema={blockouts}
-  duplicate={true}
-/>
-<!-- <script>
-  import PageHeader from "$lib/components/PageHeader.svelte";
-  import Form from "$lib/components/Form.svelte";
-  const form = {
-    name: "General",
-    groups: [
-      {
-        name: "Info",
-        description: "",
-        fields: [
-          {
-            name: "name",
-            label: "Name",
-            type: "text",
-            required: true,
-          },
-          {
-            name: "description",
-            label: "Description",
-            type: "text",
-            required: true,
-          },
-          {
-            name: "date_start",
-            label: "Start date",
-            name2: "date_end",
-            label2: "End date",
-            type: "daterange",
-          },
-        ],
-      },
-      {
-        name: "Criteria",
-        description: "",
-        fields: [
-          {
-            name: "vehicles",
-            label: "Vehicle",
-            type: "related",
-            related: "vehicles",
-          },
-          {
-            name: "all_vehicles",
-            label: "All vehicles",
-            type: "switch",
-          },
-          {
-            name: "depots",
-            label: "Depot",
-            type: "related",
-            related: "depots",
-          },
-          {
-            name: "all_depots",
-            label: "All depots",
-            type: "switch",
-          },
-          {
-            name: "suppliers",
-            label: "Supplier",
-            type: "related",
-            related: "suppliers",
-          },
-          {
-            name: "all_suppliers",
-            label: "All suppliers",
-            type: "switch",
-          },
-        ],
-      },
-    ],
-  };
-</script>
-
-<PageHeader name="Blockout" table="blockouts" />
-<Form {form} table="blockouts" /> -->
+<PageTitle title="Addons" path={data.path} data={data.data} id={data.id} />
+<Form id={data.id} path={data.path}>
+  <FormSection title="Info">
+    <InputText
+      name="name"
+      label="Name"
+      bind:value={data.data.name}
+      required={true}
+    />
+    <InputTextArea
+      name="description"
+      label="Description"
+      bind:value={data.data.description}
+    />
+    <InputDateRange
+      nameFrom="date_start"
+      nameTo="date_end"
+      labelFrom="Start Date"
+      labelTo="End Date"
+      bind:valueFrom={data.data.date_start}
+      bind:valueTo={data.data.date_end}
+    />
+  </FormSection>
+  <FormSection title="Criteria">
+    <InputManyRelation
+      name="all_depots"
+      label="Depots"
+      value={data.data.all_depots}
+      table="blockouts_depots"
+      options={data.depots}
+      selected={data.depots_selected}
+    />
+    <InputManyRelation
+      name="all_suppliers"
+      label="Suppliers"
+      value={data.data.all_suppliers}
+      table="blockouts_suppliers"
+      options={data.suppliers}
+      selected={data.suppliers_selected}
+    />
+    <InputManyRelation
+      name="all_vehicles"
+      label="Vehicles"
+      value={data.data.all_vehicles}
+      table="blockouts_vehicles"
+      options={data.vehicles}
+      selected={data.vehicles_selected}
+    />
+  </FormSection>
+  <FormSection title="Publish">
+    <InputToggle
+      name="status"
+      label="Status"
+      bind:value={data.data.status}
+      init="true"
+      half={true}
+    />
+  </FormSection>
+</Form>

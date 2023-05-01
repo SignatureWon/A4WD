@@ -1,7 +1,16 @@
 <script>
-  import PageHeader from "$lib/components/PageHeader.svelte";
-  import Table from "$lib/components/Table.svelte";
-  const headers = [
+  import PageTitle from "$lib/components/admin/PageTitle.svelte";
+  import SectionDataTable from "$lib/components/admin/SectionDataTable.svelte";
+
+  export let data;
+</script>
+
+<PageTitle title="Blockouts" path={data.path} />
+
+<SectionDataTable
+  rows={data.data}
+  path={data.path}
+  headers={[
     {
       key: "name",
       value: "Name",
@@ -18,11 +27,5 @@
       key: "status",
       value: "Status",
     },
-  ];
-</script>
-
-<PageHeader name="Blockouts" table="blockouts" />
-<Table
-  table="blockouts"
-  {headers}
+  ]}
 />

@@ -9,9 +9,13 @@
   const level = path.split("/");
   let pages = [];
   let link = "";
+  let depth = 4;
+  if (["Vehicle", "Page"].includes(title)) {
+    depth = 3;
+  }
   level.forEach((item, index) => {
     if (index > 0 && index < level.length - 1) {
-      if (index < 4) {
+      if (index < depth) {
         link += `/${item}`;
         pages.push({
           name: item,

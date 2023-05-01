@@ -1,65 +1,91 @@
 <script>
-  import { onMount } from "svelte";
-  import { page } from "$app/stores";
-  import Feedback from "$lib/components/Feedback.svelte";
-  import Title from "$lib/admin/Title.svelte";
-  import Form from "$lib/admin/input/Form.svelte";
-  import { db } from "$lib/db";
-  import { fees } from "$lib/schema/fees";
-
-  const title = "Fee";
-  let fetch = {
-    from: "fees",
-    select: "*",
-    id: $page.params.id,
-    url: $page.url.pathname,
-    parent: $page.url.pathname.replace(`/${$page.params.id}`, ""),
-  };
-  let data = {};
-
-  onMount(async () => {
-    data = db.default(fees);
-    if (fetch.id !== "add") {
-      data = await db.one(fetch);
-    }
-  });
-
-  $: {
-    fetch = {
-    from: "fees",
-    select: "*",
-    id: $page.params.id,
-    url: $page.url.pathname,
-    parent: $page.url.pathname.replace(`/${$page.params.id}`, ""),
-  };
-  
-}
+  import PageTitle from "$lib/components/admin/PageTitle.svelte";
+  import Form from "$lib/components/admin/Form.svelte";
+  import FormSection from "$lib/components/admin/FormSection.svelte";
+  import InputText from "$lib/components/admin/InputText.svelte";
+  import InputTextArea from "$lib/components/admin/InputTextArea.svelte";
+  import InputToggle from "$lib/components/admin/InputToggle.svelte";
+  import InputManyRelation from "$lib/components/admin/InputManyRelation.svelte";
+  import InputDateRange from "$lib/components/admin/InputDateRange.svelte";
+  import InputNumber from "$lib/components/admin/InputNumber.svelte";
+  export let data;
 </script>
 
-<Feedback {data} />
-
-<Title {title} {data} />
-
-<Form
-  structure={{
-    name: "",
-    sections: [
-      {
-        name: "Info",
-        fields: ["name", "description", "date_start"],
-      },
-      {
-        name: "Criteria",
-        fields: ["all_vehicles", "all_depots", "all_suppliers"],
-      },
-      {
-        name: "Charge on",
-        fields: ["pickup", "dropoff", "return", "fee"],
-      },
-    ],
-  }}
-  {fetch}
-  bind:data
-  schema={fees}
-  duplicate={true}
-/>
+<PageTitle title="Addons" path={data.path} data={data.data} id={data.id} />
+<Form id={data.id} path={data.path}>
+  <FormSection title="Info">
+    <InputText
+      name="name"
+      label="Name"
+      bind:value={data.data.name}
+      required={true}
+    />
+    <InputTextArea
+      name="description"
+      label="Description"
+      bind:value={data.data.description}
+    />
+    <InputDateRange
+      nameFrom="date_start"
+      nameTo="date_end"
+      labelFrom="Start Date"
+      labelTo="End Date"
+      bind:valueFrom={data.data.date_start}
+      bind:valueTo={data.data.date_end}
+    />
+  </FormSection>
+  <FormSection title="Criteria">
+    <InputManyRelation
+      name="all_depots"
+      label="Depots"
+      value={data.data.all_depots}
+      table="fees_depots"
+      options={data.depots}
+      selected={data.depots_selected}
+    />
+    <InputManyRelation
+      name="all_suppliers"
+      label="Suppliers"
+      value={data.data.all_suppliers}
+      table="fees_suppliers"
+      options={data.suppliers}
+      selected={data.suppliers_selected}
+    />
+    <InputManyRelation
+      name="all_vehicles"
+      label="Vehicles"
+      value={data.data.all_vehicles}
+      table="fees_vehicles"
+      options={data.vehicles}
+      selected={data.vehicles_selected}
+    />
+  </FormSection>
+  <FormSection title="Publish">
+    <InputToggle
+      name="pickup"
+      label="Pick-up"
+      bind:value={data.data.pickup}
+      half={true}
+    />
+    <InputToggle
+      name="dropoff"
+      label="Drop-off"
+      bind:value={data.data.dropoff}
+      half={true}
+    />
+    <InputToggle
+      name="return"
+      label="Return to base"
+      bind:value={data.data.return}
+      half={true}
+    />
+  </FormSection>
+  <FormSection title="Fee">
+    <InputNumber
+      name="fee"
+      label="Fee"
+      bind:value={data.data.fee}
+      step={0.01}
+    />
+  </FormSection>
+</Form>

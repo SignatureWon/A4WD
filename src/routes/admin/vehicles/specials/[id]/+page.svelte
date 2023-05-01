@@ -8,10 +8,7 @@
   import InputSelect from "$lib/components/admin/InputSelect.svelte";
   import InputDateRange from "$lib/components/admin/InputDateRange.svelte";
   import InputNumber from "$lib/components/admin/InputNumber.svelte";
-  import InputHidden from "$lib/components/admin/InputHidden.svelte";
-  import InputToggle from "$lib/components/admin/InputToggle.svelte";
-  import InputSeasonalTiers from "$lib/components/admin/InputSeasonalTiers.svelte";
-  import { Select, SelectItem } from "carbon-components-svelte";
+  import InputImage from "$lib/components/admin/InputImage.svelte";
   export let data;
 </script>
 
@@ -29,111 +26,132 @@
       label="Description"
       bind:value={data.data.description}
     />
-    <!-- <InputSelect
-      name="suppliers"
-      label="Supplier"
-      bind:value={data.data.suppliers}
+  </FormSection>
+  <FormSection title="Date">
+    <InputDateRange
+      nameFrom="booking_start"
+      nameTo="booking_end"
+      labelFrom="Booking Start"
+      labelTo="Booking End"
+      bind:valueFrom={data.data.booking_start}
+      bind:valueTo={data.data.booking_end}
+    />
+    <InputDateRange
+      nameFrom="travel_start"
+      nameTo="travel_end"
+      labelFrom="Travel Start"
+      labelTo="Travel End"
+      bind:valueFrom={data.data.travel_start}
+      bind:valueTo={data.data.travel_end}
+    />
+  </FormSection>
+  <FormSection title="Image">
+    <InputImage
+      name="image"
+      label="Featured Image"
+      bind:value={data.data.image}
+      bucket="contents"
+      fetch={{
+        table: "specials",
+        id: data.id,
+      }}
+    />
+    <InputText name="caption" label="Caption" bind:value={data.data.caption} />
+  </FormSection>
+  <FormSection title="Criteria">
+    <InputManyRelation
+      name="all_depots"
+      label="Depots"
+      value={data.data.all_depots}
+      table="specials_depots"
+      options={data.depots}
+      selected={data.depots_selected}
+    />
+    <InputManyRelation
+      name="all_suppliers"
+      label="Suppliers"
+      value={data.data.all_suppliers}
+      table="specials_suppliers"
       options={data.suppliers}
-    /> -->
-    <!-- <InputToggle
-      name="calendar"
-      label="Calendar Day"
-      bind:value={data.data.calendar}
-    /> -->
+      selected={data.suppliers_selected}
+    />
+    <InputManyRelation
+      name="all_vehicles"
+      label="Vehicles"
+      value={data.data.all_vehicles}
+      table="specials_vehicles"
+      options={data.vehicles}
+      selected={data.vehicles_selected}
+    />
   </FormSection>
-  {#if data.id !== "add"}
-    <FormSection title="Date">
-      <InputDateRange
-        nameFrom="booking_start"
-        nameTo="booking_end"
-        labelFrom="Booking Start"
-        labelTo="Booking End"
-        bind:valueFrom={data.data.booking_start}
-        bind:valueTo={data.data.booking_end}
+  <FormSection title="Discount">
+    <InputSelect
+      name="type"
+      label="Type"
+      bind:value={data.data.type}
+      options={[
+        {
+          id: "Deduction",
+          name: "Deduction",
+        },
+        {
+          id: "Early bird",
+          name: "Early bird",
+        },
+        {
+          id: "Long term",
+          name: "Long term",
+        },
+        {
+          id: "Every X day",
+          name: "Every X day",
+        },
+      ]}
+    />
+    {#if data.data.type === "Early bird"}
+      <InputNumber
+        name="days"
+        label="X days before travel"
+        bind:value={data.data.days}
       />
-      <InputDateRange
-        nameFrom="travel_start"
-        nameTo="travel_end"
-        labelFrom="Travel Start"
-        labelTo="Travel End"
-        bind:valueFrom={data.data.travel_start}
-        bind:valueTo={data.data.travel_end}
+    {:else if data.data.type === "Long term"}
+      <InputNumber
+        name="days"
+        label="Travel longer than X days"
+        bind:value={data.data.days}
       />
-    </FormSection>
-    <FormSection title="Criteria">
-      <InputManyRelation
-        name="all_depots"
-        label="Depots"
-        value={data.data.all_depots}
-        table="specials_depots"
-        options={data.depots}
-        selected={data.depots_selected}
+    {:else if data.data.type === "Every X day"}
+      <InputNumber
+        name="days"
+        label="On every X day"
+        bind:value={data.data.days}
       />
-      <InputManyRelation
-        name="all_suppliers"
-        label="Suppliers"
-        value={data.data.all_suppliers}
-        table="specials_suppliers"
-        options={data.suppliers}
-        selected={data.suppliers_selected}
-      />
-      <InputManyRelation
-        name="all_vehicles"
-        label="Vehicles"
-        value={data.data.all_vehicles}
-        table="specials_vehicles"
-        options={data.vehicles}
-        selected={data.vehicles_selected}
-      />
-    </FormSection>
-    <FormSection title="Discount">
-      <div class="md:col-span-2">
-        <Select labelText="Type" name="type" bind:selected={data.data.type}>
-          <SelectItem value="deduction" text="Deduction" />
-          <SelectItem value="early_bird" text="Early bird" />
-          <SelectItem value="long_term" text="Long term" />
-          <SelectItem value="x_day" text="Every X day" />
-        </Select>
-      </div>
-      {#if data.data.type === "x_day"}
-        <InputNumber name="value" label="On every X day" value="" />
-      {/if}
-      <div class="md:col-span-2">
-        <Select labelText="Discount" name="discount">
-          <SelectItem value="by_percentage" text="By percentage" />
-          <SelectItem value="by_price" text="By price" />
-          <SelectItem value="by_day" text="By day" />
-        </Select>
-      </div>
-      <div class="md:col-span-2">
-        <Select labelText="Discount" name="discount">
-          <SelectItem value="by_percentage" text="By percentage" />
-          <SelectItem value="by_price" text="By price" />
-          <SelectItem value="by_day" text="By day" />
-        </Select>
-      </div>
-      <InputNumber name="value" label="Value" value="" />
-    </FormSection>
-  {/if}
-
-  <!-- <FormSection title="Factors">
-    <InputNumber
-      name="nett"
-      label="Nett Factor (Percentage)"
-      bind:value={data.data.nett}
+    {/if}
+    <InputSelect
+      name="factor"
+      label="Discount by"
+      bind:value={data.data.factor}
+      options={[
+        {
+          id: "Percentage",
+          name: "Percentage",
+        },
+        {
+          id: "Price",
+          name: "Price",
+        },
+        {
+          id: "Day",
+          name: "Day",
+        },
+      ]}
       half={true}
     />
     <InputNumber
-      name="gross"
-      label="Gross Factor (Percentage)"
-      bind:value={data.data.gross}
+      name="value"
+      label="Value"
+      bind:value={data.data.value}
       half={true}
     />
   </FormSection>
-  <FormSection title="Tiered-rates">
-    <InputSeasonalTiers
-      bind:value={data.data.tiers}
-    />
-  </FormSection>
-  <InputHidden name="type" value="seasonal" /> -->
 </Form>

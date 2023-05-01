@@ -11,8 +11,13 @@ const keys = [
   "all_suppliers",
   "all_depots",
   "all_vehicles",
-  "json_details",
+  // "json_details",
   "type",
+  "days",
+  "value",
+  "factor",
+  "image",
+  "caption",
 ];
 export async function load({ url, params, locals }) {
   return {
@@ -30,21 +35,30 @@ export async function load({ url, params, locals }) {
     vehicles: db.related({
       table: "vehicles",
     }),
-    suppliers_selected: db.all({
-      table: "specials_suppliers",
-      keys: ["suppliers"],
-      eq: [{ name: "specials", value: params.id }],
-    }),
-    depots_selected: db.all({
-      table: "specials_depots",
-      keys: ["depots"],
-      eq: [{ name: "specials", value: params.id }],
-    }),
-    vehicles_selected: db.all({
-      table: "specials_vehicles",
-      keys: ["vehicles"],
-      eq: [{ name: "specials", value: params.id }],
-    }),
+    suppliers_selected:
+      params.id === "add"
+        ? []
+        : db.all({
+            table: "specials_suppliers",
+            keys: ["suppliers"],
+            eq: [{ name: "specials", value: params.id }],
+          }),
+    depots_selected:
+      params.id === "add"
+        ? []
+        : db.all({
+            table: "specials_depots",
+            keys: ["depots"],
+            eq: [{ name: "specials", value: params.id }],
+          }),
+    vehicles_selected:
+      params.id === "add"
+        ? []
+        : db.all({
+            table: "specials_vehicles",
+            keys: ["vehicles"],
+            eq: [{ name: "specials", value: params.id }],
+          }),
     path: url.pathname,
     id: params.id,
   };

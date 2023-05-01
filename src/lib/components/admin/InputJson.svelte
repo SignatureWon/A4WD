@@ -1,5 +1,5 @@
 <script>
-  import { Button, TextInput } from "carbon-components-svelte";
+  import { Button } from "carbon-components-svelte";
 
   export let name = "";
   export let value = "";
@@ -16,9 +16,7 @@
     if (!value) {
       value = [];
     }
-    value = [...value, schema];
-
-    console.log(value);
+    value = [...value, { ...schema }];
   };
   const move = (arr, from, to) => {
     let newArr = arr;
@@ -106,5 +104,5 @@
       on:click={() => addRecords()}>Add record</Button
     >
   </div>
-  <input {name} type="hidden" value={JSON.stringify(value)} />
+  <input {name} type="text" value={JSON.stringify(value)} />
 </div>

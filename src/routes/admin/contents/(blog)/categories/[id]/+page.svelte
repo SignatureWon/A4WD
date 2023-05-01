@@ -1,47 +1,44 @@
 <script>
-  import PageHeader from "$lib/components/PageHeader.svelte";
-  import Form from "$lib/components/Form.svelte";
-  const form = {
-    name: "Category",
-    groups: [
-      {
-        name: "",
-        description: "",
-        fields: [
-          {
-            name: "name",
-            label: "Name",
-            type: "text",
-            required: true,
-          },
-          {
-            name: "description",
-            label: "Description",
-            type: "trixeditor",
-          },
-          {
-            name: "status",
-            label: "Status",
-            toggle: "Active",
-            type: "switch",
-            size: "half",
-          },
-          {
-            name: "rank",
-            label: "Rank",
-            type: "number",
-            size: "half",
-          },
-          {
-            name: "type",
-            default: "articles",
-            type: "hidden",
-          },
-        ],
-      },
-    ],
-  };
+  import PageTitle from "$lib/components/admin/PageTitle.svelte";
+  import Form from "$lib/components/admin/Form.svelte";
+  import FormSection from "$lib/components/admin/FormSection.svelte";
+  import InputText from "$lib/components/admin/InputText.svelte";
+  import InputTextArea from "$lib/components/admin/InputTextArea.svelte";
+  import InputNumber from "$lib/components/admin/InputNumber.svelte";
+  import InputToggle from "$lib/components/admin/InputToggle.svelte";
+  import InputRichText from "$lib/components/admin/InputRichText.svelte";
+  export let data;
 </script>
 
-<PageHeader name="Category" table="categories" />
-<Form {form} table="categories" />
+<PageTitle title="Category" path={data.path} data={data.data} id={data.id} />
+<Form id={data.id} path={data.path}>
+  <FormSection title="Info">
+    <InputText
+      name="name"
+      label="Name"
+      bind:value={data.data.name}
+      required={true}
+    />
+    <InputRichText
+      name="description"
+      label="Description"
+      bind:value={data.data.description}
+    />
+  </FormSection>
+  <FormSection title="Publish">
+    <InputToggle
+      name="status"
+      label="Status"
+      bind:value={data.data.status}
+      init="true"
+      half={true}
+    />
+    <InputNumber
+      name="rank"
+      label="Rank"
+      bind:value={data.data.rank}
+      half={true}
+    />
+  </FormSection>
+  <input type="hidden" name="type" value="vehicles">
+</Form>

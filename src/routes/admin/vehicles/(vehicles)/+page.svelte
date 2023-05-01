@@ -1,14 +1,23 @@
 <script>
-  import PageHeader from "$lib/components/PageHeader.svelte";
-  import Table from "$lib/components/Table.svelte";
-  const headers = [
+  import PageTitle from "$lib/components/admin/PageTitle.svelte";
+  import SectionDataTable from "$lib/components/admin/SectionDataTable.svelte";
+
+  export let data;
+</script>
+
+<PageTitle title="Vehicles" path={data.path} />
+
+<SectionDataTable
+  rows={data.data}
+  path={data.path}
+  headers={[
     {
       key: "name",
       value: "Name",
     },
     {
       key: "suppliers.name",
-      value: "Supplier",
+      value: "Suppliers",
     },
     {
       key: "status",
@@ -18,18 +27,5 @@
       key: "rank",
       value: "Rank",
     },
-  ];
-</script>
-
-<PageHeader name="Vehicles" table="vehicles" />
-<Table
-  table="vehicles"
-  fields="id, name, status, rank, suppliers (name)"
-  orders={[
-    {
-      column: "rank",
-      ascend: true
-    }
   ]}
-  {headers}
 />
