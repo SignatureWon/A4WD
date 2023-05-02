@@ -14,6 +14,7 @@ const keys = [
   "cap",
   "deposit",
   "liability",
+  "bond",
   "waive_one_way",
   "description",
   "inclusions",

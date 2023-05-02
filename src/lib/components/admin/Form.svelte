@@ -8,6 +8,27 @@
 </script>
 
 <form method="POST" {action} enctype="multipart/form-data" class="bg-white divide-y divide-gray-200">
+  <header class="flex justify-between p-5">
+    <div class="flex">&nbsp;</div>
+    <div class="flex">
+      {#if id !== "add"}
+        <Button kind="ghost" href={path.replace(id, "")}>Back</Button>
+        <Button
+          type="submit"
+          on:click={(e) => {
+            action = "?/update";
+          }}>Update</Button
+        >
+      {:else}
+        <Button
+          type="submit"
+          on:click={(e) => {
+            action = "?/insert";
+          }}>Create</Button
+        >
+      {/if}
+    </div>
+  </header>
   <slot />
   <footer class="flex justify-between p-5">
     <div class="flex">
