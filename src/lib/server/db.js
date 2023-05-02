@@ -510,6 +510,21 @@ export const db = {
             .single();
         });
       }
+      if ("all_dropoffs" in dataNew) {
+        const { data: dataDropoffs, error: errDropoffs } = await locals.sb
+          .from(`${fetch.table}_dropoffs`)
+          .select()
+          .eq(fetch.table, fetch.id);
+
+        dataDropoffs.forEach(async (row) => {
+          row[fetch.table] = dataNew.id;
+          const { data: dataNewDropoff, error: errNewDropoff } = await locals.sb
+            .from(`${fetch.table}_dropoffs`)
+            .insert(row)
+            .select()
+            .single();
+        });
+      }
       if ("all_vehicles" in dataNew) {
         const { data: datavehicles, error: errvehicles } = await locals.sb
           .from(`${fetch.table}_vehicles`)

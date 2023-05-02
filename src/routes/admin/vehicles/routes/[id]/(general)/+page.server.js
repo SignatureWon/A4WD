@@ -7,6 +7,8 @@ const keys = [
   "date_end",
   "all_suppliers",
   "all_depots",
+  "waive",
+  "waive_days",
 ];
 
 export async function load({ url, params, locals }) {

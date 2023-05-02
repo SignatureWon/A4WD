@@ -9,6 +9,7 @@
   import InputDateRange from "$lib/components/admin/InputDateRange.svelte";
   import InputNumber from "$lib/components/admin/InputNumber.svelte";
   import InputImage from "$lib/components/admin/InputImage.svelte";
+  import InputToggle from "$lib/components/admin/InputToggle.svelte";
   export let data;
 </script>
 
@@ -61,11 +62,19 @@
   <FormSection title="Criteria">
     <InputManyRelation
       name="all_depots"
-      label="Depots"
+      label="Pick-up Depots"
       value={data.data.all_depots}
       table="specials_depots"
       options={data.depots}
       selected={data.depots_selected}
+    />
+    <InputManyRelation
+      name="all_dropoffs"
+      label="Drop-off Depots"
+      value={data.data.all_dropoffs}
+      table="specials_dropoffs"
+      options={data.depots}
+      selected={data.dropoffs_selected}
     />
     <InputManyRelation
       name="all_suppliers"
@@ -153,5 +162,85 @@
       bind:value={data.data.value}
       half={true}
     />
+    <div class="bg-gray-100 p-4 md:col-span-2">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <InputToggle
+          name="discount2"
+          label="Second discount"
+          bind:value={data.data.discount2}
+        />
+
+        {#if data.data.discount2}
+          <InputSelect
+            name="type2"
+            label="Type"
+            bind:value={data.data.type2}
+            options={[
+              {
+                id: "Deduction",
+                name: "Deduction",
+              },
+              {
+                id: "Early bird",
+                name: "Early bird",
+              },
+              {
+                id: "Long term",
+                name: "Long term",
+              },
+              {
+                id: "Every X day",
+                name: "Every X day",
+              },
+            ]}
+          />
+          {#if data.data.type2 === "Early bird"}
+            <InputNumber
+              name="days2"
+              label="X days before travel"
+              bind:value={data.data.days2}
+            />
+          {:else if data.data.type2 === "Long term"}
+            <InputNumber
+              name="days2"
+              label="Travel longer than X days"
+              bind:value={data.data.days2}
+            />
+          {:else if data.data.type2 === "Every X day"}
+            <InputNumber
+              name="days2"
+              label="On every X day"
+              bind:value={data.data.days2}
+            />
+          {/if}
+          <InputSelect
+            name="factor2"
+            label="Discount by"
+            bind:value={data.data.factor2}
+            options={[
+              {
+                id: "Percentage",
+                name: "Percentage",
+              },
+              {
+                id: "Price",
+                name: "Price",
+              },
+              {
+                id: "Day",
+                name: "Day",
+              },
+            ]}
+            half={true}
+          />
+          <InputNumber
+            name="value2"
+            label="Value"
+            bind:value={data.data.value2}
+            half={true}
+          />
+        {/if}
+      </div>
+    </div>
   </FormSection>
 </Form>

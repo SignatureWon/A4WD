@@ -7,6 +7,8 @@
   export let table = "";
   export let selected = [];
   export let options = [];
+  export let a = null;
+  export let b = null;
 
   let currentSelected = []
   let userSelected = [];
@@ -45,8 +47,8 @@
   <Toggle
     {name}
     labelText={label}
-    labelA="All {label}"
-    labelB="All {label}"
+    labelA={a || `All ${label}`}
+    labelB={b || `All ${label}`}
     bind:toggled={value}
     on:toggle={(e) => {}}
   />
@@ -79,34 +81,6 @@
         value={userUnselected}
       />
       <input type="hidden" name="manyTable_{name}" value={table} />
-      <!-- <input type="hidden" name="manyID_{name}" value={id} /> -->
     </div>
   {/if}
 </div>
-<!-- on:select={(e) => {
-        e.detail.selected.forEach(async (item) => {
-          if (!selected.includes(item.id)) {
-            data.updated = false;
-            let fetch = {
-              from: manyTable,
-            };
-            let newData = {};
-            newData[table[0]] = data.id;
-            newData[table[1]] = item.id;
-            await db.insert(fetch, newData);
-            data.updated = true;
-          }
-        });
-        e.detail.unselected.forEach(async (item) => {
-          if (selected.includes(item.id)) {              
-            data.updated = false;
-            await supabase
-              .from(manyTable)
-              .delete()
-              .eq(table[0], data.id)
-              .eq(table[1], item.id);
-            data.updated = true;
-          }
-        });
-        selected = e.detail.selectedIds;
-      }} -->

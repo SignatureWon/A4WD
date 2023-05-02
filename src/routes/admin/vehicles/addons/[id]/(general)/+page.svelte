@@ -3,6 +3,7 @@
   import Form from "$lib/components/admin/Form.svelte";
   import FormSection from "$lib/components/admin/FormSection.svelte";
   import InputText from "$lib/components/admin/InputText.svelte";
+  import InputTextArea from "$lib/components/admin/InputTextArea.svelte";
   import InputManyRelation from "$lib/components/admin/InputManyRelation.svelte";
   import InputDateRange from "$lib/components/admin/InputDateRange.svelte";
   import Tabs from "$lib/components/admin/Tabs.svelte";
@@ -27,6 +28,11 @@
       labelTo="End Date"
       bind:valueFrom={data.data.date_start}
       bind:valueTo={data.data.date_end}
+    />
+    <InputTextArea
+      name="description"
+      label="Description"
+      bind:value={data.data.description}
     />
     <InputText
       name="link"

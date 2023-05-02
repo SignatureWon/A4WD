@@ -9,6 +9,7 @@ const keys = [
   "all_suppliers",
   "all_vehicles",
   "all_depots",
+  "all_dropoffs",
   "pickup",
   "dropoff",
   "return",
@@ -31,6 +32,14 @@ export async function load({ url, params, locals }) {
         : db.all({
             table: "fees_depots",
             keys: ["depots"],
+            eq: [{ name: "fees", value: params.id }],
+          }),
+    dropoffs_selected:
+      params.id === "add"
+        ? []
+        : db.all({
+            table: "fees_dropoffs",
+            keys: ["dropoffs"],
             eq: [{ name: "fees", value: params.id }],
           }),
     suppliers: db.related({

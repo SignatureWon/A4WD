@@ -7,6 +7,7 @@ const keys = [
   "date_end",
   "all_suppliers",
   "all_vehicles",
+  "description",
   "link",
 ];
 

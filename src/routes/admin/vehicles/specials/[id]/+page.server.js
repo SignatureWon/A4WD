@@ -10,12 +10,18 @@ const keys = [
   "travel_end",
   "all_suppliers",
   "all_depots",
+  "all_dropoffs",
   "all_vehicles",
   // "json_details",
   "type",
   "days",
   "value",
   "factor",
+  "discount2",
+  "type2",
+  "days2",
+  "value2",
+  "factor2",
   "image",
   "caption",
 ];
@@ -49,6 +55,14 @@ export async function load({ url, params, locals }) {
         : db.all({
             table: "specials_depots",
             keys: ["depots"],
+            eq: [{ name: "specials", value: params.id }],
+          }),
+    dropoffs_selected:
+      params.id === "add"
+        ? []
+        : db.all({
+            table: "specials_dropoffs",
+            keys: ["dropoffs"],
             eq: [{ name: "specials", value: params.id }],
           }),
     vehicles_selected:

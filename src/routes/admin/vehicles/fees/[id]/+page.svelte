@@ -9,6 +9,7 @@
   import InputDateRange from "$lib/components/admin/InputDateRange.svelte";
   import InputNumber from "$lib/components/admin/InputNumber.svelte";
   export let data;
+  console.log(data);
 </script>
 
 <PageTitle title="Addons" path={data.path} data={data.data} id={data.id} />
@@ -37,11 +38,19 @@
   <FormSection title="Criteria">
     <InputManyRelation
       name="all_depots"
-      label="Depots"
+      label="Pick-up Depots"
       value={data.data.all_depots}
       table="fees_depots"
       options={data.depots}
       selected={data.depots_selected}
+    />
+    <InputManyRelation
+      name="all_dropoffs"
+      label="Drop-off Depots"
+      value={data.data.all_dropoffs}
+      table="fees_dropoffs"
+      options={data.depots}
+      selected={data.dropoffs_selected}
     />
     <InputManyRelation
       name="all_suppliers"
