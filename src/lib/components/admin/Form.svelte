@@ -4,15 +4,27 @@
   export let id = "add";
   export let path = "/";
 
+
+  let url = path.split("/");
+  const len = url.length;
+  for (let i = 4; i < len; i++) {
+    url.pop();
+  }
+
   let action = "?/insert";
 </script>
 
-<form method="POST" {action} enctype="multipart/form-data" class="bg-white divide-y divide-gray-200">
+<form
+  method="POST"
+  {action}
+  enctype="multipart/form-data"
+  class="bg-white divide-y divide-gray-200"
+>
   <header class="flex justify-between p-5">
     <div class="flex">&nbsp;</div>
     <div class="flex">
       {#if id !== "add"}
-        <Button kind="ghost" href={path.replace(id, "")}>Back</Button>
+        <Button kind="ghost" href={url.join("/")}>Back</Button>
         <Button
           type="submit"
           on:click={(e) => {
@@ -83,7 +95,7 @@
     </div>
     <div class="flex">
       {#if id !== "add"}
-        <Button kind="ghost" href={path.replace(id, "")}>Back</Button>
+        <Button kind="ghost" href={url.join("/")}>Back</Button>
         <Button
           type="submit"
           on:click={(e) => {

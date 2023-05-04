@@ -8,7 +8,7 @@
   import InputNumber from "$lib/components/admin/InputNumber.svelte";
   import InputHidden from "$lib/components/admin/InputHidden.svelte";
   import InputToggle from "$lib/components/admin/InputToggle.svelte";
-  // import InputSeasonalTiers from "$lib/components/admin/InputSeasonalTiers.svelte";
+  import InputSeasonalTiers from "$lib/components/admin/InputSeasonalTiers.svelte";
   import Tabs from "$lib/components/admin/Tabs.svelte";
   import {PageTabs} from "../../tabs"
   export let data;
@@ -30,14 +30,14 @@
       bind:value={data.data.suppliers}
       options={data.suppliers}
     />
-    <InputDateRange
+    <!-- <InputDateRange
       nameFrom="date_start"
       nameTo="date_end"
       labelFrom="Start Date"
       labelTo="End Date"
       bind:valueFrom={data.data.date_start}
       bind:valueTo={data.data.date_end}
-    />
+    /> -->
     <InputToggle
       name="calendar"
       label="Calendar Day"
@@ -50,6 +50,33 @@
       label="License"
       bind:value={data.data.license}
       options={data.licenses}
+    />
+    <!-- <InputSelect
+      name="age"
+      label="Age"
+      bind:value={data.data.age}
+      options={data.ages}
+    /> -->
+  </FormSection>
+  <FormSection title="Factors">
+    <InputNumber
+      name="nett"
+      label="Nett Factor (Percentage)"
+      bind:value={data.data.nett}
+      step={0.01}
+      half={true}
+    />
+    <InputNumber
+      name="gross"
+      label="Gross Factor (Percentage)"
+      bind:value={data.data.gross}
+      step={0.01}
+      half={true}
+    />
+  </FormSection>
+  <FormSection title="Tiered-rates">
+    <InputSeasonalTiers
+      bind:value={data.data.tiers}
     />
   </FormSection>
   <InputHidden name="type" value="seasonal" />

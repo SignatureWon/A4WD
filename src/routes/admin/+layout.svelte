@@ -29,6 +29,7 @@
 
   import LayoutAside from "$lib/components/admin/LayoutAside.svelte";
   import LayoutAsideContent from "$lib/components/admin/LayoutAsideContent.svelte";
+  import Feedback from "$lib/components/admin/Feedback.svelte";
 
   import { page } from "$app/stores";
   let path = $page.url.pathname.split("/");
@@ -52,7 +53,7 @@
     {submodule === "" ? "" : ` - ${capitalize(submodule)}`}
   </title>
 </svelte:head>
-
+<Feedback />
 <Header
   company="Australia 4WD Rentals"
   platformName=""

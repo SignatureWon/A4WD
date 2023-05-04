@@ -19,13 +19,5 @@
       key: "suppliers.name",
       value: "Suppliers",
     },
-    {
-      key: "date_start",
-      value: "Start Date",
-    },
-    {
-      key: "date_end",
-      value: "End Date",
-    },
   ]}
 />

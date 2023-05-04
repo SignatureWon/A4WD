@@ -86,8 +86,13 @@
       </div>
     </div>
     <div class="rounded bg-white p-4">
-      <div class="mb-4 font-bold text-center">
-        <a href="/vehicles?wheel=4WD">4WD Vehicles</a>
+      <div class="mb-4">
+        <span class="font-bold">4WD Vehicles</span>
+        <Button
+          kind="tertiary"
+          href="/vehicles?wheel=4WD"
+          class="text-xs px-2 py-0.5 ml-2">View more</Button
+        >
       </div>
       <section class="splide carousel-4wd -mx-10">
         <div class="splide__track mx-10">
@@ -103,8 +108,7 @@
                         {#if item.image}
                           {#await preload(`${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/${item.image}`) then base64}
                             <div
-                              class="bg-cover bg-center blur-md absolute w-full h-full scale-110 -z-10 bg-gray-200"
-                              style="background-image: url('{base64}');"
+                              class="absolute w-full h-full scale-110 -z-10 bg-white border border-gray-200"
                             />
                             <img
                               src={base64}
@@ -129,8 +133,13 @@
       </section>
     </div>
     <div class="rounded bg-white p-4">
-      <div class="mb-4 font-bold text-center">
-        <a href="/vehicles?wheel=2WD">2WD Vehicles</a>
+      <div class="mb-4">
+        <span class="font-bold">2WD Vehicles</span>
+        <Button
+          kind="tertiary"
+          href="/vehicles?wheel=2WD"
+          class="text-xs px-2 py-0.5 ml-2">View more</Button
+        >
       </div>
       <section class="splide carousel-2wd -mx-10">
         <div class="splide__track mx-10">
@@ -146,8 +155,7 @@
                         {#if item.image}
                           {#await preload(`${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/${item.image}`) then base64}
                             <div
-                              class="bg-cover bg-center blur-md absolute w-full h-full scale-110 -z-10 bg-gray-200"
-                              style="background-image: url('{base64}');"
+                              class="absolute w-full h-full scale-110 -z-10 bg-white border border-gray-200"
                             />
                             <img
                               src={base64}

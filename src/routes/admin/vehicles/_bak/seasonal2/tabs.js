@@ -1,5 +1,5 @@
 export const PageTabs = (id) => {
-  let path = "/admin/vehicles/seasonal";
+  let path = "/admin/vehicles/seasonal2";
   let tabs = [
     {
       name: "General",
@@ -10,7 +10,7 @@ export const PageTabs = (id) => {
   if (id !== "add") {
     tabs = [
         ...tabs,
-        { name: "Rates", link: `${path}/${id}/rates` },
+        { name: "Seasons", link: `${path}/${id}/seasons` },
     ];
   }
 

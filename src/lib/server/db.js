@@ -50,6 +50,7 @@ const convertToJson = (data) => {
     "compulsory",
     "routes",
     "depots",
+    "fees",
   ].forEach((key) => {
     if (key in data) {
       data[key] = JSON.parse(data[key]);
@@ -196,6 +197,18 @@ export const db = {
       .from(fetch.table)
       .insert(fetch.data)
       .select();
+
+    if (err) {
+      throw error(404, {
+        message: err.message,
+      });
+    }
+  },
+  update: async (locals, fetch) => {
+    const { error: err } = await locals.sb
+    .from(fetch.table)
+    .update(fetch.data)
+    .eq("id", fetch.id);
 
     if (err) {
       throw error(404, {
@@ -444,7 +457,7 @@ export const db = {
       }
 
       // let path = url.pathname.split("/");
-      throw redirect(303, url.pathname);
+      throw redirect(303, `${url.pathname}?success=update`);
       // return newData;
     },
     delete: async (request, url, locals, fetch) => {
@@ -460,7 +473,10 @@ export const db = {
       }
 
       let path = url.pathname.split("/");
-      path.pop();
+      const len = path.length;
+      for (let i = 4; i < len; i++) {
+        path.pop();
+      }
       throw redirect(303, `${path.join("/")}`);
     },
     duplicate: async (request, url, locals, fetch) => {
@@ -592,7 +608,10 @@ export const db = {
       }
 
       let path = url.pathname.split("/");
-      path.pop();
+      const len = path.length;
+      for (let i = 4; i < len; i++) {
+        path.pop();
+      }
       throw redirect(303, `${path.join("/")}/${dataNew.id}`);
     },
   },

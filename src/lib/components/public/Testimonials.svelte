@@ -59,8 +59,8 @@
       {/if}
     </div>
 
-    <section class="splide carousel-testimonials">
-      <div class="splide__track">
+    <section class="splide carousel-testimonials -mx-10">
+      <div class="splide__track mx-10">
         <ul class="splide__list">
           {#each records as item, itemIndex}
             {#if itemIndex < 10}
@@ -126,7 +126,7 @@
                       </div>
                     </div>
                     <p
-                      class="grow text-sm text-gray-700 font-medium leading-relaxed mb-5"
+                      class="grow text-sm text-gray-700 font-medium leading-relaxed mb-5 h-56 overflow-hidden"
                     >
                       {item.content}
                     </p>
