@@ -15,6 +15,11 @@
             required: true,
           },
           {
+            name: "rank",
+            label: "Rank",
+            type: "number",
+          },
+          {
             name: "type",
             default: "countries",
             type: "hidden",

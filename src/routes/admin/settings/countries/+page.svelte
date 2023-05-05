@@ -6,6 +6,10 @@
       key: "name",
       value: "Name",
     },
+    {
+      key: "rank",
+      value: "Rank",
+    },
   ];
 </script>
 
@@ -13,5 +17,6 @@
 <Table
   table="constants"
   filters={[{ type: "eq", column: "type", value: "countries" }]}
+  orders={[{ column: "rank", ascend: true }]}
   {headers}
 />
