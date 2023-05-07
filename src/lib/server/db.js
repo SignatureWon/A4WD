@@ -457,7 +457,7 @@ export const db = {
       }
 
       // let path = url.pathname.split("/");
-      throw redirect(303, `${url.pathname}?success=update`);
+      throw redirect(303, `${url.pathname}`);
       // return newData;
     },
     delete: async (request, url, locals, fetch) => {

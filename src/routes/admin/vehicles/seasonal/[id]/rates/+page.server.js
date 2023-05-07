@@ -85,7 +85,7 @@ export const actions = {
       data: ratesList,
     });
 
-    throw redirect(303,  `${url.pathname}?success=update`);
+    throw redirect(303,  `${url.pathname}`);
 
     // await db.actions.update(request, url, locals, {
     //   id: params.id,
