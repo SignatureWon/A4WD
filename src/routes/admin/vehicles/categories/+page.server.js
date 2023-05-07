@@ -6,7 +6,7 @@ export async function load({ url, params }) {
     data: db.all({
       table: "categories",
       keys: keys,
-      // eq: [{ name: "status", value: true }],
+      eq: [{ name: "type", value: "vehicles" }],
       order: [{ name: "rank", ascend: true}]
     }),
     path: url.pathname,

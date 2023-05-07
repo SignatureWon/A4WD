@@ -5,6 +5,7 @@
   import InputText from "$lib/components/admin/InputText.svelte";
   import InputToggle from "$lib/components/admin/InputToggle.svelte";
   import InputImage from "$lib/components/admin/InputImage.svelte";
+  import InputFile from "$lib/components/admin/InputFile.svelte";
   import InputNumber from "$lib/components/admin/InputNumber.svelte";
   import InputRichText from "$lib/components/admin/InputRichText.svelte";
   import InputSelect from "$lib/components/admin/InputSelect.svelte";
@@ -36,11 +37,23 @@
       bind:value={data.data.image}
       bucket="contents"
       fetch={{
-        table: "vehicles",
+        table: "contents",
         id: data.id,
       }}
     />
     <InputText name="caption" label="Caption" bind:value={data.data.caption} />
+  </FormSection>
+  <FormSection title="Attachment">
+    <InputFile
+      name="attachment"
+      label="File"
+      bind:value={data.data.attachment}
+      bucket="terms"
+      fetch={{
+        table: "contents",
+        id: data.id,
+      }}
+    />
   </FormSection>
   <FormSection title="Navigation">
     <InputSelect

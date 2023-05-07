@@ -206,9 +206,9 @@ export const db = {
   },
   update: async (locals, fetch) => {
     const { error: err } = await locals.sb
-    .from(fetch.table)
-    .update(fetch.data)
-    .eq("id", fetch.id);
+      .from(fetch.table)
+      .update(fetch.data)
+      .eq("id", fetch.id);
 
     if (err) {
       throw error(404, {
@@ -474,7 +474,11 @@ export const db = {
 
       let path = url.pathname.split("/");
       const len = path.length;
-      for (let i = 4; i < len; i++) {
+      let depth = 4;
+      if (path[3] === fetch.id) {
+        depth = 3;
+      }
+      for (let i = depth; i < len; i++) {
         path.pop();
       }
       throw redirect(303, `${path.join("/")}`);
@@ -609,10 +613,18 @@ export const db = {
 
       let path = url.pathname.split("/");
       const len = path.length;
-      for (let i = 4; i < len; i++) {
+      let depth = 4;
+      if (path[3] === fetch.id) {
+        depth = 3;
+      }
+      for (let i = depth; i < len; i++) {
         path.pop();
       }
       throw redirect(303, `${path.join("/")}/${dataNew.id}`);
+      // for (let i = 3; i < len; i++) {
+      //   path.pop();
+      // }
+      // throw redirect(303, `/admin/${fetch.table}/${dataNew.id}`);
     },
   },
 };

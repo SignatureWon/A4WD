@@ -7,6 +7,7 @@ const keys = [
   "image",
   "caption",
   "categories",
+  "attachment",
   "featured",
   "status",
   "rank",

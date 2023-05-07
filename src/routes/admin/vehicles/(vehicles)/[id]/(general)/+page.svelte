@@ -12,8 +12,20 @@
   import InputToggle from "$lib/components/admin/InputToggle.svelte";
   import InputSeasonalTiers from "$lib/components/admin/InputSeasonalTiers.svelte";
   import Tabs from "$lib/components/admin/Tabs.svelte";
-  import {PageTabs} from "../../tabs"
+  import { PageTabs } from "../../tabs";
   export let data;
+  import { supabase } from "$lib/supabaseClient";
+  import { onMount } from "svelte";
+
+  onMount(async () => {
+    const { data: vdata } = await supabase
+      .from("vehicles")
+      .select("id, name, categories (name)")
+      .eq("id", data.id)
+      .single();
+
+    console.log("vdata", vdata);
+  });
 
   // console.log(PageTabs(data.id));
 

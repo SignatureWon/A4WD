@@ -6,6 +6,7 @@
   import { goto } from "$app/navigation";
   import Loading from "$lib/components/Loading.svelte";
   import PageHeader from "$lib/components/public/PageHeader.svelte";
+  import { f } from "$lib/file";
   import {
     InlineNotification,
     NotificationActionButton,
@@ -14,6 +15,7 @@
   let record = {};
   let errors = {};
   let loading = false;
+  let filePreview = false;
 
   onMount(async () => {
     try {
@@ -31,6 +33,10 @@
 
       if (data) {
         record = data;
+
+        if (record.attachment) {
+          filePreview = f.extension(record.attachment);
+        }
       }
     } catch (error) {
       errors = error;
@@ -61,14 +67,30 @@
       class="h-96 bg-cover bg-center"
       style="background-image: url('{env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/{record.image}');"
     >
-      <div
+      <!-- <div
         class="w-full h-full bg-black/20 flex flex-col items-center justify-center text-center p-10"
       >
         <h1 class="text-4xl font-bold text-white">{record.name}</h1>
-      </div>
+      </div> -->
     </div>
   </PageHeader>
-  <div class="max-w-5xl py-10 px-5 mx-auto">
-    {@html record.content}
+  <div class="bg-white">
+    <div class="max-w-5xl py-10 px-5 mx-auto">
+      <h1 class="text-4xl font-bold mb-5">{record.name}</h1>
+      {@html record.content}
+      {#if filePreview}
+        <div class="pt-5 mt-5 border-t border-gray-200">
+          <div class="font-bold mb-4">Attachment</div>
+          <!-- svelte-ignore a11y-missing-content -->
+          <a
+            href="{env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/terms/{record.attachment}"
+            target="_blank"
+            rel="noreferrer"
+            class="file-icon file-icon-xl"
+            data-type={filePreview}
+          />
+        </div>
+      {/if}
     </div>
+  </div>
 {/if}

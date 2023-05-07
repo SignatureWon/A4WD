@@ -36,7 +36,7 @@
       bind:value={data.data.image}
       bucket="contents"
       fetch={{
-        table: "vehicles",
+        table: "contents",
         id: data.id,
       }}
     />
