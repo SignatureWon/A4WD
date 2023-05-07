@@ -28,9 +28,12 @@
   let pageSize = 100;
   let page = 1;
   let headers = [
-    { key: "vehicles.name", value: "Vehicles" },
-    { key: "rates.license.name", value: "License" },
-    // { key: "vehicles.categories", value: "vehicles.categories.id" },
+    { key: "vehicle_name", value: "Vehicles" },
+    { key: "license_name", value: "License" },
+    { key: "category_name", value: "category" },
+    { key: "age_name", value: "age" },
+    { key: "flex", value: "flex" },
+    { key: "daily", value: "daily" },
     { key: "date_start", value: "date_start" },
     { key: "date_end", value: "date_end" },
   ];
@@ -38,12 +41,12 @@
   let filteredRowIds = [];
 
   const DbSearch = async () => {
-    console.log(search);
-    let query = supabase
-      .from("ratesList")
-      .select(
-        "id, rates(id, license(id, name)), vehicles(id, name, age, categories(id, name)), depots, daily, flex, date_start, date_end, tiers, ratesSeasons"
-      );
+    // console.log(search);
+    let query = supabase.rpc('get_rates').select()
+    //   .from("ratesList")
+    //   .select(
+    //     "id, rates(id, license(id, name)), vehicles(id, name, age, categories(id, name)), depots, daily, flex, date_start, date_end, tiers, ratesSeasons"
+    //   );
 
     if (search.date_start !== "") {
       query = query.gte("date_start", search.date_start);
@@ -52,11 +55,14 @@
       query = query.lte("date_end", search.date_end);
     }
     if (search.license !== "") {
-      query = query.eq("rates.license", search.license);
+      query = query.eq("license_id", search.license);
     }
     if (search.category !== "") {
-      console.log(search.category);
-      query = query.contains("vehicles->>categories->>id", JSON.stringify([{ id: search.category }]) );
+      query = query.eq("category_id", search.category);
+    }
+
+    //   console.log(search.category);
+    //   query = query.contains("vehicles->>categories->>id", JSON.stringify([{ id: search.category }]) );
     //   query = query.eq("vehicles->categories", JSON.stringify([{ id: search.category }]));
     //   .eq(
     //     "vehicles->categories", JSON.stringify({id: search.category}))
@@ -64,8 +70,6 @@
         //   id: search.category,
         // }])
       //   query = query.contains("vehicles", JSON.stringify([{ category: user.id }]));
-    }
-
     //   query = query.contains("vehicles", [
     //     { categories: [{ id: search.category }] },
     //   ]);
@@ -74,6 +78,8 @@
     //   .eq("vehicles.categories.id", search.category);
 
     const { data: ratesListData, error: ratesListError } = await query;
+
+    console.log(ratesListData);
     // supabase
     //   .from("ratesList")
     //   .select(
@@ -81,7 +87,7 @@
     //   )
     //   .gte("date_start", search.date_start)
     //   .lte("date_end", search.date_end);
-    rows = [...ratesListData];
+    rows = ratesListData;
   };
 </script>
 

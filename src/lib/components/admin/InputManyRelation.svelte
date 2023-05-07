@@ -68,7 +68,7 @@
       <input
         type="hidden"
         name="manySelected_{name}"
-        value={selected.join(",")}
+        value={currentSelected.join(",")}
       />
       <input
         type="hidden"

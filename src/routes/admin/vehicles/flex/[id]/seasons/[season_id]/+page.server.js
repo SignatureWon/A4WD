@@ -78,6 +78,8 @@ export const actions = {
       });
     });
 
+    console.log(ratesList);
+
     await db.delete(locals, {
       table: "ratesList",
       key: "ratesSeasons",
