@@ -9,31 +9,6 @@ const keys = [
   "fees",
   "suppliers"
 ];
-const generateRates = async (seasonal) => {
-  let ratesList = [];
-
-  let objSeason = {
-    rates: seasonal.id,
-    date_start: seasonal.date_start,
-    date_end: seasonal.date_end,
-  };
-  (seasonal.fees || []).forEach((tier) => {
-    let objAddRates = objSeason;
-    objAddRates.tiers = tier.tiers;
-    tier.depots.forEach((depot) => {
-      let objAddDepot = objAddRates;
-      objAddDepot.depots = depot;
-      tier.vehicles.forEach((vehicle) => {
-        let objAddVehicle = objAddDepot;
-        objAddVehicle.vehicles = vehicle;
-        ratesList.push(objAddVehicle);
-      });
-    });
-  });
-
-  return ratesList
-}
-
 export async function load({ url, params, locals }) {
   let seasonal = await db.one({
     table: "rates",
@@ -63,6 +38,7 @@ export const actions = {
   update: async ({ request, url, params, locals }) => {
     const formData = await request.formData();
     let newData = Object.fromEntries(formData.entries());
+
     newData.fees = JSON.parse(newData.fees)
 
     await db.update(locals, {
@@ -77,37 +53,36 @@ export const actions = {
       keys: ["id", "date_start", "date_end", "fees"],
     });
 
-    // let ratesList = [];
+    let ratesList = [];
 
-    // let objSeason = {
-    //   rates: seasonal.id,
-    //   date_start: seasonal.date_start,
-    //   date_end: seasonal.date_end,
-    // };
-    // (seasonal.fees || []).forEach((tier) => {
-    //   let objAddRates = objSeason;
-    //   objAddRates.tiers = tier.tiers;
-    //   tier.depots.forEach((depot) => {
-    //     let objAddDepot = objAddRates;
-    //     objAddDepot.depots = depot;
-    //     tier.vehicles.forEach((vehicle) => {
-    //       let objAddVehicle = objAddDepot;
-    //       objAddVehicle.vehicles = vehicle;
-    //       ratesList.push(objAddVehicle);
-    //     });
-    //   });
-    // });
-    let rates = await generateRates(seasonal);
+    let objSeason = {
+      rates: seasonal.id,
+      date_start: seasonal.date_start,
+      date_end: seasonal.date_end,
+    };
+    (seasonal.fees || []).forEach((tier) => {
+      let objAddRates = objSeason;
+      objAddRates.tiers = tier.tiers;
+      tier.depots.forEach((depot) => {
+        let objAddDepot = objAddRates;
+        objAddDepot.depots = depot;
+        tier.vehicles.forEach((vehicle) => {
+          let objAddVehicle = objAddDepot;
+          objAddVehicle.vehicles = vehicle;
+          ratesList.push(objAddVehicle);
+        });
+      });
+    });
 
     await db.delete(locals, {
-      table: "ratesCard",
+      table: "ratesList",
       key: "rates",
       value: params.id,
     });
 
     await db.insert(locals, {
-      table: "ratesCard",
-      data: rates,
+      table: "ratesList",
+      data: ratesList,
     });
 
     throw redirect(303,  `${url.pathname}`);

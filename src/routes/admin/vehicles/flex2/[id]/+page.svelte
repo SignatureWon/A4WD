@@ -4,15 +4,27 @@
   import FormSection from "$lib/components/admin/FormSection.svelte";
   import InputText from "$lib/components/admin/InputText.svelte";
   import InputSelect from "$lib/components/admin/InputSelect.svelte";
-  import InputTextArea from "$lib/components/admin/InputTextArea.svelte";
+  import InputDateRange from "$lib/components/admin/InputDateRange.svelte";
   import InputNumber from "$lib/components/admin/InputNumber.svelte";
   import InputHidden from "$lib/components/admin/InputHidden.svelte";
   import InputToggle from "$lib/components/admin/InputToggle.svelte";
+  import InputSeasonalTiers from "$lib/components/admin/InputSeasonalTiers.svelte";
+  import Tabs from "$lib/components/admin/Tabs.svelte";
   export let data;
-  console.log(data.rates);
+  let tabs = [
+    {
+      name: "General",
+      link: "#"
+    },
+    {
+      name: "Seasons",
+      link: `${data.path}/seasons`
+    },
+  ]
 </script>
 
 <PageTitle title="Flex" path={data.path} data={data.data} id={data.id} />
+<Tabs {tabs} />
 <Form id={data.id} path={data.path}>
   <FormSection title="Info">
     <InputText
@@ -27,6 +39,19 @@
       bind:value={data.data.suppliers}
       options={data.suppliers}
     />
+    <!-- <InputDateRange
+      nameFrom="date_start"
+      nameTo="date_end"
+      labelFrom="Start Date"
+      labelTo="End Date"
+      bind:valueFrom={data.data.date_start}
+      bind:valueTo={data.data.date_end}
+    /> -->
+    <!-- <InputToggle
+      name="calendar"
+      label="Calendar Day"
+      bind:value={data.data.calendar}
+    /> -->
   </FormSection>
   <FormSection title="Driver">
     <InputSelect
@@ -35,6 +60,12 @@
       bind:value={data.data.license}
       options={data.licenses}
     />
+    <!-- <InputSelect
+      name="age"
+      label="Age"
+      bind:value={data.data.age}
+      options={data.ages}
+    /> -->
   </FormSection>
   <FormSection title="Factors">
     <InputNumber
@@ -43,7 +74,6 @@
       bind:value={data.data.nett}
       step={0.01}
       half={true}
-      required={true}
     />
     <InputNumber
       name="gross"
@@ -51,46 +81,12 @@
       bind:value={data.data.gross}
       step={0.01}
       half={true}
-      required={true}
     />
   </FormSection>
-  <FormSection title="Rates">
-    <InputTextArea
-      name="matrix"
-      label="Matrix"
-      bind:value={data.data.matrix}
-      required={true}
+  <!-- <FormSection title="Tiered-rates">
+    <InputSeasonalTiers
+      bind:value={data.data.tiers}
     />
-    <InputTextArea
-      name="data"
-      label="Flex"
-      bind:value={data.data.data}
-      required={true}
-    />
-    <InputToggle
-      name="zero"
-      label="Matrix startd from zero"
-      bind:value={data.data.zero}
-    />
-  </FormSection>
-  {#if data.rates.invalid.length}
-    <FormSection title="Invalid Rates">
-      <div class="bg-gray-100 p-4 md:col-span-2">
-        {#each data.rates.invalid as invalid}
-          {#if "invalidDepot" in invalid}
-            <div>
-              Line {invalid.invalidDepot.row}: Invalid depot <b>"{invalid.invalidDepot.depot}"</b>
-            </div>
-          {/if}
-          {#if "invalidVehicle" in invalid}
-            <div>
-              Line {invalid.invalidVehicle.row}: Invalid vehicle <b>"{invalid.invalidVehicle.vehicle}"</b>
-            </div>
-          {/if}
-        {/each}
-      </div>
-    </FormSection>
-  {/if}
-
+  </FormSection> -->
   <InputHidden name="type" value="flex" />
 </Form>

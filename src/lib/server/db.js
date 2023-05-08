@@ -193,18 +193,33 @@ export const db = {
     return data;
   },
   insert: async (locals, fetch) => {
+    // fetch.data = setNull(fetch.data);
+    // convertToDate(fetch.data);
+    // convertToJson(fetch.data);
+    // slugifyName(fetch, fetch.data);
+
+    // console.log("fetch.data", fetch.data);
+
     const { data, error: err } = await locals.sb
       .from(fetch.table)
       .insert(fetch.data)
       .select();
+    // .single()
 
     if (err) {
       throw error(404, {
         message: err.message,
       });
     }
+
+    return data;
   },
   update: async (locals, fetch) => {
+    // setNull(fetch.data);
+    // convertToDate(fetch.data);
+    // convertToJson(fetch.data);
+    // slugifyName(fetch, fetch.data);
+
     const { error: err } = await locals.sb
       .from(fetch.table)
       .update(fetch.data)

@@ -48,14 +48,22 @@
     //     "id, rates(id, license(id, name)), vehicles(id, name, age, categories(id, name)), depots, daily, flex, date_start, date_end, tiers, ratesSeasons"
     //   );
 
+    if (search.pickup !== "") {
+      query = query.eq("depot_id", search.pickup);
+    }
     if (search.date_start !== "") {
       query = query.gte("date_start", search.date_start);
+      // query = query.gte("routes_date_start", search.date_start);
     }
     if (search.date_end !== "") {
       query = query.lte("date_end", search.date_end);
+      // query = query.lte("routes_date_end", search.date_end);
     }
     if (search.license !== "") {
       query = query.eq("license_id", search.license);
+    }
+    if (search.age !== "") {
+      query = query.eq("age_id", search.age);
     }
     if (search.category !== "") {
       query = query.eq("category_id", search.category);

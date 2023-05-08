@@ -86,4 +86,5 @@
       half={true}
     />
   </FormSection>
+  <input type="hidden" name="type" value="pages">
 </Form>
