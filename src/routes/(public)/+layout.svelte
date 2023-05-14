@@ -194,6 +194,18 @@
               {/if}
             {/if}
           {/each}
+          {#each getContent("attachments") as attachment}
+            {#if attachment.categories}
+              {#if attachment.categories.name === "Company"}
+                <a
+                  href="{env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/terms/{attachment.attachment}"
+                  class="font-medium text-gray-300 hover:text-gray-400"
+                >
+                  {attachment.name}
+                </a>
+              {/if}
+            {/if}
+          {/each}
         </nav>
       </div>
       <div class="space-y-6">
@@ -211,6 +223,18 @@
                   class="font-medium text-gray-300 hover:text-gray-400"
                 >
                   {page.name}
+                </a>
+              {/if}
+            {/if}
+          {/each}
+          {#each getContent("attachments") as attachment}
+            {#if attachment.categories}
+              {#if attachment.categories.name === "Product"}
+                <a
+                  href="{env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/terms/{attachment.attachment}"
+                  class="font-medium text-gray-300 hover:text-gray-400"
+                >
+                  {attachment.name}
                 </a>
               {/if}
             {/if}

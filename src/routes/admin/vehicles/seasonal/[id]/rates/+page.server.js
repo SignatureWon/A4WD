@@ -2,37 +2,39 @@
 import { db } from "$lib/server/db";
 import { error, redirect } from "@sveltejs/kit";
 
-const keys = [
-  "name",
-  "nett",
-  "gross",
-  "fees",
-  "suppliers"
-];
+const keys = ["name", "nett", "gross", "fees", "suppliers"];
 const generateRates = async (seasonal) => {
   let ratesList = [];
 
-  let objSeason = {
-    rates: seasonal.id,
-    date_start: seasonal.date_start,
-    date_end: seasonal.date_end,
-  };
+  // let objSeason = {
+  //   rates: seasonal.id,
+  //   date_start: seasonal.date_start,
+  //   date_end: seasonal.date_end,
+  // };
   (seasonal.fees || []).forEach((tier) => {
-    let objAddRates = objSeason;
-    objAddRates.tiers = tier.tiers;
+    // let objAddRates = objSeason;
+    // objAddRates.tiers = tier.tiers;
     tier.depots.forEach((depot) => {
-      let objAddDepot = objAddRates;
-      objAddDepot.depots = depot;
+      // let objAddDepot = objAddRates;
+      // objAddDepot.depots = depot;
       tier.vehicles.forEach((vehicle) => {
-        let objAddVehicle = objAddDepot;
-        objAddVehicle.vehicles = vehicle;
-        ratesList.push(objAddVehicle);
+        ratesList.push({
+          rates: seasonal.id,
+          date_start: seasonal.date_start,
+          date_end: seasonal.date_end,
+          tiers: tier.tiers,
+          depots: depot,
+          vehicles: vehicle,
+        });
+        // let objAddVehicle = objAddDepot;
+        // objAddVehicle.vehicles = vehicle;
+        // ratesList.push(objAddVehicle);
       });
     });
   });
 
-  return ratesList
-}
+  return ratesList;
+};
 
 export async function load({ url, params, locals }) {
   let seasonal = await db.one({
@@ -63,7 +65,7 @@ export const actions = {
   update: async ({ request, url, params, locals }) => {
     const formData = await request.formData();
     let newData = Object.fromEntries(formData.entries());
-    newData.fees = JSON.parse(newData.fees)
+    newData.fees = JSON.parse(newData.fees);
 
     await db.update(locals, {
       id: params.id,
@@ -110,7 +112,7 @@ export const actions = {
       data: rates,
     });
 
-    throw redirect(303,  `${url.pathname}`);
+    throw redirect(303, `${url.pathname}`);
 
     // await db.actions.update(request, url, locals, {
     //   id: params.id,

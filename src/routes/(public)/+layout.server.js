@@ -2,8 +2,8 @@ import { supabase } from "$lib/supabaseClient";
 export async function load() {
   const { data: contents } = await supabase
     .from("contents")
-    .select("type, name, featured, slug, categories (name), content")
-    .in("type", ["announcements", "pages"])
+    .select("type, name, featured, slug, categories (name), content, attachment")
+    .in("type", ["announcements", "pages", "attachments"])
     .eq("status", true);
 
   const { data: constants } = await supabase

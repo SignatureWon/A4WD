@@ -7,11 +7,18 @@
   export let options = [];
   export let half = false;
   export let required = false;
+  export let no_blank = false;
+
+  if (no_blank && !value) {
+    value = options[0].id
+  }
 </script>
 
 <div class={half ? "" : "md:col-span-2"}>
   <Select {name} labelText={label} bind:selected={value} {required}>
-    <SelectItem value="" text="Select {label}" />
+    {#if !no_blank}
+      <option value="">Select {label}</option>
+    {/if}
     {#each options as item}
       <SelectItem value={item.id} text={item.name} />
     {/each}

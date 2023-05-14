@@ -22,6 +22,7 @@
     "description",
     "keywords",
     "hotline",
+    "email",
     "logo",
     "icon",
     "color",
@@ -150,6 +151,7 @@
           updateRecord("description", record.description);
           updateRecord("keywords", record.keywords);
           updateRecord("hotline", record.hotline);
+          updateRecord("email", record.email);
           updateRecord("color", record.color);
         }}
       >
@@ -178,6 +180,9 @@
             </div>
             <div class="mb-4">
               <TextInput labelText="Hotline" bind:value={record.hotline} />
+            </div>
+            <div class="mb-4">
+              <TextInput labelText="Email" bind:value={record.email} />
             </div>
           </div>
         </div>

@@ -1,15 +1,18 @@
 <script>
   export let record = {};
   export let size = "";
-
-
 </script>
+
 {#if record.excerpt}
-<p class="{size === "small" ? "mb-2" : "mb-4 text-lg"}">
-  {record.excerpt}
-</p>
+  <p class={size === "small" ? "mb-2" : "mb-4 text-lg"}>
+    {record.excerpt}
+  </p>
 {/if}
-<div class="grid grid-cols-2 md:grid-cols-3 gap-2 {size === "small" ? "text-sm" : "text-base"}">
+<div
+  class="grid grid-cols-2 md:grid-cols-3 gap-2 {size === 'small'
+    ? 'text-sm'
+    : 'text-base'}"
+>
   <div class="flex items-center">
     <div class="mr-2">
       <svg
@@ -17,12 +20,22 @@
         viewBox="0 0 24 24"
         class={size === "small" ? "w-4 h-4" : "w-5 h-5"}
         fill="currentColor"
+      >
+        <path
+          d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"
+        />
+      </svg>
+      <!-- <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        class={size === "small" ? "w-4 h-4" : "w-5 h-5"}
+        fill="currentColor"
         ><path
           d="M19,7H11V14H3V5H1V20H3V17H21V20H23V11A4,4 0 0,0 19,7M7,13A3,3 0 0,0 10,10A3,3 0 0,0 7,7A3,3 0 0,0 4,10A3,3 0 0,0 7,13Z"
         /></svg
-      >
+      > -->
     </div>
-    <div class="flex-1">{record.pax} Bed</div>
+    <div class="flex-1">{record.pax} Pax</div>
   </div>
   <div class="flex items-center">
     <div class="mr-2">

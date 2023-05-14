@@ -11,6 +11,7 @@
   export let valueFrom = "";
   export let valueTo = "";
   export let half = false;
+  export let required = false;
 </script>
 
 <div class={half ? "" : "md:col-span-2"}>
@@ -18,8 +19,8 @@
     datePickerType="range"
     dateFormat="d/m/Y"
     on:change={(e) => {
-      valueFrom = dayjs(e.detail.selectedDates[0]);
-      valueTo = dayjs(e.detail.selectedDates[1]);
+      valueFrom = dayjs(e.detail.selectedDates[0]).format("MM/DD/YYYY");
+      valueTo = dayjs(e.detail.selectedDates[1]).format("MM/DD/YYYY");
     }}
     valueFrom={dayjs(valueFrom).format("DD/MM/YYYY")}
     valueTo={dayjs(valueTo).format("DD/MM/YYYY")}
@@ -28,11 +29,13 @@
       name={nameFrom}
       labelText={labelFrom}
       placeholder="dd/mm/yyyy"
+      required={required}
     />
     <DatePickerInput
       name={nameTo}
       labelText={labelTo}
       placeholder="dd/mm/yyyy"
+      required={required}
     />
   </DatePicker>
 </div>

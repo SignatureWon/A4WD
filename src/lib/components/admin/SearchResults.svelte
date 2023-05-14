@@ -1,0 +1,72 @@
+<script>
+  import {
+    DataTable,
+    Pagination,
+    Toolbar,
+    ToolbarContent,
+    ToolbarSearch,
+  } from "carbon-components-svelte";
+
+  export let rows = [];
+  let pageSize = 100;
+  let page = 1;
+  let headers = [
+    { key: "vehicle_name", value: "Vehicle" },
+    { key: "rates_type", value: "Type" },
+    { key: "license", value: "License" },
+    { key: "gross", value: "gross" },
+    { key: "nett", value: "nett" },
+    { key: "profit", value: "profit" },
+  ];
+  let filteredRowIds = [];
+</script>
+
+<DataTable sortable {headers} {pageSize} {page} {rows} class="cursor-pointer">
+  <svelte:fragment slot="cell" let:row let:cell>
+    {#if cell.key === "status"}
+      {#if cell.value === true}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          width="24"
+          height="24"
+          class="w-5 h-5 text-green-600"
+          fill="currentColor"
+          ><path fill="none" d="M0 0h24v24H0z" /><path
+            d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-.997-6l7.07-7.071-1.414-1.414-5.656 5.657-2.829-2.829-1.414 1.414L11.003 16z"
+          /></svg
+        >
+      {:else}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          width="24"
+          height="24"
+          class="w-5 h-5 text-gray-300"
+          fill="currentColor"
+          ><path fill="none" d="M0 0h24v24H0z" /><path
+            d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-.997-6l7.07-7.071-1.414-1.414-5.656 5.657-2.829-2.829-1.414 1.414L11.003 16z"
+          /></svg
+        >
+      {/if}
+    {:else if ["date_start", "date_end", "routes_date_start", "routes_date_end", "travel_start", "travel_end", "created_at", "updated_at"].includes(cell.key)}
+      {dayjs(cell.value).format("DD/MM/YYYY")}
+    {:else if ["nett", "gross", "profit"].includes(cell.key)}
+      {cell.value.toFixed(0)}
+    {:else if cell.key === "vehicles_categories"}
+      {#each cell.value as item}
+        {item.name}<br />
+      {/each}
+    {:else if cell.value === null}
+      &mdash;
+    {:else}
+      {cell.value}
+    {/if}
+  </svelte:fragment>
+</DataTable>
+<Pagination
+  bind:pageSize
+  bind:page
+  totalItems={rows.length}
+  pageSizeInputDisabled
+/>
