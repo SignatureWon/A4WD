@@ -8,9 +8,14 @@
   } from "carbon-components-svelte";
   import { env } from "$env/dynamic/public";
   import Announcements from "$lib/components/public/Announcements.svelte";
-  // import Carousel from "svelte-carousel";
-  // import { browser } from "$app/environment";
-  // let carousel; // for calling methods of the carousel instance
+
+  let msg = {
+    email: "",
+    phone: "",
+    first_name: "",
+    last_name: "",
+    message: "",
+  };
 
   export let data;
 
@@ -115,10 +120,7 @@
   </div>
 </header>
 <slot />
-<div
-  class="bg-cover"
-  style="background-image: url('/img/bg-contact.jpg');"
->
+<div class="bg-cover" style="background-image: url('/img/bg-contact.jpg');">
   <div class="bg-brand-700/90">
     <div class="container xl:max-w-7xl mx-auto px-4 py-16 lg:px-8 lg:py-32">
       <div
@@ -143,27 +145,54 @@
         <!-- Contact Form -->
         <div class="lg:w-3/5 p-2 bg-white bg-opacity-10 rounded-xl">
           <form
-            onsubmit="return false;"
+            method="post"
+            action="/api/email"
             class="bg-white rounded-lg p-6 space-y-6"
           >
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div class="space-y-1">
-                <TextInput labelText="First Name" />
+                <TextInput
+                  name="first_name"
+                  labelText="First Name"
+                  bind:value={msg.first_name}
+                  required
+                />
               </div>
               <div class="space-y-1">
-                <TextInput labelText="Last Name" />
+                <TextInput
+                  name="last_name"
+                  labelText="Last Name"
+                  bind:value={msg.last_name}
+                  required
+                />
               </div>
             </div>
             <div class="space-y-1">
-              <TextInput labelText="Email" />
+              <TextInput
+                name="email"
+                labelText="Email"
+                type="email"
+                bind:value={msg.email}
+                required
+              />
             </div>
             <div class="space-y-1">
-              <TextInput labelText="Phone" />
+              <TextInput
+                name="phone"
+                labelText="Phone"
+                bind:value={msg.phone}
+                required
+              />
             </div>
             <div class="space-y-1">
-              <TextArea labelText="Message" />
+              <TextArea
+                name="message"
+                labelText="Message"
+                bind:value={msg.message}
+                required
+              />
             </div>
-            <Button>Send Message</Button>
+            <Button type="submit">Send Message</Button>
           </form>
         </div>
         <!-- END Contact Form -->
