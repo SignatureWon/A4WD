@@ -24,7 +24,6 @@
   const action = async () => {
     search.date_start = dayjs(search.date_start);
     search.date_end = dayjs(search.date_end);
-    const duration = search.date_end.diff(search.date_start, "day");
 
     const { data: ratesData, error: ratesError } = await cal.getRates(
       supabase,
@@ -37,41 +36,64 @@
     const { data: blockoutsData, error: blockoutsError } =
       await cal.getBlockouts(supabase, search);
 
-    console.log(blockoutsData);
     const { data: specialsData, error: specialsError } = await cal.getSpecials(
       supabase,
       search
     );
+    // console.log(ratesData);
 
-    let results = [];
-    ratesData.forEach((rate) => {
-      const valid = rate.routes.filter((arrRoutes) => {
-        return (
-          arrRoutes.from.id === search.pickup &&
-          arrRoutes.to.id === search.dropoff
-        );
-      });
-      if (valid.length) {
-        if (valid[0].active) {
-          rate.routes = valid[0];
-          rate.min_days = valid[0].days || 0;
-          rate.one_way = valid[0].fee || 0;
+    const filteredRoutes = cal.filterRoutes(ratesData, search);
+    // const arrangedRates = cal.arrangeRatesByVehicles(filteredRoutes);
+    const arrangedRates = cal.arrangeRates(filteredRoutes, search);
+    const filteredBlockouts = cal.filterBlockouts(arrangedRates, blockoutsData);
+    const addedFees = cal.addFees(filteredBlockouts, feesData);
+    const addedSpecials = cal.addSpecials(addedFees, specialsData);
+    // console.log(addedSpecials);
 
-          if (rate.rates_type === "seasonal") {
-            rate.daily = cal.getSeasonalDaily(
-              duration,
-              rate.tiers,
-              rate.min_days
-            );
-            console.log(rate);
-          }
-          results.push(rate);
-        }
-      }
-    });
+    rows = addedSpecials
+    // console.log(filteredBlockouts);
+    // const 
 
-    console.log("ratesData", ratesData);
-    console.log("results", results);
+
+    // console.log(arrangedRates);
+    // console.log(filteredBlockouts);
+    
+    // ratesData.forEach((rate) => {
+    //   const valid = rate.routes.filter((arrRoutes) => {
+    //     return (
+    //       arrRoutes.from.id === search.pickup &&
+    //       arrRoutes.to.id === search.dropoff
+    //     );
+    //   });
+    //   if (valid.length) {
+    //     if (valid[0].active) {
+    //       rate.routes = valid[0];
+    //       rate.min_days = valid[0].days || 0;
+    //       rate.one_way = valid[0].fee || 0;
+
+    //       if (rate.rates_type === "seasonal") {
+    //         rate.daily = cal.getSeasonalDaily(
+    //           duration,
+    //           rate.tiers,
+    //           rate.min_days
+    //         );
+    //         // console.log(rate);
+    //       }
+    //       results.push(rate);
+
+    //       // const blocked = cal.checkBlockouts(rate, blockoutsData)
+
+    //       // if (!blocked) {
+    //       //   results.push(rate);
+    //       // }
+    //     }
+    //   }
+    // });
+
+    // groupResults = 
+
+    // console.log("ratesData", ratesData);
+    // console.log("filteredRoutes", filteredRoutes);
   };
 </script>
 

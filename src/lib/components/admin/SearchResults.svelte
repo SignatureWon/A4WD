@@ -13,10 +13,10 @@
   let headers = [
     { key: "vehicle_name", value: "Vehicle" },
     { key: "rates_type", value: "Type" },
-    { key: "license", value: "License" },
-    { key: "gross", value: "gross" },
-    { key: "nett", value: "nett" },
-    { key: "profit", value: "profit" },
+    { key: "license_name", value: "License" },
+    { key: "gross", value: "Gross" },
+    { key: "nett", value: "Nett" },
+    { key: "profit", value: "Profit" },
   ];
   let filteredRowIds = [];
 </script>
