@@ -55,11 +55,12 @@
             {/each}
           </div>
         {/if}
+        <div>Min. driver's age {d.age_name}</div>
         {#if d.min_days > d.duration}
           <div
             class="col-span-2 border border-red-600 p-2 text-sm text-red-600 rounded"
           >
-            Price is based on minimum {d.min_days} days, less days is average out.
+            Price is based on minimum {d.min_days} days, less days will average out.
           </div>
         {/if}
       </div>

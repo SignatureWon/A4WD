@@ -53,9 +53,9 @@ export const cal = {
     if (search.license !== "") {
       query = query.or(`license_id.eq.${search.license},license_id.is.null`);
     }
-    if (search.age !== "") {
-      query = query.eq("age_id", search.age);
-    }
+    // if (search.age !== "") {
+    //   query = query.eq("age_id", search.age);
+    // }
     if (search.pickup !== "") {
       query = query.eq("depot_id", search.pickup);
       // query = query.eq("routes.from.id", search.pickup);
@@ -131,7 +131,8 @@ export const cal = {
         factor2,
         value2,
         discount2,
-        name, 
+        name,
+        description,
         id
     `);
     query = query.or(
@@ -302,17 +303,20 @@ export const cal = {
         let gross = 0;
         let profit = 0;
         let isAdded = false;
+        // console.log(search.date_start, search.date_end);
         for (
           var d = new Date(
             search.date_start.$y,
             search.date_start.$M,
             search.date_start.$D
           );
-          d <
+          d <=
           new Date(search.date_end.$y, search.date_end.$M, search.date_end.$D);
           d.setDate(d.getDate() + 1)
         ) {
           const day = dayjs(d);
+
+          // console.log(day.format("DD/MM/YYYY"));
 
           vehicles[id][rate].forEach((r) => {
             if (

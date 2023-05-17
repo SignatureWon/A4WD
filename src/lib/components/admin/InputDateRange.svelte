@@ -19,8 +19,29 @@
     datePickerType="range"
     dateFormat="d/m/Y"
     on:change={(e) => {
-      valueFrom = dayjs(e.detail.selectedDates[0]).format("MM/DD/YYYY");
-      valueTo = dayjs(e.detail.selectedDates[1]).format("MM/DD/YYYY");
+      // let oriTo = dayjs(valueTo)
+      let from = dayjs(e.detail.selectedDates[0])
+      let to = dayjs(e.detail.selectedDates[1])
+      
+      // console.log("from", from.format("DD/MM/YYYY"));
+      // console.log("to", to.format("DD/MM/YYYY"));
+      // console.log("oriTo", oriTo.format("DD/MM/YYYY"));
+
+      // if (oriTo.isSame(from) && oriTo.isAfter(to)) {
+      //   from = to;
+      // }
+
+      valueFrom = from;
+      valueTo = to;
+
+      // console.log(from, oriTo, from.isAfter(oriTo));
+      
+      // if (from.isAfter(to, "day")) {
+
+      // }
+      
+      // valueFrom = dayjs(e.detail.selectedDates[0]).format("MM/DD/YYYY");
+      // valueTo = dayjs(e.detail.selectedDates[1]).format("MM/DD/YYYY");
     }}
     valueFrom={dayjs(valueFrom).format("DD/MM/YYYY")}
     valueTo={dayjs(valueTo).format("DD/MM/YYYY")}

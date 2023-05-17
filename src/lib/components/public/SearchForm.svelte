@@ -19,12 +19,14 @@
   let search = {
     pickup: "",
     dropoff: "",
-    date_start: dayjs(),
-    date_end: dayjs().add(7, "day"),
+    date_start: dayjs().format("YYYY-MM-DD"),
+    date_end: dayjs().add(7, "day").format("YYYY-MM-DD"),
     license: "",
     age: "",
     category: "",
   };
+
+  console.log(search);
   // $: {
   //   $page.url.searchParams.forEach((value, key) => {
   //     if (["date_start", "date_end"].includes(key)) {

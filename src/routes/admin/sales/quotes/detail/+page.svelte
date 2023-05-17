@@ -112,7 +112,7 @@
     </div>
     {#if d.min_days > d.duration}
       <div class="col-span-2 bg-amber-50 p-3 text-sm text-amber-600 rounded">
-        Price is based on minimum {d.min_days} days, less days is average out.
+        Price is based on minimum {d.min_days} days, less days will average out.
       </div>
     {/if}
     {#if d.one_way > 0}
