@@ -13,7 +13,7 @@
     });
   };
 
-  // console.log(data.detail);
+  console.log(data.detail);
 
   let open = false;
   let showFeeDetails = false;
@@ -405,7 +405,9 @@
       {/if}
       <div class="flex justify-between py-2">
         <div>
-          Balance ({d.terms.balance} days before travel)
+          Balance ({d.terms.pay_counter
+            ? "Pay at pick-up counter"
+            : `${d.terms.balance} days before travel`})
         </div>
         <div>
           ${formatCurrency(

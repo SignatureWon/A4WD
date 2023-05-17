@@ -60,6 +60,11 @@
       bind:value={data.data.percentage}
       half={true}
     />
+    <InputText
+      name="description"
+      label="Description"
+      bind:value={data.data.description}
+    />
     <!-- <div class="h-2 border-b border-gray-200 col-span-2" /> -->
     <div class="bg-gray-100 p-4 md:col-span-2">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -95,6 +100,11 @@
             bind:value={data.data.reminder2}
             half={true}
           />
+          <InputText
+            name="description2"
+            label="Description"
+            bind:value={data.data.description2}
+          />
           <div class="bg-gray-200 p-4 -mx-4 -mb-4 col-span-2">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
               <InputToggle
@@ -129,6 +139,11 @@
                   bind:value={data.data.reminder3}
                   half={true}
                 />
+                <InputText
+                  name="description3"
+                  label="Description"
+                  bind:value={data.data.description3}
+                />
               {/if}
             </div>
           </div>
@@ -147,6 +162,11 @@
       label="Reminder (Days)"
       bind:value={data.data.reminder}
       half={true}
+    />
+    <InputText
+      name="description4"
+      label="Description"
+      bind:value={data.data.description4}
     />
     <InputToggle
       name="pay_counter"
