@@ -15,7 +15,7 @@ export async function load({ url, params, locals }) {
     license: "",
     age: "",
   };
-  let results = {};
+  let results = [];
 
   url.searchParams.forEach((value, key) => {
     if (["date_start", "date_end"].includes(key)) {
@@ -36,16 +36,16 @@ export async function load({ url, params, locals }) {
     );
     const { data: blockoutsData, error: blockoutsError } =
       await cal.getBlockouts(supabase, search);
-      const { data: specialsData, error: specialsError } = await cal.getSpecials(
-        supabase,
-        search
-      );
-      const { data: bondsData, error: bondsError } = await cal.getBonds(
-        supabase,
-        search
-      );
+    const { data: specialsData, error: specialsError } = await cal.getSpecials(
+      supabase,
+      search
+    );
+    const { data: bondsData, error: bondsError } = await cal.getBonds(
+      supabase,
+      search
+    );
     // console.log(bondsData);
-    
+
     const filteredRoutes = cal.filterRoutes(ratesData, search);
     const arrangedRates = cal.arrangeRates(filteredRoutes, search);
     const filteredBlockouts = cal.filterBlockouts(arrangedRates, blockoutsData);
