@@ -11,7 +11,7 @@ export const PageTabs = (id) => {
     tabs = [
         ...tabs,
         { name: "Depots", link: `${path}/${id}/depots` },
-        { name: "Emails", link: `${path}/${id}/emails` },
+        // { name: "Emails", link: `${path}/${id}/emails` },
     ];
   }
 

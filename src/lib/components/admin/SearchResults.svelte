@@ -6,7 +6,11 @@
     ToolbarContent,
     ToolbarSearch,
   } from "carbon-components-svelte";
+  import { page as storePage } from "$app/stores";
+  import { goto } from "$app/navigation";
+  import dayjs from "dayjs";
 
+  export let search = {};
   export let rows = [];
   let pageSize = 100;
   let page = 1;
@@ -14,6 +18,9 @@
     { key: "vehicle_name", value: "Vehicle" },
     { key: "rates_type", value: "Type" },
     { key: "license_name", value: "License" },
+    { key: "supplier_name", value: "Supplier" },
+    { key: "special_total", value: "Special" },
+    { key: "fee_total", value: "Fee" },
     { key: "gross", value: "Gross" },
     { key: "nett", value: "Nett" },
     { key: "profit", value: "Profit" },
@@ -21,7 +28,18 @@
   let filteredRowIds = [];
 </script>
 
-<DataTable sortable {headers} {pageSize} {page} {rows} class="cursor-pointer">
+<DataTable
+  sortable
+  {headers}
+  {pageSize}
+  {page}
+  {rows}
+  on:click:row={(row) => {
+    const r = row.detail
+    goto(`/admin/sales/quotes/detail?pickup=${r.depot_id}&dropoff=${r.dropoff_id}&rates=${r.rates_id}&date_start=${search.date_start}&date_end=${search.date_end}&age=${r.age_id}&license=${r.license_id}&vehicle=${r.vehicle_id}`);
+  }}
+  class="cursor-pointer"
+>
   <svelte:fragment slot="cell" let:row let:cell>
     {#if cell.key === "status"}
       {#if cell.value === true}
@@ -51,7 +69,7 @@
       {/if}
     {:else if ["date_start", "date_end", "routes_date_start", "routes_date_end", "travel_start", "travel_end", "created_at", "updated_at"].includes(cell.key)}
       {dayjs(cell.value).format("DD/MM/YYYY")}
-    {:else if ["nett", "gross", "profit"].includes(cell.key)}
+    {:else if ["nett", "gross", "profit", "special_total"].includes(cell.key)}
       {cell.value.toFixed(0)}
     {:else if cell.key === "vehicles_categories"}
       {#each cell.value as item}

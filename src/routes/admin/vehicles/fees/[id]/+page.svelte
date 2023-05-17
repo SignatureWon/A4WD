@@ -69,7 +69,7 @@
       selected={data.vehicles_selected}
     />
   </FormSection>
-  <FormSection title="Publish">
+  <FormSection title="Charge on">
     <InputToggle
       name="pickup"
       label="Pick-up"

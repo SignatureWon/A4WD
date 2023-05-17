@@ -19,8 +19,21 @@ const getSeasonalDaily = (days, tiers, route_min_days) => {
   return daily;
 };
 
+const countDiscountAmount = (factor, value, gross, daily, one_way) => {
+  let results = value; // Price
+  if (factor === "Percentage") {
+    results = (gross * value) / 100;
+  } else if (factor === "Day") {
+    results = daily * value;
+  } else if (factor === "No One Way Fee") {
+    results = one_way;
+  }
+  return results;
+};
+
 export const cal = {
   getRates: (supabase, search) => {
+    // console.log(search);
     let query = supabase.rpc("get_rates").select();
 
     query = query.or(
@@ -46,6 +59,12 @@ export const cal = {
     if (search.pickup !== "") {
       query = query.eq("depot_id", search.pickup);
       // query = query.eq("routes.from.id", search.pickup);
+    }
+    if (search.vehicle) {
+      query = query.eq("vehicle_id", search.vehicle);
+    }
+    if (search.rates) {
+      query = query.eq("rates_id", search.rates);
     }
     return query;
   },
@@ -131,22 +150,103 @@ export const cal = {
     query = query.gte("booking_end", dayjs());
     return query;
   },
-  // getSeasonalDaily: (days, tiers, route_min_days) => {
-  //   let daily = 0;
-  //   let min_days =
-  //     route_min_days > tiers[0].from ? route_min_days : tiers[0].from;
-  //   tiers.forEach((t, i) => {
-  //     if (i === 0) {
-  //       if (min_days > days) {
-  //         daily = (t.rate * min_days) / days;
-  //       }
-  //     }
-  //     if (days >= t.from && days <= t.to) {
-  //       daily = t.rate;
-  //     }
-  //   });
-  //   return daily;
-  // },
+  getBonds: (supabase, search) => {
+    let query = supabase.from("packages").select(`
+        packages_suppliers (suppliers(id, name)),
+        packages_vehicles (vehicles(id, name)),
+        all_suppliers, 
+        all_vehicles, 
+        display_name, 
+        id, 
+        nett,
+        gross,
+        cap,
+        deposit,
+        liability,
+        bond,
+        waive_one_way,
+        description,
+        inclusions
+    `);
+    query = query.or(
+      `date_start.lte.${search.date_start.format(
+        "YYYY-MM-DD"
+      )},date_end.gte.${search.date_end.format("YYYY-MM-DD")}`
+    );
+    query = query.lte("date_start", search.date_end);
+    query = query.gte("date_end", search.date_start);
+    query = query.eq("status", true);
+    query = query.order("rank", { ascending: true });
+
+    return query;
+  },
+  getAddons: (supabase, search) => {
+    let query = supabase.from("addons").select(`
+        addons_suppliers (suppliers(id, name)),
+        addons_vehicles (vehicles(id, name)),
+        all_suppliers, 
+        all_vehicles, 
+        name, 
+        description, 
+        link, 
+        id, 
+        addons
+    `);
+    query = query.or(
+      `date_start.lte.${search.date_start.format(
+        "YYYY-MM-DD"
+      )},date_end.gte.${search.date_end.format("YYYY-MM-DD")}`
+    );
+    query = query.lte("date_start", search.date_end);
+    query = query.gte("date_end", search.date_start);
+
+    return query;
+  },
+  getTerms: (supabase, search) => {
+    let query = supabase.from("terms").select(`
+        suppliers (id, name),
+        name, 
+        id,
+        confirmation,
+        confirmation_terms,
+        summary,
+        summary_terms,
+        counter,
+        counter_terms,
+        deposit,
+        percentage,
+        balance,
+        description,
+        payment2,
+        deposit2,
+        percentage2,
+        balance2,
+        description2,
+        payment3,
+        deposit3,
+        percentage3,
+        balance3,
+        description3,
+        pay_counter
+    `);
+    query = query.or(
+      `travel_start.lte.${search.date_start.format(
+        "YYYY-MM-DD"
+      )},travel_end.gte.${search.date_end.format("YYYY-MM-DD")}`
+    );
+    query = query.lte("travel_start", search.date_end);
+    query = query.gte("travel_end", search.date_start);
+    query = query.or(
+      `booking_start.lte.${dayjs().format(
+        "YYYY-MM-DD"
+      )},booking_end.gte.${dayjs().format("YYYY-MM-DD")}`
+    );
+    query = query.lte("booking_start", dayjs());
+    query = query.gte("booking_end", dayjs());
+
+    // console.log(query);
+    return query;
+  },
   filterRoutes: (rates, search) => {
     let results = [];
     const duration = search.date_end.diff(search.date_start, "day");
@@ -159,6 +259,7 @@ export const cal = {
       });
       if (valid.length) {
         if (valid[0].active) {
+          // console.log(valid[0]);
           rate.routes = valid[0];
           rate.min_days = valid[0].days || 0;
           rate.one_way = valid[0].fee || 0;
@@ -207,7 +308,7 @@ export const cal = {
             search.date_start.$M,
             search.date_start.$D
           );
-          d <=
+          d <
           new Date(search.date_end.$y, search.date_end.$M, search.date_end.$D);
           d.setDate(d.getDate() + 1)
         ) {
@@ -242,6 +343,7 @@ export const cal = {
         }
       }
     }
+    // console.log("arrange", results);
     return results;
   },
   filterBlockouts: (rates, blockouts) => {
@@ -284,79 +386,290 @@ export const cal = {
             }
           }
         }
-        if (!blocked) {
-          results.push(rate);
-        }
       });
+      if (!blocked) {
+        results.push(rate);
+      }
     });
+    // console.log("block", results);
     return results;
   },
   addFees: (rates, fees) => {
-    return rates
-  },
-  addSpecials: (rates, specials) => {
-    return rates
-  },
-
-
-  // filterBlockouts: (vehicles, blockouts) => {
-  //   let results = {};
-
-  //   for (const id in vehicles) {
-  //     let blocked = false;
-
-  //     blockouts.forEach((blockout) => {
-  //       for (const rate in vehicles[id]) {
-  //         let blocked_depots = blockout.all_depots;
-  //         let blocked_suppliers = blockout.all_suppliers;
-  //         let blocked_vehicles = blockout.all_vehicles;
-
-  //         if (!blocked_depots) {
-  //           blockout.blockouts_depots.forEach((bo) => {
-  //             if (
-  //               bo.depots.id === vehicles[id][rate].depot_id ||
-  //               bo.depots.id === vehicles[id][rate].dropoff_id
-  //             ) {
-  //               blocked_depots = true;
-  //             }
-  //           });
-  //           blockout.blockouts_suppliers.forEach((bo) => {
-  //             if (bo.suppliers.id === vehicles[id][rate].supplier_id) {
-  //               blocked_suppliers = true;
-  //             }
-  //           });
-  //           blockout.blockouts_vehicles.forEach((bo) => {
-  //             if (bo.vehicles.id === vehicles[id][rate].vehicle_id) {
-  //               blocked_vehicles = true;
-  //             }
-  //           });
-  //         }
-  //         if (blocked_depots) {
-  //           if (blocked_suppliers) {
-  //             if (blocked_vehicles) {
-  //               blocked = true;
-  //             }
-  //           }
-  //         }
-  //       }
-  //     });
-  //     if (!blocked) {
-  //       results[id] = vehicles[id];
-  //     }
-  //   }
-  //   return results;
-  // },
-  arrangeRatesByVehicles: (rates) => {
-    let results = {};
+    // let results = [];
     rates.forEach((rate) => {
-      if (!(rate.vehicle_id in results)) {
-        results[rate.vehicle_id] = {};
-      }
-      if (!(rate.rates_id in results[rate.vehicle_id])) {
-        results[rate.vehicle_id][rate.rates_id] = [];
-      }
-      results[rate.vehicle_id][rate.rates_id].push(rate);
+      rate.fee_total = 0;
+      rate.fee_items = [];
+      fees.forEach((fee) => {
+        let depots = fee.all_depots;
+        let dropoffs = fee.all_dropoffs;
+        let suppliers = fee.all_suppliers;
+        let vehicles = fee.all_vehicles;
+
+        if (!depots) {
+          fee.fees_depots.forEach((obj) => {
+            if (obj.depots.id === rate.depot_id) {
+              depots = true;
+            }
+          });
+        }
+        if (!dropoffs) {
+          fee.fees_dropoffs.forEach((obj) => {
+            if (obj.dropoffs.id === rate.dropoff_id) {
+              dropoffs = true;
+            }
+          });
+        }
+        if (!suppliers) {
+          fee.fees_suppliers.forEach((obj) => {
+            if (obj.suppliers.id === rate.supplier_id) {
+              suppliers = true;
+            }
+          });
+        }
+        if (!vehicles) {
+          fee.fees_vehicles.forEach((obj) => {
+            if (obj.vehicles.id === rate.vehicle_id) {
+              vehicles = true;
+            }
+          });
+        }
+        if (depots || dropoffs) {
+          if (suppliers) {
+            if (vehicles) {
+              rate.fee_total += fee.fee;
+              rate.fee_items.push(fee);
+            }
+          }
+        }
+      });
     });
-    return results;
+    // console.log("fees", rates);
+    return rates;
+  },
+  addSpecials: (rates, specials, search) => {
+    const duration = search.date_end.diff(search.date_start, "day");
+    rates.forEach((rate) => {
+      rate.special_total = 0;
+      rate.special_items = [];
+      specials.forEach((special) => {
+        let depots = special.all_depots;
+        let dropoffs = special.all_dropoffs;
+        let suppliers = special.all_suppliers;
+        let vehicles = special.all_vehicles;
+
+        if (!depots) {
+          special.specials_depots.forEach((obj) => {
+            if (obj.depots.id === rate.depot_id) {
+              depots = true;
+            }
+          });
+        }
+        if (!dropoffs) {
+          special.specials_dropoffs.forEach((obj) => {
+            if (obj.dropoffs.id === rate.dropoff_id) {
+              dropoffs = true;
+            }
+          });
+        }
+        if (!suppliers) {
+          special.specials_suppliers.forEach((obj) => {
+            if (obj.suppliers.id === rate.supplier_id) {
+              suppliers = true;
+            }
+          });
+        }
+        if (!vehicles) {
+          special.specials_vehicles.forEach((obj) => {
+            if (obj.vehicles.id === rate.vehicle_id) {
+              vehicles = true;
+            }
+          });
+        }
+        if (depots || dropoffs) {
+          if (suppliers) {
+            if (vehicles) {
+              special.discount_amount = 0;
+              special.discount_list = [];
+              if (special.type === "Deduction") {
+                special.discount_amount = countDiscountAmount(
+                  special.factor,
+                  special.value,
+                  rate.gross,
+                  rate.daily,
+                  rate.one_way
+                );
+              } else if (special.type === "Early bird") {
+                if (search.date_start.diff(dayjs(), "day") > special.days) {
+                  special.discount_amount = countDiscountAmount(
+                    special.factor,
+                    special.value,
+                    rate.gross,
+                    rate.daily,
+                    rate.one_way
+                  );
+                }
+              } else if (special.type === "Long term") {
+                if (duration > special.days) {
+                  special.discount_amount = countDiscountAmount(
+                    special.factor,
+                    special.value,
+                    rate.gross,
+                    rate.daily,
+                    rate.one_way
+                  );
+                }
+              } else if (special.type === "Every X day") {
+                special.discount_amount = 0;
+                special.discount_list = [];
+                rate.list.forEach((r, i) => {
+                  if (i > 0 && (i + 1) % 7 === 0) {
+                    special.discount_amount += countDiscountAmount(
+                      special.factor,
+                      special.value,
+                      r.gross,
+                      r.gross,
+                      rate.one_way
+                    );
+                    special.discount_list.push(r);
+                  }
+                });
+              }
+              rate.special_total += special.discount_amount;
+              rate.special_items.push(special);
+
+              if (special.discount2) {
+                special.discount_amount2 = 0;
+                special.discount_list2 = [];
+                if (special.type2 === "Deduction") {
+                  special.discount_amount2 = countDiscountAmount(
+                    special.factor2,
+                    special.value2,
+                    rate.gross,
+                    rate.daily,
+                    rate.one_way
+                  );
+                } else if (special.type2 === "Early bird") {
+                  if (search.date_start.diff(dayjs(), "day") > special.days2) {
+                    special.discount_amount2 = countDiscountAmount(
+                      special.factor2,
+                      special.value2,
+                      rate.gross,
+                      rate.daily,
+                      rate.one_way
+                    );
+                  }
+                } else if (special.type2 === "Long term") {
+                  if (duration > special.days2) {
+                    special.discount_amount2 = countDiscountAmount(
+                      special.factor2,
+                      special.value2,
+                      rate.gross,
+                      rate.daily,
+                      rate.one_way
+                    );
+                  }
+                } else if (special.type2 === "Every X day") {
+                  rate.list.forEach((r, i) => {
+                    if (i > 0 && (i + 1) % 7 === 0) {
+                      special.discount_amount2 += countDiscountAmount(
+                        special.factor2,
+                        special.value2,
+                        r.gross,
+                        r.gross,
+                        rate.one_way
+                      );
+                      special.discount_list2.push(r);
+                    }
+                  });
+                }
+                rate.special_total += special.discount_amount2;
+                // rate.special_items.push(special);
+              }
+            }
+          }
+        }
+      });
+    });
+    // console.log("special", rates);
+
+    return rates;
+  },
+  addBonds: (rates, bonds) => {
+    // let results = [];
+    rates.forEach((rate) => {
+      // rate.fee_total = 0;
+      rate.bond_items = [];
+      bonds.forEach((bond) => {
+        let suppliers = bond.all_suppliers;
+        let vehicles = bond.all_vehicles;
+
+        if (!suppliers) {
+          bond.packages_suppliers.forEach((obj) => {
+            if (obj.suppliers.id === rate.supplier_id) {
+              suppliers = true;
+            }
+          });
+        }
+        if (!vehicles) {
+          bond.packages_vehicles.forEach((obj) => {
+            if (obj.vehicles.id === rate.vehicle_id) {
+              vehicles = true;
+            }
+          });
+        }
+        if (suppliers) {
+          if (vehicles) {
+            rate.bond_items.push(bond);
+          }
+        }
+      });
+    });
+    // console.log("fees", rates);
+    return rates;
+  },
+  addAddons: (rates, addons) => {
+    // let results = [];
+    rates.forEach((rate) => {
+      // rate.fee_total = 0;
+      rate.addon_items = [];
+      addons.forEach((addon) => {
+        let suppliers = addon.all_suppliers;
+        let vehicles = addon.all_vehicles;
+
+        if (!suppliers) {
+          addon.addons_suppliers.forEach((obj) => {
+            if (obj.suppliers.id === rate.supplier_id) {
+              suppliers = true;
+            }
+          });
+        }
+        if (!vehicles) {
+          addon.addons_vehicles.forEach((obj) => {
+            if (obj.vehicles.id === rate.vehicle_id) {
+              vehicles = true;
+            }
+          });
+        }
+        if (suppliers) {
+          if (vehicles) {
+            rate.addon_items.push(addon);
+          }
+        }
+      });
+    });
+    // console.log("fees", rates);
+    return rates;
+  },
+  addTerms: (rates, terms) => {
+    // let results = [];
+    rates.forEach((rate) => {
+      terms.forEach((term) => {
+        // console.log(rate.supplier_id, term.suppliers);
+        if (rate.supplier_id === term.suppliers.id) {
+          rate.terms = term
+        }
+      });
+    });
+    return rates;
   },
 };
