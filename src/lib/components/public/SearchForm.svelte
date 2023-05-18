@@ -11,6 +11,7 @@
     SelectItem,
   } from "carbon-components-svelte";
   import InputSelect from "$lib/components/admin/InputSelect.svelte";
+  import InputNumber from "$lib/components/admin/InputNumber.svelte";
   import InputDateRange2 from "$lib/components/admin/InputDateRange2.svelte";
   import dayjs from "dayjs";
   import customParseFormat from "dayjs/plugin/customParseFormat";
@@ -24,6 +25,7 @@
     license: "",
     age: "",
     category: "",
+    pax: 2,
   };
 
   // console.log(search);
@@ -49,7 +51,7 @@
   // };
   let options = {
     depots: [],
-    vehicles: [],
+    categories: [],
     ages: [],
     licenses: [],
   };
@@ -66,6 +68,8 @@
       options[opt.name] = opt.options;
     });
 
+    // console.log(options);
+
     $page.url.searchParams.forEach((value, key) => {
       // if (["date_start", "date_end"].includes(key)) {
       //   console.log(key, value);
@@ -78,23 +82,20 @@
       search[key] = value;
     });
 
-    console.log("search", search);
+    // console.log("search", search);
   });
 
-  $: {
-    $page.url.searchParams.forEach((value, key) => {
-      search[key] = value;
-    });
-    console.log("search", search);
-  }
+  // $: {
+  //   $page.url.searchParams.forEach((value, key) => {
+  //     search[key] = value;
+  //   });
+  //   // console.log("search", search);
+  // }
 </script>
 
 <form
-  action="/search"
+  action="/search/redirect"
   method="get"
-  on:submit={(e) => {
-    console.log($page.url);
-  }}
 >
   <div class="bg-white px-5 py-3">
     <h2 class="font-bold text-brand-600 text-lg mb-4">Check Prices</h2>
@@ -141,6 +142,21 @@
           label="Age"
           bind:value={search.age}
           options={options["ages"]}
+          half={true}
+        />
+      </div>
+      <div class="grid grid-cols-2">
+        <InputSelect
+          name="category"
+          label="Category"
+          bind:value={search.category}
+          options={options["categories"]}
+          half={true}
+        />
+        <InputNumber
+          name="pax"
+          label="Passengers"
+          bind:value={search.pax}
           half={true}
         />
       </div>

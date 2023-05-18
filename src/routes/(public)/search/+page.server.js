@@ -7,7 +7,8 @@ dayjs.extend(isBetween);
 import { cal } from "$lib/cal";
 
 export async function load({ url, params, locals }) {
-  console.log('LOAD');
+  // console.log('LOAD');
+
   let search = {
     pickup: "",
     dropoff: "",
@@ -39,6 +40,7 @@ export async function load({ url, params, locals }) {
       search
     );
     allRates = [...flexData, ...seasonalData]
+    // console.log("flex:", flexData.length, "seasonal:", seasonalData.length);
 
     // const { data: ratesData, error: ratesError } = await cal.getRates(
     //   supabase,
@@ -69,8 +71,10 @@ export async function load({ url, params, locals }) {
     const addedBonds = cal.addBonds(addedSpecials, bondsData, search);
     //   console.log(addedBonds);
 
-    results = addedBonds;
+    results = [...addedBonds];
   }
+
+  // console.log("search", results.length);
 
   //   detail = addedSpecials[0];
   return {

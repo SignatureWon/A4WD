@@ -42,6 +42,21 @@ export const cal = {
       .eq("depot_id", search.pickup)
       .eq("rates_type", "flex");
 
+    if (search.license !== "") {
+      query = query.or(`license_id.eq.${search.license},license_id.is.null`);
+    }
+
+    if (search.category !== "") {
+      query = query.contains(
+        "vehicles_categories",
+        JSON.stringify([{ id: search.category }])
+      );
+    }
+
+    if (search.pax > 0) {
+      query = query.gte("vehicle_pax", search.pax);
+    }
+
     query = query
       .order("rates_id", { ascending: true })
       .order("vehicle_id", { ascending: true })
@@ -55,6 +70,21 @@ export const cal = {
       .rpc("get_rates")
       .eq("depot_id", search.pickup)
       .eq("rates_type", "seasonal");
+
+    if (search.license !== "") {
+      query = query.or(`license_id.eq.${search.license},license_id.is.null`);
+    }
+
+    if (search.category !== "") {
+      query = query.contains(
+        "vehicles_categories",
+        JSON.stringify([{ id: search.category }])
+      );
+    }
+
+    if (search.pax > 0) {
+      query = query.gte("vehicle_pax", search.pax);
+    }
 
     query = query
       .order("rates_id", { ascending: true })
