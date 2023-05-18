@@ -1,7 +1,7 @@
 <script>
   import { supabase } from "$lib/supabaseClient";
   import { onMount } from "svelte";
-  import { goto } from '$app/navigation'
+  import { goto } from "$app/navigation";
   import { page } from "$app/stores";
   import {
     Button,
@@ -11,7 +11,7 @@
     SelectItem,
   } from "carbon-components-svelte";
   import InputSelect from "$lib/components/admin/InputSelect.svelte";
-  import InputDateRange from "$lib/components/admin/InputDateRange.svelte";
+  import InputDateRange2 from "$lib/components/admin/InputDateRange2.svelte";
   import dayjs from "dayjs";
   import customParseFormat from "dayjs/plugin/customParseFormat";
   dayjs.extend(customParseFormat);
@@ -19,14 +19,14 @@
   let search = {
     pickup: "",
     dropoff: "",
-    date_start: dayjs().format("YYYY-MM-DD"),
-    date_end: dayjs().add(7, "day").format("YYYY-MM-DD"),
+    date_start: dayjs().format("DD/MM/YYYY"),
+    date_end: dayjs().add(7, "day").format("DD/MM/YYYY"),
     license: "",
     age: "",
     category: "",
   };
 
-  console.log(search);
+  // console.log(search);
   // $: {
   //   $page.url.searchParams.forEach((value, key) => {
   //     if (["date_start", "date_end"].includes(key)) {
@@ -65,21 +65,37 @@
     data.forEach((opt) => {
       options[opt.name] = opt.options;
     });
-    
+
     $page.url.searchParams.forEach((value, key) => {
-      if (["date_start", "date_end"].includes(key)) {
-        if (dayjs(value).$D) {
-          value = dayjs(value);
-        } else {
-          value = dayjs(value, "DD/MM/YYYY")
-        }
-      }
+      // if (["date_start", "date_end"].includes(key)) {
+      //   console.log(key, value);
+      //   // if (dayjs(value).$D) {
+      //   //   value = dayjs(value);
+      //   // } else {
+      //   value = dayjs(value, "DD/MM/YYYY");
+      //   // }
+      // }
       search[key] = value;
     });
+
+    console.log("search", search);
   });
+
+  $: {
+    $page.url.searchParams.forEach((value, key) => {
+      search[key] = value;
+    });
+    console.log("search", search);
+  }
 </script>
 
-<form action="/search" method="get">
+<form
+  action="/search"
+  method="get"
+  on:submit={(e) => {
+    console.log($page.url);
+  }}
+>
   <div class="bg-white px-5 py-3">
     <h2 class="font-bold text-brand-600 text-lg mb-4">Check Prices</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6">
@@ -102,7 +118,7 @@
         />
       </div>
       <div>
-        <InputDateRange
+        <InputDateRange2
           nameFrom="date_start"
           nameTo="date_end"
           labelFrom="Start Date"

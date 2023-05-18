@@ -32,6 +32,38 @@ const countDiscountAmount = (factor, value, gross, daily, one_way) => {
 };
 
 export const cal = {
+  getFlex: (supabase, search) => {
+    const date_start = dayjs(search.date_start, "DD/MM/YYYY");
+    const date_end = dayjs(search.date_end, "DD/MM/YYYY");
+    let query = supabase
+      .rpc("get_rates")
+      .gte("date_start", date_start.subtract(7, "day"))
+      .lte("date_end", date_end.add(7, "day"))
+      .eq("depot_id", search.pickup)
+      .eq("rates_type", "flex");
+
+    query = query
+      .order("rates_id", { ascending: true })
+      .order("vehicle_id", { ascending: true })
+      .order("date_start", { ascending: true });
+    return query;
+  },
+  getSeasonal: (supabase, search) => {
+    const date_start = dayjs(search.date_start, "DD/MM/YYYY");
+    const date_end = dayjs(search.date_end, "DD/MM/YYYY");
+    let query = supabase
+      .rpc("get_rates")
+      .eq("depot_id", search.pickup)
+      .eq("rates_type", "seasonal");
+
+    query = query
+      .order("rates_id", { ascending: true })
+      .order("vehicle_id", { ascending: true })
+      .order("date_start", { ascending: true });
+
+    return query;
+  },
+
   getRates: (supabase, search) => {
     // console.log(search);
     let query = supabase.rpc("get_rates").select();
@@ -250,7 +282,7 @@ export const cal = {
   },
   filterRoutes: (rates, search) => {
     let results = [];
-    const duration = search.date_end.diff(search.date_start, "day");
+    const duration = search.date_end.diff(search.date_start, "day") + 1;
 
     rates.forEach((rate) => {
       const valid = rate.routes.filter((route) => {
@@ -291,6 +323,7 @@ export const cal = {
       vehicles[rate.vehicle_id][rate.rates_id].push(rate);
     });
 
+    // console.log(vehicles);
     let results = [];
 
     for (const id in vehicles) {
@@ -451,7 +484,7 @@ export const cal = {
     return rates;
   },
   addSpecials: (rates, specials, search) => {
-    const duration = search.date_end.diff(search.date_start, "day");
+    const duration = search.date_end.diff(search.date_start, "day") + 1;
     rates.forEach((rate) => {
       rate.special_total = 0;
       rate.special_items = [];
@@ -670,7 +703,7 @@ export const cal = {
       terms.forEach((term) => {
         // console.log(rate.supplier_id, term.suppliers);
         if (rate.supplier_id === term.suppliers.id) {
-          rate.terms = term
+          rate.terms = term;
         }
       });
     });

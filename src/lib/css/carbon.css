@@ -13806,7 +13806,8 @@ screen and (-ms-high-contrast: none) {
     position: relative;
     display: flex;
     flex-direction: column;
-    justify-content: space-between
+    justify-content: space-between;
+    width: 100%;
 }
 
 .bx--date-picker-input__wrapper {
@@ -13832,7 +13833,7 @@ screen and (-ms-high-contrast: none) {
 }
 
 .bx--date-picker.bx--date-picker--single .bx--date-picker__input {
-    width: 18rem
+    width: 100%;
 }
 
 .bx--date-picker .bx--date-picker-input__wrapper--warn~.bx--form-requirement {

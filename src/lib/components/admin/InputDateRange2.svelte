@@ -2,6 +2,7 @@
   import { DatePicker, DatePickerInput } from "carbon-components-svelte";
   import dayjs from "dayjs";
   import customParseFormat from "dayjs/plugin/customParseFormat";
+  import { prevent_default } from "svelte/internal";
   dayjs.extend(customParseFormat);
 
   export let nameFrom = "";
@@ -10,29 +11,39 @@
   export let labelTo = "";
   export let valueFrom = "";
   export let valueTo = "";
-  export let half = false;
+  export let required = false;
 </script>
 
-<div class={half ? "" : "md:col-span-2"}>
+<div class="grid grid-cols-2">
   <DatePicker
-    datePickerType="range"
+    datePickerType="single"
     dateFormat="d/m/Y"
+    bind:value={valueFrom}
     on:change={(e) => {
-      valueFrom = dayjs(e.detail.selectedDates[0]);
-      valueTo = dayjs(e.detail.selectedDates[1]);
+      if (
+        dayjs(e.detail.dateStr, "DD/MM/YYYY").isAfter(
+          dayjs(valueTo, "DD/MM/YYYY")
+        )
+      ) {
+        valueTo = e.detail.dateStr;
+      }
     }}
-    valueFrom={dayjs(valueFrom).format("DD/MM/YYYY")}
-    valueTo={dayjs(valueTo).format("DD/MM/YYYY")}
-    >
+  >
     <DatePickerInput
       name={nameFrom}
       labelText={labelFrom}
-      placeholder="dd/mm/yyyy"
+      placeholder="DD/MM/YYYY"
+      autocomplete="off"
+      {required}
     />
+  </DatePicker>
+  <DatePicker datePickerType="single" dateFormat="d/m/Y" bind:value={valueTo}>
     <DatePickerInput
       name={nameTo}
       labelText={labelTo}
-      placeholder="dd/mm/yyyy"
+      placeholder="DD/MM/YYYY"
+      autocomplete="off"
+      {required}
     />
   </DatePicker>
 </div>

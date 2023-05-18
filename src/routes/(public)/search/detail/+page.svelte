@@ -13,7 +13,7 @@
     });
   };
 
-  console.log(data.detail);
+  // console.log(data.detail);
 
   let open = false;
   let showFeeDetails = false;

@@ -7,6 +7,7 @@ dayjs.extend(isBetween);
 import { cal } from "$lib/cal";
 
 export async function load({ url, params, locals }) {
+  console.log('LOAD');
   let search = {
     pickup: "",
     dropoff: "",
@@ -15,6 +16,7 @@ export async function load({ url, params, locals }) {
     license: "",
     age: "",
   };
+  
   let results = [];
 
   url.searchParams.forEach((value, key) => {
@@ -24,11 +26,24 @@ export async function load({ url, params, locals }) {
     search[key] = value;
   });
 
+  let allRates = []
+
   if (search.pickup !== "" && search.dropoff !== "") {
-    const { data: ratesData, error: ratesError } = await cal.getRates(
+    const { data: flexData } = await cal.getFlex(
       supabase,
       search
     );
+    // allRates = [...flexData]
+    const { data: seasonalData } = await cal.getSeasonal(
+      supabase,
+      search
+    );
+    allRates = [...flexData, ...seasonalData]
+
+    // const { data: ratesData, error: ratesError } = await cal.getRates(
+    //   supabase,
+    //   search
+    // );
     // console.log(ratesData);
     const { data: feesData, error: feesError } = await cal.getFees(
       supabase,
@@ -46,7 +61,7 @@ export async function load({ url, params, locals }) {
     );
     // console.log(bondsData);
 
-    const filteredRoutes = cal.filterRoutes(ratesData, search);
+    const filteredRoutes = cal.filterRoutes(allRates, search);
     const arrangedRates = cal.arrangeRates(filteredRoutes, search);
     const filteredBlockouts = cal.filterBlockouts(arrangedRates, blockoutsData);
     const addedFees = cal.addFees(filteredBlockouts, feesData);
@@ -59,6 +74,7 @@ export async function load({ url, params, locals }) {
 
   //   detail = addedSpecials[0];
   return {
+    // allRates: JSON.parse(JSON.stringify(allRates)),
     search: JSON.parse(JSON.stringify(search)),
     results: JSON.parse(JSON.stringify(results)),
   };

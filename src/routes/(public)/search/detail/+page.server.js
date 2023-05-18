@@ -51,7 +51,7 @@ export async function load({ url, params, locals }) {
   const addedBonds = cal.addBonds(addedSpecials, bondsData);
   const addAddons = cal.addAddons(addedBonds, addonsData);
   const addTerms = cal.addTerms(addAddons, termsData);
-  console.log("termsData", addTerms);
+  // console.log("termsData", addTerms);
 
 //   detail = addedSpecials[0];
   return {

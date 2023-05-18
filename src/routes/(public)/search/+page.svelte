@@ -3,7 +3,13 @@
   import { env } from "$env/dynamic/public";
   import VehicleFeatures from "$lib/components/public/single/VehicleFeatures.svelte";
   export let data;
-  console.log(data);
+  // console.log(data);
+  const formatCurrency = (num) => {
+    return num.toLocaleString("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  };
 
   let open = false;
 </script>
@@ -34,19 +40,18 @@
       <div class="flex-1">
         <div class="text-2xl font-bold pt-2 pb-4">
           <sup>AUD</sup>
-          ${(d.gross + d.one_way - d.special_total).toFixed(2)}
+          ${formatCurrency(d.gross + d.one_way - d.special_total)}
         </div>
         {#if d.special_total > 0}
           <div class="text-sm">
-            <s class="text-red-600">${(d.gross + d.one_way).toFixed(2)}</s>
-            Save ${d.special_total.toFixed(2)}
+            <s class="text-red-600">${formatCurrency(d.gross + d.one_way)}</s>
+            Save ${formatCurrency(d.special_total)}
           </div>
         {/if}
         <div class="text-sm mb-4">
-          Avg. per day ${(
-            (d.gross + d.one_way + d.fee_total - d.special_total) /
-            d.duration
-          ).toFixed(2)}
+          Avg. per day ${formatCurrency(
+            (d.gross + d.one_way + d.fee_total - d.special_total) / d.duration
+          )}
         </div>
         {#if d.special_total > 0}
           <div class="flex justify-center">
@@ -55,7 +60,16 @@
             {/each}
           </div>
         {/if}
-        <div>Min. driver's age {d.age_name}</div>
+        <div class="text-sm">
+          <div>
+            {#if d.license_id}
+              {d.license_name} license
+            {:else}
+              Any license
+            {/if}
+          </div>
+          <div>Min. driver's age {d.age_name}</div>
+        </div>
         {#if d.min_days > d.duration}
           <div
             class="col-span-2 border border-red-600 p-2 text-sm text-red-600 rounded"
