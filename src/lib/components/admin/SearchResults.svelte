@@ -12,20 +12,28 @@
 
   export let search = {};
   export let rows = [];
+  export let headers = [];
+  export let disabled = false;
   let pageSize = 100;
   let page = 1;
-  let headers = [
-    { key: "vehicle_name", value: "Vehicle" },
-    { key: "rates_type", value: "Type" },
-    { key: "license_name", value: "License" },
-    { key: "supplier_name", value: "Supplier" },
-    { key: "special_total", value: "Special" },
-    { key: "fee_total", value: "Fee" },
-    { key: "gross", value: "Gross" },
-    { key: "nett", value: "Nett" },
-    { key: "profit", value: "Profit" },
-  ];
+  // let headers = [
+  //   { key: "vehicle_name", value: "Vehicle" },
+  //   // { key: "rates_type", value: "Type" },
+  //   { key: "license_name", value: "License" },
+  //   // { key: "supplier_name", value: "Supplier" },
+  //   // { key: "special_total", value: "Special" },
+  //   // { key: "fee_total", value: "Fee" },
+  //   { key: "gross", value: "Gross" },
+  //   { key: "nett", value: "Nett" },
+  //   // { key: "profit", value: "Profit" },
+  // ];
   let filteredRowIds = [];
+  const formatCurrency = (num) => {
+    return num.toLocaleString("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  };
 </script>
 
 <DataTable
@@ -35,8 +43,12 @@
   {page}
   {rows}
   on:click:row={(row) => {
-    const r = row.detail
-    goto(`/admin/sales/quotes/detail?pickup=${r.depot_id}&dropoff=${r.dropoff_id}&rates=${r.rates_id}&date_start=${search.date_start}&date_end=${search.date_end}&age=${r.age_id}&license=${r.license_id}&vehicle=${r.vehicle_id}`);
+    const r = row.detail;
+    if (!disabled) {
+      goto(
+        `/admin/sales/calculator/detail?pickup=${r.depot_id}&dropoff=${r.dropoff_id}&rates=${r.rates_id}&date_start=${search.date_start}&date_end=${search.date_end}&age=${r.age_id}&license=${r.license_id}&vehicle=${r.vehicle_id}`
+      );
+    }
   }}
   class="cursor-pointer"
 >
@@ -70,8 +82,8 @@
     {:else if ["date_start", "date_end", "routes_date_start", "routes_date_end", "travel_start", "travel_end", "created_at", "updated_at"].includes(cell.key)}
       {dayjs(cell.value).format("DD/MM/YYYY")}
     {:else if ["nett", "gross", "profit", "special_total"].includes(cell.key)}
-      {cell.value.toFixed(0)}
-    {:else if cell.key === "vehicles_categories"}
+      {formatCurrency(cell.value)}
+    {:else if ["vehicles_categories", "block_items"].includes(cell.key)}
       {#each cell.value as item}
         {item.name}<br />
       {/each}

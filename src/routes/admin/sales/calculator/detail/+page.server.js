@@ -6,9 +6,6 @@ import { cal } from "$lib/cal";
 
 export async function load({ url, params, locals }) {
   let search = {};
-  let detail = {};
-  let results = [];
-  let blocked = [];
   let allRates = [];
 
   url.searchParams.forEach((value, key) => {
@@ -18,13 +15,10 @@ export async function load({ url, params, locals }) {
     search[key] = value;
   });
   const { data: flexData } = await cal.getFlex(supabase, search);
-  // allRates = [...flexData]
+
   const { data: seasonalData } = await cal.getSeasonal(supabase, search);
   allRates = [...flexData, ...seasonalData];
-// const { data: ratesData, error: ratesError } = await cal.getRates(
-  //   supabase,
-  //   search
-  // );
+
   const { data: feesData, error: feesError } = await cal.getFees(
     supabase,
     search
@@ -50,6 +44,7 @@ export async function load({ url, params, locals }) {
     search
   );
 
+
   const filteredRoutes = cal.filterRoutes(allRates, search);
   const arrangedRates = cal.arrangeRates(filteredRoutes, search);
   const filteredBlockouts = cal.filterBlockouts(arrangedRates, blockoutsData);
@@ -58,9 +53,7 @@ export async function load({ url, params, locals }) {
   const addedBonds = cal.addBonds(addedSpecials, bondsData);
   const addAddons = cal.addAddons(addedBonds, addonsData);
   const addTerms = cal.addTerms(addAddons, termsData);
-  // console.log("termsData", addTerms);
 
-//   detail = addedSpecials[0];
   return {
     detail: JSON.parse(JSON.stringify(addTerms[0])),
     search: JSON.parse(JSON.stringify(search)),

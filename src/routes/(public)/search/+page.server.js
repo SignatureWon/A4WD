@@ -17,8 +17,10 @@ export async function load({ url, params, locals }) {
     license: "",
     age: "",
   };
-  
+
   let results = [];
+  let blocked = [];
+  let allRates = [];
 
   url.searchParams.forEach((value, key) => {
     if (["date_start", "date_end"].includes(key)) {
@@ -27,19 +29,12 @@ export async function load({ url, params, locals }) {
     search[key] = value;
   });
 
-  let allRates = []
 
   if (search.pickup !== "" && search.dropoff !== "") {
-    const { data: flexData } = await cal.getFlex(
-      supabase,
-      search
-    );
+    const { data: flexData } = await cal.getFlex(supabase, search);
     // allRates = [...flexData]
-    const { data: seasonalData } = await cal.getSeasonal(
-      supabase,
-      search
-    );
-    allRates = [...flexData, ...seasonalData]
+    const { data: seasonalData } = await cal.getSeasonal(supabase, search);
+    allRates = [...flexData, ...seasonalData];
     // console.log("flex:", flexData.length, "seasonal:", seasonalData.length);
 
     // const { data: ratesData, error: ratesError } = await cal.getRates(
@@ -53,6 +48,7 @@ export async function load({ url, params, locals }) {
     );
     const { data: blockoutsData, error: blockoutsError } =
       await cal.getBlockouts(supabase, search);
+
     const { data: specialsData, error: specialsError } = await cal.getSpecials(
       supabase,
       search
@@ -66,12 +62,13 @@ export async function load({ url, params, locals }) {
     const filteredRoutes = cal.filterRoutes(allRates, search);
     const arrangedRates = cal.arrangeRates(filteredRoutes, search);
     const filteredBlockouts = cal.filterBlockouts(arrangedRates, blockoutsData);
-    const addedFees = cal.addFees(filteredBlockouts, feesData);
+    const addedFees = cal.addFees(filteredBlockouts.rates, feesData);
     const addedSpecials = cal.addSpecials(addedFees, specialsData, search);
     const addedBonds = cal.addBonds(addedSpecials, bondsData, search);
     //   console.log(addedBonds);
 
     results = [...addedBonds];
+    blocked = [...filteredBlockouts.blocked]
   }
 
   // console.log("search", results.length);
@@ -79,6 +76,7 @@ export async function load({ url, params, locals }) {
   //   detail = addedSpecials[0];
   return {
     // allRates: JSON.parse(JSON.stringify(allRates)),
+    blocked: JSON.parse(JSON.stringify(blocked)),
     search: JSON.parse(JSON.stringify(search)),
     results: JSON.parse(JSON.stringify(results)),
   };

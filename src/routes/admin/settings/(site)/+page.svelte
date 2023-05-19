@@ -23,6 +23,9 @@
     "keywords",
     "hotline",
     "email",
+    "facebook",
+    "instagram",
+    "twitter",
     "logo",
     "icon",
     "color",
@@ -155,9 +158,7 @@
           updateRecord("color", record.color);
         }}
       >
-        <div
-          class="grid md:grid-cols-3 gap-5 px-5 py-8 border-b border-gray-200"
-        >
+        <div class="grid md:grid-cols-3 gap-5 px-5 py-8 border-b border-gray-200">
           <div>
             <h4 class="font-bold">Info</h4>
           </div>
@@ -183,6 +184,25 @@
             </div>
             <div class="mb-4">
               <TextInput labelText="Email" bind:value={record.email} />
+            </div>
+          </div>
+        </div>
+        <div class="grid md:grid-cols-3 gap-5 px-5 py-8 border-b border-gray-200">
+          <div>
+            <h4 class="font-bold">Social Media</h4>
+          </div>
+          <div class="md:col-span-2">
+            <div class="mb-4">
+              <TextInput
+                labelText="Facebook"
+                bind:value={record.facebook}
+              />
+            </div>
+            <div class="mb-4">
+              <TextInput labelText="Twitter" bind:value={record.twitter} />
+            </div>
+            <div class="mb-4">
+              <TextInput labelText="Instagram" bind:value={record.instagram} />
             </div>
           </div>
         </div>

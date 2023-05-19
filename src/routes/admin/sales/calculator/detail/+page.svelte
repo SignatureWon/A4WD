@@ -1,5 +1,15 @@
 <script>
-  import { Button, Checkbox, Modal, TextInput } from "carbon-components-svelte";
+  import PageTitle from "$lib/components/admin/PageTitle.svelte";
+  import FormSection from "$lib/components/admin/FormSection.svelte";
+  import VehicleFeatures from "$lib/components/public/single/VehicleFeatures.svelte";
+  import {
+    Button,
+    Checkbox,
+    Modal,
+    RadioButton,
+    RadioButtonGroup,
+    TextInput,
+  } from "carbon-components-svelte";
   import { env } from "$env/dynamic/public";
   import dayjs from "dayjs";
   export let data;
@@ -72,10 +82,6 @@
     addons: {},
     terms: d.terms,
   };
-
-  // console.log(data.detail);
-
-  let open = false;
   let showFeeDetails = false;
 
   let selected_bond = 0;
@@ -95,6 +101,7 @@
     d.gross + d.one_way + d.fee_total + bond_fee + addon_fee - d.special_total;
 </script>
 
+<PageTitle title="Detail" />
 <section class="bg-white mb-8">
   <div class="px-4 py-2 border-b border-gray-200">
     <h2 class="text-xl font-bold">Trip Details</h2>
@@ -150,9 +157,7 @@
     <h2 class="text-xl font-bold">Price Details</h2>
   </div>
   <div class="p-4">
-    <div
-      class="uppercase tracking-wider font-bold mb-3 text-gray-400 flex justify-between"
-    >
+    <div class="uppercase tracking-wider font-bold mb-3 flex justify-between">
       <div>Fee</div>
       <div>AUD $</div>
     </div>
@@ -275,24 +280,43 @@
       {/if}
     </div>
   </div>
-  <div class="p-2">
-    <div class="p-2">
-      <div class="uppercase tracking-wider font-bold mb-3 flex justify-between">
-        Accident Liability
-      </div>
-      <div>Select your level of liability from the options below</div>
+  <div class="p-4">
+    <div class="uppercase tracking-wider font-bold mb-3 flex justify-between">
+      Accident Liability
     </div>
-    <div class="flex">
-      {#each d.bond_items as b, i}
-        <div
-          class="border {selected_bond === i
-            ? 'border-brand-600 bg-brand-50'
-            : 'border-gray-200'} p-3 flex-1 flex flex-col m-2"
-        >
-          <div class="flex-1 pb-8">
-            <h4 class="font-bold text-brand-600">{b.display_name}</h4>
-            <div class="text-xl font-bold">
-              AUD ${formatCurrency(
+    <div>
+      <RadioButtonGroup
+        orientation="vertical"
+        selected={0}
+        class="w-full [&>fieldset]:w-full"
+      >
+        {#each d.bond_items as b, i}
+          <div
+            class="flex mb-2 justify-between w-full pt-2 pb-3 border-b border-gray-200"
+          >
+            <div class="flex-1 flex justify-start">
+              <RadioButton
+                labelText={`${b.display_name} - ${b.liability.toLocaleString(
+                  "en-US"
+                )} Excess, ${b.bond.toLocaleString(
+                  "en-US"
+                )} Bond (${formatCurrency(b.gross || 0)} x ${
+                  b.cap ? (b.cap > d.duration ? b.cap : d.duration) : d.duration
+                } days)                
+                `}
+                value={i}
+                on:change={() => {
+                  selected_bond = i;
+                  bond_fee =
+                    b.gross *
+                    (d.duration < (b.cap || 0) ? d.duration : b.cap || 0);
+                  booking.bonds = b;
+                  console.log(booking);
+                }}
+              />
+            </div>
+            <div class="whitespace-nowrap pl-4">
+              ${formatCurrency(
                 (b.gross || 0) *
                   (b.cap
                     ? b.cap > d.duration
@@ -301,53 +325,15 @@
                     : d.duration)
               )}
             </div>
-            <div class="mb-4">
-              ${formatCurrency(b.gross || 0)} x {b.cap
-                ? b.cap > d.duration
-                  ? b.cap
-                  : d.duration
-                : d.duration} days
-            </div>
-            <div class="mb-4 font-bold">
-              ${b.liability.toLocaleString("en-US")} Excess<br />
-              ${b.bond.toLocaleString("en-US")} Bond
-            </div>
-            {#if b.description}
-              <div class="mb-4 text-gray-500">
-                {b.description}
-              </div>
-            {/if}
-            {#if b.inclusions}
-              <div class="font-bold">Inclusions</div>
-              {b.inclusions}
-            {/if}
           </div>
-          {#if selected_bond === i}
-            <Button>Selected</Button>
-          {:else}
-            <Button
-              kind="ghost"
-              on:click={() => {
-                selected_bond = i;
-                bond_fee =
-                  b.gross *
-                  (d.duration < (b.cap || 0) ? d.duration : b.cap || 0);
-                booking.bonds = b;
-                console.log(booking);
-              }}>Select</Button
-            >
-          {/if}
-        </div>
-      {/each}
+        {/each}
+      </RadioButtonGroup>
     </div>
   </div>
   {#if d.addon_items.length}
     <div class="p-4">
-      <div
-        class="uppercase tracking-wider font-bold mb-3 text-gray-400 flex justify-between"
-      >
+      <div class="uppercase tracking-wider font-bold mb-3 flex justify-between">
         <div>Add-ons</div>
-        <div>AUD $</div>
       </div>
       <div class="divide-y divide-gray-200">
         {#each d.addon_items as item, index1}
@@ -376,7 +362,7 @@
                     {addon.name}
                     {#if addon.daily}
                       {#if addon.gross_rate * d.duration > addon.gross_cap}
-                         {addon.gross_cap}
+                        {addon.gross_cap}
                       {:else}
                         (${formatCurrency(addon.gross_rate)} x {d.duration} days)
                       {/if}
@@ -502,38 +488,14 @@
     </div>
   </div>
 </section>
-
 <section class="bg-white p-4 mb-0.5">
-  <div class="text-xl font-bold text-center mb-4">
-    Book now with ${formatCurrency(
-      d.terms.percentage ? (total * d.terms.deposit) / 100 : d.terms.deposit
-    )} deposit only
-  </div>
-  <div class="grid grid-cols-2">
-    <Button
-      size="small"
-      kind="tertiary"
-      on:click={(e) => {
-        open = true;
-      }}>Email Quote</Button
-    >
-    <Button size="small" href="/search/details">Book Now</Button>
-  </div>
-</section>
-
-<Modal
-  bind:open
-  modalHeading="Send quote to my email"
-  primaryButtonText="Confirm"
-  secondaryButtonText="Cancel"
-  on:click:button--secondary={() => (open = false)}
-  on:open
-  on:close
-  on:submit
->
-  <div class="max-w-md mx-auto mt-10">
-    <TextInput labelText="Name" class="mb-5" />
-    <TextInput labelText="Email" class="mb-5" />
-    <TextInput labelText="Phone" class="mb-5" />
-  </div>
-</Modal>
+    <!-- <div class="text-xl font-bold text-center mb-4">
+      Book now with ${formatCurrency(
+        d.terms.percentage ? (total * d.terms.deposit) / 100 : d.terms.deposit
+      )} deposit only
+    </div> -->
+    <div class="text-center pt-3">
+      <Button size="small" href="#">Create Quote</Button>
+    </div>
+  </section>
+  

@@ -20,7 +20,7 @@ const setNull = (data) => {
   for (const key in data) {
     if (data[key] === "") {
       data[key] = null;
-      console.log(key, data[key]);
+      // console.log(key, data[key]);
     }
   }
 };
@@ -244,6 +244,60 @@ export const db = {
     }
   },
   actions: {
+    insertProfile: async (request, url, locals, fetch) => {
+      const formData = await request.formData();
+      let newData = Object.fromEntries(formData.entries());
+      let path = url.pathname.split("/");
+      path.pop();
+
+      const { data: checkUser } = await locals.sb
+        .from("profiles")
+        .select()
+        .eq("email", newData.email)
+        .single();
+
+      if (!checkUser) {
+        const { data: newUser, error: errUser } = await locals.sb.auth.signUp({
+          email: newData.email,
+          password: "password",
+        });
+
+        const { data, error: err } = await locals.sb
+          .from(fetch.table)
+          .update(newData)
+          .eq("id", newUser.user.id);
+
+        if (err) {
+          console.log("err", err);
+          throw error(404, {
+            message: err.message,
+          });
+        }
+        throw redirect(303, `${path.join("/")}/${newUser.user.id}`);
+      } else {
+        throw redirect(303, `${path.join("/")}/${checkUser.id}`);
+      }
+    },
+    updatePassword: async (request, url, locals, fetch) => {
+      const formData = await request.formData();
+      let newData = Object.fromEntries(formData.entries());
+      console.log(newData);
+
+      const { data: user, error: err } = await locals.sb.auth.admin.updateUserById(
+        fetch.id,
+        { password: newData.password }
+      );
+      if (err) {
+        console.log("err", err);
+        throw error(404, {
+          message: err.message,
+        });
+      }
+
+      // const { data, error } = await await locals.sb.rpc("change_password", {pwd: newData.password, id: fetch.id})
+
+      throw redirect(303, `${url.pathname}?success=update`);
+    },
     insert: async (request, url, locals, fetch) => {
       const formData = await request.formData();
       let newData = Object.fromEntries(formData.entries());

@@ -3,7 +3,7 @@
   import { env } from "$env/dynamic/public";
   import VehicleFeatures from "$lib/components/public/single/VehicleFeatures.svelte";
   export let data;
-  // console.log(data);
+  console.log(data);
   const formatCurrency = (num) => {
     return num.toLocaleString("en-US", {
       minimumFractionDigits: 2,
@@ -116,6 +116,79 @@
             >See Quote</Button
           >
         </div>
+      </div>
+    </div>
+  </div>
+{/each}
+{#each data.blocked as d}
+  <div class="grid grid-cols-1 md:grid-cols-2 bg-white p-2 mb-4 gap-10">
+    <div class="p-2 opacity-50">
+      <h2 class="text-xl font-bold mb-2">{d.vehicle_name}</h2>
+      <div class="my-4 text-center">
+        <img
+          src="{env.PUBLIC_SUPABASE_URL}/storage/v1/render/image/public/contents/{d.vehicle_image}?width=200&height=200&resize=contain"
+          alt={d.vehicle_caption}
+          class="mx-auto h-40"
+        />
+      </div>
+      <VehicleFeatures
+        record={{
+          pax: d.vehicle_pax,
+          wheel: d.vehicle_wheel,
+          transmission: d.vehicle_transmission,
+          fuel: d.vehicle_fuel,
+          toilet: d.vehicle_toilet,
+          shower: d.vehicle_shower,
+        }}
+      />
+    </div>
+    <div class="bg-brand-50 p-4 text-center flex flex-col">
+      <div class="flex-1">
+        <div class="font-bold py-1 px-2 border border-black uppercase">Not available</div>
+        {#each d.block_items as b}
+        <div class="py-4">
+          <div class="font-bold">
+            {b.name}
+          </div>
+          <div class="text-sm">
+            <pre class="font-sans">{b.description}</pre>
+          </div>
+        </div>
+        {/each}
+        {#if d.special_total > 0}
+          <div class="flex justify-center">
+            {#each d.special_items as item}
+              <Tag type="high-contrast">{item.name}</Tag>
+            {/each}
+          </div>
+        {/if}
+        <div class="text-sm">
+          <div>
+            {#if d.license_id}
+              {d.license_name} license
+            {:else}
+              Any license
+            {/if}
+          </div>
+          <div>Min. driver's age {d.age_name}</div>
+        </div>
+        {#if d.min_days > d.duration}
+          <div
+            class="col-span-2 border border-red-600 p-2 text-sm text-red-600 rounded"
+          >
+            Price is based on minimum {d.min_days} days, less days will average out.
+          </div>
+        {/if}
+      </div>
+      <div>
+          <Button
+            class="rounded mx-auto"
+            size="small"
+            kind="tertiary"
+            href="/vehicles/{d.vehicle_slug}"
+          >
+            View Specs
+          </Button>
       </div>
     </div>
   </div>

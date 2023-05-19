@@ -161,7 +161,8 @@ export const cal = {
         all_depots, 
         all_suppliers, 
         all_vehicles,
-        name, 
+        name,
+        description,
         id
     `);
     query = query.or(
@@ -414,9 +415,13 @@ export const cal = {
     return results;
   },
   filterBlockouts: (rates, blockouts) => {
-    let results = [];
+    let results = {
+      rates: [],
+      blocked: [],
+    };
     rates.forEach((rate) => {
       let blocked = false;
+      rate.block_items = []
       blockouts.forEach((blockout) => {
         let blocked_depots = blockout.all_depots;
         let blocked_suppliers = blockout.all_suppliers;
@@ -449,13 +454,16 @@ export const cal = {
         if (blocked_depots) {
           if (blocked_suppliers) {
             if (blocked_vehicles) {
+              rate.block_items.push(blockout)
               blocked = true;
             }
           }
         }
       });
-      if (!blocked) {
-        results.push(rate);
+      if (blocked) {
+        results.blocked.push(rate)
+      } else {
+        results.rates.push(rate);
       }
     });
     // console.log("block", results);

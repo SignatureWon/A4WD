@@ -42,7 +42,7 @@
       {#if id === "add"}
         Add {title}
       {:else}
-        {data.name || data.reference}
+        {(data.name || data.reference) || data.first_name}
       {/if}
     {:else}
       {title}

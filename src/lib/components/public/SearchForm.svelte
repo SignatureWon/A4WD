@@ -93,10 +93,7 @@
   // }
 </script>
 
-<form
-  action="/search/redirect"
-  method="get"
->
+<form action="/search/redirect" method="get">
   <div class="bg-white px-5 py-3">
     <h2 class="font-bold text-brand-600 text-lg mb-4">Check Prices</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6">
@@ -160,7 +157,8 @@
           half={true}
         />
       </div>
-      <div class="md:mt-6 lg:mt-0">
+      <!-- <div class="md:mt-6 lg:mt-0"> -->
+      <div class="md:col-span-2 lg:col-span-1">
         <Button type="submit" class="w-full flex justify-center items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
