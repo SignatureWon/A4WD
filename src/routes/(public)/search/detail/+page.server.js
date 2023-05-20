@@ -61,8 +61,11 @@ export async function load({ url, params, locals }) {
   // console.log("termsData", addTerms);
 
 //   detail = addedSpecials[0];
+
+    const {data: countries} = await supabase.from("constants").select("id, name").eq("type", "countries").order("rank", {ascending: true})
   return {
     detail: JSON.parse(JSON.stringify(addTerms[0])),
     search: JSON.parse(JSON.stringify(search)),
+    countries
   }
 }

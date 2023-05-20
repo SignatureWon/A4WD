@@ -1,17 +1,33 @@
 <script>
-  import { Button, Checkbox, Modal, TextInput } from "carbon-components-svelte";
+  import { supabase } from "$lib/supabaseClient";
+  import {
+    Button,
+    Checkbox,
+    Modal,
+    Select,
+    SelectItem,
+    TextInput,
+  } from "carbon-components-svelte";
   import { env } from "$env/dynamic/public";
   import dayjs from "dayjs";
+  import { pdf } from "$lib/pdf.js";
   export let data;
 
   const d = data.detail;
-  console.log(d);
+  // console.log(data);
 
   const formatCurrency = (num) => {
     return num.toLocaleString("en-US", {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     });
+  };
+
+  let guest = {
+    name: "John",
+    email: "john@email.com",
+    phone: "01234567890",
+    country: "australia",
   };
 
   let booking = {
@@ -86,10 +102,14 @@
       (d.duration < (d.bond_items[0].cap || 0)
         ? d.duration
         : d.bond_items[0].cap || 0);
+    booking.bond = d.bond_items[0];
   }
+  // console.log(booking);
   let addon_fee = 0;
   let total =
     d.gross + d.one_way + d.fee_total + bond_fee + addon_fee - d.special_total;
+
+  let modalSendQuote = false;
 
   $: total =
     d.gross + d.one_way + d.fee_total + bond_fee + addon_fee - d.special_total;
@@ -150,9 +170,7 @@
     <h2 class="text-xl font-bold">Price Details</h2>
   </div>
   <div class="p-4">
-    <div
-      class="uppercase tracking-wider font-bold mb-3 text-gray-400 flex justify-between"
-    >
+    <div class="uppercase tracking-wider font-bold mb-3 flex justify-between">
       <div>Fee</div>
       <div>AUD $</div>
     </div>
@@ -343,9 +361,7 @@
   </div>
   {#if d.addon_items.length}
     <div class="p-4">
-      <div
-        class="uppercase tracking-wider font-bold mb-3 text-gray-400 flex justify-between"
-      >
+      <div class="uppercase tracking-wider font-bold mb-3 flex justify-between">
         <div>Add-ons</div>
         <div>AUD $</div>
       </div>
@@ -376,7 +392,7 @@
                     {addon.name}
                     {#if addon.daily}
                       {#if addon.gross_rate * d.duration > addon.gross_cap}
-                         {addon.gross_cap}
+                        {addon.gross_cap}
                       {:else}
                         (${formatCurrency(addon.gross_rate)} x {d.duration} days)
                       {/if}
@@ -410,9 +426,7 @@
     <h2 class="text-xl font-bold">Payment Details</h2>
   </div>
   <div class="p-4">
-    <div
-      class="uppercase tracking-wider font-bold mb-3 text-gray-400 flex justify-between"
-    >
+    <div class="uppercase tracking-wider font-bold mb-3 flex justify-between">
       <div>Payment</div>
       <div>AUD $</div>
     </div>
@@ -513,8 +527,20 @@
     <Button
       size="small"
       kind="tertiary"
-      on:click={(e) => {
-        open = true;
+      on:click={async (e) => {
+        await pdf.generate_pdf(guest, booking, "Quotation")
+        // var pdfFile = new Blob(
+        //   [pdf.generate_pdf(guest, booking, "Quotation")],
+        //   {
+        //     type: "application/pdf",
+        //   }
+        // );
+        // const { data: dataPdf, error: errPdf } = await supabase.storage
+        //   .from("quotes")
+        //   .update("sample.pdf", pdfFile);
+        // let pdfout = pdf.generate_pdf(guest, booking, "Quotation")
+        // const
+        // modalSendQuote = true;
       }}>Email Quote</Button
     >
     <Button size="small" href="/search/details">Book Now</Button>
@@ -522,18 +548,23 @@
 </section>
 
 <Modal
-  bind:open
+  bind:open={modalSendQuote}
   modalHeading="Send quote to my email"
   primaryButtonText="Confirm"
   secondaryButtonText="Cancel"
   on:click:button--secondary={() => (open = false)}
   on:open
   on:close
-  on:submit
+  on:submit={pdf.generate_pdf(guest, booking, "Quotation")}
 >
   <div class="max-w-md mx-auto mt-10">
-    <TextInput labelText="Name" class="mb-5" />
-    <TextInput labelText="Email" class="mb-5" />
-    <TextInput labelText="Phone" class="mb-5" />
+    <TextInput labelText="Name" bind:value={guest.name} class="mb-5" />
+    <TextInput labelText="Email" bind:value={guest.email} class="mb-5" />
+    <TextInput labelText="Phone" bind:value={guest.phone} class="mb-5" />
+    <Select labelText="Country" bind:value={guest.country}>
+      {#each data.countries as country}
+        <SelectItem value={country.name} />
+      {/each}
+    </Select>
   </div>
 </Modal>
