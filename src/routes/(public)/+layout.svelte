@@ -78,7 +78,7 @@
         {/each}
         <Button kind="ghost" href="/blog">Blog</Button>
       </div>
-      <Button><a href="/login">Sign In</a></Button>
+      <Button><a href="/booking">Booking</a></Button>
     </div>
     <div class="flex md:hidden">
       <OverflowMenu flipped>

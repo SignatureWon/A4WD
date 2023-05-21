@@ -1,10 +1,24 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import dayjs from "dayjs";
+import { supabase } from "$lib/supabaseClient";
 
 export const pdf = {
-  generate_pdf: (user, quote, title) => {
-    const doc = new jsPDF();
+  generate_pdf: async (user, quote, title) => {
+    const { data: supplierData } = await supabase
+      .from("suppliers")
+      .select()
+      .eq("id", quote.supplier.id)
+      .single();
+
+    const pickup = supplierData.depots.filter((d) => {
+      return d.Depots.id === quote.pickup.id;
+    })[0];
+
+    const dropoff = supplierData.depots.filter((d) => {
+      return d.Depots.id === quote.dropoff.id;
+    })[0];
+    const doc = new jsPDF({ orientation: "p", lineHeight: 1.5 });
 
     // header
     doc.autoTable({
@@ -14,7 +28,7 @@ export const pdf = {
           {
             content: "",
             styles: {
-              minCellHeight: 25,
+              minCellHeight: 30,
             },
           },
           {
@@ -59,6 +73,9 @@ export const pdf = {
           });
         }
       },
+      styles: {
+        cellPadding: 0,
+      },
     });
 
     // notice
@@ -75,8 +92,8 @@ export const pdf = {
       ],
       bodyStyles: {
         fillColor: "#eeeeee",
-        lineColor: "#000000",
-        lineWidth: 0.1,
+        // lineColor: "#000000",
+        // lineWidth: 0.1,
       },
     });
 
@@ -108,19 +125,20 @@ export const pdf = {
       body: [
         [
           {
-            content: "388001",
+            content: quote.reference,
           },
           {
-            content: "JUL01234-1",
+            content: quote.confirmation || "PENDING",
           },
           {
-            content: dayjs().format("DD MMM YYYY"),
+            content: quote.date_issue.format("DD MMM YYYY"),
           },
         ],
       ],
       headStyles: {
         fontSize: 9,
         textColor: "#999999",
+        cellPadding: 0,
       },
       bodyStyles: {
         fontSize: 10,
@@ -129,121 +147,171 @@ export const pdf = {
 
     // Customer
     doc.autoTable({
+      theme: "plain",
+      head: [
+        [
+          {
+            content: "Customer",
+            styles: {
+              cellWidth: 60,
+            },
+          },
+          {
+            content: "Driver",
+            styles: {
+              cellWidth: 60,
+            },
+          },
+          {
+            content: "Passenger",
+            styles: {
+              cellWidth: 60,
+            },
+          },
+        ],
+      ],
+      body: [
+        [
+          {
+            content: `${user.first_name} ${user.last_name}\n${user.email}\n${user.phone}`,
+          },
+          {
+            content: `Age: ${user.age}\nLicense: ${user.license}`,
+          },
+          {
+            content: `Adult: ${user.adult}\nChildren: ${user.children}
+            `,
+          },
+        ],
+      ],
+      headStyles: {
+        fontSize: 9,
+        textColor: "#999999",
+        cellPadding: 0,
+      },
+      bodyStyles: {
+        fontSize: 10,
+      },
+    });
+
+    // Itinerary
+    doc.autoTable({
+      theme: "plain",
+      body: [
+        [
+          {
+            content: "",
+            styles: {
+              minCellHeight: 50,
+            },
+          },
+          {
+            content: "",
+            styles: {
+              minCellHeight: 50,
+            },
+          },
+        ],
+      ],
+      didDrawCell: function (data) {
+        if (data.column.index === 0 && data.row.section === "body") {
+          doc.autoTable({
+            theme: "plain",
+            head: [
+              [
+                {
+                  content: "Pick-up",
+                  styles: {
+                    cellWidth: 90,
+                  },
+                },
+                {
+                  content: "Drop-off",
+                  styles: {
+                    cellWidth: 90,
+                  },
+                },
+              ],
+            ],
+            body: [
+              [
+                {
+                  content: `${quote.pickup.name}\n${quote.date_start.format(
+                    "DD MMM YYYY (ddd)"
+                  )}`,
+                  styles: {
+                    fontStyle: "bold",
+                  },
+                },
+                {
+                  content: `${quote.dropoff.name}\n${quote.date_end.format(
+                    "DD MMM YYYY (ddd)"
+                  )}`,
+                  styles: {
+                    fontStyle: "bold",
+                  },
+                },
+              ],
+              [
+                {
+                  content: `${pickup.Address}}`,
+                },
+                {
+                  content: `${dropoff.Address}}`,
+                },
+              ],
+              [
+                {
+                  content: `Contact (Australia): ${pickup["Contact (Australia)"]}\nContact (International): ${pickup["Contact (International)"]}`,
+                },
+                {
+                  content: `Contact (Australia): ${dropoff["Contact (Australia)"]}\nContact (International): ${dropoff["Contact (International)"]}`,
+                },
+              ],
+            ],
+            headStyles: {
+              fontSize: 9,
+              textColor: "#999999",
+            },
+          });
+        }
+      },
+      bodyStyles: {
+        fontSize: 10,
+      },
+      styles: {
+        lineColor: "#000000",
+        lineWidth: 0.1,
+      },
+    });
+
+    // Payment
+    doc.autoTable({
         theme: "plain",
         head: [
           [
             {
-              content: "Customer",
-              styles: {
-                cellWidth: 60,
-              },
-            },
-            {
-              content: "Driver",
-              styles: {
-                cellWidth: 60,
-              },
-            },
-            {
-              content: "Passenger",
-              styles: {
-                cellWidth: 60,
-              },
+              content: "Payment Schedule",
             },
           ],
         ],
         body: [
           [
             {
-              content: "388001",
-            },
-            {
-              content: "JUL01234-1",
-            },
-            {
-              content: dayjs().format("DD MMM YYYY"),
+              content: "Payments are to be made (by credit card or Internet transfer) according to the schedule below. Unless advised otherwise, yourcredit card (supplied to us at the time of booking) will be charged accordingly. Kindly refer to the Payments Summary found on your provisional or e-ticket issued to you for more details.",
             },
           ],
         ],
         headStyles: {
           fontSize: 9,
           textColor: "#999999",
+          cellPadding: 0,
         },
         bodyStyles: {
           fontSize: 10,
         },
       });
-      // doc.autoTable({
-    //   theme: "plain",
-    //   body: [
-    //     [
-    //       {
-    //         content: "Customer Details",
-    //         styles: {
-    //           cellWidth: 60,
-    //           fontSize: 12,
-    //           fontStyle: "bold",
-    //         },
-    //       },
-    //       {
-    //         content: "",
-    //         styles: {
-    //           cellWidth: 60,
-    //         },
-    //       },
-    //       {
-    //         content: "",
-    //         styles: {
-    //           cellWidth: 60,
-    //         },
-    //       },
-    //     ],
-    //     [
-    //       {
-    //         content: "Attn",
-    //         styles: {
-    //           fontSize: 9,
-    //           textColor: "#999999",
-    //         },
-    //       },
-    //       {
-    //         content: "Driver",
-    //         styles: {
-    //           fontSize: 9,
-    //           textColor: "#999999",
-    //         },
-    //       },
-    //       {
-    //         content: "Passenger",
-    //         styles: {
-    //           fontSize: 9,
-    //           textColor: "#999999",
-    //         },
-    //       },
-    //     ],
-    //     [
-    //       {
-    //         content: "388001",
-    //         styles: {
-    //           fontSize: 10,
-    //         },
-    //       },
-    //       {
-    //         content: "JUL01234-1",
-    //         styles: {
-    //           fontSize: 10,
-    //         },
-    //       },
-    //       {
-    //         content: dayjs().format("DD MMM YYYY"),
-    //         styles: {
-    //           fontSize: 10,
-    //         },
-    //       },
-    //     ],
-    //   ],
-    // });
-
+  
     return doc.save("sample.pdf");
     // return doc.output("invoice");
   },

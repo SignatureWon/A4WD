@@ -33,6 +33,7 @@ const countDiscountAmount = (factor, value, gross, daily, one_way) => {
 
 export const cal = {
   getFlex: (supabase, search) => {
+    // console.log("search", search);
     const date_start = dayjs(search.date_start, "DD/MM/YYYY");
     const date_end = dayjs(search.date_end, "DD/MM/YYYY");
     let query = supabase
@@ -55,6 +56,13 @@ export const cal = {
 
     if (search.pax > 0) {
       query = query.gte("vehicle_pax", search.pax);
+    }
+
+    if (search.rates) {
+      query = query.eq("rates_id", search.rates);
+    }
+    if (search.vehicle) {
+      query = query.eq("vehicle_id", search.vehicle);
     }
 
     query = query
@@ -84,6 +92,13 @@ export const cal = {
 
     if (search.pax > 0) {
       query = query.gte("vehicle_pax", search.pax);
+    }
+
+    if (search.rates) {
+      query = query.eq("rates_id", search.rates);
+    }
+    if (search.vehicle) {
+      query = query.eq("vehicle_id", search.vehicle);
     }
 
     query = query
@@ -399,6 +414,7 @@ export const cal = {
                 nett: todayNett,
                 gross: todayGross,
                 profit: todayProfit,
+                flex: r.flex,
               });
             }
           });
@@ -421,7 +437,7 @@ export const cal = {
     };
     rates.forEach((rate) => {
       let blocked = false;
-      rate.block_items = []
+      rate.block_items = [];
       blockouts.forEach((blockout) => {
         let blocked_depots = blockout.all_depots;
         let blocked_suppliers = blockout.all_suppliers;
@@ -454,14 +470,14 @@ export const cal = {
         if (blocked_depots) {
           if (blocked_suppliers) {
             if (blocked_vehicles) {
-              rate.block_items.push(blockout)
+              rate.block_items.push(blockout);
               blocked = true;
             }
           }
         }
       });
       if (blocked) {
-        results.blocked.push(rate)
+        results.blocked.push(rate);
       } else {
         results.rates.push(rate);
       }

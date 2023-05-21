@@ -14,7 +14,7 @@
   export let data;
 
   const d = data.detail;
-  // console.log(data);
+  console.log(data);
 
   const formatCurrency = (num) => {
     return num.toLocaleString("en-US", {
@@ -24,13 +24,21 @@
   };
 
   let guest = {
-    name: "John",
+    first_name: "John",
+    last_name: "Doe",
     email: "john@email.com",
     phone: "01234567890",
     country: "australia",
+    age: "35",
+    license: "AU/NZ",
+    adult: 2,
+    children: 2,
   };
 
   let booking = {
+    // reference: "388001",
+    // confirmation: null,
+    date_issue: dayjs(),
     date_book: dayjs(),
     date_start: dayjs(data.search.date_start),
     date_end: dayjs(data.search.date_end),
@@ -195,7 +203,7 @@
           {#each d.list as item, index}
             <div class="flex justify-between mb-2">
               <div>
-                Day {index + 1}: {dayjs(item.day).format("DD/MM/YYYY")}
+                Day {index + 1} ({item.flex}): {dayjs(item.day).format("DD/MM/YYYY")}
               </div>
               <div class="whitespace-nowrap pl-4">
                 ${formatCurrency(item.gross)}
@@ -523,7 +531,13 @@
       d.terms.percentage ? (total * d.terms.deposit) / 100 : d.terms.deposit
     )} deposit only
   </div>
-  <div class="grid grid-cols-2">
+  <div class="text-center">
+    <form action="/search/book" method="post">
+      <input type="hidden" name="detail" value={JSON.stringify(booking)}>
+      <Button type="submit" class="px-10">Book Now</Button>
+    </form>
+  </div>
+  <!-- <div class="grid grid-cols-2">
     <Button
       size="small"
       kind="tertiary"
@@ -544,7 +558,7 @@
       }}>Email Quote</Button
     >
     <Button size="small" href="/search/details">Book Now</Button>
-  </div>
+  </div> -->
 </section>
 
 <Modal

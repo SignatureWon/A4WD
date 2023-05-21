@@ -23,6 +23,7 @@
     "keywords",
     "hotline",
     "email",
+    "email_quote",
     "facebook",
     "instagram",
     "twitter",
@@ -155,10 +156,13 @@
           updateRecord("keywords", record.keywords);
           updateRecord("hotline", record.hotline);
           updateRecord("email", record.email);
+          updateRecord("email_quote", record.email_quote);
           updateRecord("color", record.color);
         }}
       >
-        <div class="grid md:grid-cols-3 gap-5 px-5 py-8 border-b border-gray-200">
+        <div
+          class="grid md:grid-cols-3 gap-5 px-5 py-8 border-b border-gray-200"
+        >
           <div>
             <h4 class="font-bold">Info</h4>
           </div>
@@ -182,21 +186,35 @@
             <div class="mb-4">
               <TextInput labelText="Hotline" bind:value={record.hotline} />
             </div>
+          </div>
+        </div>
+        <div
+          class="grid md:grid-cols-3 gap-5 px-5 py-8 border-b border-gray-200"
+        >
+          <div>
+            <h4 class="font-bold">Notification</h4>
+          </div>
+          <div class="md:col-span-2">
             <div class="mb-4">
-              <TextInput labelText="Email" bind:value={record.email} />
+              <TextInput labelText="Email Enquiry" bind:value={record.email} />
+            </div>
+            <div class="mb-4">
+              <TextInput
+                labelText="Email Quote"
+                bind:value={record.email_quote}
+              />
             </div>
           </div>
         </div>
-        <div class="grid md:grid-cols-3 gap-5 px-5 py-8 border-b border-gray-200">
+        <div
+          class="grid md:grid-cols-3 gap-5 px-5 py-8 border-b border-gray-200"
+        >
           <div>
             <h4 class="font-bold">Social Media</h4>
           </div>
           <div class="md:col-span-2">
             <div class="mb-4">
-              <TextInput
-                labelText="Facebook"
-                bind:value={record.facebook}
-              />
+              <TextInput labelText="Facebook" bind:value={record.facebook} />
             </div>
             <div class="mb-4">
               <TextInput labelText="Twitter" bind:value={record.twitter} />
@@ -243,7 +261,7 @@
             </div>
           </div>
         </div>
-        <footer class="flex p-4  bg-gray-50">
+        <footer class="flex p-4 bg-gray-50">
           <div class="flex-1" />
           <div>
             <Button type="submit">Update</Button>
@@ -291,7 +309,7 @@
             </div>
           </div>
         {/each}
-        <footer class="flex p-4  bg-gray-50">
+        <footer class="flex p-4 bg-gray-50">
           <div class="flex-1" />
           <div>
             <Button type="submit">Update</Button>

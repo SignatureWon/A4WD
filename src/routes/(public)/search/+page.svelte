@@ -144,16 +144,18 @@
     </div>
     <div class="bg-brand-50 p-4 text-center flex flex-col">
       <div class="flex-1">
-        <div class="font-bold py-1 px-2 border border-black uppercase">Not available</div>
-        {#each d.block_items as b}
-        <div class="py-4">
-          <div class="font-bold">
-            {b.name}
-          </div>
-          <div class="text-sm">
-            <pre class="font-sans">{b.description}</pre>
-          </div>
+        <div class="font-bold py-1 px-2 border border-black uppercase">
+          Not available
         </div>
+        {#each d.block_items as b}
+          <div class="py-4">
+            <div class="font-bold">
+              {b.name}
+            </div>
+            <div class="text-sm">
+              <pre class="font-sans">{b.description}</pre>
+            </div>
+          </div>
         {/each}
         {#if d.special_total > 0}
           <div class="flex justify-center">
@@ -181,14 +183,14 @@
         {/if}
       </div>
       <div>
-          <Button
-            class="rounded mx-auto"
-            size="small"
-            kind="tertiary"
-            href="/vehicles/{d.vehicle_slug}"
-          >
-            View Specs
-          </Button>
+        <Button
+          class="rounded mx-auto"
+          size="small"
+          kind="tertiary"
+          href="/vehicles/{d.vehicle_slug}"
+        >
+          View Specs
+        </Button>
       </div>
     </div>
   </div>

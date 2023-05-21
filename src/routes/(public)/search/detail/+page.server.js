@@ -18,6 +18,7 @@ export async function load({ url, params, locals }) {
     search[key] = value;
   });
   const { data: flexData } = await cal.getFlex(supabase, search);
+  // console.log("flexData", flexData);
   // allRates = [...flexData]
   const { data: seasonalData } = await cal.getSeasonal(supabase, search);
   allRates = [...flexData, ...seasonalData];
