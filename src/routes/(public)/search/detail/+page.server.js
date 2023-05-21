@@ -6,9 +6,9 @@ import { cal } from "$lib/cal";
 
 export async function load({ url, params, locals }) {
   let search = {};
-  let detail = {};
-  let results = [];
-  let blocked = [];
+  // let detail = {};
+  // let results = [];
+  // let blocked = [];
   let allRates = [];
 
   url.searchParams.forEach((value, key) => {
