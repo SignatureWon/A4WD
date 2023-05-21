@@ -382,6 +382,8 @@ export const cal = {
         let gross = 0;
         let profit = 0;
         let isAdded = false;
+        let rateToday = {};
+
         // console.log(search.date_start, search.date_end);
         for (
           var d = new Date(
@@ -394,30 +396,47 @@ export const cal = {
           d.setDate(d.getDate() + 1)
         ) {
           const day = dayjs(d);
+          // 7-day blocked, so change rate only after every 7th day
+          if (day.diff(search.date_start, "day") % 7 === 0) {
+            vehicles[id][rate].forEach((r) => {
+              if (
+                day.isBetween(
+                  dayjs(r.date_start),
+                  dayjs(r.date_end),
+                  "day",
+                  "[)"
+                )
+              ) {
+                isAdded = true;
+                let todayNett = r.rates_nett * r.daily;
+                let todayGross = r.rates_gross * r.daily;
+                let todayProfit = todayGross - todayNett;
+
+                rateToday = {
+                  day: day,
+                  nett: todayNett,
+                  gross: todayGross,
+                  profit: todayProfit,
+                  flex: r.flex,
+                };
+
+                // rates.list.push({
+                //   day: day,
+                //   nett: todayNett,
+                //   gross: todayGross,
+                //   profit: todayProfit,
+                //   flex: r.flex,
+                // });
+              }
+            });
+          }
+          rates.list.push(rateToday)
+          nett += rateToday.nett;
+          gross += rateToday.gross;
+          profit += rateToday.profit;
+
 
           // console.log(day.format("DD/MM/YYYY"));
-
-          vehicles[id][rate].forEach((r) => {
-            if (
-              day.isBetween(dayjs(r.date_start), dayjs(r.date_end), "day", "[)")
-            ) {
-              isAdded = true;
-              let todayNett = r.rates_nett * r.daily;
-              let todayGross = r.rates_gross * r.daily;
-              let todayProfit = todayGross - todayNett;
-              nett += todayNett;
-              gross += todayGross;
-              profit += todayProfit;
-
-              rates.list.push({
-                day: day,
-                nett: todayNett,
-                gross: todayGross,
-                profit: todayProfit,
-                flex: r.flex,
-              });
-            }
-          });
         }
         if (isAdded) {
           rates.nett = nett;
