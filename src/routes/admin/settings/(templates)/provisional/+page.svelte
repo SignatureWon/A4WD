@@ -29,11 +29,19 @@
     />
     <InputRichText
       name="content"
-      label="Content"
+      label="Document Content"
       bind:value={data.data.content}
     />
-    <div class="col-span-2">
+    <div class="col-span-2 mb-5">
       Placeholder: <Tag>{"{payment_schedule}"}</Tag> <Tag>{"{agreement_terms}"}</Tag> <Tag>{"{supplier_name}"}</Tag>
+    </div>
+    <InputRichText
+      name="caption"
+      label="Email Content"
+      bind:value={data.data.caption}
+    />
+    <div class="col-span-2">
+      Placeholder: <Tag>{"{last_name}"}</Tag> <Tag>{"{payment_schedule}"}</Tag> <Tag>{"{agreement_terms}"}</Tag> <Tag>{"{supplier_name}"}</Tag>
     </div>
   </FormSection>
   <footer class="text-right p-5">

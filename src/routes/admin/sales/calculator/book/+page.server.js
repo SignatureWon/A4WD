@@ -25,8 +25,6 @@ export const actions = {
       .select("id, first_name, last_name, phone, email, country")
       .eq("email", postData.email).single();
 
-      console.log("dataUser", dataUser);
-
     if (dataUser) {
       user = dataUser
     }

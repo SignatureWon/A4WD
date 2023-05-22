@@ -3,7 +3,7 @@
   import Form from "$lib/components/admin/Form.svelte";
   import FormSection from "$lib/components/admin/FormSection.svelte";
   import InputText from "$lib/components/admin/InputText.svelte";
-  import InputToggle from "$lib/components/admin/InputToggle.svelte";
+  import InputTextArea from "$lib/components/admin/InputTextArea.svelte";
   import InputImage from "$lib/components/admin/InputImage.svelte";
   import InputFile from "$lib/components/admin/InputFile.svelte";
   import InputNumber from "$lib/components/admin/InputNumber.svelte";
@@ -13,36 +13,25 @@
   export let data;
 </script>
 
-<PageTitle title="Ticket" />
+<PageTitle title="Provisional Ticket" />
 <form method="POST" action="?/update" class="bg-white divide-y divide-gray-200">
   <FormSection title="">
     <InputText
       name="name"
-      label="Title"
+      label="Company Name"
       bind:value={data.data.name}
       required={true}
     />
     <InputText
       name="description"
-      label="Important note"
+      label="Company Registration Number"
       bind:value={data.data.description}
     />
-    <InputRichText
+    <InputTextArea
       name="content"
-      label="Document Content"
+      label="Company Contact"
       bind:value={data.data.content}
     />
-    <div class="col-span-2 mb-5">
-      Placeholder: <Tag>{"{payment_schedule}"}</Tag> <Tag>{"{agreement_terms}"}</Tag> <Tag>{"{supplier_name}"}</Tag>
-    </div>
-    <InputRichText
-      name="caption"
-      label="Email Content"
-      bind:value={data.data.caption}
-    />
-    <div class="col-span-2">
-      Placeholder: <Tag>{"{payment_schedule}"}</Tag> <Tag>{"{agreement_terms}"}</Tag> <Tag>{"{supplier_name}"}</Tag>
-    </div>
   </FormSection>
   <footer class="text-right p-5">
     <Button type="submit">Update</Button>

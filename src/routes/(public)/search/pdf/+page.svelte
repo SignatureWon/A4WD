@@ -1,15 +1,18 @@
 <script>
+  import { pdf } from "$lib/pdf.js";
+  import QuotePage1 from "$lib/components/QuotePage1.svelte";
+
   import jsPDF from "jspdf";
   function getPDF() {
     var doc = new jsPDF();
-    doc.html(document.getElementById("pdf"), {
+    doc.html(document.getElementById("quote_pdf"), {
       callback: function (doc) {
         doc.save("Generated.pdf");
       },
       x: 15,
       y: 15,
       width: 180, //target width in the PDF document
-      windowWidth: 650 //window width in CSS pixels
+      windowWidth: 650, //window width in CSS pixels
     });
 
     // We'll make our own renderer to skip this editor
@@ -36,6 +39,17 @@
   }
 </script>
 
+<!-- <QuotePage1 id={3} type="template_quote" /> -->
+<button
+  on:click={async () => {
+    console.log(await pdf.create(12, "template_quote"));
+  }}>DOWNLOAD</button
+>
+
+<!-- <div>
+  <button type="button" on:click={getPDF}>PDF</button>
+</div> -->
+<!-- 
 <div class="p-10 bg-white" id="pdf">
   <div class="flex justify-between mb-5">
     <div>
@@ -67,4 +81,4 @@
   </div>
 </div>
 
-<button type="button" on:click={getPDF}>PDF</button>
+<button type="button" on:click={getPDF}>PDF</button> -->

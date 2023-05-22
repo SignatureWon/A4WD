@@ -7,6 +7,7 @@
   import InputImage from "$lib/components/admin/InputImage.svelte";
   import InputFile from "$lib/components/admin/InputFile.svelte";
   import InputNumber from "$lib/components/admin/InputNumber.svelte";
+  import InputTextArea from "$lib/components/admin/InputTextArea.svelte";
   import InputRichText from "$lib/components/admin/InputRichText.svelte";
   import InputSelect from "$lib/components/admin/InputSelect.svelte";
   import { Button, Tag } from "carbon-components-svelte";
@@ -27,10 +28,18 @@
       label="Important note"
       bind:value={data.data.description}
     />
-    <InputRichText
+    <InputTextArea
       name="content"
-      label="Content"
+      label="Document Content"
       bind:value={data.data.content}
+    />
+    <div class="col-span-2 mb-5">
+      Placeholder: <Tag>{"{payment_schedule}"}</Tag> <Tag>{"{agreement_terms}"}</Tag> <Tag>{"{supplier_name}"}</Tag>
+    </div>
+    <InputRichText
+      name="caption"
+      label="Email Content"
+      bind:value={data.data.caption}
     />
     <div class="col-span-2">
       Placeholder: <Tag>{"{payment_schedule}"}</Tag> <Tag>{"{agreement_terms}"}</Tag> <Tag>{"{supplier_name}"}</Tag>

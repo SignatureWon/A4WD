@@ -4,6 +4,7 @@
     Button,
     Checkbox,
     Modal,
+    NumberInput,
     Select,
     SelectItem,
     TextInput,
@@ -14,7 +15,7 @@
   export let data;
 
   const d = data.detail;
-  console.log(data);
+  // console.log(data);
 
   const formatCurrency = (num) => {
     return num.toLocaleString("en-US", {
@@ -203,7 +204,9 @@
           {#each d.list as item, index}
             <div class="flex justify-between mb-2">
               <div>
-                Day {index + 1} ({item.flex}): {dayjs(item.day).format("DD/MM/YYYY")}
+                Day {index + 1} ({item.flex}): {dayjs(item.day).format(
+                  "DD/MM/YYYY"
+                )}
               </div>
               <div class="whitespace-nowrap pl-4">
                 ${formatCurrency(item.gross)}
@@ -322,16 +325,16 @@
                 (b.gross || 0) *
                   (b.cap
                     ? b.cap > d.duration
-                      ? b.cap
-                      : d.duration
+                      ? d.duration
+                      : b.cap
                     : d.duration)
               )}
             </div>
             <div class="mb-4">
               ${formatCurrency(b.gross || 0)} x {b.cap
                 ? b.cap > d.duration
-                  ? b.cap
-                  : d.duration
+                  ? d.duration
+                  : b.cap
                 : d.duration} days
             </div>
             <div class="mb-4 font-bold">
@@ -532,10 +535,9 @@
     )} deposit only
   </div>
   <div class="text-center">
-    <form action="/search/book" method="post">
-      <input type="hidden" name="detail" value={JSON.stringify(booking)}>
-      <Button type="submit" class="px-10">Book Now</Button>
-    </form>
+    <Button type="submit" class="px-10" on:click={() => (modalSendQuote = true)}
+      >Book Now</Button
+    >
   </div>
   <!-- <div class="grid grid-cols-2">
     <Button
@@ -563,22 +565,53 @@
 
 <Modal
   bind:open={modalSendQuote}
-  modalHeading="Send quote to my email"
-  primaryButtonText="Confirm"
-  secondaryButtonText="Cancel"
-  on:click:button--secondary={() => (open = false)}
-  on:open
-  on:close
-  on:submit={pdf.generate_pdf(guest, booking, "Quotation")}
+  modalHeading="Travel Information"
+  passiveModal
+  on:click:button--secondary={() => (modalSendQuote = false)}
 >
-  <div class="max-w-md mx-auto mt-10">
-    <TextInput labelText="Name" bind:value={guest.name} class="mb-5" />
+  <!-- 
+   on:open
+  on:close
+ primaryButtonText="Proceed"
+  secondaryButtonText="Cancel"
+    on:submit={pdf.generate_pdf(guest, booking, "Quotation")} 
+  -->
+  <div class="max-w-md mx-auto mt-10 mb-5">
+    <form action="/search/book" method="post">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="col-span-2">
+          <TextInput labelText="Email" type="email" name="email" value="" required />
+        </div>
+        <div>
+          <Select name="license" labelText="Driver's License" value={data.search.license}>
+            {#each data.options.licenses as license}
+              <SelectItem value={license.name} />
+            {/each}
+          </Select>
+        </div>
+        <div>
+          <NumberInput name="age" label="Driver's Age" allowEmpty required />
+        </div>
+        <div>
+          <NumberInput name="adult" label="No. of Adult" allowEmpty required />
+        </div>
+        <div>
+          <NumberInput name="children" label="No. of Children" allowEmpty required />
+        </div>
+        <div class="col-span-2">
+          <Button type="submit" class="w-full">Proceed</Button>
+          <Button kind="ghost" type="button" class="w-full" on:click={() => (modalSendQuote = false)}>Cancel</Button>
+        </div>
+      </div>
+      <input type="hidden" name="detail" value={JSON.stringify(booking)} />
+    </form>
+    <!-- <TextInput labelText="Name" bind:value={guest.name} class="mb-5" />
     <TextInput labelText="Email" bind:value={guest.email} class="mb-5" />
     <TextInput labelText="Phone" bind:value={guest.phone} class="mb-5" />
     <Select labelText="Country" bind:value={guest.country}>
       {#each data.countries as country}
         <SelectItem value={country.name} />
       {/each}
-    </Select>
+    </Select> -->
   </div>
 </Modal>

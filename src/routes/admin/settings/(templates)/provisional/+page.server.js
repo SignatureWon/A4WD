@@ -2,12 +2,12 @@ import { supabase } from "$lib/supabaseClient";
 import { error, redirect } from "@sveltejs/kit";
 // import { db } from "$lib/server/db";
 
-const keys = ["name", "content", "description"];
+// const keys = ["name", "content", "description"];
 
 export async function load({ url, params, locals }) {
   const { data } = await supabase
     .from("contents")
-    .select("name,content,description")
+    .select("name,content,description,caption")
     .eq("type", "template_ticket_provisional")
     .single();
   return {

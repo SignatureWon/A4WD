@@ -54,8 +54,16 @@ export async function load({ url, params, locals }) {
   const addAddons = cal.addAddons(addedBonds, addonsData);
   const addTerms = cal.addTerms(addAddons, termsData);
 
+  let options = {}
+  const { data: dataOption } = await supabase.rpc("search_options").select();
+
+  dataOption.forEach((opt) => {
+    options[opt.name] = opt.options;
+  });
+
   return {
     detail: JSON.parse(JSON.stringify(addTerms[0])),
     search: JSON.parse(JSON.stringify(search)),
+    options: JSON.parse(JSON.stringify(options)),
   }
 }

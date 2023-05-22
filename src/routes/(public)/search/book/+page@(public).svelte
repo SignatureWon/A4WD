@@ -1,10 +1,14 @@
 <script>
-  import { Button, Select, SelectItem, TextArea, TextInput } from "carbon-components-svelte";
+  import {
+    Button,
+    Select,
+    SelectItem,
+    TextArea,
+    TextInput,
+  } from "carbon-components-svelte";
 
   export let data;
   export let form;
-  console.log(data);
-  console.log(form);
 </script>
 
 {#if !form}
@@ -20,31 +24,58 @@
       <h1 class="text-2xl mb-5">Customer Details</h1>
       <form
         method="post"
-        action="/api/email"
+        action="/search/book/confirm"
         class="bg-white rounded-lg p-6 space-y-6"
       >
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div class="space-y-1">
-            <TextInput name="first_name" labelText="First Name" required />
+          <div>
+            <TextInput
+              name="first_name"
+              labelText="First Name"
+              value={form.user.first_name}
+              required
+            />
           </div>
-          <div class="space-y-1">
-            <TextInput name="last_name" labelText="Last Name" required />
+          <div>
+            <TextInput
+              name="last_name"
+              labelText="Last Name"
+              value={form.user.last_name}
+              required
+            />
           </div>
         </div>
-        <div class="space-y-1">
-          <TextInput name="email" labelText="Email" type="email" required />
+        <div>
+          <TextInput
+            name="email"
+            labelText="Email"
+            type="email"
+            value={form.user.email}
+            required
+            readonly
+            title="Not editable"
+          />
         </div>
-        <div class="space-y-1">
-          <TextInput name="phone" labelText="Phone" required />
+        <div>
+          <TextInput
+            name="phone"
+            labelText="Phone"
+            value={form.user.phone}
+            required
+          />
         </div>
-        <div class="space-y-1">
-          <Select labelText="Country" name="country">
+        <div>
+          <Select labelText="Country" name="country" value={form.user.country}>
             {#each data.countries as country}
               <SelectItem value={country.name} />
             {/each}
           </Select>
         </div>
-        <Button type="submit">Send Message</Button>
+        <div class="text-center">
+          <Button type="submit" class="px-10">Confirm</Button>
+        </div>
+        <input type="hidden" name="user_id" value={form.user.id || ""}>
+        <input type="hidden" name="data" value={JSON.stringify(form.postData)}>
       </form>
     </div>
   </div>

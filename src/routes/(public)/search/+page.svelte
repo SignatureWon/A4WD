@@ -3,7 +3,7 @@
   import { env } from "$env/dynamic/public";
   import VehicleFeatures from "$lib/components/public/single/VehicleFeatures.svelte";
   export let data;
-  console.log(data);
+  // console.log(data);
   const formatCurrency = (num) => {
     return num.toLocaleString("en-US", {
       minimumFractionDigits: 2,

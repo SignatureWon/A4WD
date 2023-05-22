@@ -6,8 +6,11 @@
     Button,
     Checkbox,
     Modal,
+    NumberInput,
     RadioButton,
     RadioButtonGroup,
+    Select,
+    SelectItem,
     TextInput,
   } from "carbon-components-svelte";
   import { env } from "$env/dynamic/public";
@@ -81,8 +84,11 @@
     bonds: {},
     addons: {},
     terms: d.terms,
+    add_discount: 0,
+    add_discount_remark: "",
   };
   let showFeeDetails = false;
+  let modalSendQuote = false;
 
   let selected_bond = 0;
   let bond_fee = 0;
@@ -95,10 +101,10 @@
   }
   let addon_fee = 0;
   let total =
-    d.gross + d.one_way + d.fee_total + bond_fee + addon_fee - d.special_total;
+    d.gross + d.one_way + d.fee_total + bond_fee + addon_fee - d.special_total - booking.add_discount;
 
   $: total =
-    d.gross + d.one_way + d.fee_total + bond_fee + addon_fee - d.special_total;
+    d.gross + d.one_way + d.fee_total + bond_fee + addon_fee - d.special_total - booking.add_discount;
 </script>
 
 <PageTitle title="Detail" />
@@ -301,7 +307,7 @@
                 )} Excess, ${b.bond.toLocaleString(
                   "en-US"
                 )} Bond (${formatCurrency(b.gross || 0)} x ${
-                  b.cap ? (b.cap > d.duration ? b.cap : d.duration) : d.duration
+                  b.cap ? (b.cap > d.duration ? d.duration : b.cap) : d.duration
                 } days)                
                 `}
                 value={i}
@@ -320,8 +326,8 @@
                 (b.gross || 0) *
                   (b.cap
                     ? b.cap > d.duration
-                      ? b.cap
-                      : d.duration
+                      ? d.duration
+                      : b.cap
                     : d.duration)
               )}
             </div>
@@ -384,6 +390,21 @@
       </div>
     </div>
   {/if}
+</section>
+<section class="bg-white mb-8">
+  <div class="px-4 py-2 border-b border-gray-200">
+    <h2 class="text-xl font-bold">Discount</h2>
+  </div>
+  <div class="p-4">
+    <div class="flex">
+      <div class="flex-1">
+        <TextInput labelText="Remark" bind:value={booking.add_discount_remark} />
+      </div>
+      <div class="w-40 ml-4">
+        <NumberInput label="Amount" bind:value={booking.add_discount} step={0.01} />
+      </div>
+    </div>
+  </div>
   <div
     class="p-4 border-t border-gray-200 flex justify-between text-xl font-bold"
   >
@@ -391,6 +412,7 @@
     <div>${formatCurrency(total)}</div>
   </div>
 </section>
+
 <section class="bg-white mb-8">
   <div class="px-4 py-2 border-b border-gray-200">
     <h2 class="text-xl font-bold">Payment Details</h2>
@@ -489,13 +511,69 @@
   </div>
 </section>
 <section class="bg-white p-4 mb-0.5">
-    <!-- <div class="text-xl font-bold text-center mb-4">
+  <!-- <div class="text-xl font-bold text-center mb-4">
       Book now with ${formatCurrency(
         d.terms.percentage ? (total * d.terms.deposit) / 100 : d.terms.deposit
       )} deposit only
     </div> -->
-    <div class="text-center pt-3">
-      <Button size="small" href="#">Create Quote</Button>
-    </div>
-  </section>
-  
+  <div class="text-center pt-3">
+    <Button
+      type="submit"
+      class="px-10"
+      on:click={() => (modalSendQuote = true)}
+    >
+      Create Quote
+    </Button>
+  </div>
+</section>
+<Modal
+  bind:open={modalSendQuote}
+  modalHeading="Customer Information"
+  passiveModal
+  on:click:button--secondary={() => (modalSendQuote = false)}
+>
+  <div class="max-w-md mx-auto mt-10 mb-5">
+    <form action="/admin/sales/calculator/book" method="post">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="col-span-2">
+          <TextInput labelText="Email" type="email" name="email" required />
+        </div>
+        <div>
+          <Select
+            name="license"
+            labelText="Driver's License"
+            value={data.search.license}
+          >
+            {#each data.options.licenses as license}
+              <SelectItem value={license.name} />
+            {/each}
+          </Select>
+        </div>
+        <div>
+          <NumberInput name="age" label="Driver's Age" allowEmpty required />
+        </div>
+        <div>
+          <NumberInput name="adult" label="No. of Adult" allowEmpty required />
+        </div>
+        <div>
+          <NumberInput
+            name="children"
+            label="No. of Children"
+            allowEmpty
+            required
+          />
+        </div>
+        <div class="col-span-2">
+          <Button type="submit" class="w-full">Proceed</Button>
+          <Button
+            kind="ghost"
+            type="button"
+            class="w-full"
+            on:click={() => (modalSendQuote = false)}>Cancel</Button
+          >
+        </div>
+      </div>
+      <input type="hidden" name="detail" value={JSON.stringify(booking)} />
+    </form>
+  </div>
+</Modal>

@@ -7,8 +7,8 @@ import { error, redirect } from "@sveltejs/kit";
 export async function load({ url, params, locals }) {
   const { data } = await supabase
     .from("contents")
-    .select("name,content,description,caption")
-    .eq("type", "template_ticket")
+    .select("name,content,description")
+    .eq("type", "template_letterhead")
     .single();
   return {
     data: data,
@@ -24,7 +24,7 @@ export const actions = {
     const { error: err } = await locals.sb
       .from("contents")
       .update(newData)
-      .eq("type", "template_ticket");
+      .eq("type", "template_letterhead");
 
     if (err) {
       throw error(404, {
