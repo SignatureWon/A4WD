@@ -359,7 +359,7 @@ export const pdf = {
             content: contents.description,
           },
         ],
-      ],x``
+      ],
       bodyStyles: {
         fillColor: "#eeeeee",
       },
