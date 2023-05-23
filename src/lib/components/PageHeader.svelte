@@ -5,6 +5,7 @@
   export let name = "Title";
   export let table = "table";
   export let field = "name";
+  export let manual = false;
 
   let path = $page.url.pathname.split("/");
   let breadcrumbs, link;
@@ -51,7 +52,9 @@
     {/each}
   </Breadcrumb>
   <h2 class="text-2xl font-bold">
-    {#if id}
+    {#if manual}
+      name
+    {:else if id}
       {#if id === "add"}
         Add {name}
       {:else}

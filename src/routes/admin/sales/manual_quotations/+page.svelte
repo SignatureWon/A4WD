@@ -17,7 +17,7 @@
     ];
   </script>
   
-  <PageHeader name="Quotations" table="forms" />
+  <PageHeader name="Quotations" table="forms" manual={true} />
   <Table
     table="forms"
     fields="id, reference, first_name, last_name"
