@@ -79,7 +79,7 @@
           />
         </div>
         <div class="text-center">
-          <Button type="submit" class="px-10">Confirm</Button>
+          <Button type="submit" class="px-10">Send Quote</Button>
         </div>
         <input type="hidden" name="user_id" value={form.user.id || ""}>
         <input type="hidden" name="data" value={JSON.stringify(form.postData)}>

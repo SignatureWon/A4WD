@@ -658,7 +658,7 @@
   </div> -->
   <div class="text-center">
     <Button type="submit" class="px-10" on:click={() => (modalSendQuote = true)}
-      >Book Now</Button
+      >Get Instant Quote</Button
     >
   </div>
   <!-- <div class="grid grid-cols-2">
@@ -743,7 +743,7 @@
           />
         </div>
         <div class="col-span-2">
-          <Button type="submit" class="w-full">Proceed</Button>
+          <Button type="submit" class="w-full">Next</Button>
           <Button
             kind="ghost"
             type="button"

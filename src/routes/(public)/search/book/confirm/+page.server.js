@@ -93,19 +93,19 @@ export const actions = {
 
     console.log("dataQuote", dataQuote);
 
-    // let filePDF = new Blob(
-    //   [await pdf.create(dataQuote.id, "template_quote")],
-    //   {
-    //     type: "application/pdf",
-    //   }
-    // );
-    // const { data: dataPdf, error: errPdf } = await supabase.storage
-    //   .from("quotes")
-    //   .upload(`Q${388000 + dataQuote.id}.pdf`, filePDF);
+    let filePDF = new Blob(
+      [await pdf.create(dataQuote.id, "template_quote")],
+      {
+        type: "application/pdf",
+      }
+    );
+    const { data: dataPdf, error: errPdf } = await supabase.storage
+      .from("quotes")
+      .upload(`Q${388000 + dataQuote.id}.pdf`, filePDF);
     
-    //   if (errPdf) {
-    //     console.log("errPdf", errPdf);
-    //   }
+      if (errPdf) {
+        console.log("errPdf", errPdf);
+      }
 
     const { data: contents } = await supabase
       .from("contents")
