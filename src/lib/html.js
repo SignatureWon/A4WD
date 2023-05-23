@@ -167,9 +167,9 @@ export const html = {
       if (type === "Early bird") {
         return `Early bird (${days} days)`;
       } else if (type === "Long term") {
-        return `Long term (${item.days} days)`;
+        return `Long term (${days} days)`;
       } else if (type === "Every X day") {
-        return `Every (${item.days} day)`;
+        return `Every (${days} day)`;
       }
     };
     const showDiscountFactor = (factor, value) => {
@@ -178,7 +178,7 @@ export const html = {
       } else if (factor === "Price") {
         return `Discount $${value}`;
       } else if (factor === "Day") {
-        return `Discount ${item.value} ${item.value > 1 ? "days" : "day"}`;
+        return `Discount ${value} ${value > 1 ? "days" : "day"}`;
       } else if (factor === "No One Way Fee") {
         return `No One Way Fee`;
       }
