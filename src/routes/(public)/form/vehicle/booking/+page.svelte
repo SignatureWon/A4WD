@@ -1095,7 +1095,7 @@
         </ol>
         <div class="max-w-md pt-40">
           <div class="border-t border-gray-300 pt-2">
-            Signature of credit card holder (fax bookings only)
+            Signature of credit card holder
           </div>
         </div>
       </section>
