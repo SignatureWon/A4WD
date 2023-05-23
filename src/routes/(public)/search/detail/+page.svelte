@@ -593,10 +593,10 @@
           <NumberInput name="age" label="Driver's Age" allowEmpty required />
         </div>
         <div>
-          <NumberInput name="adult" label="No. of Adult" allowEmpty required />
+          <NumberInput name="adult" label="No. of Adult" value={1} allowEmpty required />
         </div>
         <div>
-          <NumberInput name="children" label="No. of Children" allowEmpty required />
+          <NumberInput name="children" label="No. of Children" value={0} allowEmpty required />
         </div>
         <div class="col-span-2">
           <Button type="submit" class="w-full">Proceed</Button>
