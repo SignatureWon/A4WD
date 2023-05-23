@@ -207,121 +207,121 @@
         </div>
       </div>
     </div>
-  {/if}
 
-  <footer id="page-footer" class="bg-gray-900">
-    <div class="container xl:max-w-7xl mx-auto px-4 py-16">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-        <div class="space-y-6">
-          <h4
-            class="text-sm uppercase font-semibold tracking-wider text-gray-500"
-          >
-            Company
-          </h4>
-          <nav class="flex flex-col space-y-3">
-            {#each getContent("pages") as page}
-              {#if page.categories}
-                {#if page.categories.name === "Company"}
-                  <a
-                    href="/{page.slug}"
-                    class="font-medium text-gray-300 hover:text-gray-400"
-                  >
-                    {page.name}
-                  </a>
-                {/if}
-              {/if}
-            {/each}
-            {#each getContent("attachments") as attachment}
-              {#if attachment.categories}
-                {#if attachment.categories.name === "Company"}
-                  <a
-                    href="{env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/terms/{attachment.attachment}"
-                    class="font-medium text-gray-300 hover:text-gray-400"
-                  >
-                    {attachment.name}
-                  </a>
-                {/if}
-              {/if}
-            {/each}
-          </nav>
-        </div>
-        <div class="space-y-6">
-          <h4
-            class="text-sm uppercase font-semibold tracking-wider text-gray-500"
-          >
-            Product
-          </h4>
-          <nav class="flex flex-col space-y-3">
-            {#each getContent("pages") as page}
-              {#if page.categories}
-                {#if page.categories.name === "Product"}
-                  <a
-                    href="/{page.slug}"
-                    class="font-medium text-gray-300 hover:text-gray-400"
-                  >
-                    {page.name}
-                  </a>
-                {/if}
-              {/if}
-            {/each}
-            {#each getContent("attachments") as attachment}
-              {#if attachment.categories}
-                {#if attachment.categories.name === "Product"}
-                  <a
-                    href="{env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/terms/{attachment.attachment}"
-                    class="font-medium text-gray-300 hover:text-gray-400"
-                  >
-                    {attachment.name}
-                  </a>
-                {/if}
-              {/if}
-            {/each}
-          </nav>
-        </div>
-        <div class="space-y-6">
-          <h4
-            class="text-sm uppercase font-semibold tracking-wider text-gray-500"
-          >
-            Join Our Newsletter
-          </h4>
-          <form
-            onsubmit="return false;"
-            class="space-y-3 sm:space-y-0 sm:flex sm:items-center sm:space-x-2"
-          >
-            <TextInput placeholder="Your email" />
-            <Button>Subscribe</Button>
-          </form>
-        </div>
-      </div>
-      <hr class="my-10 opacity-10" />
-      <div
-        class="flex flex-col md:flex-row-reverse md:justify-between space-y-6 md:space-y-0 text-center md:text-left text-sm"
-      >
-        <nav class="space-x-4">
-          <a
-            href="https://www.facebook.com/Australia4wdrentals"
-            class="text-gray-400 hover:text-brand-400 flex items-center"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              width="24"
-              height="24"
-              class="w-5 h-5 mr-2"
-              fill="currentColor"
-              ><path fill="none" d="M0 0h24v24H0z" /><path
-                d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V14.89h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.989C18.343 21.129 22 16.99 22 12c0-5.523-4.477-10-10-10z"
-              /></svg
+    <footer id="page-footer" class="bg-gray-900">
+      <div class="container xl:max-w-7xl mx-auto px-4 py-16">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+          <div class="space-y-6">
+            <h4
+              class="text-sm uppercase font-semibold tracking-wider text-gray-500"
             >
-            Australia4wdrentals
-          </a>
-        </nav>
-        <div class="text-gray-400">
-          <span class="font-medium"
-            >&copy; {new Date().getFullYear()} {data.site.title}</span
-          >
+              Company
+            </h4>
+            <nav class="flex flex-col space-y-3">
+              {#each getContent("pages") as page}
+                {#if page.categories}
+                  {#if page.categories.name === "Company"}
+                    <a
+                      href="/{page.slug}"
+                      class="font-medium text-gray-300 hover:text-gray-400"
+                    >
+                      {page.name}
+                    </a>
+                  {/if}
+                {/if}
+              {/each}
+              {#each getContent("attachments") as attachment}
+                {#if attachment.categories}
+                  {#if attachment.categories.name === "Company"}
+                    <a
+                      href="{env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/terms/{attachment.attachment}"
+                      class="font-medium text-gray-300 hover:text-gray-400"
+                    >
+                      {attachment.name}
+                    </a>
+                  {/if}
+                {/if}
+              {/each}
+            </nav>
+          </div>
+          <div class="space-y-6">
+            <h4
+              class="text-sm uppercase font-semibold tracking-wider text-gray-500"
+            >
+              Product
+            </h4>
+            <nav class="flex flex-col space-y-3">
+              {#each getContent("pages") as page}
+                {#if page.categories}
+                  {#if page.categories.name === "Product"}
+                    <a
+                      href="/{page.slug}"
+                      class="font-medium text-gray-300 hover:text-gray-400"
+                    >
+                      {page.name}
+                    </a>
+                  {/if}
+                {/if}
+              {/each}
+              {#each getContent("attachments") as attachment}
+                {#if attachment.categories}
+                  {#if attachment.categories.name === "Product"}
+                    <a
+                      href="{env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/terms/{attachment.attachment}"
+                      class="font-medium text-gray-300 hover:text-gray-400"
+                    >
+                      {attachment.name}
+                    </a>
+                  {/if}
+                {/if}
+              {/each}
+            </nav>
+          </div>
+          <div class="space-y-6">
+            <h4
+              class="text-sm uppercase font-semibold tracking-wider text-gray-500"
+            >
+              Join Our Newsletter
+            </h4>
+            <form
+              onsubmit="return false;"
+              class="space-y-3 sm:space-y-0 sm:flex sm:items-center sm:space-x-2"
+            >
+              <TextInput placeholder="Your email" />
+              <Button>Subscribe</Button>
+            </form>
+          </div>
+        </div>
+        <hr class="my-10 opacity-10" />
+        <div
+          class="flex flex-col md:flex-row-reverse md:justify-between space-y-6 md:space-y-0 text-center md:text-left text-sm"
+        >
+          <nav class="space-x-4">
+            <a
+              href="https://www.facebook.com/Australia4wdrentals"
+              class="text-gray-400 hover:text-brand-400 flex items-center"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                width="24"
+                height="24"
+                class="w-5 h-5 mr-2"
+                fill="currentColor"
+                ><path fill="none" d="M0 0h24v24H0z" /><path
+                  d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V14.89h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.989C18.343 21.129 22 16.99 22 12c0-5.523-4.477-10-10-10z"
+                /></svg
+              >
+              Australia4wdrentals
+            </a>
+          </nav>
+          <div class="text-gray-400">
+            <span class="font-medium"
+              >&copy; {new Date().getFullYear()} {data.site.title}</span
+            >
+          </div>
         </div>
       </div>
-    </div>
-  </footer>
+    </footer>
+  {/if}
 </div>

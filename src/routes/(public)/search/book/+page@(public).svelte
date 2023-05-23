@@ -74,9 +74,8 @@
         <div>
           <TextArea
             name="comment"
-            labelText="Your trave comment"
+            labelText="Your travel comment"
             value={form.user.comment}
-            required
           />
         </div>
         <div class="text-center">
