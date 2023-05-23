@@ -56,7 +56,7 @@
         {#if d.special_total > 0}
           <div class="flex justify-center">
             {#each d.special_items as item}
-              <Tag type="red">{item.name}</Tag>
+              <Tag style="background-color: #f41a1a; color: #ffffff">{item.name}</Tag>
             {/each}
           </div>
         {/if}
