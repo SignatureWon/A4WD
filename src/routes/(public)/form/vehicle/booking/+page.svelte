@@ -526,9 +526,14 @@
     }}
   >
     <div class="bg-white container xl:max-w-7xl my-8 mx-auto">
-      <h1 class="text-2xl font-bold p-5 border-b border-gray-200">
+      <div class="p-5 border-b border-gray-200">
+      <h1 class="text-2xl font-bold">
         Vehicle Booking Request
       </h1>
+      <div>
+        This is a secure SSL booking form
+      </div>
+    </div>
       <section
         class="grid md:grid-cols-3 gap-10 p-5 py-8 border-b border-gray-200"
       >

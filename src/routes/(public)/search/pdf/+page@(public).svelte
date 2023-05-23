@@ -1,19 +1,25 @@
 <script>
-  import { pdf } from "$lib/pdf.js";
-  import QuotePage1 from "$lib/components/QuotePage1.svelte";
+  import { html } from "$lib/html.js";
+  import { onMount } from "svelte";
 
-  import jsPDF from "jspdf";
-  function getPDF() {
-    var doc = new jsPDF();
-    doc.html(document.getElementById("quote_pdf"), {
-      callback: function (doc) {
-        doc.save("Generated.pdf");
-      },
-      x: 15,
-      y: 15,
-      width: 180, //target width in the PDF document
-      windowWidth: 650, //window width in CSS pixels
-    });
+  let email = ""
+  onMount(async () => {
+    email = await html.create(11, "template_quote")
+  })
+  // import QuotePage1 from "$lib/components/QuotePage1.svelte";
+
+  // import jsPDF from "jspdf";
+  // function getPDF() {
+  //   var doc = new jsPDF();
+  //   doc.html(document.getElementById("quote_pdf"), {
+  //     callback: function (doc) {
+  //       doc.save("Generated.pdf");
+  //     },
+  //     x: 15,
+  //     y: 15,
+  //     width: 180, //target width in the PDF document
+  //     windowWidth: 650, //window width in CSS pixels
+  //   });
 
     // We'll make our own renderer to skip this editor
     // var specialElementHandlers = {
@@ -36,16 +42,30 @@
     // });
 
     // doc.save("Generated.pdf");
-  }
+  // }
+
+  // let email = ""
+  // const genEmail = async () => {
+  //   let result = await html.create(13, "template_quote")
+  //   console.log(result);
+  //   email = result
+  // }
+
 </script>
 
+{@html email}
+
 <!-- <QuotePage1 id={3} type="template_quote" /> -->
-<button
+<!-- <button
   on:click={async () => {
     console.log(await pdf.create(12, "template_quote"));
   }}>DOWNLOAD</button
->
+> -->
 
+<!-- <button
+  on:click={genEmail}>DOWNLOAD</button
+>
+ -->
 <!-- <div>
   <button type="button" on:click={getPDF}>PDF</button>
 </div> -->

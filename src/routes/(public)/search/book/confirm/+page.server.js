@@ -1,5 +1,6 @@
 import { supabase } from "$lib/supabaseClient";
 import { pdf } from "$lib/pdf.js";
+import { html } from "$lib/html.js";
 import { env } from "$env/dynamic/public";
 import sgMail from "@sendgrid/mail";
 import dayjs from "dayjs";
@@ -93,19 +94,19 @@ export const actions = {
 
     console.log("dataQuote", dataQuote);
 
-    let filePDF = new Blob(
-      [await pdf.create(dataQuote.id, "template_quote")],
-      {
-        type: "application/pdf",
-      }
-    );
-    const { data: dataPdf, error: errPdf } = await supabase.storage
-      .from("quotes")
-      .upload(`Q${388000 + dataQuote.id}.pdf`, filePDF);
+    // let filePDF = new Blob(
+    //   [await pdf.create(dataQuote.id, "template_quote")],
+    //   {
+    //     type: "application/pdf",
+    //   }
+    // );
+    // const { data: dataPdf, error: errPdf } = await supabase.storage
+    //   .from("quotes")
+    //   .upload(`Q${388000 + dataQuote.id}.pdf`, filePDF);
     
-      if (errPdf) {
-        console.log("errPdf", errPdf);
-      }
+    //   if (errPdf) {
+    //     console.log("errPdf", errPdf);
+    //   }
 
     const { data: contents } = await supabase
       .from("contents")
@@ -194,10 +195,12 @@ export const actions = {
     }
     paymentTerms += "</div>";
 
-    emailBody = emailBody.replace("{payment_schedule}", paymentTerms);
-    emailBody = emailBody.replace("{supplier_name}", dataQuote.details.supplier.name);
+    emailBody = await html.create(dataQuote.id, "template_quote")
 
-    emailBody += `<div style="margin-top:20px"><a href="https://rixauffklvvhkfkwrpme.supabase.co/storage/v1/object/public/quotes/Q${dataQuote.id + 388000}.pdf">Download Quotation</a></div>`
+    // emailBody = emailBody.replace("{payment_schedule}", paymentTerms);
+    // emailBody = emailBody.replace("{supplier_name}", dataQuote.details.supplier.name);
+
+    // emailBody += `<div style="margin-top:20px"><a href="https://rixauffklvvhkfkwrpme.supabase.co/storage/v1/object/public/quotes/Q${dataQuote.id + 388000}.pdf">Download Quotation</a></div>`
 
     const { data: emailData } = await supabase
     .from("constants")
