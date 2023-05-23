@@ -71,6 +71,14 @@
             {/each}
           </Select>
         </div>
+        <div>
+          <TextArea
+            name="comment"
+            labelText="Your trave comment"
+            value={form.user.comment}
+            required
+          />
+        </div>
         <div class="text-center">
           <Button type="submit" class="px-10">Confirm</Button>
         </div>

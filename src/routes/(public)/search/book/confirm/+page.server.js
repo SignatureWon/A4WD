@@ -23,6 +23,7 @@ export const actions = {
       phone: fd.phone,
       email: fd.email,
       country: fd.country,
+      comment: fd.comment,
     };
 
     if (fd.user_id === "") {
@@ -42,6 +43,7 @@ export const actions = {
         .from("users")
         .update(user)
         .eq("id", fd.user_id);
+        
       user.id = fd.user_id;
     }
     let data = JSON.parse(fd.data);
