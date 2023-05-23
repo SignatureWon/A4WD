@@ -4,7 +4,7 @@
 
 <div class="p-4 bg-white">
   <div class="mx-auto max-w-lg p-4">
-    <h1 class="text-3xl font-bold mb-10">Check your booking</h1>
+    <h1 class="text-3xl font-bold mb-10">Check your quote</h1>
     <form action="/booking/detail" method="post">
       <TextInput
         name="email"
@@ -22,7 +22,7 @@
         required
       />
       <div class="text-center">
-        <Button type="submit" class="px-10">Confirm</Button>
+        <Button type="submit" class="px-10">Check</Button>
       </div>
     </form>
   </div>
