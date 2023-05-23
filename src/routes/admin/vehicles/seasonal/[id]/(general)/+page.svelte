@@ -49,7 +49,13 @@
       name="license"
       label="License"
       bind:value={data.data.license}
-      options={data.licenses}
+      options={[
+        {
+          id: "",
+          name: "Any license"
+        },
+        ...data.licenses
+      ]}
     />
   </FormSection>
   <InputHidden name="type" value="seasonal" />

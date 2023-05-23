@@ -84,7 +84,6 @@
       name="status"
       label="Status"
       bind:value={data.data.status}
-      init="true"
       half={true}
     />
     <InputNumber
