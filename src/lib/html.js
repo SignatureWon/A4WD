@@ -703,7 +703,7 @@ export const html = {
     email += `</table>`;
     email += `<div style="margin-top: 10px">* Rates quoted are in Australian Dollar (AUD)</div>`
     email += `<div style="margin-top: 10px; text-align: center">
-        <a href="https://australia4wdrentals.com/form/vehicle/booking" style="display: inline-block; padding-left: 30px; padding-right: 30px; padding-top: 10px; padding-bottom: 10px; font-weight: bold; font-size: 30px; background-color: #92400e; color: #ffffff">Book Now</a>
+        <a href="https://australia4wdrentals.com/form/vehicle/booking" style="display: inline-block; padding-left: 30px; padding-right: 30px; padding-top: 10px; padding-bottom: 10px; font-weight: bold; font-size: 30px; background-color: #1d4ed8; color: #ffffff">Book Now</a>
     </div>`
 
     email += `</div>`;

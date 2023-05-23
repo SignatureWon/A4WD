@@ -120,10 +120,10 @@ export const actions = {
       .eq("suppliers", dataQuote.details.supplier.id)
       .single();
 
-    let emailBody = contents.caption.replace(
-      "{agreement_terms}",
-      `<div>• <a href="https://australia4wdrentals.com/terms/${terms.id}">View Terms</a></div>`
-    );
+    // let emailBody = contents.caption.replace(
+    //   "{agreement_terms}",
+    //   `<div>• <a href="https://australia4wdrentals.com/terms/${terms.id}">View Terms</a></div>`
+    // );
     const formatCurrency = (num) => {
       return num.toLocaleString("en-US", {
         minimumFractionDigits: 2,
@@ -195,7 +195,7 @@ export const actions = {
     }
     paymentTerms += "</div>";
 
-    emailBody = await html.create(dataQuote.id, "template_quote")
+    let emailBody = await html.create(dataQuote.id, "template_quote")
 
     // emailBody = emailBody.replace("{payment_schedule}", paymentTerms);
     // emailBody = emailBody.replace("{supplier_name}", dataQuote.details.supplier.name);
@@ -212,7 +212,7 @@ export const actions = {
     await sgMail
       .send({
         to: user.email,
-        bcc: emailData.name,
+        bcc: emailData.name.split(","),
         from: "info@australia4wheeldriverentals.com.au",
         subject: `Quotation from Australia 4WD Rentals`,
         html: emailBody,
