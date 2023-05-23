@@ -148,7 +148,7 @@ export const actions = {
     const formData = await request.formData();
     let newData = Object.fromEntries(formData.entries());
     if (!newData.license) {
-      delete newData.license
+      delete newData.license;
     }
     let data = await db.insert(locals, {
       table: "rates",
@@ -175,9 +175,9 @@ export const actions = {
   update: async ({ request, url, params, locals }) => {
     const formData = await request.formData();
     let newData = Object.fromEntries(formData.entries());
-    if (!newData.license) {
-      delete newData.license
-    }
+    // if (!newData.license) {
+      // newData.license = null;
+    // }
 
     await db.update(locals, {
       id: params.id,

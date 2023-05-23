@@ -215,7 +215,9 @@ export const db = {
     return data;
   },
   update: async (locals, fetch) => {
-    // setNull(fetch.data);
+    setNull(fetch.data);
+
+    console.log("fetch.data", fetch.data);
     // convertToDate(fetch.data);
     // convertToJson(fetch.data);
     // slugifyName(fetch, fetch.data);

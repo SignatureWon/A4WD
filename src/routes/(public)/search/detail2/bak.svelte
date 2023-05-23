@@ -15,7 +15,6 @@
   export let data;
 
   const d = data.detail;
-  console.log(d);
   // console.log(data);
 
   const formatCurrency = (num) => {
@@ -120,97 +119,6 @@
     d.gross + d.one_way + d.fee_total + bond_fee + addon_fee - d.special_total;
 
   let modalSendQuote = false;
-
-  // check terms
-  let terms = [];
-
-  // console.log("d.terms", d.terms);
-
-  if ("terms" in d) {
-    let today = dayjs();
-    let date_start = dayjs(data.search.date_start);
-    let gap = date_start.diff(today, "day");
-
-    // console.log("gap", gap, d.terms.balance, gap > d.terms.balance);
-
-    if (gap < d.terms.balance) {
-      // console.log("LESS");
-      terms = [
-        {
-          name: "Full payment",
-          amount: total,
-        },
-      ];
-    } else {
-      // console.log("MORE");
-
-      terms = [
-        {
-          name: `Booking Deposit (${
-            d.terms.percentage ? `${d.terms.deposit}%` : `$${d.terms.deposit}`
-          })`,
-          description: d.terms.description || "",
-          amount: d.terms.percentage
-            ? (total * d.terms.deposit) / 100
-            : d.terms.deposit,
-        },
-      ];
-      if (d.terms.payment2) {
-        if (d.terms.balance2 < gap) {
-          terms.push({
-            name: `1st Payment (${
-              d.terms.percentage2
-                ? `${d.terms.deposit2}%`
-                : `$${d.terms.deposit2}`
-            } - ${d.terms.balance2} days before
-              travel)`,
-            description: d.terms.description2 || "",
-            amount: d.terms.percentage2
-              ? (total * d.terms.deposit2) / 100
-              : d.terms.deposit2,
-          });
-        }
-      }
-      if (d.terms.payment3) {
-        if (d.terms.balance3 < gap) {
-          terms.push({
-            name: `1st Payment (${
-              d.terms.percentage3
-                ? `${d.terms.deposit3}%`
-                : `$${d.terms.deposit3}`
-            } - ${d.terms.balance3} days before
-              travel)`,
-            description: d.terms.description3 || "",
-            amount: d.terms.percentage3
-              ? (total * d.terms.deposit3) / 100
-              : d.terms.deposit3,
-          });
-        }
-      }
-      // balance
-      if (d.terms.balance < gap) {
-        let bal = total;
-        terms.forEach((t) => {
-          bal -= t.amount;
-        });
-
-        terms.push({
-          name:
-            "Balance (" +
-            (d.terms.pay_counter
-              ? "Pay at pick-up counter"
-              : `${d.terms.balance} days before travel`) +
-            ")",
-          amount: bal,
-        });
-      }
-    }
-
-    console.log("terms", terms);
-
-    // if (d.terms.balance < gap) {
-    // }
-  }
 
   $: total =
     d.gross + d.one_way + d.fee_total + bond_fee + addon_fee - d.special_total;
@@ -524,37 +432,7 @@
     <div>${formatCurrency(total)}</div>
   </div>
 </section>
-{#if terms.length}
-  <section class="bg-white mb-8">
-    <div class="px-4 py-2 border-b border-gray-200">
-      <h2 class="text-xl font-bold">Payment Details</h2>
-    </div>
-    <div class="p-4">
-      <div class="uppercase tracking-wider font-bold mb-3 flex justify-between">
-        <div>Payment</div>
-        <div>AUD $</div>
-      </div>
-      <div class="divide-y divide-gray-200">
-        {#each terms as t}
-          <div class="flex justify-between py-2">
-            <div>
-              {t.name}
-              {#if t.description}
-                <div class="text-gray-400 text-sm">
-                  {t.description}
-                </div>
-              {/if}
-            </div>
-            <div>
-              {formatCurrency(t.amount)}
-            </div>
-          </div>
-        {/each}
-      </div>
-    </div>
-  </section>
-{/if}
-<!-- <section class="bg-white mb-8">
+<section class="bg-white mb-8">
   <div class="px-4 py-2 border-b border-gray-200">
     <h2 class="text-xl font-bold">Payment Details</h2>
   </div>
@@ -566,7 +444,7 @@
     <div class="divide-y divide-gray-200">
       <div class="flex justify-between py-2">
         <div>
-          Booking Deposit ({(d.terms.percentage || false)
+          Booking Deposit ({d.terms.percentage
             ? `${d.terms.deposit}%`
             : `$${d.terms.deposit}`})
           {#if d.terms.description}
@@ -648,14 +526,14 @@
       </div>
     </div>
   </div>
-</section> -->
+</section>
 
 <section class="bg-white p-4 mb-0.5">
-  <!-- <div class="text-xl font-bold text-center mb-4">
+  <div class="text-xl font-bold text-center mb-4">
     Book now with ${formatCurrency(
       d.terms.percentage ? (total * d.terms.deposit) / 100 : d.terms.deposit
     )} deposit only
-  </div> -->
+  </div>
   <div class="text-center">
     <Button type="submit" class="px-10" on:click={() => (modalSendQuote = true)}
       >Book Now</Button
@@ -702,20 +580,10 @@
     <form action="/search/book" method="post">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="col-span-2">
-          <TextInput
-            labelText="Email"
-            type="email"
-            name="email"
-            value=""
-            required
-          />
+          <TextInput labelText="Email" type="email" name="email" value="" required />
         </div>
         <div>
-          <Select
-            name="license"
-            labelText="Driver's License"
-            value={data.search.license}
-          >
+          <Select name="license" labelText="Driver's License" value={data.search.license}>
             {#each data.options.licenses as license}
               <SelectItem value={license.name} />
             {/each}
@@ -725,31 +593,14 @@
           <NumberInput name="age" label="Driver's Age" allowEmpty required />
         </div>
         <div>
-          <NumberInput
-            name="adult"
-            label="No. of Adult"
-            value={1}
-            allowEmpty
-            required
-          />
+          <NumberInput name="adult" label="No. of Adult" value={1} allowEmpty required />
         </div>
         <div>
-          <NumberInput
-            name="children"
-            label="No. of Children"
-            value={0}
-            allowEmpty
-            required
-          />
+          <NumberInput name="children" label="No. of Children" value={0} allowEmpty required />
         </div>
         <div class="col-span-2">
           <Button type="submit" class="w-full">Proceed</Button>
-          <Button
-            kind="ghost"
-            type="button"
-            class="w-full"
-            on:click={() => (modalSendQuote = false)}>Cancel</Button
-          >
+          <Button kind="ghost" type="button" class="w-full" on:click={() => (modalSendQuote = false)}>Cancel</Button>
         </div>
       </div>
       <input type="hidden" name="detail" value={JSON.stringify(booking)} />

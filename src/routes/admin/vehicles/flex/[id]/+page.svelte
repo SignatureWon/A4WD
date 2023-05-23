@@ -9,7 +9,6 @@
   import InputHidden from "$lib/components/admin/InputHidden.svelte";
   import InputToggle from "$lib/components/admin/InputToggle.svelte";
   export let data;
-  console.log(data.rates);
 </script>
 
 <PageTitle title="Flex" path={data.path} data={data.data} id={data.id} />
@@ -33,7 +32,13 @@
       name="license"
       label="License"
       bind:value={data.data.license}
-      options={data.licenses}
+      options={[
+        {
+          id: "",
+          name: "Any license"
+        },
+        ...data.licenses
+      ]}
     />
   </FormSection>
   <FormSection title="Factors">

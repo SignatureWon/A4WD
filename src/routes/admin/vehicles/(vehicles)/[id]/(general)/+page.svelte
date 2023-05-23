@@ -14,6 +14,7 @@
   import Tabs from "$lib/components/admin/Tabs.svelte";
   import { PageTabs } from "../../tabs";
   export let data;
+  console.log(data);
   import { supabase } from "$lib/supabaseClient";
   import { onMount } from "svelte";
 
