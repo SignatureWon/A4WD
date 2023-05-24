@@ -46,7 +46,7 @@ export const actions = {
         .from("users")
         .update(user)
         .eq("id", fd.user_id);
-        
+
       user.id = fd.user_id;
     }
     let data = JSON.parse(fd.data);
@@ -103,7 +103,7 @@ export const actions = {
     // const { data: dataPdf, error: errPdf } = await supabase.storage
     //   .from("quotes")
     //   .upload(`Q${388000 + dataQuote.id}.pdf`, filePDF);
-    
+
     //   if (errPdf) {
     //     console.log("errPdf", errPdf);
     //   }
@@ -119,6 +119,12 @@ export const actions = {
       .select()
       .eq("suppliers", dataQuote.details.supplier.id)
       .single();
+
+    // const { data: user } = await supabase
+    //   .from("users")
+    //   .select()
+    //   .eq("id", quote.users)
+    //   .single();
 
     // let emailBody = contents.caption.replace(
     //   "{agreement_terms}",
@@ -142,7 +148,8 @@ export const actions = {
       (terms.percentage3
         ? (dataQuote.gross * terms.deposit3) / 100
         : terms.deposit3) || 0;
-    let fee_balance = dataQuote.gross - fee_deposit - fee_payment_1 - fee_payment_2;
+    let fee_balance =
+      dataQuote.gross - fee_deposit - fee_payment_1 - fee_payment_2;
 
     let paymentTerms = "<div>• ";
     paymentTerms += `$${formatCurrency(fee_deposit)}`;
@@ -195,7 +202,7 @@ export const actions = {
     }
     paymentTerms += "</div>";
 
-    let emailBody = await html.create(dataQuote.id, "template_quote")
+    let emailBody = await html.create(dataQuote.id, "template_quote");
 
     // emailBody = emailBody.replace("{payment_schedule}", paymentTerms);
     // emailBody = emailBody.replace("{supplier_name}", dataQuote.details.supplier.name);
@@ -203,10 +210,10 @@ export const actions = {
     // emailBody += `<div style="margin-top:20px"><a href="https://rixauffklvvhkfkwrpme.supabase.co/storage/v1/object/public/quotes/Q${dataQuote.id + 388000}.pdf">Download Quotation</a></div>`
 
     const { data: emailData } = await supabase
-    .from("constants")
-    .select("name")
-    .eq("type", "email_quote")
-    .single();
+      .from("constants")
+      .select("name")
+      .eq("type", "email_quote")
+      .single();
 
     sgMail.setApiKey(env.PUBLIC_SENDGRID_API_KEY);
     await sgMail
@@ -214,7 +221,10 @@ export const actions = {
         to: user.email,
         bcc: emailData.name.split(","),
         from: "info@australia4wheeldriverentals.com.au",
-        subject: `Quotation from Australia 4WD Rentals`,
+        subject: `Quote: ${user.first_name} ${user.last_name} 
+          [${dataQuote.details.pickup.name} ${dayjs(dataQuote.details.date_start).format("DD/MM/YYYY")} -
+          ${dataQuote.details.dropoff.name} ${dayjs(dataQuote.details.date_end).format("DD/MM/YYYY")}] 
+          ${dataQuote.details.vehicle.name}`,
         html: emailBody,
       })
       .then(() => {

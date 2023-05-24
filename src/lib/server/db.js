@@ -1,4 +1,4 @@
-import { supabase } from "$lib/supabaseClient";
+import { supabase } from "$lib/supabaseAdmin";
 import { error, redirect } from "@sveltejs/kit";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
