@@ -9,8 +9,8 @@
 
   onMount(() => {
     new Splide(".carousel-banners", {
-      type   : 'loop',
-      drag   : true,
+      type: "loop",
+      drag: true,
       autoplay: true,
       interval: 5000,
     }).mount();
@@ -24,7 +24,7 @@
         <li class="splide__slide">
           <div
             class="h-[460px] bg-cover bg-center"
-            style="background-image: url('{env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/{item.image}');"
+            style="background-image: url('{env.PUBLIC_SUPABASE_URL}/storage/v1/render/image/public/contents/{item.image}?width=800&height=800&resize=contain');"
           >
             <div
               class="w-full h-full bg-black/20 flex flex-col items-center justify-center text-center p-10"

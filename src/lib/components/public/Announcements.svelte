@@ -5,6 +5,7 @@
   import { env } from "$env/dynamic/public";
 
   export let records = [];
+  console.log(records);
 
   onMount(() => {
     new Splide(".carousel-announcements", {
@@ -25,7 +26,11 @@
         {#each records as item}
           <li class="splide__slide">
             <div class="h-8 leading-8">
-              <a href={item.content} class="block">{item.name}</a>
+              {#if item.content}
+                <a href={item.content} class="block">{item.name}</a>
+              {:else}
+                {item.name}
+              {/if}
             </div>
           </li>
         {/each}

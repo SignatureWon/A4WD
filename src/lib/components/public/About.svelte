@@ -1,9 +1,9 @@
 <script>
-  import "@splidejs/splide/css";
-  import Splide from "@splidejs/splide";
-  import { onMount } from "svelte";
-  import { env } from "$env/dynamic/public";
-  import { Button } from "carbon-components-svelte";
+  // import "@splidejs/splide/css";
+  // import Splide from "@splidejs/splide";
+  // import { onMount } from "svelte";
+  // import { env } from "$env/dynamic/public";
+  // import { Button } from "carbon-components-svelte";
 
   export let title = {
     name: "",

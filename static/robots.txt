@@ -1,0 +1,3 @@
+user-agent: *
+disallow: /admin/
+sitemap: https://www.australia4wdrentals.com/sitemap.xml

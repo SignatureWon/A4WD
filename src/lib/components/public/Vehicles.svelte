@@ -13,23 +13,23 @@
   export let record4 = [];
   export let record2 = [];
 
-  const preload = async (src) => {
-    const resp = await fetch(src);
-    const blob = await resp.blob();
-    let img =
-      "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+  // const preload = async (src) => {
+  //   const resp = await fetch(src);
+  //   const blob = await resp.blob();
+  //   let img =
+  //     "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
-    if (blob.type !== "application/json") {
-      img = await new Promise(function (resolve) {
-        let reader = new FileReader();
-        reader.readAsDataURL(blob);
-        reader.onload = () => {
-          resolve(reader.result);
-        };
-      });
-    }
-    return img;
-  };
+  //   if (blob.type !== "application/json") {
+  //     img = await new Promise(function (resolve) {
+  //       let reader = new FileReader();
+  //       reader.readAsDataURL(blob);
+  //       reader.onload = () => {
+  //         resolve(reader.result);
+  //       };
+  //     });
+  //   }
+  //   return img;
+  // };
 
   onMount(() => {
     new Splide(".carousel-2wd", {
@@ -106,16 +106,18 @@
                         class="h-44 overflow-hidden rounded relative flex items-center"
                       >
                         {#if item.image}
-                          {#await preload(`${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/${item.image}`) then base64}
-                            <div
-                              class="absolute w-full h-full scale-110 -z-10 bg-white border border-gray-200"
-                            />
-                            <img
-                              src={base64}
-                              alt={item.name}
-                              class="transition-all group-hover:scale-125"
-                            />
-                          {/await}
+                          <!-- {#await preload(`${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/${item.image}`) then base64} -->
+                          <div
+                            class="absolute w-full h-full scale-110 -z-10 bg-white border border-gray-200"
+                          />
+                          <img
+                            src="{env.PUBLIC_SUPABASE_URL}/storage/v1/render/image/public/contents/{item.image}?width=300&height=300&resize=contain"
+                            alt={item.name}
+                            width="300"
+                            height="300"
+                            class="transition-all group-hover:scale-125"
+                          />
+                          <!-- {/await} -->
                         {:else}
                           <div class="absolute w-full h-full bg-gray-200" />
                         {/if}
@@ -153,16 +155,18 @@
                         class="h-44 overflow-hidden rounded relative flex items-center"
                       >
                         {#if item.image}
-                          {#await preload(`${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/${item.image}`) then base64}
-                            <div
-                              class="absolute w-full h-full scale-110 -z-10 bg-white border border-gray-200"
-                            />
-                            <img
-                              src={base64}
-                              alt={item.name}
-                              class="transition-all group-hover:scale-125"
-                            />
-                          {/await}
+                          <!-- {#await preload(`${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/${item.image}`) then base64} -->
+                          <div
+                            class="absolute w-full h-full scale-110 -z-10 bg-white border border-gray-200"
+                          />
+                          <img
+                            src="{env.PUBLIC_SUPABASE_URL}/storage/v1/render/image/public/contents/{item.image}?width=300&height=300&resize=contain"
+                            alt={item.name}
+                            width="300"
+                            height="300"
+                            class="transition-all group-hover:scale-125"
+                          />
+                          <!-- {/await} -->
                         {:else}
                           <div class="absolute w-full h-full bg-gray-200" />
                         {/if}

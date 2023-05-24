@@ -81,7 +81,7 @@
               {/if}
 
               <!-- Sign Up Form -->
-              <form on:submit|preventDefault={handleForm} class="my-6">
+              <!-- <form on:submit|preventDefault={handleForm} class="my-6">
                 <TextInput
                   labelText="Email"
                   placeholder="Enter your email"
@@ -117,7 +117,7 @@
                     >Create Account</Button
                   >
                 </div>
-              </form>
+              </form> -->
 
               <div class="text-sm">
                 <a href="/login" class="font-medium">Return to Sign In</a>
