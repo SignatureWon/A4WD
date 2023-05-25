@@ -110,7 +110,7 @@
                       <div class="text-gray-500 mt-2 h-[75px] overflow-hidden">
                         {item.content.replace(/(<([^>]+)>)/gi, "")}
                       </div>
-                      <span class="text-brand-500">Read more</span>
+                      <!-- <span class="text-brand-500">Read more</span> -->
                     {/if}
                   </a>
                 </div>

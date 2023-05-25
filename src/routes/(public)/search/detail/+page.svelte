@@ -11,7 +11,7 @@
   } from "carbon-components-svelte";
   import { env } from "$env/dynamic/public";
   import dayjs from "dayjs";
-  import { pdf } from "$lib/pdf.js";
+  // import { pdf } from "$lib/pdf.js";
   export let data;
 
   const d = data.detail;
@@ -103,6 +103,7 @@
 
   let open = false;
   let showFeeDetails = false;
+  let showSpecialsDetails = false;
 
   let selected_bond = 0;
   let bond_fee = 0;
@@ -206,7 +207,7 @@
       }
     }
 
-    console.log("terms", terms);
+    // console.log("terms", terms);
 
     // if (d.terms.balance < gap) {
     // }
@@ -332,66 +333,94 @@
       {/if}
       {#if d.special_total > 0}
         {#each d.special_items as item}
-          <div>
-            <div class="col-span-2 flex font-semibold tracking-wide pt-2">
-              Deduct: {item.name}
-            </div>
-            <div class="flex justify-between py-2">
-              <div>
-                <div>
-                  {#if item.type === "Early bird"}
-                    Early bird ({item.days} days)
-                  {:else if item.type === "Long term"}
-                    Long term ({item.days} days)
-                  {:else if item.type === "Every X day"}
-                    Every {item.days} day
-                  {/if}
-                  {#if item.factor === "Percentage"}
-                    Discount {item.value}%
-                  {:else if item.factor === "Price"}
-                    Discount ${item.value}
-                  {:else if item.factor === "Day"}
-                    Discount {item.value} {item.value > 1 ? "days" : "day"}
-                  {:else if item.factor === "No One Way Fee"}
-                    No One Way Fee
-                  {/if}
-                </div>
-                <div class="text-sm text-gray-400">
-                  {item.description}
-                </div>
+          {#if item.active}
+            <div>
+              <div class="col-span-2 flex font-semibold tracking-wide pt-2">
+                Deduct: {item.name}
               </div>
-              <div class="whitespace-nowrap pl-4">
-                - ${formatCurrency(item.discount_amount)}
-              </div>
-            </div>
-            {#if item.discount2}
               <div class="flex justify-between py-2">
                 <div>
                   <div>
-                    {#if item.type2 === "Early bird"}
-                      Early bird ({item.days2} days)
-                    {:else if item.type2 === "Long term"}
-                      Long term ({item.days2} days)
-                    {:else if item.type2 === "Every X day"}
-                      Every {item.days2} day
+                    {#if item.type === "Early bird"}
+                      Early bird ({item.days} days)
+                    {:else if item.type === "Long term"}
+                      Long term ({item.days} days)
+                    {:else if item.type === "Every X day"}
+                      Every {item.days} day
                     {/if}
-                    {#if item.factor2 === "Percentage"}
-                      Discount {item.value2}%
-                    {:else if item.factor2 === "Price"}
-                      Discount ${item.value2}
-                    {:else if item.factor2 === "Day"}
-                      Discount {item.value2} {item.value2 > 1 ? "days" : "day"}
-                    {:else if item.factor2 === "No One Way Fee"}
+                    {#if item.factor === "Percentage"}
+                      Discount {item.value}%
+                    {:else if item.factor === "Price"}
+                      Discount ${item.value}
+                    {:else if item.factor === "Day"}
+                      Discount {item.value} {item.value > 1 ? "days" : "day"}
+                    {:else if item.factor === "No One Way Fee"}
                       No One Way Fee
                     {/if}
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <!-- <span
+                      class="cursor-pointer text-brand-600 text-sm"
+                      on:click={() =>
+                        (showSpecialsDetails = !showSpecialsDetails)}
+                      >Details</span
+                    > -->
+                  </div>
+                  <!-- <div
+                    class="col-span-2 text-sm text-gray-400 {showSpecialsDetails
+                      ? 'block'
+                      : 'hidden'}"
+                  >
+                    {#each item.discount_list as item, index}
+                      <div class="flex justify-between mb-2">
+                        <div>
+                          Day {index + 1} ({item.flex}): {dayjs(
+                            item.day
+                          ).format("DD/MM/YYYY")}
+                        </div>
+                        <div class="whitespace-nowrap pl-4">
+                          ${formatCurrency(item.gross)}
+                        </div>
+                      </div>
+                    {/each}
+                  </div> -->
+                  <div class="text-sm text-gray-400">
+                    {item.description}
                   </div>
                 </div>
                 <div class="whitespace-nowrap pl-4">
-                  - ${formatCurrency(item.discount_amount2)}
+                  - ${formatCurrency(item.discount_amount)}
                 </div>
               </div>
-            {/if}
-          </div>
+              {#if item.discount2}
+                <div class="flex justify-between py-2">
+                  <div>
+                    <div>
+                      {#if item.type2 === "Early bird"}
+                        Early bird ({item.days2} days)
+                      {:else if item.type2 === "Long term"}
+                        Long term ({item.days2} days)
+                      {:else if item.type2 === "Every X day"}
+                        Every {item.days2} day
+                      {/if}
+                      {#if item.factor2 === "Percentage"}
+                        Discount {item.value2}%
+                      {:else if item.factor2 === "Price"}
+                        Discount ${item.value2}
+                      {:else if item.factor2 === "Day"}
+                        Discount {item.value2}
+                        {item.value2 > 1 ? "days" : "day"}
+                      {:else if item.factor2 === "No One Way Fee"}
+                        No One Way Fee
+                      {/if}
+                    </div>
+                  </div>
+                  <div class="whitespace-nowrap pl-4">
+                    - ${formatCurrency(item.discount_amount2)}
+                  </div>
+                </div>
+              {/if}
+            </div>
+          {/if}
         {/each}
       {/if}
     </div>
@@ -454,7 +483,7 @@
                   b.gross *
                   (d.duration < (b.cap || 0) ? d.duration : b.cap || 0);
                 booking.bonds = b;
-                console.log(booking);
+                // console.log(booking);
               }}>Select</Button
             >
           {/if}
@@ -486,7 +515,7 @@
                         addon_fee -= fee;
                         delete booking.addons[`${index1}-${index2}`];
                       }
-                      console.log(booking);
+                      // console.log(booking);
                     }}
                   />
                 </div>

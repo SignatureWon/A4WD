@@ -196,11 +196,11 @@ export const html = {
       ]);
     }
 
-    let email = `<div style="width: 800px; background-color: #ffffff; margin: auto; padding: 20px">`;
+    let email = `<div style="width: 640px; background-color: #ffffff; margin: auto; padding: 20px">`;
 
     // header
     email += `
-        <table width="100%">
+        <table width="600">
             <tr>
                 <td>
                     <div style="font-size: 18px; font-weight: bold">
@@ -227,7 +227,7 @@ export const html = {
         </div>`;
     // Reference
     email += `
-        <table width="100%" style="margin-top: 20px">
+        <table width="600" style="margin-top: 20px">
             <tr>
                 <td width="33.33333%" valign="top">
                     <div style="font-size: 13px; color: #999999">
@@ -257,7 +257,7 @@ export const html = {
         </table>`;
     // Customer
     email += `
-        <table width="100%" style="margin-top: 15px">
+        <table width="600" style="margin-top: 15px">
             <tr>
                 <td width="33.33333%" valign="top">
                     <div style="font-size: 13px; color: #999999">
@@ -291,7 +291,7 @@ export const html = {
         </table>`;
     // Vehicle
     email += `
-        <table width="100%" style="margin-top: 15px">
+        <table width="600" style="margin-top: 15px">
             <tr>
                 <td width="33.33333%" valign="top">
                     <div style="font-size: 13px; color: #999999">
@@ -321,7 +321,7 @@ export const html = {
         </table>`;
     // Travel
     email += `
-        <table cellspacing="0" cellpadding="10" width="100%" style="margin-top: 20px; border: 1px solid #999999">
+        <table cellspacing="0" cellpadding="10" width="600" style="margin-top: 20px; border: 1px solid #999999">
             <tr>
                 <td width="50%" valign="top" style="border: 1px solid #999999">
                     <div style="font-size: 13px; color: #999999; font-weight: bold; margin-bottom: 5px">
@@ -374,7 +374,7 @@ export const html = {
 
     email += `
         <div style="font-size: 18px; font-weight: bold; margin-top: 20px; margin-bottom: 10px">Payment Details</div>
-        <table cellspacing="0" cellpadding="10" width="100%" style="margin-top: 20px; border: 1px solid #999999">
+        <table cellspacing="0" cellpadding="10" width="600" style="margin-top: 20px; border: 1px solid #999999">
             <tr>
                 <td width="70%" valign="top" style="font-size: 13px; color: #999999; font-weight: bold">
                     Description

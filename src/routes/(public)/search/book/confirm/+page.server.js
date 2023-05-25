@@ -215,16 +215,24 @@ export const actions = {
       .eq("type", "email_quote")
       .single();
 
+    let getBond = Object.keys(dataQuote.details.bonds).length
+      ? dataQuote.details.bonds
+      : dataQuote.details.bond;
+
     sgMail.setApiKey(env.PUBLIC_SENDGRID_API_KEY);
     await sgMail
       .send({
         to: user.email,
         bcc: emailData.name.split(","),
         from: "info@australia4wheeldriverentals.com.au",
-        subject: `Quote: ${user.first_name} ${user.last_name} 
-          [${dataQuote.details.pickup.name} ${dayjs(dataQuote.details.date_start).format("DD/MM/YYYY")} -
-          ${dataQuote.details.dropoff.name} ${dayjs(dataQuote.details.date_end).format("DD/MM/YYYY")}] 
-          ${dataQuote.details.vehicle.name}`,
+        subject: `Quote: ${dataQuote.details.vehicle.name}: ${
+          dataQuote.details.pickup.name
+        }, ${dayjs(dataQuote.details.date_start).format("DD MMM YYYY")} - ${
+          dataQuote.details.dropoff.name
+        }, ${dayjs(dataQuote.details.date_end).format("DD MMM YYYY")} (${
+          getBond.display_name
+        })
+          ${user.first_name} ${user.last_name}`,
         html: emailBody,
       })
       .then(() => {

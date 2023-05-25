@@ -21,6 +21,7 @@ export async function load({ url, params, locals }) {
   let results = [];
   let blocked = [];
   let allRates = [];
+  let specials = []
 
   url.searchParams.forEach((value, key) => {
     if (["date_start", "date_end"].includes(key)) {
@@ -69,6 +70,7 @@ export async function load({ url, params, locals }) {
 
     results = [...addedBonds];
     blocked = [...filteredBlockouts.blocked]
+    specials = [...addedSpecials]
   }
 
   // console.log("search", results.length);
@@ -79,5 +81,6 @@ export async function load({ url, params, locals }) {
     blocked: JSON.parse(JSON.stringify(blocked)),
     search: JSON.parse(JSON.stringify(search)),
     results: JSON.parse(JSON.stringify(results)),
+    specials: JSON.parse(JSON.stringify(specials)),
   };
 }

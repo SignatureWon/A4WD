@@ -3,7 +3,7 @@
   import { env } from "$env/dynamic/public";
   import VehicleFeatures from "$lib/components/public/single/VehicleFeatures.svelte";
   export let data;
-  // console.log(data);
+  console.log(data);
   const formatCurrency = (num) => {
     return num.toLocaleString("en-US", {
       minimumFractionDigits: 2,
@@ -55,9 +55,17 @@
         </div>
         {#if d.special_total > 0}
           <div class="flex justify-center">
-            {#each d.special_items as item}
-              <Tag style="background-color: #f41a1a; color: #ffffff">{item.name}</Tag>
-            {/each}
+            {#if d.special_total > 0}
+              <div class="flex justify-center">
+                {#each d.special_items as item}
+                  {#if item.active}
+                    <Tag style="background-color: #f41a1a; color: #ffffff">
+                      {item.name}
+                    </Tag>
+                  {/if}
+                {/each}
+              </div>
+            {/if}
           </div>
         {/if}
         <div class="text-sm">

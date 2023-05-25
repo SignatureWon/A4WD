@@ -5,7 +5,6 @@
   import { env } from "$env/dynamic/public";
 
   export let records = [];
-  console.log(records);
 
   onMount(() => {
     new Splide(".carousel-announcements", {
