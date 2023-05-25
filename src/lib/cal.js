@@ -29,6 +29,7 @@ const countDiscountAmount = (
   list,
   start_date
 ) => {
+  console.log("list", list);
   let results = {
     total: 0,
     items: [],
@@ -67,7 +68,7 @@ const countDiscountAmount = (
     }
   } else if (factor === "Day") {
     if (type === "Every X day") {
-      list.forEach(item, (i) => {
+      list.forEach((item, i) => {
         if (i > 0 && (i + 1) % 7 === 0) {
           let discount = item.gross;
           results.total += discount;
@@ -84,7 +85,7 @@ const countDiscountAmount = (
   } else if (factor === "No One Way Fee") {
     results.total = one_way;
   }
-  console.log("Discount results", results);
+  // console.log("Discount results", results);
   return results;
 };
 
@@ -618,6 +619,7 @@ export const cal = {
       rate.special_total = 0;
       rate.special_items = [];
       specials.forEach((special) => {
+        // console.log("special", special);
         let depots = special.all_depots;
         let dropoffs = special.all_dropoffs;
         let suppliers = special.all_suppliers;
@@ -661,11 +663,12 @@ export const cal = {
               if (special.type === "Deduction") {
                 special.active = true;
                 let getDiscount = countDiscountAmount(
-                  special.type2,
+                  special.type,
                   special.factor,
                   special.value,
-                  r.gross,
-                  r.gross,
+                  rate.gross,
+                  rate.daily,
+                  rate.one_way,
                   rate.list,
                   search.date_start
                 );
@@ -674,21 +677,7 @@ export const cal = {
                 if (search.date_start.diff(dayjs(), "day") > special.days) {
                   special.active = true;
                   let getDiscount = countDiscountAmount(
-                    special.type2,
-                    special.factor,
-                    special.value,
-                    r.gross,
-                    r.gross,
-                    rate.list,
-                    search.date_start
-                  );
-                  special.discount_amount = getDiscount.total;
-                }
-              } else if (special.type === "Long term") {
-                if (duration > special.days) {
-                  special.active = true;
-                  special.discount_amount = countDiscountAmount(
-                    special.type2,
+                    special.type,
                     special.factor,
                     special.value,
                     rate.gross,
@@ -697,6 +686,32 @@ export const cal = {
                     rate.list,
                     search.date_start
                   );
+                  special.discount_amount = getDiscount.total;
+                }
+              } else if (special.type === "Long term") {
+                if (duration > special.days) {
+                  special.active = true;
+                  let getDiscount = countDiscountAmount(
+                    special.type,
+                    special.factor,
+                    special.value,
+                    rate.gross,
+                    rate.daily,
+                    rate.one_way,
+                    rate.list,
+                    search.date_start
+                  );
+                  special.discount_amount = getDiscount.total;
+                  // special.discount_amount = countDiscountAmount(
+                  //   special.type2,
+                  //   special.factor,
+                  //   special.value,
+                  //   rate.gross,
+                  //   rate.daily,
+                  //   rate.one_way,
+                  //   rate.list,
+                  //   search.date_start
+                  // );
                 }
               } else if (special.type === "Every X day") {
                 special.discount_amount = 0;
@@ -705,11 +720,12 @@ export const cal = {
                 rate.list.forEach((r, i) => {
                   if (i > 0 && (i + 1) % 7 === 0) {
                     let getDiscount = countDiscountAmount(
-                      special.type2,
+                      special.type,
                       special.factor,
                       special.value,
                       r.gross,
                       r.gross,
+                      rate.one_way,
                       rate.list,
                       search.date_start
                     );
@@ -721,23 +737,26 @@ export const cal = {
               rate.special_total += special.discount_amount;
               rate.special_items.push(special);
 
+              // console.log("rate", rate.special_total);
+
               if (special.discount2) {
                 special.discount_amount2 = 0;
                 special.discount_list2 = [];
                 if (special.type2 === "Deduction") {
                   let getDiscount = countDiscountAmount(
                     special.type2,
-                    special.factor,
-                    special.value,
-                    r.gross,
-                    r.gross,
+                    special.factor2,
+                    special.value2,
+                    rate.gross,
+                    rate.daily,
+                    rate.one_way,
                     rate.list,
                     search.date_start
                   );
                   special.discount_amount2 = getDiscount.total;
                 } else if (special.type2 === "Early bird") {
                   if (search.date_start.diff(dayjs(), "day") > special.days2) {
-                    special.discount_amount2 = countDiscountAmount(
+                    let getDiscount = countDiscountAmount(
                       special.type2,
                       special.factor2,
                       special.value2,
@@ -747,15 +766,17 @@ export const cal = {
                       rate.list,
                       search.date_start
                     );
+                    special.discount_amount2 = getDiscount.total;
                   }
                 } else if (special.type2 === "Long term") {
                   if (duration > special.days2) {
                     let getDiscount = countDiscountAmount(
                       special.type2,
-                      special.factor,
-                      special.value,
-                      r.gross,
-                      r.gross,
+                      special.factor2,
+                      special.value2,
+                      rate.gross,
+                      rate.daily,
+                      rate.one_way,
                       rate.list,
                       search.date_start
                     );
