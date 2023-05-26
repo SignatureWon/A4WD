@@ -18,7 +18,7 @@ export const actions = {
     const formData = await request.formData();
     let fd = Object.fromEntries(formData.entries());
 
-    console.log(fd);
+    // console.log(fd);
 
     let user = {
       first_name: fd.first_name,

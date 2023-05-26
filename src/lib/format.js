@@ -1,11 +1,11 @@
 export const format = {
-  currency: (num) => {
+  currency: (num, decimal = 2) => {
     if (!num) {
       num = 0;
     }
     return num.toLocaleString("en-US", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
+      minimumFractionDigits: decimal,
+      maximumFractionDigits: decimal,
     });
   },
 };

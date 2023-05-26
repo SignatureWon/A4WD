@@ -175,7 +175,7 @@
       if (d.terms.payment3) {
         if (d.terms.balance3 < gap) {
           terms.push({
-            name: `1st Payment (${
+            name: `2nd Payment (${
               d.terms.percentage3
                 ? `${d.terms.deposit3}%`
                 : `$${d.terms.deposit3}`

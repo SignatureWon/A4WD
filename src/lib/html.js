@@ -1,527 +1,962 @@
 import dayjs from "dayjs";
 import { supabase } from "$lib/supabaseClient";
-import { Table } from "carbon-components-svelte";
+import { format } from "$lib/format.js";
 
 export const html = {
   create: async (quote_id, type) => {
-    const { data: quote } = await supabase
-      .from("quotes")
-      .select()
-      .eq("id", quote_id)
-      .single();
-
-    console.log("quote", quote);
-
-    const { data: user } = await supabase
-      .from("users")
-      .select()
-      .eq("id", quote.users)
-      .single();
-
     const { data: letterhead } = await supabase
       .from("contents")
-      .select()
+      .select("content, description, name")
       .eq("type", "template_letterhead")
       .single();
 
-    // Doc Type:
-    // template_quote
-    // template_ticket_provisional
-    // template_ticket
+    const { data: contents } = await supabase.from("contents").select().eq("type", type).single();
 
-    const { data: contents } = await supabase
-      .from("contents")
-      .select()
-      .eq("type", type)
+    const { data: quote } = await supabase
+      .from("quotes")
+      .select("*, users (id, first_name, last_name, email, phone)")
+      .eq("id", 38)
+      .single();
+      // console.log("quote", quote);
+
+    const { data: vehicle } = await supabase
+      .from("vehicles")
+      .select("name, slug, image")
+      .eq("id", quote.details.vehicle.id)
       .single();
 
-    const { data: supplier } = await supabase
-      .from("suppliers")
-      .select()
-      .eq("id", quote.details.supplier.id)
-      .single();
+    const duration = quote.details.duration;
+    const date_quote = dayjs(quote.created_at).format("DD MMM YYYY");
+    const date_start = dayjs(quote.details.date_start).format("ddd, DD MMM YYYY");
+    const date_end = dayjs(quote.details.date_end).format("ddd, DD MMM YYYY");
+    let agentFees = [];
+    let supplierFees = [];
 
-    // console.log(supplier);
-
-    const { data: terms } = await supabase
-      .from("terms")
-      .select()
-      .eq("suppliers", quote.details.supplier.id)
-      .single();
-    //   console.log("terms", terms);
-
-    const pickup = supplier.depots.filter((d) => {
-      return d.Depots.id === quote.details.pickup.id;
-    })[0];
-
-    const dropoff = supplier.depots.filter((d) => {
-      return d.Depots.id === quote.details.dropoff.id;
-    })[0];
-
-    let payment = contents.content.replace(/(?:\r\n|\r|\n)/g, "<br>");
-    payment = payment.replace(
-      "{agreement_terms}",
-      `<div style="margin-top:10px">• <a href="https://australia4wdrentals.com/terms/${terms.id}">View Terms</a></div>`
-    );
-
-    const formatCurrency = (num) => {
-      if (!num) {
-        num = 0;
-      }
-      return num.toLocaleString("en-US", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
+    const totalAgentFee = () => {
+      let sum = 0;
+      agentFees.forEach((fee) => {
+        sum += fee.total;
       });
+      return sum;
+    };
+    const totalAgentCommission = () => {
+      // console.log(agentFees);
+      let sum = 0;
+      agentFees.forEach((fee) => {
+        sum += fee.profit;
+      });
+      return sum;
+    };
+    const totalSupplierFee = () => {
+      let sum = 0;
+      supplierFees.forEach((fee) => {
+        sum += fee.total;
+      });
+      return sum;
     };
 
-    let termsItem = [];
-
-    if (terms) {
-      let today = dayjs();
-      let date_start = dayjs(quote.details.date_start);
-      let gap = date_start.diff(today, "day");
-
-      // console.log("today", today);
-      // console.log("date_start", date_start);
-      // console.log("gap", gap);
-
-      if (gap < terms.balance) {
-        termsItem = [
-          {
-            name: "Full payment",
-            amount: quote.gross,
-            due_date: today.format("ddd, DD MMM YYYY"),
-          },
-        ];
+    const getDailyRates = () => {
+      let obj = quote.details.daily;
+      let type = quote.details.rates_type;
+      let arr = obj.items;
+      if (type === "flex") {
+        let week = 1;
+        let day = 0;
+        arr.forEach((o, i) => {
+          if (i !== 0 && i % 7 === 0) {
+            agentFees.push({
+              name: `Daily basic rental: Week ${week}: Flex[${arr[i - 1].flex}]: $${format.currency(
+                arr[i - 1].gross
+              )} x ${day} days`,
+              total: arr[i - 1].gross * day,
+              nett: arr[i - 1].nett * day,
+              profit: arr[i - 1].profit * day,
+            });
+            day = 1;
+            week++;
+          } else {
+            day++;
+          }
+          if (i === arr.length - 1) {
+            agentFees.push({
+              name: `Daily basic rental: Week ${week}: Flex[${o.flex}]: $${format.currency(o.gross)} x ${day} days`,
+              total: o.gross * day,
+              nett: o.nett * day,
+              profit: o.profit * day,
+            });
+          }
+        });
       } else {
-        termsItem = [
-          {
-            name: `Booking Deposit`,
-            description: terms.description || "",
-            amount: terms.percentage
-              ? (quote.gross * terms.deposit) / 100
-              : terms.deposit,
-            due_date: today.format("ddd, DD MMM YYYY"),
-          },
-        ];
-        if (terms.payment2) {
-          if (terms.balance2 < gap) {
-            termsItem.push({
-              name: `1st Payment:`,
-              description: terms.description2 || "",
-              amount: terms.percentage2
-                ? (quote.gross * terms.deposit2) / 100
-                : terms.deposit2,
-              due_date: date_start
-                .subtract(terms.balance2, "day")
-                .format("ddd, DD MMM YYYY"),
-            });
-          }
-        }
-        if (terms.payment3) {
-          if (terms.balance3 < gap) {
-            termsItem.push({
-              name: `2nd Payment`,
-              description: terms.description3 || "",
-              amount: terms.percentage3
-                ? (quote.gross * terms.deposit3) / 100
-                : terms.deposit3,
-              due_date: date_start
-                .subtract(terms.balance3, "day")
-                .format("ddd, DD MMM YYYY"),
-            });
-          }
-        }
-        // balance
-        if (terms.balance < gap) {
-          let bal = quote.gross;
-          termsItem.forEach((t) => {
-            bal -= t.amount;
-          });
-
-          termsItem.push({
-            name: "Balance",
-            amount: bal,
-            due_date: date_start
-              .subtract(terms.balance, "day")
-              .format("ddd, DD MMM YYYY"),
-          });
-        }
-      }
-      let paymentTerms = `<table cellpadding="5" style="margin-top: 10px">`;
-      termsItem.forEach((t) => {
-        paymentTerms += `<tr><td>• ${t.name}: </td><td>$${formatCurrency(t.amount)} on ${t.due_date}</td></tr>`;
-      });
-      paymentTerms += "</table>"
-      payment = payment.replace("{payment_schedule}", paymentTerms);
-      payment = payment.replace("{supplier_name}", quote.details.supplier.name);
-    }
-
-    const showDiscountType = (type, days) => {
-      if (type === "Early bird") {
-        return `Early bird (${days} days)`;
-      } else if (type === "Long term") {
-        return `Long term (${days} days)`;
-      } else if (type === "Every X day") {
-        return `Every (${days} day)`;
-      }
-    };
-    const showDiscountFactor = (factor, value) => {
-      if (factor === "Percentage") {
-        return `Discount ${value}%`;
-      } else if (factor === "Price") {
-        return `Discount $${value}`;
-      } else if (factor === "Day") {
-        return `Discount ${value} ${value > 1 ? "days" : "day"}`;
-      } else if (factor === "No One Way Fee") {
-        return `No One Way Fee`;
+        agentFees.push({
+          name: `Daily basic rental: $${format.currency(obj.gross / arr.length)} x ${arr.length} days`,
+          total: obj.gross,
+          nett: obj.nett,
+          profit: obj.profit,
+        });
       }
     };
 
-    for (const key in quote.details.addons) {
-      let addon = quote.details.addons[key];
-      console.log("addon", addon);
-      billingDetail.push([
-        {
-          content: `Add-on: ${addon.name}`,
-        },
-        {
-          content: `${formatCurrency(
-            addon.daily
-              ? addon.gross_rate * quote.details.duration
-              : addon.gross_rate
-          )}`,
-          styles: { halign: "right" },
-        },
-      ]);
-    }
+    const getBonds = () => {
+      const bond = Object.keys(quote.details.bonds).length ? quote.details.bonds : quote.details.bond;
 
-    let email = `<div style="width: 640px; background-color: #ffffff; margin: auto; padding: 20px">`;
+      let gross = bond.gross * duration;
+      let nett = bond.nett * duration;
+      let profit = gross - nett;
 
-    // header
-    email += `
-        <table width="600">
-            <tr>
-                <td>
-                    <div style="font-size: 18px; font-weight: bold">
-                        ${letterhead.name}
-                    </div>
-                    <div style="font-size: 12px; color: #999999">
-                        ${letterhead.description}
-                    </div>
-                    <div style="font-size: 14px;">
-                        ${letterhead.content.replace(/(?:\r\n|\r|\n)/g, "<br>")}
-                    </div>
-                </td>
-                <td valign="top">
-                    <div style="text-align: right; font-size: 24px; font-weight: bold">
-                        ${contents.name}
-                    </div>
-                </td>
-            </tr>
-        </table>`;
-    // notice
-    email += `
-        <div style="padding: 10px; background-color: #eeeeee; margin-top: 20px;">
-            ${contents.description}
-        </div>`;
-    // Reference
-    email += `
-        <table width="600" style="margin-top: 20px">
-            <tr>
-                <td width="33.33333%" valign="top">
-                    <div style="font-size: 13px; color: #999999">
-                        Reference
-                    </div>
-                    <div>
-                        ${quote.id + 388000}
-                    </div>
-                </td>
-                <td width="33.33333%" valign="top">
-                    <div style="font-size: 13px; color: #999999">
-                        Confirmation Code
-                    </div>
-                    <div>
-                        ${quote.status}
-                    </div>
-                </td>
-                <td width="33.33333%" valign="top">
-                    <div style="font-size: 13px; color: #999999">
-                        Date of Issue
-                    </div>
-                    <div>
-                        ${dayjs(quote.created).format("DD MMM YYYY (ddd)")}
-                    </div>
-                </td>
-            </tr>
-        </table>`;
-    // Customer
-    email += `
-        <table width="600" style="margin-top: 15px">
-            <tr>
-                <td width="33.33333%" valign="top">
-                    <div style="font-size: 13px; color: #999999">
-                        Customer
-                    </div>
-                    <div>
-                        ${user.first_name} ${user.last_name}<br>
-                        ${user.email}<br>
-                        ${user.phone}
-                    </div>
-                </td>
-                <td width="33.33333%" valign="top">
-                    <div style="font-size: 13px; color: #999999">
-                        Driver
-                    </div>
-                    <div>
-                        Age: ${quote.details.driver.age}<br>
-                        License: ${quote.details.driver.license}
-                    </div>
-                </td>
-                <td width="33.33333%" valign="top">
-                    <div style="font-size: 13px; color: #999999">
-                        Passenger
-                    </div>
-                    <div>
-                        Adult: ${quote.details.passenger.adult}<br>
-                        Children: ${quote.details.passenger.children}
-                    </div>
-                </td>
-            </tr>
-        </table>`;
-    // Vehicle
-    email += `
-        <table width="600" style="margin-top: 15px">
-            <tr>
-                <td width="33.33333%" valign="top">
-                    <div style="font-size: 13px; color: #999999">
-                        Vehicle
-                    </div>
-                    <div>
-                        ${quote.details.vehicle.name}
-                    </div>
-                </td>
-                <td width="33.33333%" valign="top">
-                    <div style="font-size: 13px; color: #999999">
-                        Supplier
-                    </div>
-                    <div>
-                        ${quote.details.supplier.name}
-                    </div>
-                </td>
-                <td width="33.33333%" valign="top">
-                    <div style="font-size: 13px; color: #999999">
-                        Duration
-                    </div>
-                    <div>
-                        ${quote.details.duration} days
-                    </div>
-                </td>
-            </tr>
-        </table>`;
-    // Travel
-    email += `
-        <table cellspacing="0" cellpadding="10" width="600" style="margin-top: 20px; border: 1px solid #999999">
-            <tr>
-                <td width="50%" valign="top" style="border: 1px solid #999999">
-                    <div style="font-size: 13px; color: #999999; font-weight: bold; margin-bottom: 5px">
-                        Pick-up
-                    </div>
-                    <div style="font-weight: bold">
-                        ${quote.details.pickup.name}<br>
-                        ${dayjs(quote.details.date_start).format(
-                          "DD MMM YYYY (ddd)"
-                        )}
-                    </div>`
-              if (type !== "template_quote") {
-                  email += `<div>
-                        ${pickup.Address.replace(/(?:\r\n|\r|\n)/g, "<br>")}<br>
-                        Contact (Australia): ${pickup["Contact (Australia)"]}
-                    </div>`}
-              email += `
-                </td>
-                <td width="50%" valign="top" style="border: 1px solid #999999">
-                    <div style="font-size: 13px; color: #999999; font-weight: bold; margin-bottom: 5px">
-                        Drop-off
-                    </div>
-                    <div style="font-weight: bold">
-                        ${quote.details.dropoff.name}<br>
-                        ${dayjs(quote.details.date_end).format(
-                          "DD MMM YYYY (ddd)"
-                        )}
-                    </div>`
-                    if (type !== "template_quote") {
-                        email += `<div>
-                          ${dropoff.Address.replace(
-                          /(?:\r\n|\r|\n)/g,
-                          "<br>"
-                        )}<br>
-                        Contact (Australia): ${dropoff["Contact (Australia)"]}
-                    </div>`}
-            email += `
-              </td>
-            </tr>
-        </table>`;
-    // Payment schedule
-    email += `
-        <div style="font-size: 18px; font-weight: bold; margin-top: 20px; margin-bottom: 10px">Payment Schedule</div>
-        <div>${payment}</div>
-    `;
-    // Payment details
-    let getBond = Object.keys(quote.details.bonds).length
-      ? quote.details.bonds
-      : quote.details.bond;
-
-    email += `
-        <div style="font-size: 18px; font-weight: bold; margin-top: 20px; margin-bottom: 10px">Payment Details</div>
-        <table cellspacing="0" cellpadding="10" width="600" style="margin-top: 20px; border: 1px solid #999999">
-            <tr>
-                <td width="70%" valign="top" style="font-size: 13px; color: #999999; font-weight: bold">
-                    Description
-                </td>
-                <td width="30%" valign="top" style="font-size: 13px; color: #999999; font-weight: bold; text-align: right">
-                    AUD $
-                </td>
-            </tr>
-            <tr>
-                <td valign="top" style="border-top: 1px solid #999999">
-                    Daily Rental (${quote.details.duration} days)
-                    ${
-                      quote.details.min_days > quote.details.duration
-                        ? `<div style="font-size: 13px>Price is based on minimum ${quote.details.min_days} days, less days will average out.</div>`
-                        : ""
-                    }
-                </td>
-                <td valign="top" style="text-align: right; border-top: 1px solid #999999">
-                    ${formatCurrency(quote.gross)}
-                </td>
-            </tr>
-            <tr>
-                <td valign="top" style="border-top: 1px solid #999999">
-                    ${getBond.display_name} (${getBond.bond.toLocaleString("en-US")} Bond)
-                </td>
-                <td valign="top" style="text-align: right; border-top: 1px solid #999999">
-                    ${formatCurrency(getBond.gross)}
-                </td>
-            </tr>`;
-
-    if (quote.details.one_way > 0) {
-      email += `
-        <tr>
-            <td valign="top" style="border-top: 1px solid #999999">
-                One-way Fee
-            </td>
-            <td valign="top" style="text-align: right; border-top: 1px solid #999999">
-                ${formatCurrency(quote.details.one_way)}
-            </td>
-        </tr>`;
-    }
-
-    if (quote.details.fees.total > 0) {
-      quote.details.fees.items.forEach((item) => {
-        email += `
-            <tr>
-                <td valign="top" style="border-top: 1px solid #999999">
-                    ${item.name}
-                </td>
-                <td valign="top" style="text-align: right; border-top: 1px solid #999999">
-                    ${formatCurrency(item.fee)}
-                </td>
-            </tr>`;
+      if (bond.gross > 0) {
+        const row = {
+          name: `${bond.display_name}: $${bond.gross} x ${duration} days`,
+          total: gross,
+          nett: nett,
+          profit: profit,
+        };
+        if (bond.gross > bond.nett) {
+          agentFees.push(row);
+        } else {
+          supplierFees.push(row);
+        }
+      }
+      supplierFees.push({
+        name: `Bond: $${format.currency(bond.bond, 0)} is taken from the hirer's credit or debit card`,
+        total: bond.bond,
+        nett: 0,
+        profit: 0,
       });
-    }
+    };
 
-    if (quote.details.specials.total > 0) {
-      quote.details.specials.items.forEach((item) => {
-        email += `
-            <tr>
-                <td valign="top" style="border-top: 1px solid #999999">
-                    ${showDiscountType(item.type, item.days)}
-                    ${showDiscountFactor(item.factor, item.value)}
-                    ${
-                      item.discount2
-                        ? `<br>
-                    ${showDiscountType(item.type2, item.days2)}
-                    ${showDiscountFactor(item.factor2, item.value2)}`
-                        : ""
-                    }
-                </td>
-                <td valign="top" style="text-align: right; border-top: 1px solid #999999">
-                    - $${formatCurrency(item.discount_amount)}
-                    ${
-                      item.discount2
-                        ? `<br>- $${formatCurrency(item.discount_amount2)}`
-                        : ""
-                    }
-                </td>
-            </tr>`;
-      });
-    }
-    for (const key in quote.details.addons) {
-      let addon = quote.details.addons[key];
-      email += `
-        <tr>
-            <td valign="top" style="border-top: 1px solid #999999">
-                Add-on: ${addon.name}
-            </td>
-            <td valign="top" style="text-align: right; border-top: 1px solid #999999">
-            ${formatCurrency(
-              addon.daily
-                ? addon.gross_rate * quote.details.duration
-                : addon.gross_rate
-            )}
-            </td>
-        </tr>`;
-    }
+    const getOneways = () => {
+      let one_way = quote.details.one_way;
+      if (one_way > 0) {
+        supplierFees.push({
+          name: `One-way fee`,
+          total: one_way,
+          nett: 0,
+          profit: 0,
+        });
+      }
+    };
+    const getAddons = () => {
+      let addons = quote.details.addons;
+      for (const key in addons) {
+        const addon = addons[key];
+        let gross = addon.gross_rate;
+        if (addon.daily) {
+          gross = gross * duration;
+        }
+        if (addon.gross_cap > 0) {
+          if (gross > addon.gross_cap) {
+            gross = addon.gross_cap;
+          }
+        }
+        let nett = addon.nett_rate;
+        if (addon.daily) {
+          nett = nett * duration;
+        }
+        if (addon.nett_cap > 0) {
+          if (nett > addon.nett_cap) {
+            nett = addon.nett_cap;
+          }
+        }
+        const row = {
+          name: `Add-on: ${addon.name}${addon.daily ? `$${addon.gross_rate} x ${duration} days` : ""}`,
+          total: gross,
+          nett: nett,
+          profit: gross - nett,
+        };
+        if (addon.gross_rate > addon.nett_rate) {
+          agentFees.push(row);
+        } else {
+          supplierFees.push(row);
+        }
+      }
+    };
+
+    const getSpecials = () => {
+      let special = quote.details.specials;
+      if (special.total > 0) {
+        special.items.forEach((item) => {
+          agentFees.push({
+            name: item.name,
+            total: -item.discount_amount,
+            nett: 0,
+            profit: 0,
+          });
+        });
+      }
+    };
+    const getFees = () => {
+      let fee = quote.details.fees;
+      if (fee.total > 0) {
+        fee.items.forEach((item) => {
+          supplierFees.push({
+            name: item.name,
+            total: item.fee,
+            nett: 0,
+            profit: 0,
+          });
+        });
+      }
+    };
+    const getCcs = () => {
+      let fee = (totalAgentFee() * 2) / 100;
+      if (fee > 0) {
+        agentFees.push({
+          name: "Credit card surcharge (2%)",
+          total: fee,
+          nett: 0,
+          profit: 0,
+        });
+      }
+    };
+
+    let termsItems = [];
+    const getTerms = () => {
+      let total = totalAgentFee();
+
+      if ("terms" in quote.details) {
+        let terms = quote.details.terms;
+        let gap = dayjs(date_start).diff(dayjs(date_quote), "day");
+
+        if (gap < terms.balance) {
+          termsItems = [
+            {
+              name: `Full payment to agent on ${dayjs(date_quote).format()}`,
+              total: total,
+            },
+          ];
+        } else {
+          termsItems = [
+            {
+              name: `Booking deposit to agent now (${
+                terms.percentage ? `${terms.deposit}%` : `$${terms.deposit}`
+              }) on ${dayjs(date_quote).format("ddd, DD MMM YYYY")}`,
+              total: terms.percentage ? (total * terms.deposit) / 100 : terms.deposit,
+            },
+          ];
+          if (terms.payment2) {
+            if (terms.balance2 < gap) {
+              termsItems.push({
+                name: `First payment to agent (${
+                  terms.percentage2 ? `${terms.deposit2}%` : `$${terms.deposit2}`
+                }) on ${dayjs(date_start).subtract(terms.balance2, "day").format("ddd, DD MMM YYYY")} (${
+                  terms.balance2
+                } days before
+                travel)`,
+                total: terms.percentage2 ? (total * terms.deposit2) / 100 : terms.deposit2,
+              });
+            }
+          }
+          if (terms.payment3) {
+            if (terms.balance3 < gap) {
+              termsItems.push({
+                name: `Second payment (${terms.percentage3 ? `${terms.deposit3}%` : `$${terms.deposit3}`}) on ${dayjs(
+                  date_start
+                )
+                  .subtract(terms.balance3, "day")
+                  .format("ddd, DD MMM YYYY")} (${terms.balance3} days before
+                travel)`,
+                total: terms.percentage3 ? (total * terms.deposit3) / 100 : terms.deposit3,
+              });
+            }
+          }
+          // balance
+          if (terms.balance < gap) {
+            let bal = total;
+            termsItems.forEach((t) => {
+              bal -= t.total;
+            });
+
+            termsItems.push({
+              name:
+                "Balance payment to " +
+                (terms.pay_counter
+                  ? `supplier at pick-up counter on ${date_start.format("ddd, DD MMM YYYY")}`
+                  : `agent on ${dayjs(date_start).subtract(terms.balance, "day").format("ddd, DD MMM YYYY")}`) +
+                ` (${terms.balance} days before travel)`,
+              total: bal,
+            });
+          }
+        }
+      }
+    };
+
+    // map data
+    const info = {
+      doc: {
+        name: contents.name,
+      },
+      company: {
+        name: letterhead.name,
+        reg: letterhead.description,
+        contact: letterhead.content.replace(/(?:\r\n|\r|\n)/g, "<br>"),
+      },
+      user: {
+        first_name: quote.users.first_name,
+        last_name: quote.users.last_name,
+        email: quote.users.email,
+        phone: quote.users.phone,
+      },
+      quote: {
+        id: quote.id + 388000,
+        date: date_quote,
+        duration: duration,
+        pickup: {
+          name: quote.details.pickup.name,
+          date: date_start,
+        },
+        dropoff: {
+          name: quote.details.dropoff.name,
+          date: date_end,
+        },
+      },
+      vehicle: {
+        name: vehicle.name,
+        slug: vehicle.slug,
+        image: vehicle.image,
+      },
+      passenger: {
+        adult: quote.details.passenger.adult,
+        children: quote.details.passenger.children,
+      },
+      driver: {
+        age: quote.details.driver.age,
+        license: quote.details.driver.license,
+      },
+      terms: {
+        id: quote.details.terms.id,
+        confirmation: {
+          text: quote.details.terms.confirmation_terms,
+          pdf: quote.details.terms.confirmation,
+        },
+        summary: {
+          text: quote.details.terms.summary_terms,
+          pdf: quote.details.terms.summary,
+        },
+        counter: {
+          text: quote.details.terms.counter_terms,
+          pdf: quote.details.terms.counter,
+        },
+      },
+      daily: getDailyRates(),
+      bond: getBonds(),
+      oneway: getOneways(),
+      addon: getAddons(),
+      special: getSpecials(),
+      fee: getFees(),
+      cc: getCcs(),
+      term: getTerms(),
+    };
+
+let email = `
+<div
+  style="width: 640px; background-color: #ffffff; margin: auto; padding: 20px"
+>
+  <table width="600" style="margin-bottom: 30px;">
+    <tr>
+      <td>
+        <div style="font-size: 18px; font-weight: bold">
+          ${info.company.name}
+        </div>
+        <div style="font-size: 12px; color: #999999">
+          ${info.company.reg}
+        </div>
+        <div style="font-size: 14px;">
+          ${info.company.contact}
+        </div>
+      </td>
+      <td valign="top">
+        <div style="text-align: right; font-size: 24px; font-weight: bold">
+          ${info.doc.name}
+        </div>
+      </td>
+    </tr>
+  </table>
+  <hr />
+  <div style="margin-top: 30px; margin-bottom: 10px; font-weight: bold;">
+    Dear ${info.user.first_name},
+  </div>
+  <div style="margin-bottom: 30px">
+    Thank you for contacting <a
+      href="www.australia4wdrentals.com"
+      style="color: #1d4ed8">www.australia4wdrentals.com</a
+    > one of Australia's leading officially licensed specialist agents for vehicle
+    rentals (motorhomes, campers, 4WD, 4WD campers) and guided safari tours based
+    in and operating out of Darwin, Australia.
+  </div>
+  <div style="margin-bottom: 10px; font-weight: bold;">
+    Availability and validity of this quotation
+  </div>
+  <div style="margin-bottom: 10px;">
+    Vehicle is subject to availability and rates are subject to change prior to
+    confirmation. We suggest you book as soon as possible to ensure you get the
+    vehicle you want at the best price.
+  </div>
+  <div style="margin-bottom: 10px;">
+    If you have any queries please <a
+      href="https://www.australia4wdrentals.com/contact-us">contact</a
+    > our friendly staff. Please be advised that the prices stated in our quote are
+    confidential.
+  </div>
+  <div style="margin-bottom: 30px;">
+    Please note that all prices are quoted in <strong
+      >Australian Dollars (AUD)</strong
+    >.
+  </div>
+  <table
+    width="600"
+    cellpadding="20"
+    cellspacing="0"
+    style="margin-bottom: 30px;"
+  >
+    <tr>
+      <td
+        width="33.3333%"
+        valign="top"
+        align="center"
+        style="border: 1px solid #CCCCCC"
+      >
+        <div style="font-size: 12px; color: #999999">Quote No.</div>
+        <div style="font-weight: bold">
+          Q${info.quote.id}
+        </div>
+      </td>
+      <td
+        width="33.3333%"
+        valign="top"
+        align="center"
+        style="border: 1px solid #CCCCCC"
+      >
+        <div style="font-size: 12px; color: #999999">Quote Date</div>
+        <div style="font-weight: bold">
+          ${info.quote.date}
+        </div>
+      </td>
+      <td
+        width="33.3333%"
+        valign="top"
+        align="center"
+        style="border: 1px solid #CCCCCC"
+      >
+        <div style="font-size: 12px; color: #999999">Duration</div>
+        <div style="font-weight: bold">
+          ${info.quote.duration}
+        </div>
+      </td>
+    </tr>
+  </table>
+  <table
+    width="600"
+    cellpadding="20"
+    cellspacing="0"
+    style="margin-bottom: 30px;"
+  >
+    <tr>
+      <td
+        width="50%"
+        valign="top"
+        align="center"
+        style="border: 1px solid #CCCCCC"
+      >
+        <div style="font-size: 12px; color: #999999">Pick-up from</div>
+        <div style="font-weight: bold">
+          ${info.quote.pickup.name}
+        </div>
+        <div>
+          ${info.quote.pickup.date}
+        </div>
+      </td>
+      <td
+        width="50%"
+        valign="top"
+        align="center"
+        style="border: 1px solid #CCCCCC"
+      >
+        <div style="font-size: 12px; color: #999999">Drop-off at</div>
+        <div style="font-weight: bold">
+          ${info.quote.dropoff.name}
+        </div>
+        <div>
+          ${info.quote.dropoff.date}
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td
+        width="50%"
+        valign="top"
+        align="center"
+        style="border: 1px solid #CCCCCC"
+      >
+        <div style="font-size: 12px; color: #999999">Customer</div>
+        <div style="font-weight: bold">
+          ${info.user.first_name}
+          ${info.user.last_name}
+        </div>
+        <div>
+          ${info.user.email}
+        </div>
+        <div>
+          ${info.user.phone}
+        </div>
+      </td>
+      <td
+        width="50%"
+        valign="top"
+        align="center"
+        style="border: 1px solid #CCCCCC"
+      >
+        <div style="font-size: 12px; color: #999999">Vehicle</div>
+        <div style="font-weight: bold">
+          ${info.vehicle.name}
+        </div>
+        <div style="margin-bottom: 20px">
+          <a
+            href="https://www.australia4wdrentals.com/vehicles/${info.vehicle
+              .slug}">View vehicle specs</a
+          >
+        </div>
+        <div>
+          <img
+            src="https://api.australia4wdrentals.com/storage/v1/render/image/public/contents/${info
+              .vehicle.image}?width=300&height=300&resize=contain"
+            alt=${info.vehicle.name}
+          />
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td
+        width="50%"
+        valign="top"
+        align="center"
+        style="border: 1px solid #CCCCCC"
+      >
+        <div style="font-size: 12px; color: #999999">Passenger</div>
+        <div style="font-weight: bold">
+          Adult: ${info.passenger.adult}
+        </div>
+        <div style="font-weight: bold">
+          Children: ${info.passenger.children}
+        </div>
+      </td>
+      <td
+        width="50%"
+        valign="top"
+        align="center"
+        style="border: 1px solid #CCCCCC"
+      >
+        <div style="font-size: 12px; color: #999999">Driver</div>
+        <div style="font-weight: bold">
+          Age: ${info.driver.age}
+        </div>
+        <div style="font-weight: bold">
+          License: ${info.driver.license}
+        </div>
+      </td>
+    </tr>
+  </table>
+  <table
+    width="600"
+    cellpadding="10"
+    cellspacing="0"
+    style="margin-bottom: 30px;"
+  >
+    <tr>
+      <td
+        width="75%"
+        valign="top"
+        align="left"
+        style="border: 1px solid #CCCCCC"
+      >
+        <div style="font-size: 12px; color: #999999">Payable to Agent</div>
+      </td>
+      <td
+        width="25%"
+        valign="top"
+        align="right"
+        style="border: 1px solid #CCCCCC"
+      >
+        <div style="font-size: 12px; color: #999999">Total ($)</div>
+      </td>
+    </tr>`
+  agentFees.forEach(item => {
+  email += `
+    <tr>
+      <td valign="top" align="left" style="border: 1px solid #CCCCCC">
+        <div>
+          ${item.name}
+        </div>
+      </td>
+      <td valign="top" align="right" style="border: 1px solid #CCCCCC">
+        <div>${format.currency(item.total)}</div>
+      </td>
+    </tr>`
+  })
+  email += `
+    <tr>
+      <td
+        valign="top"
+        align="left"
+        style="border: 1px solid #CCCCCC; background-color: #dbeafe;"
+      >
+        <div style="font-weight: bold;">Total payable to agent</div>
+      </td>
+      <td
+        valign="top"
+        align="right"
+        style="border: 1px solid #CCCCCC; background-color: #dbeafe;"
+      >
+        <div style="font-weight: bold;">${format.currency(totalAgentFee())}</div>
+      </td>
+    </tr>
+  </table>
+  <table
+    width="600"
+    cellpadding="10"
+    cellspacing="0"
+    style="margin-bottom: 30px;"
+  >
+    <tr>
+      <td
+        width="75%"
+        valign="top"
+        align="left"
+        style="border: 1px solid #CCCCCC"
+      >
+        <div style="font-size: 12px; color: #999999">Payable to Supplier</div>
+      </td>
+      <td
+        width="25%"
+        valign="top"
+        align="right"
+        style="border: 1px solid #CCCCCC"
+      >
+        <div style="font-size: 12px; color: #999999">Total ($)</div>
+      </td>
+    </tr>`
+    supplierFees.forEach(item => {
     email += `
-        <tr>
-            <td valign="top" style="border-top: 1px solid #999999; font-weight: bold">
-                Total payable to agent
-            </td>
-            <td valign="top" style="text-align: right; border-top: 1px solid #999999; font-weight: bold">
-            ${formatCurrency(
-              terms.pay_counter
-                ? fee_deposit + fee_payment_1 + fee_payment_2
-                : quote.details.daily.gross
-            )}
-            </td>
-        </tr>`;
+      <tr>
+        <td valign="top" align="left" style="border: 1px solid #CCCCCC">
+          <div>
+            ${item.name}
+          </div>
+        </td>
+        <td valign="top" align="right" style="border: 1px solid #CCCCCC">
+          <div>${format.currency(item.total)}</div>
+        </td>
+      </tr>`
+    })
     email += `
-        <tr>
-            <td valign="top" style="border-top: 1px solid #999999; font-weight: bold">
-                Total payable to supplier at pick-up counter
-            </td>
-            <td valign="top" style="text-align: right; border-top: 1px solid #999999; font-weight: bold">
-            ${formatCurrency(
-              terms.pay_counter
-                ? quote.details.daily.gross - fee_deposit - fee_payment_1 - fee_payment_2 + getBond.gross + quote.details.fees.total
-                : getBond.gross + quote.details.fees.total
-            )}
-            </td>
-        </tr>`;
+    <tr>
+      <td
+        valign="top"
+        align="left"
+        style="border: 1px solid #CCCCCC; background-color: #dbeafe;"
+      >
+        <div style="font-weight: bold;">
+          Total payable to supplier at pick-up
+        </div>
+      </td>
+      <td
+        valign="top"
+        align="right"
+        style="border: 1px solid #CCCCCC; background-color: #dbeafe;"
+      >
+        <div style="font-weight: bold;">
+          ${format.currency(totalSupplierFee())}
+        </div>
+      </td>
+    </tr>
+  </table>
+  <table
+    width="600"
+    cellpadding="10"
+    cellspacing="0"
+    style="margin-bottom: 30px;"
+  >
+    <tr>
+      <td
+        width="75%"
+        valign="top"
+        align="left"
+        style="background-color: #1d4ed8; color: #ffffff"
+      >
+        <div style="font-weight: bold; padding-top: 10px; padding-bottom: 10px">
+          Total Amount
+        </div>
+      </td>
+      <td
+        width="25%"
+        valign="top"
+        align="right"
+        style="background-color: #1d4ed8; color: #ffffff"
+      >
+        <div style="font-weight: bold; padding-top: 10px; padding-bottom: 10px">
+          ${format.currency(totalAgentFee() + totalSupplierFee())}
+        </div>
+      </td>
+    </tr>
+  </table>
+  <div style="background-color: #dbeafe; padding: 20px; margin-bottom: 30px;">
+    <div style="margin-bottom: 20px; font-size: 20px;">
+      <a href="https://www.australia4wdrentals.com" style="color: #1d4ed8"
+        >www.australia4wdrentals.com</a
+      > is protected by geotrust 256-bit ssl for complete peace of mind when booking
+      online.
+    </div>
+    <div style="margin-bottom: 10px;">
+      <a
+        href="https://australia4wdrentals.com/form/vehicle/booking"
+        style="display: block; width: 200px; padding-top: 10px; padding-bottom: 10px; text-align: center; font-weight: bold; font-size: 30px; background-color: #1d4ed8; text-decoration: none; color: #ffffff; border-radius: 5px"
+      >
+        <strong style="text-decoration: none; color: #ffffff;">Book Now</strong>
+      </a>
+    </div>
+  </div>
+  <div
+    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 18px"
+  >
+    Payment Details & Schedule
+  </div>
+  <table
+    width="600"
+    cellpadding="10"
+    cellspacing="0"
+    style="margin-bottom: 10px;"
+  >`
+  termsItems.forEach(item => {
+  email += `
+    <tr>
+      <td style="border: 1px solid #CCCCCC">${item.name}</td>
+      <td style="border: 1px solid #CCCCCC; text-align: right"
+        >${format.currency(item.total)}</td
+      >
+    </tr>`
+  })
+  email += `
+  </table>
+  <div style="margin-bottom: 10px;">
+    The security deposit and balance payment to the agent is taken from the
+    credit or debit card supplied at the time of booking - book now using our
+    secure online booking form.
+  </div>
+  <div
+    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 18px"
+  >
+    Pay At Pick-Up
+  </div>
+  <table
+    width="600"
+    cellpadding="10"
+    cellspacing="0"
+    style="margin-bottom: 10px;"
+    >`
+    supplierFees.forEach(item => {
     email += `
-        <tr>
-            <td valign="top" style="border-top: 1px solid #999999; font-weight: bold">
-                Total full amount
-            </td>
-            <td valign="top" style="text-align: right; border-top: 1px solid #999999; font-weight: bold">
-            ${formatCurrency(quote.gross)}
-            </td>
-        </tr>`;
-
-    email += `</table>`;
-    email += `<div style="margin-top: 10px">
-      * Rates quoted are in Australian Dollar (AUD)<br>
-      * Booking with a Visa or Mastercard required 2% card merchant fee
-    </div>`;
-    email += `<div style="margin-top: 30px; margin-bottom: 30px; text-align: center">
-        <a href="https://australia4wdrentals.com/form/vehicle/booking" style="display: block; width: 200px; padding-top: 10px; padding-bottom: 10px; font-weight: bold; font-size: 30px; background-color: #1d4ed8; text-decoration: none; color: #ffffff; border-radius: 5px">
-          <strong style="text-decoration: none; color: #ffffff;">Book Now</strong>
-        </a>
-    </div>`;
-
-    email += `</div>`;
-
+      <tr>
+        <td style="border: 1px solid #CCCCCC">${item.name}</td>
+        <td style="border: 1px solid #CCCCCC; text-align: right"
+          >${format.currency(item.total)}</td
+        >
+      </tr>`
+    })
+  email += `
+  </table>
+  <div
+    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 18px"
+  >
+    Alternative payment options
+  </div>
+  <div style="margin-bottom: 10px;">
+    Balance payment collected by Australia 4 Wheel Drive Rentals can be paid via
+    internet banking instead of credit card. Details will be supplied upon
+    request.
+  </div>
+  <div
+    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 18px"
+  >
+    Terms & Conditions
+  </div>
+  <div style="margin-bottom: 10px;">
+    For your convenience please find links to the summary of the full terms and
+    conditions and the supplier counter agreement for the rental of this
+    vehicle. You will also find links to the user agreement and agent terms and
+    conditions. Please ensure that you read and understand the terms and
+    conditions found at the following links:
+  </div>
+  <ul>`
+    if (info.terms.confirmation.text !== "<p></p>" || info.terms.confirmation.pdf) {
+    email += `
+      <li>
+        <a
+          href="https://www.australia4wdrentals.com/terms/${info.terms
+            .id}/confirmation"
+          style="color: #1d4ed8">Booking Confirmation Terms</a
+        >
+      </li>`
+    }
+    if (info.terms.summary.text !== "<p></p>" || info.terms.summary.pdf) {
+    email += `
+      <li>
+        <a
+          href="https://www.australia4wdrentals.com/terms/${info.terms
+            .id}/summary"
+          style="color: #1d4ed8">Summary of Terms</a
+        >
+      </li>`
+    }
+    if (info.terms.counter.text !== "<p></p>" || info.terms.counter.pdf) {
+    email += `
+      <li>
+        <a
+          href="https://www.australia4wdrentals.com/terms/${info.terms
+            .id}/counter"
+          style="color: #1d4ed8">Counter Agreement</a
+        >
+      </li>`
+    }
+email += `
+  </ul>
+  <div
+    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 18px"
+  >
+    Domestic Rates
+  </div>
+  <div style="margin-bottom: 10px;">
+    This rate is for Australian and New Zealand residents only. The hirer must
+    be able to produce their Australian or New Zealand drivers licence upon
+    vehicle collection. Should the hirer not be able to do so on the day of pick
+    up, the hirer will be refused the rental at the rate nominated. The hirer
+    will be charged the difference between the Domestic rate and the Standard
+    rate.
+  </div>
+  <div
+    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 18px"
+  >
+    The agent - Australia 4 Wheel Drive Rentals
+  </div>
+  <div style="margin-bottom: 10px;">
+    From here onwards Australia 4 Wheel Drive Rentals and it's associated group
+    of companies shall henceforth be referred to as the 'Agent', 'we' or 'our'.
+  </div>
+  <div
+    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 18px"
+  >
+    Agent security deposit
+  </div>
+  <div style="margin-bottom: 10px;">
+    Security deposits taken by the Agent are to help ensure that your
+    reservations are secure and in order. The security deposit is
+    non-refundable. In the event of a cancellation the security deposit, may be
+    used towards a future booking (given at the discretion of the Agent). In the
+    event of a cancellation the security deposit will be held for a further 6
+    months from date of cancellation to be used towards a future security
+    deposit for bookings made through the Agent and only with the same supplier.
+    This clause is subject to the sole discretion of the management of the
+    Agent. Total Agent's Security Booking Deposit of ${format.currency(totalAgentCommission())} is fully included
+    in the final payment.
+  </div>
+  <div
+    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 18px"
+  >
+    Agent credit card surcharge
+  </div>
+  <div style="margin-bottom: 10px;">
+    A 2.0% surcharge for all VISA / Mastercard credit card transactions paid
+    towards the booking will apply. Please note that these credit card fees do
+    not overlap with the supplier surcharge. Please note when choosing a
+    Standard rate you will be paying extra credit card fees to the supplier for
+    any administration surcharges and / or if you choose to take up any excess
+    plan upon pickup. The Agent does NOT accept American Express or Diners
+    credit cards.
+  </div>
+  <div
+    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 18px"
+  >
+    Calculation errors
+  </div>
+  <div style="margin-bottom: 10px;">
+    We rely heavily on accurate information provided to us by our suppliers and
+    we endeavour to ensure that all our prices are up to date. However we cannot
+    be held liable for any errors in price calculation. In the event of an
+    erroneous quotation or invoice, we will re-issue another quotation
+    superseding the original quote or invoice with the necessary corrections in
+    pricing.
+  </div>
+  <div
+    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 18px"
+  >
+    Suppliers Responsibility
+  </div>
+  <div style="margin-bottom: 10px;">
+    We are a booking service for the Suppliers. You will be required to complete
+    a rental agreement directly with the relevant Supplier on collection of the
+    rented vehicle. Your rental is subject to the terms and conditions of the
+    respective Supplier with whom the rental agreement is made. Each Supplier is
+    responsible for notifying inventory levels to the Agent. We do not accept
+    any liability for unavailability of vehicles caused by the Supplier
+    over-selling its own vehicle inventory or vehicle movement disruption.
+  </div>
+  <div
+    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 18px"
+  >
+    Disclaimer
+  </div>
+  <ul style="margin-bottom: 30px;">
+    <li style="margin-bottom: 10px;">
+      These details are indicative of the vehicle that will be supplied under
+      your booking. Actual vehicles may vary according to year of manufacture
+      and availability but your vehicle will be suitable for the required number
+      of persons and have equivalent or better specifications to those listed in
+      this website.
+    </li>
+    <li style="margin-bottom: 10px;">
+      We will NOT accept responsibility for any/the loss or damage or injury
+      caused to any passenger. We will not be held responsible for any changes
+      to any or all of the above services provided by the operator. We STRONGLY
+      recommends you take out adequate travel insurance including cancellation
+      insurance for your holiday.
+    </li>
+    <li style="margin-bottom: 10px;">
+      Unless we hear from you that you can't access this information before your
+      booking of the vehicle it will be generally understood and accepted by all
+      parties that you have successfully accessed all links then read and
+      understood our terms and conditions and those of the supplier.
+    </li>
+    <li style="margin-bottom: 10px;">
+      This electronic message and any attachments are supplied in good faith and
+      is believed to be free of viruses or related problems. The contents of the
+      message and any advice contained (this quote will be voided if
+      intentionally misused or distributed) therein are supplied on the basis
+      that the recipient understands that they should seek their own expert
+      opinions. We accept no responsibility for the damage or loss (arising from
+      negligence or otherwise) which may occur through the use of the contents
+      or from transmission of this message and attachments. The contents of this
+      electronic message and any attachments are intended only for the addressee
+      and may contain privileged or confidential information. If you are not the
+      addressee, you are notified that any transmission, distribution,
+      downloading, printing or photocopying of the contents of this message or
+      attachments is strictly prohibited. The privilege of confidentiality
+      attached to this message and attachments is not waived, lost or destroyed
+      by reason of mistaken delivery to you. If you are not the addressee, you
+      are notified that any transmission, distribution, downloading, printing or
+      photocopying of the contents of this message or attachments is strictly
+      prohibited. The privilege of confidentiality attached to this message and
+      attachments is not waived, lost or destroyed.
+    </li>
+  </ul>
+  <div
+    style="background-color: #dbeafe;padding: 50px; margin-bottom: 30px; text-align: center;"
+  >
+    <div style="">THANK YOU FOR CHOOSING</div>
+    <div style="font-weight: bold; font-size: 20px">
+      <a href="https://www.australia4wdrentals.com" style="color: #1d4ed8"
+        >AUSTRALIA 4WD RENTALS</a
+      >
+    </div>
+  </div>
+</div>`
     return email;
   },
 };
