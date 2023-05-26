@@ -348,6 +348,12 @@ export const html = {
     };
 
 let email = `
+<!DOCTYPE htmlPUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
+</head>
+<body>
 <div
   style="width: 640px; background-color: #ffffff; margin: auto; padding: 20px"
 >
@@ -398,8 +404,8 @@ let email = `
     confidential.
   </div>
   <div style="margin-bottom: 30px;">
-    Please note that all prices are quoted in <strong
-      >Australian Dollars (AUD)</strong
+    Please note that all prices are quoted in <b
+      >Australian Dollars (AUD)</b
     >.
   </div>
   <table
@@ -710,7 +716,7 @@ let email = `
         href="https://australia4wdrentals.com/form/vehicle/booking"
         style="display: block; width: 200px; padding-top: 10px; padding-bottom: 10px; text-align: center; font-weight: bold; font-size: 30px; background-color: #1d4ed8; text-decoration: none; color: #ffffff; border-radius: 5px"
       >
-        <strong style="text-decoration: none; color: #ffffff;">Book Now</strong>
+        <b style="text-decoration: none; color: #ffffff;">Book Now</b>
       </a>
     </div>
   </div>
@@ -784,40 +790,38 @@ let email = `
     vehicle. You will also find links to the user agreement and agent terms and
     conditions. Please ensure that you read and understand the terms and
     conditions found at the following links:
-  </div>
-  <ul>`
+  </div>`
     if (info.terms.confirmation.text !== "<p></p>" || info.terms.confirmation.pdf) {
     email += `
-      <li>
+    &bull; 
         <a
           href="https://www.australia4wdrentals.com/terms/${info.terms
             .id}/confirmation"
           style="color: #1d4ed8">Booking Confirmation Terms</a
         >
-      </li>`
+      <br>`
     }
     if (info.terms.summary.text !== "<p></p>" || info.terms.summary.pdf) {
     email += `
-      <li>
+      &bull; 
         <a
           href="https://www.australia4wdrentals.com/terms/${info.terms
             .id}/summary"
           style="color: #1d4ed8">Summary of Terms</a
         >
-      </li>`
+      <br>`
     }
     if (info.terms.counter.text !== "<p></p>" || info.terms.counter.pdf) {
     email += `
-      <li>
+      &bull; 
         <a
           href="https://www.australia4wdrentals.com/terms/${info.terms
             .id}/counter"
           style="color: #1d4ed8">Counter Agreement</a
         >
-      </li>`
+      <br>`
     }
 email += `
-  </ul>
   <div
     style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 18px"
   >
@@ -956,7 +960,9 @@ email += `
       >
     </div>
   </div>
-</div>`
+</div>
+</body>
+</html>`
     return email;
   },
 };
