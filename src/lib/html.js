@@ -117,7 +117,7 @@ export const html = {
         }
       }
       supplierFees.push({
-        name: `Bond: $${format.currency(bond.bond, 0)} is taken from the hirer's credit or debit card`,
+        name: `Bond: $${format.currency(bond.bond, 0)} is taken from the hirer's credit or debit card <div style="font-size: 14px; color: #999999">Refundable as per supplier's Summary of Terms<div>`,
         total: bond.bond,
         nett: 0,
         profit: 0,
@@ -352,10 +352,43 @@ let email = `
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
+<style type="text/css">
+body{
+    margin:0;
+    padding:0;
+}
+
+img{
+    border:0 none;
+    height:auto;
+    line-height:100%;
+    outline:none;
+    text-decoration:none;
+}
+
+a img{
+    border:0 none;
+}
+
+.imageFix{
+    display:block;
+}
+
+table, td{
+    border-collapse:collapse;
+}
+
+#bodyTable{
+    height:100% !important;
+    margin:0;
+    padding:0;
+    width:100% !important;
+}
+</style>
 </head>
 <body>
 <div
-  style="width: 640px; background-color: #ffffff; margin: auto; padding: 20px"
+  style="width: 600px; background-color: #ffffff; margin: auto; padding: 0"
 >
   <table width="600" style="margin-bottom: 30px;">
     <tr>
@@ -522,7 +555,7 @@ let email = `
           >
         </div>
         <div>
-          <img
+          <img class="imageFix"
             src="https://api.australia4wdrentals.com/storage/v1/render/image/public/contents/${info
               .vehicle.image}?width=300&height=300&resize=contain"
             alt=${info.vehicle.name}
