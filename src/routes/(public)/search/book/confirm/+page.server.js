@@ -224,7 +224,7 @@ export const actions = {
       .send({
         to: user.email,
         bcc: emailData.name.split(","),
-        from: "info@australia4wheeldriverentals.com.au",
+        from: "info@australia4wdrentals.com",
         subject: `Quote: ${dataQuote.details.vehicle.name}: ${
           dataQuote.details.pickup.name
         }, ${dayjs(dataQuote.details.date_start).format("DD MMM YYYY")} - ${
