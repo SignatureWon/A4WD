@@ -15,7 +15,7 @@ export const html = {
     const { data: quote } = await supabase
       .from("quotes")
       .select("*, users (id, first_name, last_name, email, phone)")
-      .eq("id", 38)
+      .eq("id", quote_id)
       .single();
       // console.log("quote", quote);
 
