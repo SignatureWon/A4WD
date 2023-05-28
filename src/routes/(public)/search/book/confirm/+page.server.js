@@ -30,11 +30,7 @@ export const actions = {
     };
 
     if (fd.user_id === "") {
-      const { data: dataUser, error: errUser } = await supabase
-        .from("users")
-        .insert(user)
-        .select()
-        .single();
+      const { data: dataUser, error: errUser } = await supabase.from("users").insert(user).select().single();
 
       if (errUser) {
         console.log("error", errUser);
@@ -42,10 +38,7 @@ export const actions = {
         user.id = dataUser.id;
       }
     } else {
-      const { error: errUser } = await supabase
-        .from("users")
-        .update(user)
-        .eq("id", fd.user_id);
+      const { error: errUser } = await supabase.from("users").update(user).eq("id", fd.user_id);
 
       user.id = fd.user_id;
     }
@@ -82,17 +75,13 @@ export const actions = {
 
     // console.log("quote", quote);
 
-    const { data: dataQuote, error: errQuote } = await supabase
-      .from("quotes")
-      .insert(quote)
-      .select()
-      .single();
+    const { data: dataQuote, error: errQuote } = await supabase.from("quotes").insert(quote).select().single();
 
     if (errQuote) {
       console.log("errQuote", errQuote);
     }
 
-    console.log("dataQuote", dataQuote);
+    // console.log("dataQuote", dataQuote);
 
     // let filePDF = new Blob(
     //   [await pdf.create(dataQuote.id, "template_quote")],
@@ -108,11 +97,7 @@ export const actions = {
     //     console.log("errPdf", errPdf);
     //   }
 
-    const { data: contents } = await supabase
-      .from("contents")
-      .select("caption")
-      .eq("type", "template_quote")
-      .single();
+    const { data: contents } = await supabase.from("contents").select("caption").eq("type", "template_quote").single();
 
     const { data: terms } = await supabase
       .from("terms")
@@ -130,120 +115,133 @@ export const actions = {
     //   "{agreement_terms}",
     //   `<div>• <a href="https://australia4wdrentals.com/terms/${terms.id}">View Terms</a></div>`
     // );
-    const formatCurrency = (num) => {
-      return num.toLocaleString("en-US", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      });
-    };
+    // const formatCurrency = (num) => {
+    //   return num.toLocaleString("en-US", {
+    //     minimumFractionDigits: 2,
+    //     maximumFractionDigits: 2,
+    //   });
+    // };
 
-    let fee_deposit = terms.percentage
-      ? (dataQuote.gross * terms.deposit) / 100
-      : terms.deposit;
-    let fee_payment_1 =
-      (terms.percentage2
-        ? (dataQuote.gross * terms.deposit2) / 100
-        : terms.deposit2) || 0;
-    let fee_payment_2 =
-      (terms.percentage3
-        ? (dataQuote.gross * terms.deposit3) / 100
-        : terms.deposit3) || 0;
-    let fee_balance =
-      dataQuote.gross - fee_deposit - fee_payment_1 - fee_payment_2;
+    // let fee_deposit = terms.percentage ? (dataQuote.gross * terms.deposit) / 100 : terms.deposit;
+    // let fee_payment_1 = (terms.percentage2 ? (dataQuote.gross * terms.deposit2) / 100 : terms.deposit2) || 0;
+    // let fee_payment_2 = (terms.percentage3 ? (dataQuote.gross * terms.deposit3) / 100 : terms.deposit3) || 0;
+    // let fee_balance = dataQuote.gross - fee_deposit - fee_payment_1 - fee_payment_2;
 
-    let paymentTerms = "<div>• ";
-    paymentTerms += `$${formatCurrency(fee_deposit)}`;
-    paymentTerms += ` on ${dayjs(dataQuote.details.daily.date_book).format(
-      "DD MMM YYYY (ddd)"
-    )}</div>`;
-    if (terms.payment2) {
-      paymentTerms += "<div>• ";
-      paymentTerms += `$${formatCurrency(fee_payment_1)}`;
-      let depositDay = dayjs(dataQuote.details.daily.date_book);
-      let payDay = dayjs(dataQuote.details.daily.date_start).subtract(
-        terms.balance2,
-        "day"
-      );
-      paymentTerms += ` on ${
-        payDay.isBefore(depositDay)
-          ? depositDay.format("DD MMM YYYY (ddd)")
-          : payDay.format("DD MMM YYYY (ddd)")
-      }</div>`;
-    }
-    if (terms.payment3) {
-      paymentTerms += "<div>• ";
-      paymentTerms += `$${formatCurrency(fee_payment_2)}`;
-      let depositDay = dayjs(dataQuote.details.daily.date_book);
-      let payDay = dayjs(dataQuote.details.daily.date_start).subtract(
-        terms.balance3,
-        "day"
-      );
-      paymentTerms += ` on ${
-        payDay.isBefore(depositDay)
-          ? depositDay.format("DD MMM YYYY (ddd)")
-          : payDay.format("DD MMM YYYY (ddd)")
-      }</div>`;
-    }
-    paymentTerms += "<div>• ";
-    paymentTerms += `$${formatCurrency(fee_balance)}`;
-    let depositDay = dayjs(dataQuote.details.daily.date_book);
-    let payDay = dayjs(dataQuote.details.daily.date_start).subtract(
-      terms.balance,
-      "day"
-    );
-    paymentTerms += ` on ${
-      payDay.isBefore(depositDay)
-        ? depositDay.format("DD MMM YYYY (ddd)")
-        : payDay.format("DD MMM YYYY (ddd)")
-    }`;
+    // let paymentTerms = "<div>• ";
+    // paymentTerms += `$${formatCurrency(fee_deposit)}`;
+    // paymentTerms += ` on ${dayjs(dataQuote.details.daily.date_book).format("DD MMM YYYY (ddd)")}</div>`;
+    // if (terms.payment2) {
+    //   paymentTerms += "<div>• ";
+    //   paymentTerms += `$${formatCurrency(fee_payment_1)}`;
+    //   let depositDay = dayjs(dataQuote.details.daily.date_book);
+    //   let payDay = dayjs(dataQuote.details.daily.date_start).subtract(terms.balance2, "day");
+    //   paymentTerms += ` on ${
+    //     payDay.isBefore(depositDay) ? depositDay.format("DD MMM YYYY (ddd)") : payDay.format("DD MMM YYYY (ddd)")
+    //   }</div>`;
+    // }
+    // if (terms.payment3) {
+    //   paymentTerms += "<div>• ";
+    //   paymentTerms += `$${formatCurrency(fee_payment_2)}`;
+    //   let depositDay = dayjs(dataQuote.details.daily.date_book);
+    //   let payDay = dayjs(dataQuote.details.daily.date_start).subtract(terms.balance3, "day");
+    //   paymentTerms += ` on ${
+    //     payDay.isBefore(depositDay) ? depositDay.format("DD MMM YYYY (ddd)") : payDay.format("DD MMM YYYY (ddd)")
+    //   }</div>`;
+    // }
+    // paymentTerms += "<div>• ";
+    // paymentTerms += `$${formatCurrency(fee_balance)}`;
+    // let depositDay = dayjs(dataQuote.details.daily.date_book);
+    // let payDay = dayjs(dataQuote.details.daily.date_start).subtract(terms.balance, "day");
+    // paymentTerms += ` on ${
+    //   payDay.isBefore(depositDay) ? depositDay.format("DD MMM YYYY (ddd)") : payDay.format("DD MMM YYYY (ddd)")
+    // }`;
 
-    if (terms.pay_counter) {
-      paymentTerms += " (Pay at pick-up counter)";
-    }
-    paymentTerms += "</div>";
+    // if (terms.pay_counter) {
+    //   paymentTerms += " (Pay at pick-up counter)";
+    // }
+    // paymentTerms += "</div>";
 
     let emailBody = await html.create(dataQuote.id, "template_quote");
 
     // emailBody = emailBody.replace("{payment_schedule}", paymentTerms);
     // emailBody = emailBody.replace("{supplier_name}", dataQuote.details.supplier.name);
 
-    // emailBody += `<div style="margin-top:20px"><a href="https://rixauffklvvhkfkwrpme.supabase.co/storage/v1/object/public/quotes/Q${dataQuote.id + 388000}.pdf">Download Quotation</a></div>`
+    // emailBody += `<div style="margin-top:20px"><a href="https://api.australia4wdrentals.com/storage/v1/object/public/quotes/Q${dataQuote.id + 388000}.pdf">Download Quotation</a></div>`
 
-    const { data: emailData } = await supabase
-      .from("constants")
-      .select("name")
-      .eq("type", "email_quote")
-      .single();
+    const { data: emailData } = await supabase.from("constants").select("name").eq("type", "email_quote").single();
 
-    let getBond = Object.keys(dataQuote.details.bonds).length
-      ? dataQuote.details.bonds
-      : dataQuote.details.bond;
-
+    let getBond = Object.keys(dataQuote.details.bonds).length ? dataQuote.details.bonds : dataQuote.details.bond;
+    let bcc = emailData.name.split(",")
+    let bccList = []
+    bcc.forEach(email => {
+      bccList.push({
+        email: email.trim()
+      })
+    })
+    let emailResponse = ""
     sgMail.setApiKey(env.PUBLIC_SENDGRID_API_KEY);
+    // await sgMail
+    //   .send({
+    //     to: user.email,
+    //     bcc: emailData.name.split(","),
+    //     from: "info@australia4wdrentals.com",
+    //     subject: `Quote: ${dataQuote.details.vehicle.name}: ${
+    //       dataQuote.details.pickup.name.trim()
+    //     }, ${dayjs(dataQuote.details.date_start).format("DD MMM YYYY")} - ${
+    //       dataQuote.details.dropoff.name.trim()
+    //     }, ${dayjs(dataQuote.details.date_end).format("DD MMM YYYY")} (${
+    //       getBond.display_name.trim()
+    //     })${user.first_name.trim()} ${user.last_name.trim()}`,
+    //     html: emailBody,
+    //   })
     await sgMail
       .send({
-        to: user.email,
-        bcc: emailData.name.split(","),
-        from: "info@australia4wdrentals.com",
-        subject: `Quote: ${dataQuote.details.vehicle.name}: ${
-          dataQuote.details.pickup.name
-        }, ${dayjs(dataQuote.details.date_start).format("DD MMM YYYY")} - ${
-          dataQuote.details.dropoff.name
-        }, ${dayjs(dataQuote.details.date_end).format("DD MMM YYYY")} (${
-          getBond.display_name
-        })
-          ${user.first_name} ${user.last_name}`,
-        html: emailBody,
+        personalizations: [
+          {
+            to: [
+              {
+                email: user.email,
+                name: `${user.first_name.trim()} ${user.last_name.trim()}`,
+              },
+            ],
+            bcc: bccList,
+          },
+        ],
+        from: {
+          email: "info@australia4wdrentals.com",
+          name: "Australia 4WD Rentals",
+        },
+        subject: `Quote: ${dataQuote.details.vehicle.name.trim()}: ${
+            dataQuote.details.pickup.name.trim()
+          }, ${dayjs(dataQuote.details.date_start).format("DD MMM YYYY")} - ${
+            dataQuote.details.dropoff.name.trim()
+          }, ${dayjs(dataQuote.details.date_end).format("DD MMM YYYY")} (${
+            getBond.display_name.trim()
+          }) ${user.first_name.trim()} ${user.last_name.trim()}`,
+        content: [
+          {
+            type: "text/html",
+            value: emailBody,
+          },
+        ],
+        // mail_settings: {
+        //   sandbox_mode: {
+        //     enable: true,
+        //   },
+        // },
       })
       .then(() => {
+        emailResponse = "Email sent"
         console.log("Email sent");
       })
       .catch((error) => {
+        emailResponse = error
         console.error(error);
       });
 
     return {
-      quote: dataQuote,
+      quote: JSON.parse(JSON.stringify(dataQuote)),
+      emailResponse: JSON.parse(JSON.stringify(emailResponse)),
     };
   },
 };

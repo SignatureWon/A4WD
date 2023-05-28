@@ -12,20 +12,24 @@
     path={data.path}
     headers={[
       {
-        key: "updated_at",
-        value: "Last update",
+        key: "created_at",
+        value: "Booking Date",
       },
       {
-        key: "users.first_name",
-        value: "User",
+        key: "quote_id",
+        value: "Ref Code",
       },
       {
-        key: "status",
+        key: "quote_title",
+        value: "Title",
+      },
+      {
+        key: "quote_customer",
+        value: "Customer",
+      },
+      {
+        key: "quote_status",
         value: "Status",
-      },
-      {
-        key: "gross",
-        value: "Gross",
       },
     ]}
   />

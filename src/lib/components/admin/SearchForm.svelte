@@ -45,7 +45,6 @@
     });
   });
 </script>
-
 <div class="bg-white px-5 py-3 mb-4">
   <h2 class="font-bold text-brand-600 text-lg mb-4">Check Prices</h2>
   <form action="/admin/sales/calculator/redirect" method="get">

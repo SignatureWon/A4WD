@@ -21,6 +21,23 @@
       maximumFractionDigits: 2,
     });
   };
+  const getBond = (details) => {
+    let result = "";
+    if ("bonds" in details) {
+      if (Object.keys(details.bonds).length) {
+        result = details.bonds.display_name;
+      }
+    }
+    if ("bond" in details) {
+      if (Object.keys(details.bond).length) {
+        result = details.bond.display_name;
+      }
+    }
+    if (result !== "") {
+      result = `(${result})`;
+    }
+    return result;
+  };
 
   let page = 1;
   let pageSize = 100;
@@ -88,6 +105,19 @@
       &mdash;
     {:else if cell.key === "gross"}
       {formatCurrency(cell.value)}
+    {:else if cell.key === "quote_id"}
+      Q{388000 + row.id}
+    {:else if cell.key === "quote_title"}
+      {row.details.vehicle.name.trim()}: {row.details.pickup.name.trim()}, {dayjs(
+        row.details.date_start
+      ).format("DD MMM YYYY")} - {row.details.dropoff.name.trim()}, {dayjs(
+        row.details.date_end
+      ).format("DD MMM YYYY")}
+      {getBond(row.details).trim()}
+    {:else if cell.key === "quote_customer"}
+      {row.users.first_name} {row.users.last_name}
+    {:else if cell.key === "quote_status"}
+      {row.status}
     {:else}
       {cell.value}
     {/if}

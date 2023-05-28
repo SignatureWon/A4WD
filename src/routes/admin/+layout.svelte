@@ -14,7 +14,7 @@
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
   export let data;
-  console.log("data", data);
+  // console.log("data", data);
 
   let site = {};
   let c = {};

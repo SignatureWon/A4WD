@@ -9,6 +9,7 @@
   import { page as storePage } from "$app/stores";
   import { goto } from "$app/navigation";
   import dayjs from "dayjs";
+  import {format} from "$lib/format"
 
   export let search = {};
   export let rows = [];
@@ -82,7 +83,7 @@
     {:else if ["date_start", "date_end", "routes_date_start", "routes_date_end", "travel_start", "travel_end", "created_at", "updated_at"].includes(cell.key)}
       {dayjs(cell.value).format("DD/MM/YYYY")}
     {:else if ["nett", "gross", "profit", "special_total"].includes(cell.key)}
-      {formatCurrency(cell.value)}
+      {format.currency(cell.value)}
     {:else if ["vehicles_categories", "block_items"].includes(cell.key)}
       {#each cell.value as item}
         {item.name}<br />

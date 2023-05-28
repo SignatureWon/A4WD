@@ -36,7 +36,7 @@
         {#if form.quote.status === "Request"}
           <div class="text-base mt-5 pt-5 border-t border-gray-300 text-xl">
             <a
-              href="https://rixauffklvvhkfkwrpme.supabase.co/storage/v1/object/public/quotes/Q{form
+              href="https://api.australia4wdrentals.com/storage/v1/object/public/quotes/Q{form
                 .quote.id + 388000}.pdf"
               class="text-brand-600" target="_blank">View your quote</a
             >

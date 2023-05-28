@@ -210,7 +210,7 @@
     <h2 class="text-lg font-bold mb-2">Apollo Adventure Camper</h2>
     <div
       class="bg-cover bg-center bg-no-repeat h-48"
-      style="background-image: url('https://rixauffklvvhkfkwrpme.supabase.co/storage/v1/object/public/gallery/thumb-vehicles-2b25d7e9-74df-4986-b578-78535c9034e5.jpg');"
+      style="background-image: url('https://api.australia4wdrentals.com/storage/v1/object/public/gallery/thumb-vehicles-2b25d7e9-74df-4986-b578-78535c9034e5.jpg');"
     />
     <div class="px-4 mt-2">
       <p>

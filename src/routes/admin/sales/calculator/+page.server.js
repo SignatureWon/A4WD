@@ -7,6 +7,8 @@ dayjs.extend(isBetween);
 import { cal } from "$lib/cal";
 
 export async function load({ url, params, locals }) {
+  // console.log('LOAD');
+
   let search = {
     pickup: "",
     dropoff: "",
@@ -19,6 +21,7 @@ export async function load({ url, params, locals }) {
   let results = [];
   let blocked = [];
   let allRates = [];
+  let specials = []
 
   url.searchParams.forEach((value, key) => {
     if (["date_start", "date_end"].includes(key)) {
@@ -30,9 +33,16 @@ export async function load({ url, params, locals }) {
 
   if (search.pickup !== "" && search.dropoff !== "") {
     const { data: flexData } = await cal.getFlex(supabase, search);
+    // allRates = [...flexData]
     const { data: seasonalData } = await cal.getSeasonal(supabase, search);
     allRates = [...flexData, ...seasonalData];
+    // console.log("flex:", flexData.length, "seasonal:", seasonalData.length);
 
+    // const { data: ratesData, error: ratesError } = await cal.getRates(
+    //   supabase,
+    //   search
+    // );
+    // console.log(ratesData);
     const { data: feesData, error: feesError } = await cal.getFees(
       supabase,
       search
@@ -48,6 +58,7 @@ export async function load({ url, params, locals }) {
       supabase,
       search
     );
+    // console.log(bondsData);
 
     const filteredRoutes = cal.filterRoutes(allRates, search);
     const arrangedRates = cal.arrangeRates(filteredRoutes, search);
@@ -55,14 +66,21 @@ export async function load({ url, params, locals }) {
     const addedFees = cal.addFees(filteredBlockouts.rates, feesData);
     const addedSpecials = cal.addSpecials(addedFees, specialsData, search);
     const addedBonds = cal.addBonds(addedSpecials, bondsData, search);
+    //   console.log(addedBonds);
 
     results = [...addedBonds];
     blocked = [...filteredBlockouts.blocked]
+    specials = [...addedSpecials]
   }
 
+  // console.log("search", results.length);
+
+  //   detail = addedSpecials[0];
   return {
+    // allRates: JSON.parse(JSON.stringify(allRates)),
     blocked: JSON.parse(JSON.stringify(blocked)),
     search: JSON.parse(JSON.stringify(search)),
     results: JSON.parse(JSON.stringify(results)),
+    specials: JSON.parse(JSON.stringify(specials)),
   };
 }

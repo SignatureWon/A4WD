@@ -103,7 +103,7 @@ export const dummy = {
         id: "dbed6fc4-1901-4871-930c-9fd095ec988a",
         name: "Adventure 4wd Camper",
         image:
-          "https://rixauffklvvhkfkwrpme.supabase.co/storage/v1/render/image/public/contents/8deded15-906e-4e3c-b292-9ad7824d7179.gif?width=600&height=600&resize=contain",
+          "https://api.australia4wdrentals.com/storage/v1/render/image/public/contents/8deded15-906e-4e3c-b292-9ad7824d7179.gif?width=600&height=600&resize=contain",
         excerpt:
           "The compact Adventure Camper is perfect for those interested in a real outback adventure. Roomier, more fuel capacity and cooking facilities make this 4WD campervan ideal for thrill seeking couples.",
         slug: "adventure-4wd-camper",

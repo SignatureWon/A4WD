@@ -31,6 +31,7 @@ export const html = {
     const date_end = dayjs(quote.details.date_end).format("ddd, DD MMM YYYY");
     let agentFees = [];
     let supplierFees = [];
+    let pickupFees = [];
 
     const totalAgentFee = () => {
       let sum = 0;
@@ -116,7 +117,7 @@ export const html = {
           supplierFees.push(row);
         }
       }
-      supplierFees.push({
+      pickupFees.push({
         name: `Bond: $${format.currency(bond.bond, 0)} is taken from the hirer's credit or debit card <div style="font-size: 14px; color: #999999">Refundable as per supplier's Summary of Terms<div>`,
         total: bond.bond,
         nett: 0,
@@ -128,6 +129,12 @@ export const html = {
       let one_way = quote.details.one_way;
       if (one_way > 0) {
         supplierFees.push({
+          name: `One-way fee`,
+          total: one_way,
+          nett: 0,
+          profit: 0,
+        });
+        pickupFees.push({
           name: `One-way fee`,
           total: one_way,
           nett: 0,
@@ -167,6 +174,7 @@ export const html = {
           agentFees.push(row);
         } else {
           supplierFees.push(row);
+          pickupFees.push(row);
         }
       }
     };
@@ -189,6 +197,12 @@ export const html = {
       if (fee.total > 0) {
         fee.items.forEach((item) => {
           supplierFees.push({
+            name: item.name,
+            total: item.fee,
+            nett: 0,
+            profit: 0,
+          });
+          pickupFees.push({
             name: item.name,
             total: item.fee,
             nett: 0,
@@ -738,16 +752,16 @@ table, td{
     </tr>
   </table>
   <div style="background-color: #dbeafe; padding: 20px; margin-bottom: 30px;">
-    <div style="margin-bottom: 20px; font-size: 20px;">
+    <div style="margin-bottom: 20px; font-size: 16px;">
       <a href="https://www.australia4wdrentals.com" style="color: #1d4ed8"
         >www.australia4wdrentals.com</a
-      > is protected by geotrust 256-bit ssl for complete peace of mind when booking
+      > is protected by a 256-bit ssl for complete peace of mind when booking
       online.
     </div>
     <div style="margin-bottom: 10px;">
       <a
         href="https://australia4wdrentals.com/form/vehicle/booking"
-        style="display: block; width: 200px; padding-top: 10px; padding-bottom: 10px; text-align: center; font-weight: bold; font-size: 30px; background-color: #1d4ed8; text-decoration: none; color: #ffffff; border-radius: 5px"
+        style="display: block; width: 200px; padding-top: 10px; padding-bottom: 10px; text-align: center; font-weight: bold; font-size: 20px; background-color: #1d4ed8; text-decoration: none; color: #ffffff; border-radius: 5px"
       >
         <b style="text-decoration: none; color: #ffffff;">Book Now</b>
       </a>
@@ -791,7 +805,7 @@ table, td{
     cellspacing="0"
     style="margin-bottom: 10px;"
     >`
-    supplierFees.forEach(item => {
+    pickupFees.forEach(item => {
     email += `
       <tr>
         <td style="border: 1px solid #CCCCCC">${item.name}</td>
