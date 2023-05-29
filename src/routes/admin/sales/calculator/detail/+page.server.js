@@ -5,6 +5,12 @@ dayjs.extend(isBetween);
 import { cal } from "$lib/cal";
 
 export async function load({ url, params, locals }) {
+  const { data: countries } = await supabase
+  .from("constants")
+  .select("id, name")
+  .eq("type", "countries")
+  .order("rank", { ascending: true });
+
   let search = {};
   let allRates = [];
 
@@ -65,5 +71,6 @@ export async function load({ url, params, locals }) {
     detail: JSON.parse(JSON.stringify(addTerms[0])),
     search: JSON.parse(JSON.stringify(search)),
     options: JSON.parse(JSON.stringify(options)),
+    countries: JSON.parse(JSON.stringify(countries)),
   }
 }

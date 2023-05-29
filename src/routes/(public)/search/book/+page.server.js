@@ -13,19 +13,25 @@ export const actions = {
     let postData = Object.fromEntries(formData.entries());
 
     let user = {
+      title: "",
       first_name: "",
       last_name: "",
       phone: "",
       email: postData.email,
+      address_1: "",
+      address_2: "",
+      postcode: "",
+      city: "",
+      state: "",
       country: "",
     }
 
     const { data: dataUser } = await supabase
       .from("users")
-      .select("id, first_name, last_name, phone, email, country")
+      .select("id, title, first_name, last_name, phone, email, address_1, address_2, postcode, city, state, country")
       .eq("email", postData.email).single();
 
-      console.log("dataUser", dataUser);
+      // console.log("dataUser", dataUser);
 
     if (dataUser) {
       user = dataUser

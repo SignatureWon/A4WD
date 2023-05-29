@@ -64,25 +64,72 @@
             required
           />
         </div>
+        <div class="font-bold text-lg pt-10">Home Address</div>
         <div>
-          <Select labelText="Country" name="country" value={form.user.country}>
-            {#each data.countries as country}
-              <SelectItem value={country.name} />
-            {/each}
-          </Select>
+          <TextInput
+            name="address_1"
+            labelText="Address 1"
+            value={form.user.address_1}
+            required
+          />
         </div>
         <div>
-          <TextArea
-            name="comment"
-            labelText="Your travel comment"
-            value={form.user.comment}
+          <TextInput
+            name="address_2"
+            labelText="Address 2"
+            value={form.user.address_2}
+            required
           />
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div>
+            <TextInput
+              name="postcode"
+              labelText="Postcode"
+              value={form.user.postcode}
+              required
+            />
+          </div>
+          <div>
+            <TextInput
+              name="city"
+              labelText="City"
+              value={form.user.city}
+              required
+            />
+          </div>
+          <div>
+            <TextInput
+              name="state"
+              labelText="State"
+              value={form.user.state}
+              required
+            />
+          </div>
+          <div>
+            <Select
+              labelText="Country"
+              name="country"
+              value={form.user.country}
+            >
+              {#each data.countries as country}
+                <SelectItem value={country.name} />
+              {/each}
+            </Select>
+          </div>
+        </div>
+        <div>
+          <TextArea name="comment" labelText="Your travel comment" value="" />
         </div>
         <div class="text-center">
           <Button type="submit" class="px-10">Send Quote</Button>
         </div>
-        <input type="hidden" name="user_id" value={form.user.id || ""}>
-        <input type="hidden" name="data" value={JSON.stringify(form.postData)}>
+        <input type="hidden" name="user_id" value={form.user.id || ""} />
+        <input
+          type="hidden"
+          name="data"
+          value={JSON.stringify(form.postData)}
+        />
       </form>
     </div>
   </div>

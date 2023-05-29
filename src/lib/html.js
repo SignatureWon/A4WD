@@ -14,7 +14,7 @@ export const html = {
 
     const { data: quote } = await supabase
       .from("quotes")
-      .select("*, users (id, first_name, last_name, email, phone)")
+      .select("*, users (id, first_name, last_name, email, phone, address_1, address_2, postcode, city, state, country)")
       .eq("id", quote_id)
       .single();
       // console.log("quote", quote);
@@ -96,6 +96,17 @@ export const html = {
         });
       }
     };
+    const getDiscount = () => {
+      if (quote.add_discount > 0) {
+        agentFees.push({
+          name: `Discount: ${quote.add_discount_remark}`,
+          total: -quote.add_discount,
+          nett: 0,
+          profit: 0,
+        });
+      }
+    }
+
 
     const getBonds = () => {
       const bond = Object.keys(quote.details.bonds).length ? quote.details.bonds : quote.details.bond;
@@ -234,7 +245,7 @@ export const html = {
         if (gap < terms.balance) {
           termsItems = [
             {
-              name: `Full payment to agent on ${dayjs(date_quote).format()}`,
+              name: `Full payment to agent on ${dayjs(date_quote).format("ddd, DD MMM YYYY")}`,
               total: total,
             },
           ];
@@ -309,6 +320,12 @@ export const html = {
         last_name: quote.users.last_name,
         email: quote.users.email,
         phone: quote.users.phone,
+        address_1: quote.users.address_1,
+        address_2: quote.users.address_2,
+        postcode: quote.users.postcode,
+        city: quote.users.city,
+        state: quote.users.state,
+        country: quote.users.country,
       },
       quote: {
         id: quote.id + 388000,
@@ -323,6 +340,7 @@ export const html = {
           date: date_end,
         },
       },
+      comment: quote.comment,
       vehicle: {
         name: vehicle.name,
         slug: vehicle.slug,
@@ -352,6 +370,7 @@ export const html = {
         },
       },
       daily: getDailyRates(),
+      discount: getDiscount(),
       bond: getBonds(),
       oneway: getOneways(),
       addon: getAddons(),
@@ -492,7 +511,7 @@ table, td{
       >
         <div style="font-size: 12px; color: #999999">Duration</div>
         <div style="font-weight: bold">
-          ${info.quote.duration}
+          ${info.quote.duration} days
         </div>
       </td>
     </tr>
@@ -546,10 +565,16 @@ table, td{
           ${info.user.last_name}
         </div>
         <div>
-          ${info.user.email}
+          ${info.user.email}<br>
+          ${info.user.phone}<br><br>
         </div>
         <div>
-          ${info.user.phone}
+          ${info.user.address_1 ? `${info.user.address_1},<br>` : ""}
+          ${info.user.address_2 ? `${info.user.address_2},<br>` : ""}
+          ${info.user.postcode ? `${info.user.postcode}` : ""}
+          ${info.user.city ? `${info.user.city},<br>` : ""}
+          ${info.user.state ? `${info.user.state}` : ""}
+          ${info.user.country ? `${info.user.country}` : ""}
         </div>
       </td>
       <td
@@ -606,6 +631,24 @@ table, td{
           License: ${info.driver.license}
         </div>
       </td>
+    </tr>
+  </table>
+  <table
+    width="600"
+    cellpadding="20"
+    cellspacing="0"
+    style="margin-bottom: 30px;"
+  >
+    <tr>
+      <td
+        align="center"
+        style="border: 1px solid #CCCCCC"
+      >
+      <div style="font-size: 12px; color: #999999">Comment</div>
+      <div style="font-weight: bold">
+        ${info.comment || "No comment"}
+      </div>
+    </td>
     </tr>
   </table>
   <table
@@ -709,6 +752,7 @@ table, td{
       >
         <div style="font-weight: bold;">
           Total payable to supplier at pick-up
+          <div style="font-size: 14px; color: #999999">Any bond selected, addons, fees and one-way fee</div>
         </div>
       </td>
       <td
@@ -1002,10 +1046,17 @@ email += `
   >
     <div style="">THANK YOU FOR CHOOSING</div>
     <div style="font-weight: bold; font-size: 20px">
-      <a href="https://www.australia4wdrentals.com" style="color: #1d4ed8"
-        >AUSTRALIA 4WD RENTALS</a
-      >
+      <a href="https://www.australia4wdrentals.com" style="color: #1d4ed8">
+        AUSTRALIA 4WD RENTALS
+      </a>
     </div>
+  </div>
+  <div
+    style="padding-bottom: 30px; text-align: center;"
+  >
+    <a href="https://www.australia4wdrentals.com/conditions-australia-4-wheel-drive-rentals" style="color: #1d4ed8">
+      Terms & Conditions of Australia 4 Wheel Drive Rentals
+    </a>
   </div>
 </div>
 </body>

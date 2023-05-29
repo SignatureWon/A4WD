@@ -4,7 +4,7 @@
 
   let email = ""
   onMount(async () => {
-    email = await html.create(38, "template_quote")
+    email = await html.create(59, "template_quote")
   })
   // import QuotePage1 from "$lib/components/QuotePage1.svelte";
 
