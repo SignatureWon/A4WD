@@ -44,12 +44,18 @@
     date_book: dayjs(),
     date_start: dayjs(data.search.date_start),
     date_end: dayjs(data.search.date_end),
-    pax: dayjs(data.search.pax),
+    pax: data.search.pax,
     duration: d.duration,
     min_days: d.min_days,
     rates_type: d.rates_type,
     rates_nett: d.rates_nett,
     rates_gross: d.rates_gross,
+    rates: {
+      id: d.rates_id,
+      type: d.rates_type,
+      nett: d.rates_nett,
+      gross: d.rates_gross,
+    },
     pickup: {
       id: d.depot_id,
       name: d.depot_name,
@@ -78,6 +84,10 @@
     age: {
       id: d.age_id,
       name: d.age_name,
+    },
+    license: {
+      id: d.license_id,
+      name: d.license_name,
     },
     daily: {
       gross: d.gross,
