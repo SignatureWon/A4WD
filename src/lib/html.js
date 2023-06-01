@@ -111,9 +111,19 @@ export const html = {
     const getBonds = () => {
       const bond = Object.keys(quote.details.bonds).length ? quote.details.bonds : quote.details.bond;
 
-      let gross = bond.gross * duration;
-      let nett = bond.nett * duration;
-      let profit = gross - nett;
+      let gross = 0;
+      let nett = 0;
+      let profit = 0;
+
+      if ("gross" in bond) {
+        gross = bond.gross * duration;
+        nett = bond.nett * duration;
+        profit = gross - nett;
+      } else {
+        bond.gross = 0
+        bond.nett = 0
+        bond.bond = 0
+      }
 
       if (bond.gross > 0) {
         const row = {
@@ -389,6 +399,7 @@ let email = `
 body{
     margin:0;
     padding:0;
+    font-size: 12px;
 }
 
 img{
@@ -409,6 +420,7 @@ a img{
 
 table, td{
     border-collapse:collapse;
+    font-size: 12px;
 }
 
 #bodyTable{
@@ -416,6 +428,7 @@ table, td{
     margin:0;
     padding:0;
     width:100% !important;
+    font-size: 12px;
 }
 </style>
 </head>
@@ -426,18 +439,18 @@ table, td{
   <table width="600" style="margin-bottom: 30px;">
     <tr>
       <td>
-        <div style="font-size: 18px; font-weight: bold">
+        <div style="font-size: 16px; font-weight: bold">
           ${info.company.name}
         </div>
-        <div style="font-size: 12px; color: #999999">
+        <div style="font-size: 10px; color: #999999">
           ${info.company.reg}
         </div>
-        <div style="font-size: 14px;">
+        <div style="font-size: 12px;">
           ${info.company.contact}
         </div>
       </td>
       <td valign="top">
-        <div style="text-align: right; font-size: 24px; font-weight: bold">
+        <div style="text-align: right; font-size: 20px; font-weight: bold">
           ${info.doc.name}
         </div>
       </td>
@@ -871,11 +884,11 @@ table, td{
     request.
   </div>
   <div
-    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 18px"
+    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 12px"
   >
     Terms & Conditions
   </div>
-  <div style="margin-bottom: 10px;">
+  <div style="margin-bottom: 10px; font-size: 10px">
     For your convenience please find links to the summary of the full terms and
     conditions and the supplier counter agreement for the rental of this
     vehicle. You will also find links to the user agreement and agent terms and
@@ -888,7 +901,7 @@ table, td{
         <a
           href="https://www.australia4wdrentals.com/terms/${info.terms
             .id}/confirmation"
-          style="color: #1d4ed8">Booking Confirmation Terms</a
+          style="color: #1d4ed8; font-size: 12px">Booking Confirmation Terms</a
         >
       <br>`
     }
@@ -898,7 +911,7 @@ table, td{
         <a
           href="https://www.australia4wdrentals.com/terms/${info.terms
             .id}/summary"
-          style="color: #1d4ed8">Summary of Terms</a
+          style="color: #1d4ed8; font-size: 12px">Summary of Terms</a
         >
       <br>`
     }
@@ -914,11 +927,11 @@ table, td{
     }
 email += `
   <div
-    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 18px"
+    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 12px"
   >
     Domestic Rates
   </div>
-  <div style="margin-bottom: 10px;">
+  <div style="margin-bottom: 10px; font-size: 10px">
     This rate is for Australian and New Zealand residents only. The hirer must
     be able to produce their Australian or New Zealand drivers licence upon
     vehicle collection. Should the hirer not be able to do so on the day of pick
@@ -927,20 +940,20 @@ email += `
     rate.
   </div>
   <div
-    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 18px"
+    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 12px"
   >
     The agent - Australia 4 Wheel Drive Rentals
   </div>
-  <div style="margin-bottom: 10px;">
+  <div style="margin-bottom: 10px; font-size: 10px">
     From here onwards Australia 4 Wheel Drive Rentals and it's associated group
     of companies shall henceforth be referred to as the 'Agent', 'we' or 'our'.
   </div>
   <div
-    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 18px"
+    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 12px"
   >
     Agent security deposit
   </div>
-  <div style="margin-bottom: 10px;">
+  <div style="margin-bottom: 10px; font-size: 10px">
     Security deposits taken by the Agent are to help ensure that your
     reservations are secure and in order. The security deposit is
     non-refundable. In the event of a cancellation the security deposit, may be
@@ -953,11 +966,11 @@ email += `
     in the final payment.
   </div>
   <div
-    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 18px"
+    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 12px"
   >
     Agent credit card surcharge
   </div>
-  <div style="margin-bottom: 10px;">
+  <div style="margin-bottom: 10px; font-size: 10px">
     A 2.0% surcharge for all VISA / Mastercard credit card transactions paid
     towards the booking will apply. Please note that these credit card fees do
     not overlap with the supplier surcharge. Please note when choosing a
@@ -967,11 +980,11 @@ email += `
     credit cards.
   </div>
   <div
-    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 18px"
+    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 12px"
   >
     Calculation errors
   </div>
-  <div style="margin-bottom: 10px;">
+  <div style="margin-bottom: 10px; font-size: 10px">
     We rely heavily on accurate information provided to us by our suppliers and
     we endeavour to ensure that all our prices are up to date. However we cannot
     be held liable for any errors in price calculation. In the event of an
@@ -980,11 +993,11 @@ email += `
     pricing.
   </div>
   <div
-    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 18px"
+    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 12px"
   >
     Suppliers Responsibility
   </div>
-  <div style="margin-bottom: 10px;">
+  <div style="margin-bottom: 10px; font-size: 10px">
     We are a booking service for the Suppliers. You will be required to complete
     a rental agreement directly with the relevant Supplier on collection of the
     rented vehicle. Your rental is subject to the terms and conditions of the
@@ -994,11 +1007,11 @@ email += `
     over-selling its own vehicle inventory or vehicle movement disruption.
   </div>
   <div
-    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 18px"
+    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 12px"
   >
     Disclaimer
   </div>
-  <ul style="margin-bottom: 30px;">
+  <ul style="margin-bottom: 30px; font-size: 10px">
     <li style="margin-bottom: 10px;">
       These details are indicative of the vehicle that will be supplied under
       your booking. Actual vehicles may vary according to year of manufacture
