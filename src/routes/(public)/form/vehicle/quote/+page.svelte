@@ -124,7 +124,7 @@
               <Select labelText="Country" name="country">
                 <SelectItem value="" text="Select country" />
                 {#each data.options.countries as country}
-                  <SelectItem value={country.id} text={country.name} />
+                  <SelectItem value={country.name} text={country.name} />
                 {/each}
               </Select>
             </div>

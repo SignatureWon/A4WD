@@ -3,10 +3,10 @@
   import SectionDataTable from "$lib/components/admin/SectionDataTable.svelte";
 
   export let data;
-  console.log(data);
+  // console.log(data);
 </script>
 
-<PageTitle title={data.title} path={data.path} />
+<PageTitle title="Admin" path={data.path} />
 
 <SectionDataTable
   rows={data.data}

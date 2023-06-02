@@ -19,24 +19,24 @@ export async function load({ url, params }) {
     "tnc",
     "newsletter",
   ];
-  const pageTitle = {
-    quoted: "Pax Quoted",
-    booked: "Pax Booked",
-    enquiry: "Pax Enquiry",
-    subscribed: "Pax Subscribed",
-    affiliate: "Affiliate",
-    supplier: "Supplier",
-    admin: "Admin",
-  };
+  // const pageTitle = {
+  //   quoted: "Pax Quoted",
+  //   booked: "Pax Booked",
+  //   enquiry: "Pax Enquiry",
+  //   subscribed: "Pax Subscribed",
+  //   affiliate: "Affiliate",
+  //   supplier: "Supplier",
+  //   admin: "Admin",
+  // };
 
   return {
     data: db.all({
       table: "profiles",
       keys: keys,
-      eq: [{ name: "role", value: params.type }],
+      eq: [{ name: "role", value: "admin" }],
       order: [{ name: "created_at", ascend: true }],
     }),
     path: url.pathname,
-    title: pageTitle[params.type],
+    // title: pageTitle[params.type],
   };
 }
