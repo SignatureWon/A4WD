@@ -19,8 +19,20 @@
   import { format } from "$lib/format.js";
   import { env } from "$env/dynamic/public";
   import dayjs from "dayjs";
+  import Trip from "../Trip.svelte";
+  import Customer from "../Customer.svelte";
+  import Driver from "../Driver.svelte";
+  import { bind } from "svelte/internal";
+  import Section from "../Section.svelte";
+  import Passenger from "../Passenger.svelte";
+  import FeeDaily from "../FeeDaily.svelte";
+  import FeeBond from "../FeeBond.svelte";
+  import FeeAddons from "../FeeAddons.svelte";
+  import FeeOthers from "../FeeOthers.svelte";
+  import FeeSpecials from "../FeeSpecials.svelte";
 
   export let data;
+
   let paneHeight = 0;
   const d = data.detail;
   let details = data.quote.details;
@@ -30,6 +42,8 @@
     bond_fee =
       d.bond_items[0].gross * (d.duration < (d.bond_items[0].cap || 0) ? d.duration : d.bond_items[0].cap || 0);
   }
+  let selected_addons = [];
+
   let addon_fee = 0;
   let noCustomer = false;
   let user = data.user;
@@ -44,57 +58,79 @@
   let pickupFees = [];
   let totalPickupFees = 0;
 
-  const lookupCustomer = async () => {
-    noCustomer = false;
-    const { data: dataCustomer, error: errorData } = await supabase
-      .from("users")
-      .select()
-      .eq("email", user.email)
-      .single();
+  let fees = {
+    daily: [],
+    bond: {},
+    addons: {},
+    others: [],
+  };
+  let fee_discount = {
+    daily: {
+      name: "",
+      value: "",
+    },
+    specials: [],
+  };
 
-    // console.log(dataCustomer);
-    if (dataCustomer) {
-      // console.log("YES");
-      user = dataCustomer;
-      quote.users = dataCustomer.id;
-    } else {
-      // console.log("NO");
-      user.id = "add";
-    }
-  };
-  const changeCustomer = () => {
-    noCustomer = false;
-    user = {
-      id: null,
-      first_name: null,
-      last_name: null,
-      phone: null,
-      email: null,
-      address_1: null,
-      address_2: null,
-      postcode: null,
-      city: null,
-      state: null,
-      country: null,
-    };
-    quote.users = null;
-  };
-  const addCustomer = async () => {
-    noCustomer = false;
-    delete user.id;
-    const { data: dataCustomer, error: errorData } = await supabase.from("users").insert(user).select().single();
+  let total_gross = 0
+  let total_commission = 0
+  const countFees = () => {
 
-    // console.log(dataCustomer);
-    if (dataCustomer) {
-      // console.log("YES");
-      user.id = dataCustomer.id;
-      quote.users = dataCustomer.id;
-    } else {
-      // console.log("NO");
-      user.id = null;
-      quote.users = null;
-    }
-  };
+  }
+
+
+
+  // const lookupCustomer = async () => {
+  //   noCustomer = false;
+  //   const { data: dataCustomer, error: errorData } = await supabase
+  //     .from("users")
+  //     .select()
+  //     .eq("email", user.email)
+  //     .single();
+
+  //   // console.log(dataCustomer);
+  //   if (dataCustomer) {
+  //     // console.log("YES");
+  //     user = dataCustomer;
+  //     quote.users = dataCustomer.id;
+  //   } else {
+  //     // console.log("NO");
+  //     user.id = "add";
+  //   }
+  // };
+  // const changeCustomer = () => {
+  //   noCustomer = false;
+  //   user = {
+  //     id: null,
+  //     first_name: null,
+  //     last_name: null,
+  //     phone: null,
+  //     email: null,
+  //     address_1: null,
+  //     address_2: null,
+  //     postcode: null,
+  //     city: null,
+  //     state: null,
+  //     country: null,
+  //   };
+  //   quote.users = null;
+  // };
+  // const addCustomer = async () => {
+  //   noCustomer = false;
+  //   delete user.id;
+  //   const { data: dataCustomer, error: errorData } = await supabase.from("users").insert(user).select().single();
+
+  //   // console.log(dataCustomer);
+  //   if (dataCustomer) {
+  //     // console.log("YES");
+  //     user.id = dataCustomer.id;
+  //     quote.users = dataCustomer.id;
+  //   } else {
+  //     // console.log("NO");
+  //     user.id = null;
+  //     quote.users = null;
+  //   }
+  // };
 
   const getTotalAgentFee = () => {
     let sum = 0;
@@ -122,177 +158,6 @@
     });
     quote.supplier_fee = sum;
     return sum;
-  };
-
-  const getDailyRates = () => {
-    let obj = details.daily;
-    let type = details.rates_type;
-    let arr = obj.items;
-    if (type === "flex") {
-      let week = 1;
-      let day = 0;
-      arr.forEach((o, i) => {
-        if (i !== 0 && i % 7 === 0) {
-          agentFees.push({
-            name: `Daily basic rental: Week ${week}: Flex[${arr[i - 1].flex}]: $${format.currency(
-              arr[i - 1].gross
-            )} x ${day} days`,
-            total: arr[i - 1].gross * day,
-            nett: arr[i - 1].nett * day,
-            profit: arr[i - 1].profit * day,
-          });
-          day = 1;
-          week++;
-        } else {
-          day++;
-        }
-        if (i === arr.length - 1) {
-          agentFees.push({
-            name: `Daily basic rental: Week ${week}: Flex[${o.flex}]: $${format.currency(o.gross)} x ${day} days`,
-            total: o.gross * day,
-            nett: o.nett * day,
-            profit: o.profit * day,
-          });
-        }
-      });
-    } else {
-      agentFees.push({
-        name: `Daily basic rental: $${format.currency(obj.gross / arr.length)} x ${arr.length} days`,
-        total: obj.gross,
-        nett: obj.nett,
-        profit: obj.profit,
-      });
-    }
-  };
-
-  const getBonds = () => {
-    const bond = Object.keys(details.bonds).length ? details.bonds : details.bond;
-    let gross = bond.gross * duration;
-    let nett = bond.nett * duration;
-    let profit = gross - nett;
-
-    if (bond.gross > 0) {
-      const row = {
-        name: `${bond.display_name}: $${bond.gross} x ${duration} days`,
-        total: gross,
-        nett: nett,
-        profit: profit,
-      };
-      if (bond.gross > bond.nett) {
-        agentFees.push(row);
-      } else {
-        supplierFees.push(row);
-      }
-    }
-    pickupFees.push({
-      name: `Bond: $${format.currency(
-        bond.bond,
-        0
-      )} is taken from the hirer's credit or debit card <div style="font-size: 14px; color: #999999">Refundable as per supplier's Summary of Terms<div>`,
-      total: bond.bond,
-      nett: 0,
-      profit: 0,
-    });
-  };
-
-  const getOneways = () => {
-    let one_way = details.one_way;
-    if (one_way > 0) {
-      supplierFees.push({
-        name: `One-way fee`,
-        total: one_way,
-        nett: 0,
-        profit: 0,
-      });
-      pickupFees.push({
-        name: `One-way fee`,
-        total: one_way,
-        nett: 0,
-        profit: 0,
-      });
-    }
-  };
-  const getAddons = () => {
-    let addons = details.addons;
-    // console.log("addons", addons);
-
-    for (const key in addons) {
-      const addon = addons[key];
-      let gross = addon.gross_rate;
-      if (addon.daily) {
-        gross = gross * duration;
-      }
-      if (addon.gross_cap > 0) {
-        if (gross > addon.gross_cap) {
-          gross = addon.gross_cap;
-        }
-      }
-      let nett = addon.nett_rate;
-      if (addon.daily) {
-        nett = nett * duration;
-      }
-      if (addon.nett_cap > 0) {
-        if (nett > addon.nett_cap) {
-          nett = addon.nett_cap;
-        }
-      }
-      const row = {
-        name: `Add-on: ${addon.name}${addon.daily ? `$${addon.gross_rate} x ${duration} days` : ""}`,
-        total: gross,
-        nett: nett,
-        profit: gross - nett,
-      };
-      if (addon.gross_rate > addon.nett_rate) {
-        agentFees.push(row);
-      } else {
-        supplierFees.push(row);
-        pickupFees.push(row);
-      }
-    }
-  };
-
-  const getSpecials = () => {
-    let special = details.specials;
-    if (special.total > 0) {
-      special.items.forEach((item) => {
-        agentFees.push({
-          name: item.name,
-          total: -item.discount_amount,
-          nett: 0,
-          profit: 0,
-        });
-      });
-    }
-  };
-  const getFees = () => {
-    let fee = details.fees;
-    if (fee.total > 0) {
-      fee.items.forEach((item) => {
-        supplierFees.push({
-          name: item.name,
-          total: item.fee,
-          nett: 0,
-          profit: 0,
-        });
-        pickupFees.push({
-          name: item.name,
-          total: item.fee,
-          nett: 0,
-          profit: 0,
-        });
-      });
-    }
-  };
-  const getCcs = () => {
-    let fee = (getTotalAgentFee() * 2) / 100;
-    if (fee > 0) {
-      agentFees.push({
-        name: "Credit card surcharge (2%)",
-        total: fee,
-        nett: 0,
-        profit: 0,
-      });
-    }
   };
 
   let termsItems = [];
@@ -440,14 +305,14 @@
         pdf: details.terms.counter,
       },
     },
-    daily: getDailyRates(),
-    bond: getBonds(),
-    oneway: getOneways(),
-    addon: getAddons(),
-    special: getSpecials(),
-    fee: getFees(),
-    cc: getCcs(),
-    term: getTerms(),
+    // daily: getDailyRates(),
+    // bond: getBonds(),
+    // oneway: getOneways(),
+    // addon: getAddons(),
+    // special: getSpecials(),
+    // fee: getFees(),
+    // cc: getCcs(),
+    // term: getTerms(),
     // quote: updateQuote(),
   };
 </script>
@@ -455,290 +320,101 @@
 <svelte:window bind:innerHeight={paneHeight} />
 
 <PageTitle title="Q{388000 + data.quote.id}" path={data.path} id={data.id} />
-<div class="flex bg-white" style="height: {paneHeight - 150}px">
+<div class="flex bg-white" style="height: {paneHeight - 190}px">
   <div class="flex-1 h-full overflow-y-auto">
     <div class="p-5">
-      <section class="bg-white mb-4">
-        <div class="py-2 border-b border-gray-200">
-          <h2 class="text-xl font-bold">Trip Details</h2>
-        </div>
-        <!-- <h2 class="uppercase tracking-wider font-bold mb-2">Trip Summary</h2> -->
-        <div class="grid grid-cols-1 md:grid-cols-3 py-4 gap-4">
-          <div class="text-center">
-            <img
-              src="{env.PUBLIC_SUPABASE_URL}/storage/v1/render/image/public/contents/{info.vehicle
-                .image}?width=200&height=200&resize=contain"
-              alt={info.vehicle.name}
-            />
-          </div>
-          <div class="col-span-2">
-            <h2 class="text-lg font-bold mb-4">{info.vehicle.name}</h2>
-            <div class="flex items-center justify-between py-2">
-              <div class="w-5/12">
-                <div class="uppercase tracking-wider font-bold mb-1 text-xs text-gray-400">Pick-up</div>
-                <div class="font-bold text-lg">{info.quote.pickup.name}</div>
-                <div>{dayjs(info.quote.pickup.date).format("DD/MM/YYYY (ddd)")}</div>
-              </div>
-              <div>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  width="24"
-                  height="24"
-                  class="w-4 h-4"
-                  fill="currentColor"
-                  ><path fill="none" d="M0 0h24v24H0z" /><path
-                    d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"
-                  /></svg
-                >
-              </div>
-              <div class="w-5/12">
-                <div class="uppercase tracking-wider font-bold mb-1 text-xs text-gray-400">Drop-off</div>
-                <div class="font-bold text-lg">{info.quote.dropoff.name}</div>
-                <div>{dayjs(info.quote.dropoff.date).format("DD/MM/YYYY (ddd)")}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      <section class="bg-white mb-8">
-        <div class="py-2 border-b border-gray-200">
-          <h2 class="text-xl font-bold">Customer Details</h2>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 py-5">
-          <div>
-            <div class="text-sm text-gray-400">Name</div>
-            <div class="mb-5">{user.first_name} {user.last_name}</div>
-            <div class="text-sm text-gray-400">Contact</div>
-            <div class="mb-5">
-              {user.email}<br />
-              {user.phone}
-            </div>
-          </div>
-          <div>
-            <div class="text-sm text-gray-400">Address</div>
-            <div class="mb-5">
-              {@html user.address_1 ? `${user.address_1},<br>` : ""}
-              {@html user.address_2 ? `${user.address_2},<br>` : ""}
-              {@html user.postcode ? `${user.postcode}` : ""}
-              {@html user.city ? `${user.city},<br>` : ""}
-              {@html user.state ? `${user.state}` : ""}
-              {@html user.country ? `${user.country}` : ""}
-            </div>
-          </div>
-        </div>
-      </section>
-      <section class="bg-white mb-8">
-        <div class="py-2 border-b border-gray-200">
-          <h2 class="text-xl font-bold">Driver's Details</h2>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
-          <div>
-            <Select name="license" labelText="License" bind:value={details.driver.license}>
-              {#each data.options.licenses as license}
-                <SelectItem value={license.name} />
-              {/each}
-            </Select>
-          </div>
-          <div>
-            <NumberInput name="age" label="Age" bind:value={details.driver.age} allowEmpty required />
-          </div>
-        </div>
-      </section>
-      <section class="bg-white mb-8">
-        <div class="py-2 border-b border-gray-200">
-          <h2 class="text-xl font-bold">Passenger Details</h2>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
-          <div>
-            <NumberInput name="adult" label="No. of Adult" bind:value={details.passenger.adult} allowEmpty required />
-          </div>
-          <div>
-            <NumberInput
-              name="children"
-              label="No. of Children"
-              bind:value={details.passenger.children}
-              allowEmpty
-              required
-            />
-          </div>
-        </div>
-      </section>
-      <section class="bg-white mb-8">
-        <div class="py-2 border-b border-gray-200">
-          <h2 class="text-xl font-bold">Price Details</h2>
-        </div>
-        <div class="font-bold text-sm text-gray-400 pt-5">Agent Fees</div>
-        {#each agentFees as item}
-          <div class="flex py-3 border-b border-gray-200">
-            <div class="flex-1">
-              {item.name}
-            </div>
-            <div class="text-right">
-              {format.currency(item.total)}
-            </div>
-          </div>
-        {/each}
-        <div class="flex py-3 border-b border-gray-200 font-bold">
-          <div class="flex-1">Total Agent Fees</div>
-          <div class="text-right">
-            {format.currency(quote.gross)}
-          </div>
-        </div>
-        <div class="font-bold text-sm text-gray-400 pt-5">Supplier Fees</div>
-        {#each supplierFees as item}
-          <div class="flex py-3 border-b border-gray-200">
-            <div class="flex-1">
-              {item.name}
-            </div>
-            <div class="text-right">
-              {format.currency(item.total)}
-            </div>
-          </div>
-        {/each}
-        <div class="flex py-3 border-b border-gray-200 font-bold">
-          <div class="flex-1">Total Supplier Fees</div>
-          <div class="text-right">
-            {format.currency(quote.supplier_fee)}
-          </div>
-        </div>
-      </section>
-      <section class="bg-white mb-8">
-        <div class="py-2 border-b border-gray-200">
-          <h2 class="text-xl font-bold">Bond Options</h2>
-        </div>
-        <RadioButtonGroup orientation="vertical" selected={0} class="w-full [&>fieldset]:w-full">
-          {#each d.bond_items as b, i}
-            <div class="flex mb-2 justify-between w-full pt-2 pb-3 border-b border-gray-200">
-              <div class="flex-1 flex justify-start">
-                <RadioButton
-                  labelText={`${b.display_name} - ${b.liability.toLocaleString(
-                    "en-US"
-                  )} Excess, ${b.bond.toLocaleString("en-US")} Bond (${format.currency(b.gross || 0)} x ${
-                    b.cap ? (b.cap > d.duration ? d.duration : b.cap) : d.duration
-                  } days)                
-                `}
-                  value={i}
-                  on:change={() => {
-                    selected_bond = i;
-                    bond_fee = b.gross * (d.duration < (b.cap || 0) ? d.duration : b.cap || 0);
-                    details.bonds = b;
-                    updateQuote();
-                    // console.log(details);
-                  }}
-                />
-              </div>
-              <div class="whitespace-nowrap pl-4">
-                ${format.currency((b.gross || 0) * (b.cap ? (b.cap > d.duration ? d.duration : b.cap) : d.duration))}
-              </div>
-            </div>
-          {/each}
-        </RadioButtonGroup>
-      </section>
-      {#if d.addon_items.length}
-        <section class="bg-white mb-8">
-          <div class="py-2 border-b border-gray-200">
-            <h2 class="text-xl font-bold">Add-ons</h2>
-          </div>
-          <div class="divide-y divide-gray-200">
-            {#each d.addon_items as item, index1}
-              {#each item.addons as addon, index2}
-                <div class="flex justify-between py-2">
-                  <div class="flex">
-                    <div>
-                      <Checkbox
-                        on:change={(e) => {
-                          let fee = addon.daily ? addon.gross_rate * d.duration : addon.gross_rate;
-                          if (e.target.checked) {
-                            addon_fee += fee;
-                            details.addons[`${index1}-${index2}`] = addon;
-                          } else {
-                            addon_fee -= fee;
-                            delete details.addons[`${index1}-${index2}`];
-                          }
-                          updateQuote();
-                        }}
-                      />
-                    </div>
-                    <div>
-                      <div>
-                        {addon.name}
-                        {#if addon.daily}
-                          {#if addon.gross_rate * d.duration > addon.gross_cap}
-                            {addon.gross_cap}
-                          {:else}
-                            (${format.currency(addon.gross_rate)} x {d.duration} days)
-                          {/if}
-                        {/if}
-                      </div>
-                      <div class="text-gray-400 text-sm">{addon.description}</div>
-                    </div>
-                  </div>
-                  <div class="pl-4">
-                    {#if addon.daily}
-                      ${format.currency(addon.gross_rate * d.duration)}
-                    {:else}
-                      ${format.currency(addon.gross_rate)}
-                    {/if}
-                  </div>
-                </div>
-              {/each}
-            {/each}
-          </div>
-        </section>
-      {/if}
+      <Section title="Trip Details">
+        <Trip {info} />
+      </Section>
+      <Section title="Customer Details">
+        <Customer {user} />
+      </Section>
+      <Section title="Driver's Details">
+        <Driver licenseOptions={data.options.licenses} bind:driver={details.driver} />
+      </Section>
+      <Section title="Passenger Details">
+        <Passenger passenger={details.passenger} />
+      </Section>
+      <Section title="Daily basic rental">
+        <FeeDaily
+          bind:fees={fees.daily}
+          daily={details.daily}
+          type={details.rates_type}
+          discount={fee_discount.daily}
+        />
+      </Section>
+      <Section title="Bond Options">
+        <FeeBond
+          bind:fees={fees.bond}
+          list={d.bond_items}
+          bind:bonds={details.bonds}
+          bind:selected={selected_bond}
+          duration={d.duration}
+        />
+      </Section>
+      <Section title="Add-ons">
+        <FeeAddons
+          bind:fees={fees.addons}
+          addons={d.addon_items}
+          bind:selected={selected_addons}
+          bind:bond={fees.bond}
+          duration={d.duration}
+        />
+      </Section>
+      <Section title="Other Fees">
+        <FeeOthers bind:fees={fees.others} one_way={details.one_way} others={details.fees} />
+      </Section>
+      <Section title="Specials">
+        <FeeSpecials bind:fees={fee_discount.specials} specials={details.specials} />
+      </Section>
     </div>
   </div>
   <div class="h-full w-80 overflow-y-auto bg-brand-50">
-    <div class="p-5">
-      <div class="py-2 border-b border-gray-200">
-        <h2 class="text-xl font-bold">Quote Details</h2>
-      </div>
-      <div class="pt-4">
-        <h2 class="font-bold">Summary</h2>
-      </div>
-      <div class="flex py-3 border-b border-gray-200">
-        <div class="flex-1">Total Receivable</div>
-        <div class="text-right ml-4">{format.currency(quote.gross)}</div>
-      </div>
-      <div class="flex py-3 border-b border-gray-200">
-        <div class="flex-1">Total Commission</div>
-        <div class="text-right ml-4">{format.currency(quote.agent_fee)}</div>
-      </div>
-      <div>
-        <div class="mb-2">Special Discount</div>
-        <TextArea labelText="Remark" bind:value={quote.add_discount_remark} class="mb-2" />
-        <NumberInput label="Amount" bind:value={quote.add_discount} on:blur={getTotalAgentCommission} />
-      </div>
-      <div class="flex py-3 border-b border-gray-200">
-        <div class="flex-1">Total System Commission (8%)</div>
-        <div class="text-right ml-4">{format.currency(quote.system_fee)}</div>
-      </div>
-      <div class="flex py-3 border-b border-gray-200 font-bold">
-        <div class="flex-1">Nett Commission</div>
-        <div class="text-right ml-4">{format.currency(quote.nett_profit)}</div>
-      </div>
-      <div class="pt-4">
-        <h2 class="font-bold">Payment Schedule</h2>
-      </div>
-      {#each termsItems as item}
-        <div class="flex py-3 border-b border-gray-200">
-          <div class="flex-1">{item.name}</div>
-          <div class="text-right">{format.currency(item.total)}</div>
+    <div class="overflow-y-auto" style="height: {paneHeight - 330}px">
+      <div class="p-5">
+        <div class="py-2 border-b border-gray-200">
+          <h2 class="text-xl font-bold">Quote Details</h2>
         </div>
-      {/each}
-      <div class="py-4 border-b border-gray-200">
-        <Button on:click={() => console.log("Update")}>Update Quote</Button>
-        {#if noCustomer}
-          <InlineNotification
-            hideCloseButton
-            lowContrast
-            kind="warning"
-            title="Required"
-            subtitle="Please select a customer"
-          />
-        {/if}
+        <div class="pt-4">
+          <h2 class="font-bold">Summary</h2>
+        </div>
+        <div class="flex py-3 border-b border-gray-200">
+          <div class="flex-1">Total Receivable</div>
+          <div class="text-right ml-4">{format.currency(quote.gross)}</div>
+        </div>
+        <div class="flex py-3 border-b border-gray-200">
+          <div class="flex-1">Total Commission</div>
+          <div class="text-right ml-4">{format.currency(quote.agent_fee)}</div>
+        </div>
+        <div>
+          <div class="mb-2">Special Discount</div>
+          <TextArea labelText="Remark" bind:value={quote.add_discount_remark} class="mb-2" />
+          <NumberInput label="Amount" bind:value={quote.add_discount} on:blur={getTotalAgentCommission} />
+        </div>
+        <div class="flex py-3 border-b border-gray-200">
+          <div class="flex-1">Total System Commission (8%)</div>
+          <div class="text-right ml-4">{format.currency(quote.system_fee)}</div>
+        </div>
+        <div class="flex py-3 border-b border-gray-200 font-bold">
+          <div class="flex-1">Nett Commission</div>
+          <div class="text-right ml-4">{format.currency(quote.nett_profit)}</div>
+        </div>
+        <div class="pt-4">
+          <h2 class="font-bold">Payment Schedule</h2>
+        </div>
+        {#each termsItems as item}
+          <div class="flex py-3 border-b border-gray-200">
+            <div class="flex-1">{item.name}</div>
+            <div class="text-right">{format.currency(item.total)}</div>
+          </div>
+        {/each}
       </div>
+    </div>
+    <div class="p-5">
+      <Button on:click={() => {
+        console.log("fees", fees);
+        console.log("fee_discount", fee_discount);
+      }} class="w-full">Update Quote</Button>
       <div class="pt-4 flex justify-between">
         <Button kind="ghost" on:click={() => console.log("Preview")}>Preview Quote</Button>
         <Button kind="tertiary" on:click={() => console.log("Email")}>Email Quote</Button>
