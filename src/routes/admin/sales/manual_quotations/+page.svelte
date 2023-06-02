@@ -3,6 +3,10 @@
     import Table from "$lib/components/Table.svelte";
     const headers = [
       {
+        key: "created_at",
+        value: "Booking Date",
+      },
+      {
         key: "reference",
         value: "Reference",
       },
@@ -17,10 +21,10 @@
     ];
   </script>
   
-  <PageHeader name="Quotations" table="forms" manual={true} />
+  <PageHeader name="Quotations" table="forms" />
   <Table
     table="forms"
-    fields="id, reference, first_name, last_name"
+    fields="id, created_at, reference, first_name, last_name"
     filters={[{
         type: "eq",
         column: "type",
