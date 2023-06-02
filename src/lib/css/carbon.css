@@ -16405,7 +16405,8 @@ not all and (min-resolution: 0.001dpcm) {
 }
 
 .bx--number--nosteppers input[type=number] {
-    padding-right: 3rem
+    @apply px-2;
+    /* padding-right: 3rem */
 }
 
 .bx--number--nosteppers .bx--number__invalid {
