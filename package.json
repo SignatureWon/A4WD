@@ -29,6 +29,7 @@
 		"@tiptap/extension-link": "^2.0.3",
 		"@tiptap/pm": "^2.0.3",
 		"@tiptap/starter-kit": "^2.0.3",
+		"crypto-js": "^4.1.1",
 		"dayjs": "^1.11.7",
 		"easy-soap-request": "^5.2.0",
 		"fast-xml-parser": "^4.1.3",

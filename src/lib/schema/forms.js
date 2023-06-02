@@ -545,7 +545,7 @@ export const forms = {
   card_code: {
     label: "Security Code (CVV)",
     placeholder: "",
-    type: "number",
+    type: "text",
     default: null,
     required: true,
     related: false,
