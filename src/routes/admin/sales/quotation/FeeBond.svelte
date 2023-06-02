@@ -7,10 +7,21 @@
   export let bonds;
   export let selected;
 
-  let gross = list[selected].gross * (duration < (list[selected].cap || 0) ? duration : list[selected].cap || 0);
-  let nett = list[selected].nett * (duration < (list[selected].cap || 0) ? duration : list[selected].cap || 0);
+  console.log("list", list);
+  console.log("selected", selected);
+
+  let gross = 0
+  let nett = 0
+  let name = ""
+
+  if (list.length) {
+    gross = list[selected].gross * (duration < (list[selected].cap || 0) ? duration : list[selected].cap || 0);
+    nett = list[selected].nett * (duration < (list[selected].cap || 0) ? duration : list[selected].cap || 0);
+    name = `${list[selected].display_name}: $${format.currency(list[selected].gross)} x ${duration} days`;
+  }
+
   fees = {
-    name: `${list[selected].display_name}: $${format.currency(list[selected].gross)} x ${duration} days`,
+    name: name,
     total: gross,
     nett: nett,
     profit: gross - nett,
