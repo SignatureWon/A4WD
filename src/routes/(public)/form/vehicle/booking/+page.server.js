@@ -333,6 +333,6 @@ export const actions = {
         console.error(error);
       });
 
-    throw redirect(303, `/form/vehicle/quote/success`);
+    throw redirect(303, `/form/vehicle/booking/success`);
   },
 };

@@ -4,7 +4,7 @@
   export let others;
   export let fees;
 
-  console.log(fees);
+  // console.log(fees);
 
   if (one_way > 0) {
     fees.push({

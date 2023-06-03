@@ -7,7 +7,7 @@
     if (item.discount_amount > 0) {
       fees.push({
         name: item.name,
-        total: -item.discount_amount,
+        total: item.discount_amount,
         nett: 0,
         profit: 0,
       });

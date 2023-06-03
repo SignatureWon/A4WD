@@ -6,31 +6,43 @@
   export let duration;
   export let bonds;
   export let selected;
+  export let count;
 
-  console.log("list", list);
-  console.log("selected", selected);
+  // console.log("list", list);
+  // console.log("selected", selected);
 
-  let gross = 0
-  let nett = 0
-  let name = ""
+  let gross = 0;
+  let nett = 0;
+  let day = 0;
+  let name = "";
 
   if (list.length) {
-    gross = list[selected].gross * (duration < (list[selected].cap || 0) ? duration : list[selected].cap || 0);
-    nett = list[selected].nett * (duration < (list[selected].cap || 0) ? duration : list[selected].cap || 0);
-    name = `${list[selected].display_name}: $${format.currency(list[selected].gross)} x ${duration} days`;
+    if (Object.keys(bonds).length) {
+      list.forEach((item, index) => {
+        if (item.id === bonds.id) {
+          selected = index;
+        }
+      });
+    }
+    day = duration < (list[selected].cap || 99999) ? duration : list[selected].cap;
+    gross = list[selected].gross * day;
+    nett = list[selected].nett * day;
+    name = `${list[selected].display_name}: $${format.currency(list[selected].gross)} x ${day} days`;
   }
 
   fees = {
     name: name,
     total: gross,
     nett: nett,
-    profit: gross - nett,
-    day: duration,
+    profit: nett > 0 ? gross - nett : 0,
+    day: day,
   };
+
+  // console.log("bond fees", fees);
 </script>
 
 <div class="border-b border-gray-200 py-3">
-  <RadioButtonGroup orientation="vertical" selected={0} class="w-full [&>fieldset]:w-full">
+  <RadioButtonGroup orientation="vertical" {selected} class="w-full [&>fieldset]:w-full">
     {#each list as b, i}
       <div class="flex mb-2 justify-between w-full pt-2 pb-3">
         <div class="flex-1 flex justify-start">
@@ -44,17 +56,31 @@
             value={i}
             on:change={() => {
               selected = i;
-              let gross = b.gross * (duration < (b.cap || 0) ? duration : b.cap || 0);
-              let nett = b.nett * (duration < (b.cap || 0) ? duration : b.cap || 0);
+
+              day = duration < (list[selected].cap || 99999) ? duration : list[selected].cap;
+              gross = list[selected].gross * day;
+              nett = list[selected].nett * day;
+              name = `${list[selected].display_name}: $${format.currency(list[selected].gross)} x ${day} days`;
               fees = {
-                name: `${b.display_name}: $${format.currency(b.gross)} x ${duration} days`,
+                name: name,
                 total: gross,
                 nett: nett,
-                profit: gross - nett,
-                day: duration,
+                profit: nett > 0 ? gross - nett : 0,
+                day: day,
               };
 
+              // let gross = b.gross * (duration < (b.cap || 0) ? duration : b.cap || 0);
+              // let nett = b.nett * (duration < (b.cap || 0) ? duration : b.cap || 0);
+              // fees = {
+              //   name: `${b.display_name}: $${format.currency(b.gross)} x ${duration} days`,
+              //   total: gross,
+              //   nett: nett,
+              //   profit: nett > 0 ? gross - nett : 0,
+              //   day: duration,
+              // };
+
               bonds = b;
+              count();
               //   updateQuote();
               // console.log(details);
             }}
@@ -64,7 +90,7 @@
           ${format.currency((b.gross || 0) * (b.cap ? (b.cap > duration ? duration : b.cap) : duration))}
         </div>
       </div>
-      {#if b.gross > b.nett && b.nett !== 0}
+      {#if b.gross > b.nett && b.nett > 0}
         <div class="flex w-full mb-2 justify-between text-sm text-gray-400">
           <div class="pl-7">
             Nett: ${b.nett} x {duration} days

@@ -4,7 +4,8 @@
   export let fees;
   export let daily;
   export let type;
-  export let discount;
+  export let quote;
+  export let count;
 
   const getDailyRates = () => {
     fees = [];
@@ -47,6 +48,7 @@
         day: arr.length,
       });
     }
+    count();
   };
   let subtotal;
   const getDailyTotal = () => {
@@ -61,8 +63,10 @@
       subtotal.profit += item.profit;
     });
 
-    subtotal.total -= discount.value
-    subtotal.profit -= discount.value
+    subtotal.total -= quote.add_discount;
+    subtotal.profit -= quote.add_discount;
+
+    count();
   };
   $: getDailyRates();
   $: getDailyTotal();
@@ -98,10 +102,10 @@
 {/each}
 <div class="flex border-b border-gray-200 py-3 bg-gray-100 px-2">
   <div class="flex-1">
-    <TextInput placeholder="Discount for daily basic rental" bind:value={discount.name} />
+    <TextInput placeholder="Discount for daily basic rental" bind:value={quote.add_discount_remark} />
   </div>
   <div class="text-right w-20">
-    <NumberInput bind:value={discount.value} hideSteppers on:keyup={getDailyTotal} class="text-right" />
+    <NumberInput bind:value={quote.add_discount} hideSteppers on:keyup={getDailyTotal} class="text-right" />
   </div>
 </div>
 <div class="border-b border-gray-200 py-3 bg-gray-50 px-2">
@@ -118,9 +122,7 @@
     </div>
   </div>
   <div class="flex mb-2 text-sm text-gray-400">
-    <div class="flex-1">
-      Total Commission
-    </div>
+    <div class="flex-1">Total Commission</div>
     <div class="text-right">
       {format.currency(subtotal.profit)}
     </div>

@@ -4,10 +4,12 @@
   import FormSection from "$lib/components/admin/FormSection.svelte";
   import InputText from "$lib/components/admin/InputText.svelte";
   import InputSelect from "$lib/components/admin/InputSelect.svelte";
+  import { html } from "$lib/html.js";
   import {
     Button,
     Checkbox,
     InlineNotification,
+    Modal,
     NumberInput,
     RadioButton,
     RadioButtonGroup,
@@ -15,6 +17,7 @@
     SelectItem,
     TextArea,
     TextInput,
+    Toggle,
   } from "carbon-components-svelte";
   import { format } from "$lib/format.js";
   import { env } from "$env/dynamic/public";
@@ -22,7 +25,7 @@
   import Trip from "../Trip.svelte";
   import Customer from "../Customer.svelte";
   import Driver from "../Driver.svelte";
-  import { bind } from "svelte/internal";
+  import { bind, onMount } from "svelte/internal";
   import Section from "../Section.svelte";
   import Passenger from "../Passenger.svelte";
   import FeeDaily from "../FeeDaily.svelte";
@@ -33,6 +36,7 @@
 
   export let data;
 
+  console.log(data);
   let paneHeight = 0;
   const d = data.detail;
   let details = data.quote.details;
@@ -67,18 +71,10 @@
   let fee_discount = {
     daily: {
       name: "",
-      value: "",
+      value: 0,
     },
     specials: [],
   };
-
-  let total_gross = 0
-  let total_commission = 0
-  const countFees = () => {
-
-  }
-
-
 
   // const lookupCustomer = async () => {
   //   noCustomer = false;
@@ -147,8 +143,8 @@
       sum += fee.profit;
     });
     quote.agent_fee = sum;
-    quote.system_fee = ((quote.agent_fee - quote.add_discount) * 8) / 100;
-    quote.nett_profit = quote.agent_fee - quote.add_discount - quote.system_fee;
+    quote.system_fee_fee = ((quote.agent_fee - quote.add_discount) * 8) / 100;
+    quote.nett_profit = quote.agent_fee - quote.add_discount - quote.system_fee_fee;
     return sum;
   };
   const getTotalSupplierFee = () => {
@@ -232,22 +228,22 @@
       }
     }
   };
-  const updateQuote = () => {
-    agentFees = [];
-    supplierFees = [];
-    pickupFees = [];
-    getDailyRates();
-    getBonds();
-    getOneways();
-    getAddons();
-    getSpecials();
-    getFees();
-    getCcs();
-    getTerms();
-    getTotalAgentFee();
-    getTotalAgentCommission();
-    getTotalSupplierFee();
-  };
+  // const updateQuote = () => {
+  //   agentFees = [];
+  //   supplierFees = [];
+  //   pickupFees = [];
+  //   getDailyRates();
+  //   getBonds();
+  //   getOneways();
+  //   getAddons();
+  //   getSpecials();
+  //   getFees();
+  //   getCcs();
+  //   getTerms();
+  //   getTotalAgentFee();
+  //   getTotalAgentCommission();
+  //   getTotalSupplierFee();
+  // };
 
   // map data
   const info = {
@@ -290,21 +286,21 @@
     //   age: details.driver.age,
     //   license: details.driver.license,
     // },
-    terms: {
-      id: details.terms.id,
-      confirmation: {
-        text: details.terms.confirmation_terms,
-        pdf: details.terms.confirmation,
-      },
-      summary: {
-        text: details.terms.summary_terms,
-        pdf: details.terms.summary,
-      },
-      counter: {
-        text: details.terms.counter_terms,
-        pdf: details.terms.counter,
-      },
-    },
+    // terms: {
+    //   id: details.terms.id,
+    //   confirmation: {
+    //     text: details.terms.confirmation_terms,
+    //     pdf: details.terms.confirmation,
+    //   },
+    //   summary: {
+    //     text: details.terms.summary_terms,
+    //     pdf: details.terms.summary,
+    //   },
+    //   counter: {
+    //     text: details.terms.counter_terms,
+    //     pdf: details.terms.counter,
+    //   },
+    // },
     // daily: getDailyRates(),
     // bond: getBonds(),
     // oneway: getOneways(),
@@ -315,6 +311,84 @@
     // term: getTerms(),
     // quote: updateQuote(),
   };
+
+  // $: console.log("fees", fees);
+  // $: console.log("fee_discount", fee_discount);
+  // let quote.gross = 0;
+  // let quote.nett = 0;
+  // let quote.profit = 0;
+  // let quote.add_discount = 0;
+  // let quote.discount = 0;
+  // let quote.cc_fee = 0;
+  // let quote.receivables = 0;
+  // let quote.cc_charge = true;
+  // let quote.system_fee = 0;
+  // let quote.nett_profit = 0;
+
+  const countFees = () => {
+    quote.gross = 0;
+    quote.nett = 0;
+    quote.profit = 0;
+    // quote.add_discount = 0;
+    quote.discount = 0;
+    quote.receivables = 0;
+    quote.cc_fee = 0;
+    quote.system_fee = 0;
+    quote.nett_profit = 0;
+
+    // daily
+    fees.daily.forEach((obj) => {
+      quote.gross += obj.total;
+      quote.nett += obj.nett;
+      quote.profit += obj.profit;
+    });
+
+    // bond
+    quote.gross += fees.bond.total;
+    quote.nett += fees.bond.nett;
+    quote.profit += fees.bond.profit;
+
+    // addons
+    for (const key in fees.addons) {
+      let obj = fees.addons[key];
+      quote.gross += obj.total;
+      quote.nett += obj.nett;
+      quote.profit += obj.profit;
+    }
+
+    // others
+    fees.others.forEach((obj) => {
+      quote.gross += obj.total;
+      quote.nett += obj.nett;
+      quote.profit += obj.profit;
+    });
+
+    // discount
+    // quote.add_discount += fee_discount.daily.value;
+
+    // specials
+    fee_discount.specials.forEach((obj) => {
+      quote.discount += obj.total;
+    });
+
+    quote.cc_fee = quote.cc_charge ? (quote.gross - quote.discount) * 0.02 : 0;
+    quote.receivables = quote.gross - quote.discount + quote.cc_fee;
+
+    quote.profit -= quote.add_discount;
+    quote.system_fee = quote.profit * 0.08;
+    quote.nett_profit = quote.profit - quote.system_fee;
+  };
+
+  let open = false
+  let emailPreview = ""
+
+  onMount(() => {
+    countFees();
+  });
+
+  // countFees();
+
+  // $: countFees()
 </script>
 
 <svelte:window bind:innerHeight={paneHeight} />
@@ -336,12 +410,7 @@
         <Passenger passenger={details.passenger} />
       </Section>
       <Section title="Daily basic rental">
-        <FeeDaily
-          bind:fees={fees.daily}
-          daily={details.daily}
-          type={details.rates_type}
-          discount={fee_discount.daily}
-        />
+        <FeeDaily bind:fees={fees.daily} daily={details.daily} type={details.rates_type} {quote} count={countFees} />
       </Section>
       <Section title="Bond Options">
         <FeeBond
@@ -350,16 +419,11 @@
           bind:bonds={details.bonds}
           bind:selected={selected_bond}
           duration={d.duration}
+          count={countFees}
         />
       </Section>
       <Section title="Add-ons">
-        <FeeAddons
-          bind:fees={fees.addons}
-          addons={d.addon_items}
-          bind:selected={selected_addons}
-          bind:bond={fees.bond}
-          duration={d.duration}
-        />
+        <FeeAddons bind:fees={fees.addons} bind:addons={details.addons} list={d.addon_items} duration={d.duration} count={countFees} />
       </Section>
       <Section title="Other Fees">
         <FeeOthers bind:fees={fees.others} one_way={details.one_way} others={details.fees} />
@@ -372,53 +436,82 @@
   <div class="h-full w-80 overflow-y-auto bg-brand-50">
     <div class="overflow-y-auto" style="height: {paneHeight - 330}px">
       <div class="p-5">
-        <div class="py-2 border-b border-gray-200">
-          <h2 class="text-xl font-bold">Quote Details</h2>
-        </div>
-        <div class="pt-4">
-          <h2 class="font-bold">Summary</h2>
-        </div>
-        <div class="flex py-3 border-b border-gray-200">
-          <div class="flex-1">Total Receivable</div>
+        <h2 class="text-xl font-bold mb-2">Quote Summary</h2>
+        <div class="flex py-2 border-b border-gray-200">
+          <div class="flex-1">Total Gross</div>
           <div class="text-right ml-4">{format.currency(quote.gross)}</div>
         </div>
-        <div class="flex py-3 border-b border-gray-200">
-          <div class="flex-1">Total Commission</div>
-          <div class="text-right ml-4">{format.currency(quote.agent_fee)}</div>
+        <div class="flex py-2 border-b border-gray-200">
+          <div class="flex-1">Total Specials</div>
+          <div class="text-right ml-4">{format.currency(quote.discount)}</div>
         </div>
-        <div>
-          <div class="mb-2">Special Discount</div>
-          <TextArea labelText="Remark" bind:value={quote.add_discount_remark} class="mb-2" />
-          <NumberInput label="Amount" bind:value={quote.add_discount} on:blur={getTotalAgentCommission} />
+        <div class="flex py-2 border-b border-gray-200">
+          <div class="flex-1">
+            <Toggle
+              labelA=""
+              labelB=""
+              size="sm"
+              bind:toggled={quote.cc_charge}
+              on:toggle={countFees}
+              class="absolute -mt-1"
+            />
+            <div class="pl-10">Credit Card</div>
+          </div>
+          <div class="text-right ml-4">{format.currency(quote.cc_fee)}</div>
         </div>
-        <div class="flex py-3 border-b border-gray-200">
-          <div class="flex-1">Total System Commission (8%)</div>
+        <div class="flex py-2 border-b border-gray-200">
+          <div class="flex-1 font-bold">Total Receivables</div>
+          <div class="text-right ml-4 font-bold">{format.currency(quote.receivables)}</div>
+        </div>
+        <div class="flex py-2 border-b border-gray-200">
+          <div class="flex-1">Total Nett</div>
+          <div class="text-right ml-4">{format.currency(quote.nett)}</div>
+        </div>
+        <div class="flex py-2 border-b border-gray-200">
+          <div class="flex-1">Total Profit</div>
+          <div class="text-right ml-4">{format.currency(quote.profit)}</div>
+        </div>
+        <div class="flex py-2 border-b border-gray-200">
+          <div class="flex-1">Total Discount</div>
+          <div class="text-right ml-4">{format.currency(quote.add_discount)}</div>
+        </div>
+        <div class="flex py-2 border-b border-gray-200">
+          <div class="flex-1">Total System Fee</div>
           <div class="text-right ml-4">{format.currency(quote.system_fee)}</div>
         </div>
-        <div class="flex py-3 border-b border-gray-200 font-bold">
-          <div class="flex-1">Nett Commission</div>
-          <div class="text-right ml-4">{format.currency(quote.nett_profit)}</div>
+        <div class="flex py-2 border-b border-gray-200">
+          <div class="flex-1 font-bold">Total A4 Profit</div>
+          <div class="text-right ml-4 font-bold">{format.currency(quote.nett_profit)}</div>
         </div>
-        <div class="pt-4">
-          <h2 class="font-bold">Payment Schedule</h2>
-        </div>
-        {#each termsItems as item}
-          <div class="flex py-3 border-b border-gray-200">
-            <div class="flex-1">{item.name}</div>
-            <div class="text-right">{format.currency(item.total)}</div>
-          </div>
-        {/each}
       </div>
     </div>
     <div class="p-5">
-      <Button on:click={() => {
-        console.log("fees", fees);
-        console.log("fee_discount", fee_discount);
-      }} class="w-full">Update Quote</Button>
+      <form action="?/update" method="POST">
+        <Button
+        type="submit"
+        class="w-full">Update Quote</Button
+      >
+        <!-- <Button
+          on:click={() => {
+            console.log(quote);
+          }}
+          class="w-full"
+        >
+          Update Quote
+        </Button> -->
+        <input type="hidden" name="quote" value={JSON.stringify(quote)} />
+      </form>
       <div class="pt-4 flex justify-between">
-        <Button kind="ghost" on:click={() => console.log("Preview")}>Preview Quote</Button>
+        <Button kind="ghost" on:click={async () => {
+          emailPreview = await html.create(quote.id, "template_quote")
+          open = true
+        }}>Preview Quote</Button>
         <Button kind="tertiary" on:click={() => console.log("Email")}>Email Quote</Button>
       </div>
     </div>
   </div>
 </div>
+
+<Modal passiveModal bind:open modalHeading="Preview" on:open on:close>
+  {@html emailPreview}
+</Modal>

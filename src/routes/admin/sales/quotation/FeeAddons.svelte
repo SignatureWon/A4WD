@@ -3,15 +3,17 @@
   import { format } from "$lib/format.js";
 
   export let addons;
+  export let list;
   export let fees;
   export let duration;
+  export let count;
   // export let bond;
 
-  let list = [];
+  let poplist = [];
   const getAddons = () => {
-    list = [];
-    addons.forEach((item) => {
-      item.addons.forEach((a) => {
+    poplist = [];
+    list.forEach((item, i1) => {
+      item.addons.forEach((a, i2) => {
         let gross = a.daily ? a.gross_rate * duration : a.gross_rate;
         let nett = a.daily ? a.nett_rate * duration : a.nett_rate;
 
@@ -22,35 +24,60 @@
           nett = a.nett_cap;
         }
 
-        list.push({
+        let id = `${i1}-${i2}`
+        let selected = false
+
+        for (const key in addons) {
+          if (key === id) {
+            selected = true
+          }
+        }
+
+        let addon = {
+          id: id,
+          selected: selected,
           name: a.name,
           total: gross,
           nett: nett,
-          profit: gross - nett,
+          profit: nett > 0 ? gross - nett : 0,
           daily: a.daily,
           daily_gross: a.gross_rate,
           daily_nett: a.nett_rate,
           day: duration,
           description: a.description,
-        });
+        }
+
+        poplist.push(addon);
+
+        if (selected) {
+          fees[id] = addon;
+        }
       });
     });
+    
+    count();
   };
   $: getAddons();
 </script>
 
-{#each list as addon}
+{#each poplist as addon}
   <div class="border-b border-gray-200 pt-3 pb-1">
     <div class="flex justify-between mb-2">
       <div class="flex">
         <div>
           <Checkbox
+            checked={addon.selected}
             on:change={(e) => {
               if (e.target.checked) {
-                fees[addon.name] = addon
+                fees[addon.id] = addon;
               } else {
-                delete fees[addon.name];
+                delete fees[addon.id];
               }
+              addons = fees
+
+              console.log(addons);
+              
+              count();
             }}
           />
         </div>

@@ -165,6 +165,7 @@ export const html = {
     };
     const getAddons = () => {
       let addons = quote.details.addons;
+      console.log(addons);
       for (const key in addons) {
         const addon = addons[key];
         let gross = addon.gross_rate;
@@ -186,7 +187,7 @@ export const html = {
           }
         }
         const row = {
-          name: `Add-on: ${addon.name}${addon.daily ? `$${addon.gross_rate} x ${duration} days` : ""}`,
+          name: `Add-on: ${addon.name}${addon.daily ? `$${gross} x ${duration} days` : ""}`,
           total: gross,
           nett: nett,
           profit: gross - nett,
@@ -399,7 +400,6 @@ let email = `
 body{
     margin:0;
     padding:0;
-    font-size: 12px;
 }
 
 img{
