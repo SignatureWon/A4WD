@@ -14,10 +14,12 @@ export const html = {
 
     const { data: quote } = await supabase
       .from("quotes")
-      .select("*, users (id, first_name, last_name, email, phone, address_1, address_2, postcode, city, state, country)")
+      .select(
+        "*, users (id, first_name, last_name, email, phone, address_1, address_2, postcode, city, state, country)"
+      )
       .eq("id", quote_id)
       .single();
-      // console.log("quote", quote);
+    // console.log("quote", quote);
 
     const { data: vehicle } = await supabase
       .from("vehicles")
@@ -46,6 +48,8 @@ export const html = {
       agentFees.forEach((fee) => {
         sum += fee.profit;
       });
+
+      sum -= quote.add_discount
       return sum;
     };
     const totalSupplierFee = () => {
@@ -105,8 +109,7 @@ export const html = {
           profit: 0,
         });
       }
-    }
-
+    };
 
     const getBonds = () => {
       const bond = Object.keys(quote.details.bonds).length ? quote.details.bonds : quote.details.bond;
@@ -118,11 +121,11 @@ export const html = {
       if ("gross" in bond) {
         gross = bond.gross * duration;
         nett = bond.nett * duration;
-        profit = gross - nett;
+        profit = nett > 0 ? gross - nett : 0;
       } else {
-        bond.gross = 0
-        bond.nett = 0
-        bond.bond = 0
+        bond.gross = 0;
+        bond.nett = 0;
+        bond.bond = 0;
       }
 
       if (bond.gross > 0) {
@@ -139,7 +142,10 @@ export const html = {
         }
       }
       pickupFees.push({
-        name: `Bond: $${format.currency(bond.bond, 0)} is taken from the hirer's credit or debit card <div style="font-size: 14px; color: #999999">Refundable as per supplier's Summary of Terms<div>`,
+        name: `Bond: $${format.currency(
+          bond.bond,
+          0
+        )} is taken from the hirer's credit or debit card <div style="font-size: 14px; color: #999999">Refundable as per supplier's Summary of Terms<div>`,
         total: bond.bond,
         nett: 0,
         profit: 0,
@@ -165,7 +171,6 @@ export const html = {
     };
     const getAddons = () => {
       let addons = quote.details.addons;
-      console.log(addons);
       for (const key in addons) {
         const addon = addons[key];
         let gross = addon.gross_rate;
@@ -187,10 +192,10 @@ export const html = {
           }
         }
         const row = {
-          name: `Add-on: ${addon.name}${addon.daily ? `$${gross} x ${duration} days` : ""}`,
+          name: `Add-on: ${addon.name} ${addon.daily ? `$${addon.gross_rate} x ${duration} days` : ""}`,
           total: gross,
           nett: nett,
-          profit: gross - nett,
+          profit: nett > 0 ? gross - nett : 0,
         };
         if (addon.gross_rate > addon.nett_rate) {
           agentFees.push(row);
@@ -234,11 +239,20 @@ export const html = {
       }
     };
     const getCcs = () => {
-      let fee = (totalAgentFee() * 2) / 100;
-      if (fee > 0) {
+      if (quote.cc_charge) {
+        let fee = (totalAgentFee() * 2) / 100;
+        if (fee > 0) {
+          agentFees.push({
+            name: "Credit card surcharge (2%)",
+            total: fee,
+            nett: 0,
+            profit: 0,
+          });
+        }
+      } else {
         agentFees.push({
-          name: "Credit card surcharge (2%)",
-          total: fee,
+          name: "Credit card surcharge (WAIVED)",
+          total: 0,
           nett: 0,
           profit: 0,
         });
@@ -391,7 +405,7 @@ export const html = {
       term: getTerms(),
     };
 
-let email = `
+    let email = `
 <!DOCTYPE htmlPUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
@@ -420,7 +434,7 @@ a img{
 
 table, td{
     border-collapse:collapse;
-    font-size: 12px;
+    font-size: 14px;
 }
 
 #bodyTable{
@@ -434,7 +448,7 @@ table, td{
 </head>
 <body>
 <div
-  style="width: 600px; background-color: #ffffff; margin: auto; padding: 0"
+  style="width: 600px; background-color: #ffffff; margin: auto; padding: 0; font-size: 14px"
 >
   <table width="600" style="margin-bottom: 30px;">
     <tr>
@@ -602,14 +616,14 @@ table, td{
         </div>
         <div style="margin-bottom: 20px">
           <a
-            href="https://www.australia4wdrentals.com/vehicles/${info.vehicle
-              .slug}">View vehicle specs</a
+            href="https://www.australia4wdrentals.com/vehicles/${info.vehicle.slug}">View vehicle specs</a
           >
         </div>
         <div>
           <img class="imageFix"
-            src="https://api.australia4wdrentals.com/storage/v1/render/image/public/contents/${info
-              .vehicle.image}?width=300&height=300&resize=contain"
+            src="https://api.australia4wdrentals.com/storage/v1/render/image/public/contents/${
+              info.vehicle.image
+            }?width=300&height=300&resize=contain"
             alt=${info.vehicle.name}
           />
         </div>
@@ -687,9 +701,9 @@ table, td{
       >
         <div style="font-size: 12px; color: #999999">Total ($)</div>
       </td>
-    </tr>`
-  agentFees.forEach(item => {
-  email += `
+    </tr>`;
+    agentFees.forEach((item) => {
+      email += `
     <tr>
       <td valign="top" align="left" style="border: 1px solid #CCCCCC">
         <div>
@@ -699,9 +713,9 @@ table, td{
       <td valign="top" align="right" style="border: 1px solid #CCCCCC">
         <div>${format.currency(item.total)}</div>
       </td>
-    </tr>`
-  })
-  email += `
+    </tr>`;
+    });
+    email += `
     <tr>
       <td
         valign="top"
@@ -742,9 +756,9 @@ table, td{
       >
         <div style="font-size: 12px; color: #999999">Total ($)</div>
       </td>
-    </tr>`
-    supplierFees.forEach(item => {
-    email += `
+    </tr>`;
+    supplierFees.forEach((item) => {
+      email += `
       <tr>
         <td valign="top" align="left" style="border: 1px solid #CCCCCC">
           <div>
@@ -754,8 +768,8 @@ table, td{
         <td valign="top" align="right" style="border: 1px solid #CCCCCC">
           <div>${format.currency(item.total)}</div>
         </td>
-      </tr>`
-    })
+      </tr>`;
+    });
     email += `
     <tr>
       <td
@@ -825,7 +839,7 @@ table, td{
     </div>
   </div>
   <div
-    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 18px"
+    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 16px"
   >
     Payment Details & Schedule
   </div>
@@ -834,17 +848,17 @@ table, td{
     cellpadding="10"
     cellspacing="0"
     style="margin-bottom: 10px;"
-  >`
-  termsItems.forEach(item => {
-  email += `
+  >`;
+    termsItems.forEach((item) => {
+      email += `
     <tr>
       <td style="border: 1px solid #CCCCCC">${item.name}</td>
       <td style="border: 1px solid #CCCCCC; text-align: right"
         >${format.currency(item.total)}</td
       >
-    </tr>`
-  })
-  email += `
+    </tr>`;
+    });
+    email += `
   </table>
   <div style="margin-bottom: 10px;">
     The security deposit and balance payment to the agent is taken from the
@@ -852,7 +866,7 @@ table, td{
     secure online booking form.
   </div>
   <div
-    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 18px"
+    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 16px"
   >
     Pay At Pick-Up
   </div>
@@ -861,20 +875,20 @@ table, td{
     cellpadding="10"
     cellspacing="0"
     style="margin-bottom: 10px;"
-    >`
-    pickupFees.forEach(item => {
-    email += `
+    >`;
+    pickupFees.forEach((item) => {
+      email += `
       <tr>
         <td style="border: 1px solid #CCCCCC">${item.name}</td>
         <td style="border: 1px solid #CCCCCC; text-align: right"
           >${format.currency(item.total)}</td
         >
-      </tr>`
-    })
-  email += `
+      </tr>`;
+    });
+    email += `
   </table>
   <div
-    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 18px"
+    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 16px"
   >
     Alternative payment options
   </div>
@@ -894,38 +908,35 @@ table, td{
     vehicle. You will also find links to the user agreement and agent terms and
     conditions. Please ensure that you read and understand the terms and
     conditions found at the following links:
-  </div>`
+  </div>`;
     if (info.terms.confirmation.text !== "<p></p>" || info.terms.confirmation.pdf) {
-    email += `
+      email += `
     &bull; 
         <a
-          href="https://www.australia4wdrentals.com/terms/${info.terms
-            .id}/confirmation"
+          href="https://www.australia4wdrentals.com/terms/${info.terms.id}/confirmation"
           style="color: #1d4ed8; font-size: 12px">Booking Confirmation Terms</a
         >
-      <br>`
+      <br>`;
     }
     if (info.terms.summary.text !== "<p></p>" || info.terms.summary.pdf) {
-    email += `
+      email += `
       &bull; 
         <a
-          href="https://www.australia4wdrentals.com/terms/${info.terms
-            .id}/summary"
+          href="https://www.australia4wdrentals.com/terms/${info.terms.id}/summary"
           style="color: #1d4ed8; font-size: 12px">Summary of Terms</a
         >
-      <br>`
+      <br>`;
     }
     if (info.terms.counter.text !== "<p></p>" || info.terms.counter.pdf) {
-    email += `
+      email += `
       &bull; 
         <a
-          href="https://www.australia4wdrentals.com/terms/${info.terms
-            .id}/counter"
-          style="color: #1d4ed8">Counter Agreement</a
+          href="https://www.australia4wdrentals.com/terms/${info.terms.id}/counter"
+          style="color: #1d4ed8; font-size: 12px">Counter Agreement</a
         >
-      <br>`
+      <br>`;
     }
-email += `
+    email += `
   <div
     style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 12px"
   >
@@ -1073,7 +1084,7 @@ email += `
   </div>
 </div>
 </body>
-</html>`
+</html>`;
     return email;
   },
 };

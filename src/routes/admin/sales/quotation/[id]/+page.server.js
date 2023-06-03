@@ -5,6 +5,10 @@ import isBetween from "dayjs/plugin/isBetween";
 dayjs.extend(isBetween);
 import { cal } from "$lib/cal";
 import { error, redirect } from "@sveltejs/kit";
+import { html } from "$lib/html.js";
+import puppeteer from "puppeteer";
+import { env } from "$env/dynamic/public";
+import sgMail from "@sendgrid/mail";
 
 export async function load({ url, params }) {
   const keys = [
@@ -135,13 +139,13 @@ export const actions = {
     let fd = Object.fromEntries(formData.entries());
 
     const quote = JSON.parse(fd.quote);
-    const id = quote.id
+    const id = quote.id;
 
     console.log("id", id);
 
-    delete quote.id
-    delete quote.created_at
-    delete quote.updated_at
+    delete quote.id;
+    delete quote.created_at;
+    delete quote.updated_at;
 
     console.log("quote", quote);
 
@@ -155,6 +159,80 @@ export const actions = {
 
     throw redirect(303, url.pathname);
   },
+  download: async ({ request, url, params, locals }) => {
+    const browser = await puppeteer.launch({headless: false});
+    const page = await browser.newPage();
+    const content = await html.create(params.id, "template_quote");
+    await page.setContent(content);
+    const buffer = await page.pdf({ format: "A4" });
+    // await browser.close();
+    // console.log(buffer);
+    throw redirect(303, url.pathname);
+  },
+  email: async ({ request, url, params, locals }) => {
+    const emailBody = await html.create(params.id, "template_quote");
+    const { data: emailData } = await supabase.from("constants").select("name").eq("type", "email_quote").single();
+    const { data: dataQuote } = await supabase.from("quotes").select().eq("id", params.id).single();
+    let getBond = Object.keys(dataQuote.details.bonds).length ? dataQuote.details.bonds : dataQuote.details.bond;
+    const { data: dataUser } = await supabase.from("users").select().eq("id", dataQuote.users).single();
+
+    let bcc = emailData.name.split(",")
+    let bccList = []
+    bcc.forEach(email => {
+      bccList.push({
+        email: email.trim()
+      })
+    })
+    let emailResponse = ""
+    sgMail.setApiKey(env.PUBLIC_SENDGRID_API_KEY);
+    await sgMail
+      .send({
+        personalizations: [
+          {
+            to: [
+              {
+                email: dataUser.email,
+                name: `${dataUser.first_name.trim()} ${dataUser.last_name.trim()}`,
+              },
+            ],
+            // bcc: bccList,
+          },
+        ],
+        from: {
+          email: "info@australia4wdrentals.com",
+          name: "Australia 4WD Rentals",
+        },
+        subject: `Quote: ${dataQuote.details.vehicle.name.trim()}: ${
+            dataQuote.details.pickup.name.trim()
+          }, ${dayjs(dataQuote.details.date_start).format("DD MMM YYYY")} - ${
+            dataQuote.details.dropoff.name.trim()
+          }, ${dayjs(dataQuote.details.date_end).format("DD MMM YYYY")} (${
+            getBond.display_name.trim()
+          }) ${dataUser.first_name.trim()} ${dataUser.last_name.trim()}`,
+        content: [
+          {
+            type: "text/html",
+            value: emailBody,
+          },
+        ],
+        // mail_settings: {
+        //   sandbox_mode: {
+        //     enable: true,
+        //   },
+        // },
+      })
+      .then(() => {
+        emailResponse = "Email sent"
+        console.log("Email sent");
+      })
+      .catch((error) => {
+        emailResponse = error
+        console.error(error);
+      });
+
+    throw redirect(303, url.pathname);
+  },
+
   // delete: async ({ request, url, params, locals }) => {
   //   await db.actions.delete(request, url, locals, {
   //     id: params.id,
@@ -168,3 +246,25 @@ export const actions = {
   //   });
   // },
 };
+
+// async function downloadFiles(url, count) {
+//   const browser = await puppeteer.launch({
+//       headless: false,
+//       args: ['--no-sandbox', '--disable-setuid-sandbox']
+//   });
+//   const page = await browser.newPage();
+//   for (let i = 0; i < count; i++) {
+//       const pageUrl = await url(i);
+//       try {
+//           await page.goto(pageUrl);
+//           await page.pdf({
+//               path: `pdf-${i}.pdf`,
+//               format: 'A4',
+//               printBackground: true
+//           });
+//       } catch (e) {
+//           console.log(`Error loading ${pageUrl}`);
+//       }
+//   }
+//   await browser.close();
+// }

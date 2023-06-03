@@ -4,7 +4,9 @@
   import FormSection from "$lib/components/admin/FormSection.svelte";
   import InputText from "$lib/components/admin/InputText.svelte";
   import InputSelect from "$lib/components/admin/InputSelect.svelte";
+  import { enhance } from "$app/forms";
   import { html } from "$lib/html.js";
+  import { jsPDF } from "jspdf";
   import {
     Button,
     Checkbox,
@@ -36,7 +38,7 @@
 
   export let data;
 
-  console.log(data);
+  // console.log(data);
   let paneHeight = 0;
   const d = data.detail;
   let details = data.quote.details;
@@ -371,16 +373,16 @@
       quote.discount += obj.total;
     });
 
-    quote.cc_fee = quote.cc_charge ? (quote.gross - quote.discount) * 0.02 : 0;
-    quote.receivables = quote.gross - quote.discount + quote.cc_fee;
+    quote.cc_fee = quote.cc_charge ? (quote.gross - quote.discount - quote.add_discount) * 0.02 : 0;
+    quote.receivables = quote.gross - quote.discount - quote.add_discount + quote.cc_fee;
 
     quote.profit -= quote.add_discount;
     quote.system_fee = quote.profit * 0.08;
     quote.nett_profit = quote.profit - quote.system_fee;
   };
 
-  let open = false
-  let emailPreview = ""
+  let open = false;
+  let emailPreview = "";
 
   onMount(() => {
     countFees();
@@ -423,7 +425,13 @@
         />
       </Section>
       <Section title="Add-ons">
-        <FeeAddons bind:fees={fees.addons} bind:addons={details.addons} list={d.addon_items} duration={d.duration} count={countFees} />
+        <FeeAddons
+          bind:fees={fees.addons}
+          bind:addons={details.addons}
+          list={d.addon_items}
+          duration={d.duration}
+          count={countFees}
+        />
       </Section>
       <Section title="Other Fees">
         <FeeOthers bind:fees={fees.others} one_way={details.one_way} others={details.fees} />
@@ -444,6 +452,10 @@
         <div class="flex py-2 border-b border-gray-200">
           <div class="flex-1">Total Specials</div>
           <div class="text-right ml-4">{format.currency(quote.discount)}</div>
+        </div>
+        <div class="flex py-2 border-b border-gray-200">
+          <div class="flex-1">Total Discount</div>
+          <div class="text-right ml-4">{format.currency(quote.add_discount)}</div>
         </div>
         <div class="flex py-2 border-b border-gray-200">
           <div class="flex-1">
@@ -472,10 +484,6 @@
           <div class="text-right ml-4">{format.currency(quote.profit)}</div>
         </div>
         <div class="flex py-2 border-b border-gray-200">
-          <div class="flex-1">Total Discount</div>
-          <div class="text-right ml-4">{format.currency(quote.add_discount)}</div>
-        </div>
-        <div class="flex py-2 border-b border-gray-200">
           <div class="flex-1">Total System Fee</div>
           <div class="text-right ml-4">{format.currency(quote.system_fee)}</div>
         </div>
@@ -487,10 +495,7 @@
     </div>
     <div class="p-5">
       <form action="?/update" method="POST">
-        <Button
-        type="submit"
-        class="w-full">Update Quote</Button
-      >
+        <Button type="submit" class="w-full">Update Quote</Button>
         <!-- <Button
           on:click={() => {
             console.log(quote);
@@ -501,17 +506,60 @@
         </Button> -->
         <input type="hidden" name="quote" value={JSON.stringify(quote)} />
       </form>
-      <div class="pt-4 flex justify-between">
-        <Button kind="ghost" on:click={async () => {
-          emailPreview = await html.create(quote.id, "template_quote")
-          open = true
-        }}>Preview Quote</Button>
-        <Button kind="tertiary" on:click={() => console.log("Email")}>Email Quote</Button>
+      <div class="pt-2 grid grid-cols-2 gap-2">
+        <div>
+          <Button
+            kind="tertiary"
+            on:click={async () => {
+              emailPreview = await html.create(quote.id, "template_quote");
+              open = true;
+            }}
+            class="px-0.5 w-full">Preview Quote</Button
+          >
+        </div>
+        <!-- <div>
+          <form action="?/download" method="POST">
+            <Button kind="tertiary" type="submit" class="px-0.5 w-full">Download</Button>
+          </form>
+        </div> -->
+        <div>
+          <form action="?/email" method="POST">
+            <Button kind="tertiary" type="submit" class="px-0.5 w-full">Email Quote</Button>
+          </form>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
 <Modal passiveModal bind:open modalHeading="Preview" on:open on:close>
-  {@html emailPreview}
+  <div class="fixed">
+    <Button
+      on:click={async () => {
+        const doc = new jsPDF();
+        // const elem = document.getElementById("htmlcontent");
+        doc.html(document.getElementById("htmlcontent"), {
+          callback: function (doc) {
+            doc.save("Generated.pdf");
+          },
+          x: 15,
+          y: 15,
+          width: 180, //target width in the PDF document
+          windowWidth: 650, //window width in CSS pixels
+          pagesplit: true,
+        });
+        // await doc
+        //         .html(elem, 15, 15, {
+        //           width: 170,
+        //           //   elementHandlers: specialElementHandlers,
+        //         })
+        //         .save("test.pdf");
+      }}>DOWNLOAD</Button
+    >
+  </div>
+  <div class="pt-20">
+    <div id="htmlcontent">
+      {@html emailPreview}
+    </div>
+  </div>
 </Modal>

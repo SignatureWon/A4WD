@@ -32,7 +32,7 @@ export const actions = {
       state: fd.state,
       country: fd.country,
     };
-    console.log("USER", user, fd.user_id);
+    // console.log("USER", user, fd.user_id);
 
     if (fd.user_id === "") {
       const { data: dataUser, error: errUser } = await supabase.from("users").insert(user).select().single();

@@ -45,6 +45,10 @@
           daily_nett: a.nett_rate,
           day: duration,
           description: a.description,
+          nett_rate: a.nett_rate,
+          gross_rate: a.gross_rate,
+          nett_cap: 0,
+          gross_cap: 0,
         }
 
         poplist.push(addon);
