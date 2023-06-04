@@ -458,7 +458,7 @@
           <div class="text-right ml-4">{format.currency(quote.add_discount)}</div>
         </div>
         <div class="flex py-2 border-b border-gray-200">
-          <div class="flex-1">
+          <div class="flex-1 relative">
             <Toggle
               labelA=""
               labelB=""
@@ -514,17 +514,20 @@
               emailPreview = await html.create(quote.id, "template_quote");
               open = true;
             }}
-            class="px-0.5 w-full">Preview Quote</Button
+            class="p-0.5 h-6 w-full">Preview Quote</Button
           >
         </div>
-        <!-- <div>
+        <div>
           <form action="?/download" method="POST">
-            <Button kind="tertiary" type="submit" class="px-0.5 w-full">Download</Button>
+            <Button kind="tertiary" type="submit" class="p-0.5 h-6 w-full">Generate PDF</Button>
           </form>
-        </div> -->
+        </div>
+        <div>
+          <Button kind="tertiary" href="https://api.australia4wdrentals.com/storage/v1/object/public/quotes/Q{388000 + quote.id}.pdf" target="_blank" class="p-0.5 h-6 w-full block">Download PDF</Button>
+        </div>
         <div>
           <form action="?/email" method="POST">
-            <Button kind="tertiary" type="submit" class="px-0.5 w-full">Email Quote</Button>
+            <Button kind="tertiary" type="submit" class="p-0.5 h-6 w-full">Email Quote</Button>
           </form>
         </div>
       </div>
@@ -533,7 +536,7 @@
 </div>
 
 <Modal passiveModal bind:open modalHeading="Preview" on:open on:close>
-  <div class="fixed">
+  <!-- <div class="fixed">
     <Button
       on:click={async () => {
         const doc = new jsPDF();
@@ -557,9 +560,9 @@
       }}>DOWNLOAD</Button
     >
   </div>
-  <div class="pt-20">
+  <div class="pt-20"> -->
     <div id="htmlcontent">
       {@html emailPreview}
     </div>
-  </div>
+  <!-- </div> -->
 </Modal>

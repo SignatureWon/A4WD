@@ -160,11 +160,48 @@ export const actions = {
     throw redirect(303, url.pathname);
   },
   download: async ({ request, url, params, locals }) => {
-    const browser = await puppeteer.launch({headless: false});
+    const browser = await puppeteer.launch();
     const page = await browser.newPage();
     const content = await html.create(params.id, "template_quote");
     await page.setContent(content);
-    const buffer = await page.pdf({ format: "A4" });
+    const buffer = await page.pdf({
+      format: "A4",
+      margin: {
+        top: "1cm",
+        bottom: "1cm",
+        left: "1cm",
+        right: "1cm",
+      },
+    });
+
+    let filePDF = new Blob([buffer], {
+      type: "application/pdf",
+    });
+
+    const { data: uploadData, error: uploadError } = await supabase.storage
+      .from("quotes")
+      .upload(`Q${388000 + Number(params.id)}.pdf`, filePDF);
+    // if (uploadData) {
+    //   console.log(uploadData);
+    // }
+
+    if (uploadError) {
+      console.log("uploadError", uploadError);
+      const { data: updateData, error: updateError } = await supabase.storage
+        .from("quotes")
+        .update(`Q${388000 + Number(params.id)}.pdf`, filePDF, {
+          cacheControl: "3600",
+          upsert: true,
+        });
+      if (updateError) {
+        console.log(updateError);
+      }
+      // if (updateData) {
+      //   console.log(updateData);
+      // }
+    }
+    // const { data, error } = await supabase.storage.from("quotes").download(`Q${388000 + Number(params.id)}.pdf`);
+
     // await browser.close();
     // console.log(buffer);
     throw redirect(303, url.pathname);
@@ -176,14 +213,14 @@ export const actions = {
     let getBond = Object.keys(dataQuote.details.bonds).length ? dataQuote.details.bonds : dataQuote.details.bond;
     const { data: dataUser } = await supabase.from("users").select().eq("id", dataQuote.users).single();
 
-    let bcc = emailData.name.split(",")
-    let bccList = []
-    bcc.forEach(email => {
+    let bcc = emailData.name.split(",");
+    let bccList = [];
+    bcc.forEach((email) => {
       bccList.push({
-        email: email.trim()
-      })
-    })
-    let emailResponse = ""
+        email: email.trim(),
+      });
+    });
+    let emailResponse = "";
     sgMail.setApiKey(env.PUBLIC_SENDGRID_API_KEY);
     await sgMail
       .send({
@@ -202,13 +239,11 @@ export const actions = {
           email: "info@australia4wdrentals.com",
           name: "Australia 4WD Rentals",
         },
-        subject: `Quote: ${dataQuote.details.vehicle.name.trim()}: ${
-            dataQuote.details.pickup.name.trim()
-          }, ${dayjs(dataQuote.details.date_start).format("DD MMM YYYY")} - ${
-            dataQuote.details.dropoff.name.trim()
-          }, ${dayjs(dataQuote.details.date_end).format("DD MMM YYYY")} (${
-            getBond.display_name.trim()
-          }) ${dataUser.first_name.trim()} ${dataUser.last_name.trim()}`,
+        subject: `Quote: ${dataQuote.details.vehicle.name.trim()}: ${dataQuote.details.pickup.name.trim()}, ${dayjs(
+          dataQuote.details.date_start
+        ).format("DD MMM YYYY")} - ${dataQuote.details.dropoff.name.trim()}, ${dayjs(dataQuote.details.date_end).format(
+          "DD MMM YYYY"
+        )} (${getBond.display_name.trim()}) ${dataUser.first_name.trim()} ${dataUser.last_name.trim()}`,
         content: [
           {
             type: "text/html",
@@ -222,11 +257,11 @@ export const actions = {
         // },
       })
       .then(() => {
-        emailResponse = "Email sent"
+        emailResponse = "Email sent";
         console.log("Email sent");
       })
       .catch((error) => {
-        emailResponse = error
+        emailResponse = error;
         console.error(error);
       });
 

@@ -19,7 +19,7 @@ export const html = {
       )
       .eq("id", quote_id)
       .single();
-    // console.log("quote", quote);
+    // console.log("quote", quote, quote_id);
 
     const { data: vehicle } = await supabase
       .from("vehicles")
@@ -414,6 +414,7 @@ export const html = {
 body{
     margin:0;
     padding:0;
+    font-family: sans-serif;
 }
 
 img{
@@ -435,6 +436,7 @@ a img{
 table, td{
     border-collapse:collapse;
     font-size: 14px;
+    font-family: sans-serif;
 }
 
 #bodyTable{
@@ -444,11 +446,16 @@ table, td{
     width:100% !important;
     font-size: 12px;
 }
+@media print {
+  .no-print {
+    visibility: hidden;
+  }
+}
 </style>
 </head>
 <body>
 <div
-  style="width: 600px; background-color: #ffffff; margin: auto; padding: 0; font-size: 14px"
+  style="width: 600px; background-color: #ffffff; margin: auto; padding: 0; font-size: 14px; font-family: sans-serif;"
 >
   <table width="600" style="margin-bottom: 30px;">
     <tr>
@@ -664,7 +671,7 @@ table, td{
     width="600"
     cellpadding="20"
     cellspacing="0"
-    style="margin-bottom: 30px;"
+    style="margin-bottom: 30px;page-break-before: always"
   >
     <tr>
       <td
@@ -822,7 +829,7 @@ table, td{
       </td>
     </tr>
   </table>
-  <div style="background-color: #dbeafe; padding: 20px; margin-bottom: 30px;">
+  <div style="background-color: #dbeafe; padding: 20px; margin-bottom: 30px;" class="no-print">
     <div style="margin-bottom: 20px; font-size: 16px;">
       <a href="https://www.australia4wdrentals.com" style="color: #1d4ed8"
         >www.australia4wdrentals.com</a
@@ -839,7 +846,7 @@ table, td{
     </div>
   </div>
   <div
-    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 16px"
+    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 16px;page-break-before: always"
   >
     Payment Details & Schedule
   </div>
@@ -898,7 +905,7 @@ table, td{
     request.
   </div>
   <div
-    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 12px"
+    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 12px; page-break-before: always"
   >
     Terms & Conditions
   </div>
@@ -1067,6 +1074,7 @@ table, td{
   </ul>
   <div
     style="background-color: #dbeafe;padding: 50px; margin-bottom: 30px; text-align: center;"
+    class="no-print"
   >
     <div style="">THANK YOU FOR CHOOSING</div>
     <div style="font-weight: bold; font-size: 20px">
