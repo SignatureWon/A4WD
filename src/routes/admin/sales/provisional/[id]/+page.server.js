@@ -5,7 +5,7 @@ import isBetween from "dayjs/plugin/isBetween";
 dayjs.extend(isBetween);
 import { cal } from "$lib/cal";
 import { error, redirect } from "@sveltejs/kit";
-import { html } from "$lib/html.js";
+import { html } from "$lib/provisional.js";
 import puppeteer from "puppeteer";
 import { env } from "$env/dynamic/public";
 import sgMail from "@sendgrid/mail";
@@ -48,6 +48,7 @@ export async function load({ url, params }) {
     "cc_charge",
     "system_fee",
     "nett_profit",
+    "supplier_reference",
   ];
 
   const quote = await db.one({
@@ -119,9 +120,13 @@ export async function load({ url, params }) {
     options[opt.name] = opt.options;
   });
 
+  const { data: templates } = await supabase.from("contents").select("name, content").eq("type", "emails");
+
+
   return {
     quote: quote,
     user: user,
+    templates: templates,
     detail: JSON.parse(JSON.stringify(addTerms[0])),
     options: JSON.parse(JSON.stringify(options)),
     path: url.pathname,
@@ -162,7 +167,7 @@ export const actions = {
   download: async ({ request, url, params, locals }) => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
-    const content = await html.create(params.id, "template_quote");
+    const content = await html.create(params.id);
     await page.setContent(content);
     const buffer = await page.pdf({
       format: "A4",
@@ -180,30 +185,20 @@ export const actions = {
 
     const { data: uploadData, error: uploadError } = await supabase.storage
       .from("quotes")
-      .upload(`Q${388000 + Number(params.id)}.pdf`, filePDF);
-    // if (uploadData) {
-    //   console.log(uploadData);
-    // }
+      .upload(`P${388000 + Number(params.id)}.pdf`, filePDF);
 
     if (uploadError) {
       console.log("uploadError", uploadError);
       const { data: updateData, error: updateError } = await supabase.storage
         .from("quotes")
-        .update(`Q${388000 + Number(params.id)}.pdf`, filePDF, {
+        .update(`P${388000 + Number(params.id)}.pdf`, filePDF, {
           cacheControl: "3600",
           upsert: true,
         });
       if (updateError) {
         console.log(updateError);
       }
-      // if (updateData) {
-      //   console.log(updateData);
-      // }
     }
-    // const { data, error } = await supabase.storage.from("quotes").download(`Q${388000 + Number(params.id)}.pdf`);
-
-    // await browser.close();
-    // console.log(buffer);
     throw redirect(303, url.pathname);
   },
   email: async ({ request, url, params, locals }) => {
@@ -216,7 +211,42 @@ export const actions = {
     let getBond = Object.keys(dataQuote.details.bonds).length ? dataQuote.details.bonds : dataQuote.details.bond;
     const { data: dataUser } = await supabase.from("users").select().eq("id", dataQuote.users).single();
 
-    emailBody = `<div>${fd.message}</div>` + emailBody
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    const content = await html.create(params.id);
+    await page.setContent(content);
+    const buffer = await page.pdf({
+      format: "A4",
+      margin: {
+        top: "1cm",
+        bottom: "1cm",
+        left: "1cm",
+        right: "1cm",
+      },
+    });
+
+    let filePDF = new Blob([buffer], {
+      type: "application/pdf",
+    });
+
+    const { data: uploadData, error: uploadError } = await supabase.storage
+      .from("quotes")
+      .upload(`P${388000 + Number(params.id)}.pdf`, filePDF);
+
+    if (uploadError) {
+      console.log("uploadError", uploadError);
+      const { data: updateData, error: updateError } = await supabase.storage
+        .from("quotes")
+        .update(`P${388000 + Number(params.id)}.pdf`, filePDF, {
+          cacheControl: "3600",
+          upsert: true,
+        });
+      if (updateError) {
+        console.log(updateError);
+      }
+    }
+
+    emailBody = `<div>${fd.message}</div>` + emailBody;
     // console.log(emailBody);
     // console.log("send to", dataUser.email)
 
@@ -239,7 +269,7 @@ export const actions = {
                 name: `${dataUser.first_name.trim()} ${dataUser.last_name.trim()}`,
               },
             ],
-            bcc: bccList,
+            // bcc: bccList,
           },
         ],
         from: {
@@ -255,6 +285,14 @@ export const actions = {
           {
             type: "text/html",
             value: emailBody,
+          },
+        ],
+        attachments: [
+          {
+            content: buffer.toString("base64"),
+            filename: `P${388000 + Number(params.id)}.pdf`,
+            type: "application/pdf",
+            disposition: "attachment",
           },
         ],
         // mail_settings: {
@@ -280,8 +318,8 @@ export const actions = {
 
     const updateData = {
       supplier_reference: fd.supplier_reference,
-      status: "Provisional"
-    }
+      status: "Provisional",
+    };
     const { error: err } = await locals.sb.from("quotes").update(updateData).eq("id", params.id);
 
     if (err) {

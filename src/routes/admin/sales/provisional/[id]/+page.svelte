@@ -5,7 +5,7 @@
   import InputText from "$lib/components/admin/InputText.svelte";
   import InputSelect from "$lib/components/admin/InputSelect.svelte";
   import { enhance } from "$app/forms";
-  import { html } from "$lib/html.js";
+  import { html } from "$lib/provisional.js";
   import { jsPDF } from "jspdf";
   import {
     Button,
@@ -23,10 +23,11 @@
   } from "carbon-components-svelte";
   import { format } from "$lib/format.js";
   import { env } from "$env/dynamic/public";
-  import { bind, onMount } from "svelte/internal";
   import dayjs from "dayjs";
+  import { bind, onMount } from "svelte/internal";
   import Trip from "$lib/admin/quote/Trip.svelte";
   import Customer from "$lib/admin/quote/Customer.svelte";
+  import Confirmation from "$lib/admin/quote/Confirmation.svelte";
   import Driver from "$lib/admin/quote/Driver.svelte";
   import Section from "$lib/admin/quote/Section.svelte";
   import Passenger from "$lib/admin/quote/Passenger.svelte";
@@ -35,10 +36,13 @@
   import FeeAddons from "$lib/admin/quote/FeeAddons.svelte";
   import FeeOthers from "$lib/admin/quote/FeeOthers.svelte";
   import FeeSpecials from "$lib/admin/quote/FeeSpecials.svelte";
+  import InputRichText from "$lib/components/admin/InputRichText.svelte";
 
   export let data;
 
-  // console.log(data);
+  let emailContent = "";
+
+  // console.log(data.templates);
   let paneHeight = 0;
   const d = data.detail;
   let details = data.quote.details;
@@ -407,6 +411,9 @@
       <Section title="Customer Details">
         <Customer {user} />
       </Section>
+      <Section title="Confirmation Details">
+        <Confirmation code={quote.supplier_reference} />
+      </Section>
       <Section title="Driver's Details">
         <Driver licenseOptions={data.options.licenses} bind:driver={details.driver} />
       </Section>
@@ -444,7 +451,7 @@
     </div>
   </div>
   <div class="h-full w-80 overflow-y-auto bg-brand-50">
-    <div class="overflow-y-auto" style="height: {paneHeight - 440}px">
+    <div class="overflow-y-auto" style="height: {paneHeight - 330}px">
       <div class="p-5">
         <h2 class="text-xl font-bold mb-2">Quote Summary</h2>
         <div class="flex py-2 border-b border-gray-200">
@@ -497,7 +504,7 @@
     </div>
     <div class="p-4">
       <form action="?/update" method="POST">
-        <Button type="submit" class="w-full">Update Quote</Button>
+        <Button type="submit" class="w-full">Update Ticket</Button>
         <!-- <Button
           on:click={() => {
             console.log(quote);
@@ -513,10 +520,10 @@
           <Button
             kind="tertiary"
             on:click={async () => {
-              emailPreview = await html.create(quote.id, "template_quote");
+              emailPreview = await html.create(quote.id);
               open = true;
             }}
-            class="p-0.5 h-6 w-full">Preview Quote</Button
+            class="p-0.5 h-6 w-full">Preview Ticket</Button
           >
         </div>
         <div>
@@ -527,7 +534,7 @@
         <div>
           <Button
             kind="tertiary"
-            href="https://api.australia4wdrentals.com/storage/v1/object/public/quotes/Q{388000 + quote.id}.pdf"
+            href="https://api.australia4wdrentals.com/storage/v1/object/public/quotes/P{388000 + quote.id}.pdf"
             target="_blank"
             class="p-0.5 h-6 w-full block">Download PDF</Button
           >
@@ -538,7 +545,7 @@
             class="p-0.5 h-6 w-full"
             on:click={() => {
               openEmail = true;
-            }}>Email Quote</Button
+            }}>Email Ticket</Button
           >
           <!-- <form action="?/email" method="POST">
             <Button kind="tertiary" type="submit" class="p-0.5 h-6 w-full">Email Quote</Button>
@@ -546,18 +553,32 @@
         </div>
       </div>
     </div>
-    <div class="p-4 bg-brand-200">
+    <!-- <div class="p-4 bg-brand-200">
       <form action="?/provisional" method="POST">
-        <TextInput name="supplier_reference" placeholder="Supplier Confirmation Code" class="text-center" required />
+        <TextInput name="supplier_reference" placeholder="Supplier Booking Reference" class="text-center" />
         <Button type="submit" class="w-full">Create Provisional Ticket</Button>
       </form>
-    </div>
+    </div> -->
   </div>
 </div>
 
 <Modal passiveModal bind:open={openEmail} modalHeading="Email Quote" on:open on:close>
+  <div>
+    <Select
+      labelText="Templates"
+      on:change={(e) => {
+        emailContent = e.target.value;
+      }}
+      class="mb-4"
+    >
+      <SelectItem value="" text="Choose a template" />
+      {#each data.templates as item}
+        <SelectItem value={item.content} text={item.name} />
+      {/each}
+    </Select>
+  </div>
   <form action="?/email" method="POST">
-    <TextArea labelText="Message" name="message" class="mb-2" placeholder="Add message here" />
+    <InputRichText name="message" label="Message" bind:value={emailContent} />
     <Button type="submit" class="w-full">Send</Button>
   </form>
 </Modal>

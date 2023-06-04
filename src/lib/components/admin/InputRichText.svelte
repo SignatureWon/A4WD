@@ -41,11 +41,9 @@
         editor = editor;
         value = editor.getHTML();
       },
-    //   onUpdate: () => {
-    //     debounce(() => {
-    //       console.log("updated onUpdate");
-    //     });
-    //   },
+      onUpdate: () => {
+          console.log("updated onUpdate");
+      },
     });
 
     setLink = () => {
@@ -72,6 +70,7 @@
         .setLink({ href: url })
         .run();
     };
+
   });
 
   onDestroy(() => {
@@ -79,6 +78,11 @@
       editor.destroy();
     }
   });
+  $:value,  editor?.commands.setContent(value)
+
+  // $: {
+  //   editor.commands.setContent(value)
+  // }
 </script>
 
 <div class="md:col-span-2">

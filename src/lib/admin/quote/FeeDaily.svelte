@@ -11,6 +11,8 @@
     fees = [];
     let arr = daily.items;
     if (type === "flex") {
+
+      // console.log(arr);
       let week = 1;
       let day = 0;
       arr.forEach((o, i) => {

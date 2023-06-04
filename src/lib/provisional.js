@@ -3,14 +3,20 @@ import { supabase } from "$lib/supabaseClient";
 import { format } from "$lib/format.js";
 
 export const html = {
-  create: async (quote_id, type) => {
+  create: async (quote_id) => {
     const { data: letterhead } = await supabase
       .from("contents")
       .select("content, description, name")
       .eq("type", "template_letterhead")
       .single();
 
-    const { data: contents } = await supabase.from("contents").select().eq("type", type).single();
+    const { data: contents } = await supabase
+      .from("contents")
+      .select()
+      .eq("type", "template_ticket_provisional")
+      .single();
+
+    console.log(contents);
 
     const { data: quote } = await supabase
       .from("quotes")
@@ -19,7 +25,7 @@ export const html = {
       )
       .eq("id", quote_id)
       .single();
-    // console.log("quote", quote, quote_id);
+    console.log("quote", quote, quote_id);
 
     const { data: vehicle } = await supabase
       .from("vehicles")
@@ -49,7 +55,7 @@ export const html = {
         sum += fee.profit;
       });
 
-      sum -= quote.add_discount
+      sum -= quote.add_discount;
       return sum;
     };
     const totalSupplierFee = () => {
@@ -58,6 +64,14 @@ export const html = {
         sum += fee.total;
       });
       return sum;
+    };
+    const totalOutstanding = () => {
+      let total = totalSupplierFee() + totalAgentFee();
+      let payments = quote.payments || [];
+      payments.forEach((obj) => {
+        total -= obj.amount;
+      });
+      return total;
     };
 
     const getDailyRates = () => {
@@ -334,6 +348,7 @@ export const html = {
     const info = {
       doc: {
         name: contents.name,
+        note: contents.description,
       },
       company: {
         name: letterhead.name,
@@ -354,7 +369,8 @@ export const html = {
       },
       quote: {
         id: quote.id + 388000,
-        date: date_quote,
+        supplier_reference: quote.supplier_reference,
+        date: quote.date_provisional,
         duration: duration,
         pickup: {
           name: quote.details.pickup.name,
@@ -394,6 +410,7 @@ export const html = {
           pdf: quote.details.terms.counter,
         },
       },
+      payments: quote.payments || [],
       daily: getDailyRates(),
       discount: getDiscount(),
       bond: getBonds(),
@@ -472,47 +489,19 @@ table, td{
       </td>
       <td valign="top">
         <div style="text-align: right; font-size: 20px; font-weight: bold">
-          ${info.doc.name}
+          ${info.doc.name.replace(" ", "<br>")}
         </div>
       </td>
     </tr>
   </table>
   <hr />
   <div style="margin-top: 30px; margin-bottom: 10px; font-weight: bold;">
-    Dear ${info.user.first_name},
-  </div>
-  <div style="margin-bottom: 30px">
-    Thank you for contacting <a
-      href="www.australia4wdrentals.com"
-      style="color: #1d4ed8">www.australia4wdrentals.com</a
-    > one of Australia's leading officially licensed specialist agents for vehicle
-    rentals (motorhomes, campers, 4WD, 4WD campers) and guided safari tours based
-    in and operating out of Darwin, Australia.
-  </div>
-  <div style="margin-bottom: 10px; font-weight: bold;">
-    Availability and validity of this quotation
-  </div>
-  <div style="margin-bottom: 10px;">
-    Vehicle is subject to availability and rates are subject to change prior to
-    confirmation. We suggest you book as soon as possible to ensure you get the
-    vehicle you want at the best price.
-  </div>
-  <div style="margin-bottom: 10px;">
-    If you have any queries please <a
-      href="https://www.australia4wdrentals.com/contact-us">contact</a
-    > our friendly staff. Please be advised that the prices stated in our quote are
-    confidential.
-  </div>
-  <div style="margin-bottom: 30px;">
-    Please note that all prices are quoted in <b
-      >Australian Dollars (AUD)</b
-    >.
+    ${info.doc.note}
   </div>
   <table
     width="600"
     cellpadding="20"
     cellspacing="0"
-    style="margin-bottom: 30px;"
   >
     <tr>
       <td
@@ -521,7 +510,7 @@ table, td{
         align="center"
         style="border: 1px solid #CCCCCC"
       >
-        <div style="font-size: 12px; color: #999999">Quote No.</div>
+        <div style="font-size: 12px; color: #999999">Ticket No.</div>
         <div style="font-weight: bold">
           Q${info.quote.id}
         </div>
@@ -532,7 +521,7 @@ table, td{
         align="center"
         style="border: 1px solid #CCCCCC"
       >
-        <div style="font-size: 12px; color: #999999">Quote Date</div>
+        <div style="font-size: 12px; color: #999999">Ticket Date</div>
         <div style="font-weight: bold">
           ${info.quote.date}
         </div>
@@ -546,6 +535,25 @@ table, td{
         <div style="font-size: 12px; color: #999999">Duration</div>
         <div style="font-weight: bold">
           ${info.quote.duration} days
+        </div>
+      </td>
+    </tr>
+  </table>
+  <table
+    width="600"
+    cellpadding="20"
+    cellspacing="0"
+    style="margin-bottom: 30px;"
+  >
+    <tr>
+      <td
+        valign="top"
+        align="center"
+        style="border: 1px solid #CCCCCC"
+      >
+        <div style="font-size: 12px; color: #999999">Confirmation Code</div>
+        <div style="font-weight: bold">
+          ${info.quote.supplier_reference}
         </div>
       </td>
     </tr>
@@ -829,26 +837,11 @@ table, td{
       </td>
     </tr>
   </table>
-  <div style="background-color: #dbeafe; padding: 20px; margin-bottom: 30px;" class="no-print">
-    <div style="margin-bottom: 20px; font-size: 16px;">
-      <a href="https://www.australia4wdrentals.com" style="color: #1d4ed8"
-        >www.australia4wdrentals.com</a
-      > is protected by a 256-bit ssl for complete peace of mind when booking
-      online.
-    </div>
-    <div style="margin-bottom: 10px;">
-      <a
-        href="https://australia4wdrentals.com/form/vehicle/booking"
-        style="display: block; width: 200px; padding-top: 10px; padding-bottom: 10px; text-align: center; font-weight: bold; font-size: 20px; background-color: #1d4ed8; text-decoration: none; color: #ffffff; border-radius: 5px"
-      >
-        <b style="text-decoration: none; color: #ffffff;">Book Now</b>
-      </a>
-    </div>
-  </div>
-  <div
-    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 16px;page-break-before: always"
-  >
+  <div style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 16px;page-break-before: always">
     Payment Details & Schedule
+  </div>
+  <div style="margin-bottom: 10px;">
+    Payments are to be made (by credit card or Internet transfer) according to the schedule below. Unless advised otherwise, your credit card (supplied to us at the time of booking) will be charged accordingly. Kindly refer to the Payments Summary found on your provisional or e-ticket issued to you for more details.
   </div>
   <table
     width="600"
@@ -867,15 +860,17 @@ table, td{
     });
     email += `
   </table>
-  <div style="margin-bottom: 10px;">
-    The security deposit and balance payment to the agent is taken from the
-    credit or debit card supplied at the time of booking - book now using our
-    secure online booking form.
-  </div>
-  <div
-    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 16px"
-  >
+  <div style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 16px">
     Pay At Pick-Up
+  </div>
+  <div style="margin-bottom: 10px;">
+    Any optional or extra items are to be paid directly to Apollo at the time of pick-up. Please refer to your e-Ticket for more details.
+  </div>
+  <div style="margin-bottom: 10px;">
+    Please ensure that you have sufficient funds in your credit card to pay the bond. Information on applicable bond charges can be found in this document.
+  </div>
+  <div style="margin-bottom: 10px;">
+    Please ensure that you pick-up and drop-off your rental vehicle during depot business hours to avoid any inconvenience or extra charges. Depot addresses and booking times can be found in this document.
   </div>
   <table
     width="600"
@@ -894,205 +889,47 @@ table, td{
     });
     email += `
   </table>
-  <div
-    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 16px"
-  >
-    Alternative payment options
+  <div style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 16px">
+    Payments
   </div>
-  <div style="margin-bottom: 10px;">
-    Balance payment collected by Australia 4 Wheel Drive Rentals can be paid via
-    internet banking instead of credit card. Details will be supplied upon
-    request.
-  </div>
-  <div
-    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 12px; page-break-before: always"
-  >
-    Terms & Conditions
-  </div>
-  <div style="margin-bottom: 10px; font-size: 10px">
-    For your convenience please find links to the summary of the full terms and
-    conditions and the supplier counter agreement for the rental of this
-    vehicle. You will also find links to the user agreement and agent terms and
-    conditions. Please ensure that you read and understand the terms and
-    conditions found at the following links:
-  </div>`;
-    if (info.terms.confirmation.text !== "<p></p>" || info.terms.confirmation.pdf) {
+  <table
+  width="600"
+  cellpadding="10"
+  cellspacing="0"
+  >`;
+    info.payments.forEach((pay) => {
       email += `
-    &bull; 
-        <a
-          href="https://www.australia4wdrentals.com/terms/${info.terms.id}/confirmation"
-          style="color: #1d4ed8; font-size: 12px">Booking Confirmation Terms</a
-        >
-      <br>`;
-    }
-    if (info.terms.summary.text !== "<p></p>" || info.terms.summary.pdf) {
-      email += `
-      &bull; 
-        <a
-          href="https://www.australia4wdrentals.com/terms/${info.terms.id}/summary"
-          style="color: #1d4ed8; font-size: 12px">Summary of Terms</a
-        >
-      <br>`;
-    }
-    if (info.terms.counter.text !== "<p></p>" || info.terms.counter.pdf) {
-      email += `
-      &bull; 
-        <a
-          href="https://www.australia4wdrentals.com/terms/${info.terms.id}/counter"
-          style="color: #1d4ed8; font-size: 12px">Counter Agreement</a
-        >
-      <br>`;
-    }
+    <tr>
+        <td style="border: 1px solid #CCCCCC">${dayjs(pay.date).format("DD/MM/YYYY")}</td>
+        <td style="border: 1px solid #CCCCCC">${pay.description}</td>
+        <td style="border: 1px solid #CCCCCC; text-align: right; width: 20%">${format.currency(pay.amount)}</td>
+    </tr>`;
+    });
+
     email += `
-  <div
-    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 12px"
-  >
-    Domestic Rates
-  </div>
-  <div style="margin-bottom: 10px; font-size: 10px">
-    This rate is for Australian and New Zealand residents only. The hirer must
-    be able to produce their Australian or New Zealand drivers licence upon
-    vehicle collection. Should the hirer not be able to do so on the day of pick
-    up, the hirer will be refused the rental at the rate nominated. The hirer
-    will be charged the difference between the Domestic rate and the Standard
-    rate.
-  </div>
-  <div
-    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 12px"
-  >
-    The agent - Australia 4 Wheel Drive Rentals
-  </div>
-  <div style="margin-bottom: 10px; font-size: 10px">
-    From here onwards Australia 4 Wheel Drive Rentals and it's associated group
-    of companies shall henceforth be referred to as the 'Agent', 'we' or 'our'.
-  </div>
-  <div
-    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 12px"
-  >
-    Agent security deposit
-  </div>
-  <div style="margin-bottom: 10px; font-size: 10px">
-    Security deposits taken by the Agent are to help ensure that your
-    reservations are secure and in order. The security deposit is
-    non-refundable. In the event of a cancellation the security deposit, may be
-    used towards a future booking (given at the discretion of the Agent). In the
-    event of a cancellation the security deposit will be held for a further 6
-    months from date of cancellation to be used towards a future security
-    deposit for bookings made through the Agent and only with the same supplier.
-    This clause is subject to the sole discretion of the management of the
-    Agent. Total Agent's Security Booking Deposit of ${format.currency(totalAgentCommission())} is fully included
-    in the final payment.
-  </div>
-  <div
-    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 12px"
-  >
-    Agent credit card surcharge
-  </div>
-  <div style="margin-bottom: 10px; font-size: 10px">
-    A 2.0% surcharge for all VISA / Mastercard credit card transactions paid
-    towards the booking will apply. Please note that these credit card fees do
-    not overlap with the supplier surcharge. Please note when choosing a
-    Standard rate you will be paying extra credit card fees to the supplier for
-    any administration surcharges and / or if you choose to take up any excess
-    plan upon pickup. The Agent does NOT accept American Express or Diners
-    credit cards.
-  </div>
-  <div
-    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 12px"
-  >
-    Calculation errors
-  </div>
-  <div style="margin-bottom: 10px; font-size: 10px">
-    We rely heavily on accurate information provided to us by our suppliers and
-    we endeavour to ensure that all our prices are up to date. However we cannot
-    be held liable for any errors in price calculation. In the event of an
-    erroneous quotation or invoice, we will re-issue another quotation
-    superseding the original quote or invoice with the necessary corrections in
-    pricing.
-  </div>
-  <div
-    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 12px"
-  >
-    Suppliers Responsibility
-  </div>
-  <div style="margin-bottom: 10px; font-size: 10px">
-    We are a booking service for the Suppliers. You will be required to complete
-    a rental agreement directly with the relevant Supplier on collection of the
-    rented vehicle. Your rental is subject to the terms and conditions of the
-    respective Supplier with whom the rental agreement is made. Each Supplier is
-    responsible for notifying inventory levels to the Agent. We do not accept
-    any liability for unavailability of vehicles caused by the Supplier
-    over-selling its own vehicle inventory or vehicle movement disruption.
-  </div>
-  <div
-    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 12px"
-  >
-    Disclaimer
-  </div>
-  <ul style="margin-bottom: 30px; font-size: 10px">
-    <li style="margin-bottom: 10px;">
-      These details are indicative of the vehicle that will be supplied under
-      your booking. Actual vehicles may vary according to year of manufacture
-      and availability but your vehicle will be suitable for the required number
-      of persons and have equivalent or better specifications to those listed in
-      this website.
-    </li>
-    <li style="margin-bottom: 10px;">
-      We will NOT accept responsibility for any/the loss or damage or injury
-      caused to any passenger. We will not be held responsible for any changes
-      to any or all of the above services provided by the operator. We STRONGLY
-      recommends you take out adequate travel insurance including cancellation
-      insurance for your holiday.
-    </li>
-    <li style="margin-bottom: 10px;">
-      Unless we hear from you that you can't access this information before your
-      booking of the vehicle it will be generally understood and accepted by all
-      parties that you have successfully accessed all links then read and
-      understood our terms and conditions and those of the supplier.
-    </li>
-    <li style="margin-bottom: 10px;">
-      This electronic message and any attachments are supplied in good faith and
-      is believed to be free of viruses or related problems. The contents of the
-      message and any advice contained (this quote will be voided if
-      intentionally misused or distributed) therein are supplied on the basis
-      that the recipient understands that they should seek their own expert
-      opinions. We accept no responsibility for the damage or loss (arising from
-      negligence or otherwise) which may occur through the use of the contents
-      or from transmission of this message and attachments. The contents of this
-      electronic message and any attachments are intended only for the addressee
-      and may contain privileged or confidential information. If you are not the
-      addressee, you are notified that any transmission, distribution,
-      downloading, printing or photocopying of the contents of this message or
-      attachments is strictly prohibited. The privilege of confidentiality
-      attached to this message and attachments is not waived, lost or destroyed
-      by reason of mistaken delivery to you. If you are not the addressee, you
-      are notified that any transmission, distribution, downloading, printing or
-      photocopying of the contents of this message or attachments is strictly
-      prohibited. The privilege of confidentiality attached to this message and
-      attachments is not waived, lost or destroyed.
-    </li>
-  </ul>
-  <div
-    style="background-color: #dbeafe;padding: 50px; margin-bottom: 30px; text-align: center;"
-    class="no-print"
-  >
-    <div style="">THANK YOU FOR CHOOSING</div>
-    <div style="font-weight: bold; font-size: 20px">
-      <a href="https://www.australia4wdrentals.com" style="color: #1d4ed8">
-        AUSTRALIA 4WD RENTALS
-      </a>
-    </div>
-  </div>
-  <div
-    style="padding-bottom: 30px; text-align: center;"
-  >
-    <a href="https://www.australia4wdrentals.com/conditions-australia-4-wheel-drive-rentals" style="color: #1d4ed8">
-      Terms & Conditions of Australia 4 Wheel Drive Rentals
-    </a>
-  </div>
+</table>
+<table
+width="600"
+cellpadding="10"
+cellspacing="0"
+style="margin-bottom: 30px"
+>
+    <tr>
+        <td style="border: 1px solid #CCCCCC; font-weight: bold">Total Outstanding</td>
+        <td style="border: 1px solid #CCCCCC; font-weight: bold; text-align: right; width: 20%">${format.currency(
+          totalOutstanding()
+        )}</td>
+    </tr>
+</table>
+<div style="margin-bottom: 10px;">
+  Cancellation fees will apply on $${format.currency(totalAgentFee())}. The Agent Deposit Fee of $${format.currency(
+      totalAgentCommission()
+    )} is non-refundable. The Agent Deposit will be carried forward towards a future booking if cancellation is made more than 25 days prior to travel. The Agent Deposit will be held for 6 months from the date of cancellation. An additional AUD $100.00 administration fee applies. Please read the cancellation policy found in this document.
+</div>
 </div>
 </body>
 </html>`;
+
     return email;
   },
 };
