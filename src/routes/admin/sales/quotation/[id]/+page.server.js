@@ -216,7 +216,7 @@ export const actions = {
     let getBond = Object.keys(dataQuote.details.bonds).length ? dataQuote.details.bonds : dataQuote.details.bond;
     const { data: dataUser } = await supabase.from("users").select().eq("id", dataQuote.users).single();
 
-    emailBody = `<div>${fd.message}</div>` + emailBody
+    emailBody = `<div style="font-size: 24px; margin-bottom: 50px">${fd.message}</div>` + emailBody
     // console.log(emailBody);
     // console.log("send to", dataUser.email)
 

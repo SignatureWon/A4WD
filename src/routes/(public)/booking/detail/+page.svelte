@@ -106,7 +106,7 @@
           }}>{button}</Button
         >
       </div>
-      {#if form.quote.status === "Provisional"}
+      {#if form.quote.status === "Request"}
         <div class="bg-gray-50 p-5">
           <div class="pb-4 mb-4 border-b border-gray-300">
             <h2 class="font-bold text-xl">Book now</h2>
