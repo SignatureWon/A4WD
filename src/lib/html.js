@@ -113,6 +113,15 @@ export const html = {
 
     const getBonds = () => {
       const bond = Object.keys(quote.details.bonds).length ? quote.details.bonds : quote.details.bond;
+      pickupFees.push({
+        name: `Bond: $${format.currency(
+          bond.bond,
+          0
+        )} is taken from the hirer's credit or debit card <div style="font-size: 14px; color: #999999">Refundable as per supplier's Summary of Terms<div>`,
+        total: bond.bond,
+        nett: 0,
+        profit: 0,
+      });
 
       let gross = 0;
       let nett = 0;
@@ -139,17 +148,9 @@ export const html = {
           agentFees.push(row);
         } else {
           supplierFees.push(row);
+          pickupFees.push(row);
         }
       }
-      pickupFees.push({
-        name: `Bond: $${format.currency(
-          bond.bond,
-          0
-        )} is taken from the hirer's credit or debit card <div style="font-size: 14px; color: #999999">Refundable as per supplier's Summary of Terms<div>`,
-        total: bond.bond,
-        nett: 0,
-        profit: 0,
-      });
     };
 
     const getOneways = () => {
