@@ -448,12 +448,14 @@
       <div class="p-5">
         <h2 class="text-xl font-bold mb-2">Quote Summary</h2>
         <div class="flex py-2 border-b border-gray-200">
-          <div class="flex-1">Total Gross</div>
+          <div class="flex-1">Total Gross
+            <div class="text-xs">Daily, LRO, Inc, Fee, Add, O/W, CC</div>
+          </div>
           <div class="text-right ml-4">{format.currency(quote.gross)}</div>
         </div>
         <div class="flex py-2 border-b border-gray-200">
           <div class="flex-1">Total Specials</div>
-          <div class="text-right ml-4">{format.currency(quote.discount)}</div>
+          <div class="text-right ml-4">-{format.currency(quote.discount)}</div>
         </div>
         <div class="flex py-2 border-b border-gray-200">
           <div class="flex-1">Total Discount</div>
