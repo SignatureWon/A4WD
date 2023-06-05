@@ -3,13 +3,7 @@
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
-  import {
-    Button,
-    DatePicker,
-    DatePickerInput,
-    Select,
-    SelectItem,
-  } from "carbon-components-svelte";
+  import { Button, DatePicker, DatePickerInput, Select, SelectItem } from "carbon-components-svelte";
   import InputSelect from "$lib/components/admin/InputSelect.svelte";
   import InputNumber from "$lib/components/admin/InputNumber.svelte";
   import InputDateRange2 from "$lib/components/admin/InputDateRange2.svelte";
@@ -91,7 +85,11 @@
   //   });
   //   // console.log("search", search);
   // }
+
+  let innerWidth = 0
 </script>
+
+<svelte:window bind:innerWidth={innerWidth} />
 
 <form action="/search/redirect" method="get">
   <div class="bg-white px-5 py-3">
@@ -134,29 +132,23 @@
           options={options["licenses"]}
           half={true}
         />
-        <InputSelect
-          name="age"
-          label="Age"
-          bind:value={search.age}
-          options={options["ages"]}
-          half={true}
-        />
+        <InputSelect name="age" label="Age" bind:value={search.age} options={options["ages"]} half={true} />
       </div>
       <div class="grid grid-cols-3">
-        <div class="grid grid-cols-2 col-span-2">
-          <InputSelect
-            name="category"
-            label="Category"
-            bind:value={search.category}
-            options={options["categories"]}
-          />
+        <div class="col-span-2">
+          <div class="grid grid-cols-1 md:grid-cols-2">
+            <InputSelect
+              name="category"
+              label="Category"
+              bind:value={search.category}
+              options={options["categories"]}
+            />
+          </div>
         </div>
-        <div class="grid grid-cols-2">
-          <InputNumber
-          name="pax"
-          label="Passengers"
-          bind:value={search.pax}
-        />
+        <div>
+          <div class="grid grid-cols-1 md:grid-cols-2">
+            <InputNumber name="pax" label="Passengers" bind:value={search.pax} hideSteppers={innerWidth < 480 ? true : false} />
+          </div>
         </div>
       </div>
       <!-- <div class="md:mt-6 lg:mt-0"> -->

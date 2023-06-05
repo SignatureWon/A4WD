@@ -35,15 +35,19 @@
       placeholder="DD/MM/YYYY"
       autocomplete="off"
       {required}
+      readonly
     />
   </DatePicker>
-  <DatePicker datePickerType="single" dateFormat="d/m/Y" bind:value={valueTo}>
+  <DatePicker datePickerType="single" dateFormat="d/m/Y" bind:value={valueTo} flatpickrProps={{
+    position: "auto right"
+  }}>
     <DatePickerInput
       name={nameTo}
       labelText={labelTo}
       placeholder="DD/MM/YYYY"
       autocomplete="off"
       {required}
+      readonly
     />
   </DatePicker>
 </div>

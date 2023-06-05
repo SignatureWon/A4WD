@@ -41,9 +41,9 @@
         editor = editor;
         value = editor.getHTML();
       },
-      onUpdate: () => {
-          console.log("updated onUpdate");
-      },
+      // onUpdate: () => {
+      //     console.log("updated onUpdate");
+      // },
     });
 
     setLink = () => {
@@ -78,7 +78,7 @@
       editor.destroy();
     }
   });
-  $:value,  editor?.commands.setContent(value)
+  // $:value,  editor?.commands.setContent(value)
 
   // $: {
   //   editor.commands.setContent(value)

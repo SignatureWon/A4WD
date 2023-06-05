@@ -191,7 +191,7 @@
       }}
     />
   </FormSection>
-  <FormSection title="Booking Confirmation Terms">
+  <FormSection title="Agent's Terms and Conditions">
     <InputRichText
       name="confirmation_terms"
       label="Terms"

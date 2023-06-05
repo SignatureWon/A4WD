@@ -6,6 +6,7 @@ dayjs.extend(isBetween);
 import { cal } from "$lib/cal";
 import { error, redirect } from "@sveltejs/kit";
 import { html } from "$lib/provisional.js";
+import { html as confirmation } from "$lib/confirmation.js";
 import puppeteer from "puppeteer";
 import { env } from "$env/dynamic/public";
 import sgMail from "@sendgrid/mail";
@@ -152,7 +153,7 @@ export const actions = {
     delete quote.created_at;
     delete quote.updated_at;
 
-    console.log("quote", quote);
+    // console.log("quote", quote);
 
     const { error: err } = await locals.sb.from("quotes").update(quote).eq("id", id);
 
@@ -185,13 +186,13 @@ export const actions = {
 
     const { data: uploadData, error: uploadError } = await supabase.storage
       .from("quotes")
-      .upload(`P${388000 + Number(params.id)}.pdf`, filePDF);
+      .upload(`Q${388000 + Number(params.id)}.pdf`, filePDF);
 
     if (uploadError) {
       console.log("uploadError", uploadError);
       const { data: updateData, error: updateError } = await supabase.storage
         .from("quotes")
-        .update(`P${388000 + Number(params.id)}.pdf`, filePDF, {
+        .update(`Q${388000 + Number(params.id)}.pdf`, filePDF, {
           cacheControl: "3600",
           upsert: true,
         });
@@ -205,7 +206,7 @@ export const actions = {
     const formData = await request.formData();
     let fd = Object.fromEntries(formData.entries());
 
-    let emailBody = await html.create(params.id, "template_quote");
+    let emailBody = await html.create(params.id);
     const { data: emailData } = await supabase.from("constants").select("name").eq("type", "email_quote").single();
     const { data: dataQuote } = await supabase.from("quotes").select().eq("id", params.id).single();
     let getBond = Object.keys(dataQuote.details.bonds).length ? dataQuote.details.bonds : dataQuote.details.bond;
@@ -224,6 +225,22 @@ export const actions = {
         right: "1cm",
       },
     });
+    browser.close();
+
+    const browser2 = await puppeteer.launch();
+    const page2 = await browser2.newPage();
+    const content2 = await confirmation.create(params.id);
+    await page2.setContent(content2);
+    const buffer2 = await page2.pdf({
+      format: "A4",
+      margin: {
+        top: "1cm",
+        bottom: "1cm",
+        left: "1cm",
+        right: "1cm",
+      },
+    });
+    browser2.close();
 
     let filePDF = new Blob([buffer], {
       type: "application/pdf",
@@ -231,13 +248,13 @@ export const actions = {
 
     const { data: uploadData, error: uploadError } = await supabase.storage
       .from("quotes")
-      .upload(`P${388000 + Number(params.id)}.pdf`, filePDF);
+      .upload(`Q${388000 + Number(params.id)}.pdf`, filePDF);
 
     if (uploadError) {
       console.log("uploadError", uploadError);
       const { data: updateData, error: updateError } = await supabase.storage
         .from("quotes")
-        .update(`P${388000 + Number(params.id)}.pdf`, filePDF, {
+        .update(`Q${388000 + Number(params.id)}.pdf`, filePDF, {
           cacheControl: "3600",
           upsert: true,
         });
@@ -246,7 +263,7 @@ export const actions = {
       }
     }
 
-    emailBody = `<div>${fd.message}</div>` + emailBody;
+    emailBody = `<div style="margin-bottom: 50px; font-size: 16px;">${fd.message}</div>` + emailBody;
     // console.log(emailBody);
     // console.log("send to", dataUser.email)
 
@@ -290,7 +307,13 @@ export const actions = {
         attachments: [
           {
             content: buffer.toString("base64"),
-            filename: `P${388000 + Number(params.id)}.pdf`,
+            filename: `Provisional Ticket - Q${388000 + Number(params.id)}.pdf`,
+            type: "application/pdf",
+            disposition: "attachment",
+          },
+          {
+            content: buffer2.toString("base64"),
+            filename: `Booking Confirmation - Q${388000 + Number(params.id)}.pdf`,
             type: "application/pdf",
             disposition: "attachment",
           },
@@ -356,7 +379,7 @@ export const actions = {
 //       try {
 //           await page.goto(pageUrl);
 //           await page.pdf({
-//               path: `pdf-${i}.pdf`,
+//               path: `Qdf-${i}.pdf`,
 //               format: 'A4',
 //               printBackground: true
 //           });

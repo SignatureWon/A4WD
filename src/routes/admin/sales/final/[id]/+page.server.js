@@ -5,7 +5,8 @@ import isBetween from "dayjs/plugin/isBetween";
 dayjs.extend(isBetween);
 import { cal } from "$lib/cal";
 import { error, redirect } from "@sveltejs/kit";
-import { html } from "$lib/html.js";
+import { html } from "$lib/final.js";
+import { html as confirmation } from "$lib/confirmation.js";
 import puppeteer from "puppeteer";
 import { env } from "$env/dynamic/public";
 import sgMail from "@sendgrid/mail";
@@ -48,6 +49,7 @@ export async function load({ url, params }) {
     "cc_charge",
     "system_fee",
     "nett_profit",
+    "supplier_reference",
   ];
 
   const quote = await db.one({
@@ -119,9 +121,13 @@ export async function load({ url, params }) {
     options[opt.name] = opt.options;
   });
 
+  const { data: templates } = await supabase.from("contents").select("name, content").eq("type", "emails");
+
+
   return {
     quote: quote,
     user: user,
+    templates: templates,
     detail: JSON.parse(JSON.stringify(addTerms[0])),
     options: JSON.parse(JSON.stringify(options)),
     path: url.pathname,
@@ -141,7 +147,7 @@ export const actions = {
     const quote = JSON.parse(fd.quote);
     const id = quote.id;
 
-    // console.log("id", id);
+    console.log("id", id);
 
     delete quote.id;
     delete quote.created_at;
@@ -162,7 +168,7 @@ export const actions = {
   download: async ({ request, url, params, locals }) => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
-    const content = await html.create(params.id, "template_quote");
+    const content = await html.create(params.id);
     await page.setContent(content);
     const buffer = await page.pdf({
       format: "A4",
@@ -181,9 +187,6 @@ export const actions = {
     const { data: uploadData, error: uploadError } = await supabase.storage
       .from("quotes")
       .upload(`Q${388000 + Number(params.id)}.pdf`, filePDF);
-    // if (uploadData) {
-    //   console.log(uploadData);
-    // }
 
     if (uploadError) {
       console.log("uploadError", uploadError);
@@ -196,27 +199,71 @@ export const actions = {
       if (updateError) {
         console.log(updateError);
       }
-      // if (updateData) {
-      //   console.log(updateData);
-      // }
     }
-    // const { data, error } = await supabase.storage.from("quotes").download(`Q${388000 + Number(params.id)}.pdf`);
-
-    // await browser.close();
-    // console.log(buffer);
     throw redirect(303, url.pathname);
   },
   email: async ({ request, url, params, locals }) => {
     const formData = await request.formData();
     let fd = Object.fromEntries(formData.entries());
 
-    let emailBody = await html.create(params.id, "template_quote");
+    let emailBody = await html.create(params.id);
     const { data: emailData } = await supabase.from("constants").select("name").eq("type", "email_quote").single();
     const { data: dataQuote } = await supabase.from("quotes").select().eq("id", params.id).single();
     let getBond = Object.keys(dataQuote.details.bonds).length ? dataQuote.details.bonds : dataQuote.details.bond;
     const { data: dataUser } = await supabase.from("users").select().eq("id", dataQuote.users).single();
 
-    emailBody = `<div style="font-size: 24px; margin-bottom: 50px">${fd.message}</div>` + emailBody
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    const content = await html.create(params.id);
+    await page.setContent(content);
+    const buffer = await page.pdf({
+      format: "A4",
+      margin: {
+        top: "1cm",
+        bottom: "1cm",
+        left: "1cm",
+        right: "1cm",
+      },
+    });
+    browser.close();
+
+    const browser2 = await puppeteer.launch();
+    const page2 = await browser2.newPage();
+    const content2 = await confirmation.create(params.id);
+    await page2.setContent(content2);
+    const buffer2 = await page2.pdf({
+      format: "A4",
+      margin: {
+        top: "1cm",
+        bottom: "1cm",
+        left: "1cm",
+        right: "1cm",
+      },
+    });
+    browser2.close();
+
+    let filePDF = new Blob([buffer], {
+      type: "application/pdf",
+    });
+
+    const { data: uploadData, error: uploadError } = await supabase.storage
+      .from("quotes")
+      .upload(`Q${388000 + Number(params.id)}.pdf`, filePDF);
+
+    if (uploadError) {
+      console.log("uploadError", uploadError);
+      const { data: updateData, error: updateError } = await supabase.storage
+        .from("quotes")
+        .update(`Q${388000 + Number(params.id)}.pdf`, filePDF, {
+          cacheControl: "3600",
+          upsert: true,
+        });
+      if (updateError) {
+        console.log(updateError);
+      }
+    }
+
+    emailBody = `<div style="margin-bottom: 50px; font-size: 16px;">${fd.message}</div>` + emailBody;
     // console.log(emailBody);
     // console.log("send to", dataUser.email)
 
@@ -257,6 +304,20 @@ export const actions = {
             value: emailBody,
           },
         ],
+        attachments: [
+          {
+            content: buffer.toString("base64"),
+            filename: `Provisional Ticket - Q${388000 + Number(params.id)}.pdf`,
+            type: "application/pdf",
+            disposition: "attachment",
+          },
+          {
+            content: buffer2.toString("base64"),
+            filename: `Booking Confirmation - Q${388000 + Number(params.id)}.pdf`,
+            type: "application/pdf",
+            disposition: "attachment",
+          },
+        ],
         // mail_settings: {
         //   sandbox_mode: {
         //     enable: true,
@@ -281,8 +342,7 @@ export const actions = {
     const updateData = {
       supplier_reference: fd.supplier_reference,
       status: "Provisional",
-      date_provisional: dayjs()
-    }
+    };
     const { error: err } = await locals.sb.from("quotes").update(updateData).eq("id", params.id);
 
     if (err) {
@@ -292,25 +352,6 @@ export const actions = {
     }
 
     throw redirect(303, `/admin/sales/provisional/${params.id}`);
-  },
-  final: async ({ request, url, params, locals }) => {
-    const formData = await request.formData();
-    let fd = Object.fromEntries(formData.entries());
-
-    const updateData = {
-      supplier_reference: fd.supplier_reference,
-      status: "Final",
-      date_provisional: dayjs()
-    }
-    const { error: err } = await locals.sb.from("quotes").update(updateData).eq("id", params.id);
-
-    if (err) {
-      throw error(404, {
-        message: err.message,
-      });
-    }
-
-    throw redirect(303, `/admin/sales/final/${params.id}`);
   },
 
   // delete: async ({ request, url, params, locals }) => {
@@ -338,7 +379,7 @@ export const actions = {
 //       try {
 //           await page.goto(pageUrl);
 //           await page.pdf({
-//               path: `pdf-${i}.pdf`,
+//               path: `Qdf-${i}.pdf`,
 //               format: 'A4',
 //               printBackground: true
 //           });

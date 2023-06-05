@@ -7,8 +7,11 @@
   export let half = false;
   export let required = false;
   export let step = 1;
+  export let hideSteppers = false;
+
+  console.log(hideSteppers);
 </script>
 
 <div class={half ? "" : "md:col-span-2"}>
-  <NumberInput allowEmpty {name} {label} bind:value {required} {step} />
+  <NumberInput allowEmpty {name} {label} bind:value {required} {step} {hideSteppers} />
 </div>

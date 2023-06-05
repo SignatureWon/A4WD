@@ -563,7 +563,7 @@
 </div>
 
 <Modal passiveModal bind:open={openEmail} modalHeading="Email Provisional Ticket" on:open on:close>
-  <div>
+  <!-- <div>
     <Select
       labelText="Templates"
       on:change={(e) => {
@@ -576,7 +576,7 @@
         <SelectItem value={item.content} text={item.name} />
       {/each}
     </Select>
-  </div>
+  </div> -->
   <form action="?/email" method="POST">
     <InputRichText name="message" label="Message" bind:value={emailContent} />
     <Button type="submit" class="w-full">Send</Button>

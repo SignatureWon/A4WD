@@ -4,17 +4,15 @@ import { format } from "$lib/format.js";
 
 export const html = {
   create: async (quote_id) => {
+    let newBond = {};
+
     const { data: letterhead } = await supabase
       .from("contents")
       .select("content, description, name")
       .eq("type", "template_letterhead")
       .single();
 
-    const { data: contents } = await supabase
-      .from("contents")
-      .select()
-      .eq("type", "template_ticket_provisional")
-      .single();
+    const { data: contents } = await supabase.from("contents").select().eq("type", "template_ticket").single();
 
     const { data: quote } = await supabase
       .from("quotes")
@@ -35,8 +33,7 @@ export const html = {
       .select("depots")
       .eq("id", quote.details.supplier.id)
       .single();
-      console.log("supplier", supplier);
-
+    //   console.log("supplier", supplier);
 
     const duration = quote.details.duration;
     const date_quote = dayjs(quote.created_at).format("DD MMM YYYY");
@@ -79,44 +76,81 @@ export const html = {
       return total;
     };
 
+    // let
+
     const getDailyRates = () => {
       let obj = quote.details.daily;
       let type = quote.details.rates_type;
       let arr = obj.items;
-      if (type === "flex") {
-        let week = 1;
-        let day = 0;
-        arr.forEach((o, i) => {
-          if (i !== 0 && i % 7 === 0) {
-            agentFees.push({
-              name: `Daily basic rental: Week ${week}: Flex[${arr[i - 1].flex}]: $${format.currency(
-                arr[i - 1].gross
-              )} x ${day} days`,
-              total: arr[i - 1].gross * day,
-              nett: arr[i - 1].nett * day,
-              profit: arr[i - 1].profit * day,
-            });
-            day = 1;
-            week++;
-          } else {
-            day++;
-          }
-          if (i === arr.length - 1) {
-            agentFees.push({
-              name: `Daily basic rental: Week ${week}: Flex[${o.flex}]: $${format.currency(o.gross)} x ${day} days`,
-              total: o.gross * day,
-              nett: o.nett * day,
-              profit: o.profit * day,
-            });
-          }
+
+      let terms = quote.details.terms;
+
+      //   console.log("quote", quote);
+      //   console.log("terms", terms);
+
+      if (terms.pay_counter) {
+        let toAgent = terms.percentage ? (quote.details.daily.gross * terms.deposit) / 100 : terms.deposit;
+
+        agentFees.push({
+          name: `${terms.percentage ? `${terms.deposit}%` : `$${terms.deposit}%`} deposit of daily basic rental ${
+            terms.percentage ? `($${format.currency(quote.details.daily.gross)} x ${terms.deposit}%)` : ""
+          }`,
+          total: toAgent,
+          nett: 0,
+          profit: toAgent,
+        });
+        supplierFees.push({
+          name: `Balance of daily basic rental ($${format.currency(quote.details.daily.gross)} - $${format.currency(
+            toAgent
+          )})`,
+          total: quote.details.daily.gross - toAgent,
+          nett: 0,
+          profit: 0,
+        });
+        pickupFees.push({
+          name: `Balance of daily basic rental ($${format.currency(quote.details.daily.gross)} - $${format.currency(
+            toAgent
+          )})`,
+          total: quote.details.daily.gross - toAgent,
+          nett: 0,
+          profit: 0,
         });
       } else {
-        agentFees.push({
-          name: `Daily basic rental: $${format.currency(obj.gross / arr.length)} x ${arr.length} days`,
-          total: obj.gross,
-          nett: obj.nett,
-          profit: obj.profit,
-        });
+        if (type === "flex") {
+          let week = 1;
+          let day = 0;
+          arr.forEach((o, i) => {
+            if (i !== 0 && i % 7 === 0) {
+              agentFees.push({
+                name: `Daily basic rental: Week ${week}: Flex[${arr[i - 1].flex}]: $${format.currency(
+                  arr[i - 1].gross
+                )} x ${day} days`,
+                total: arr[i - 1].gross * day,
+                nett: arr[i - 1].nett * day,
+                profit: arr[i - 1].profit * day,
+              });
+              day = 1;
+              week++;
+            } else {
+              day++;
+            }
+            if (i === arr.length - 1) {
+              agentFees.push({
+                name: `Daily basic rental: Week ${week}: Flex[${o.flex}]: $${format.currency(o.gross)} x ${day} days`,
+                total: o.gross * day,
+                nett: o.nett * day,
+                profit: o.profit * day,
+              });
+            }
+          });
+        } else {
+          agentFees.push({
+            name: `Daily basic rental: $${format.currency(obj.gross / arr.length)} x ${arr.length} days`,
+            total: obj.gross,
+            nett: obj.nett,
+            profit: obj.profit,
+          });
+        }
       }
     };
     const getDiscount = () => {
@@ -130,8 +164,11 @@ export const html = {
       }
     };
 
-    const getBonds = () => {
+    const getBonds = async () => {
       const bond = Object.keys(quote.details.bonds).length ? quote.details.bonds : quote.details.bond;
+      //   console.log(bond);
+
+      //   console.log("newBond", newBond);
       pickupFees.push({
         name: `Bond: $${format.currency(
           bond.bond,
@@ -157,7 +194,21 @@ export const html = {
       }
 
       if (bond.gross > 0) {
+        // if (Object.keys(bond).length) {
+        //     // console.log("DON");
+        //   const { data: dataBond, error: errorBond } = await supabase
+        //     .from("packages")
+        //     .select("display_name")
+        //     .eq("id", bond.id)
+        //     .single();
+        //   if (errorBond) {
+        //     console.log(errorBond);
+        //   }
+        // //   newBond = dataBond;
+        // }
+        // console.log("BOOBOB");
         const row = {
+          //   name: `${"display_name" in newBond ? newBond.display_name : bond.display_name}: $${bond.gross} x ${duration} days`,
           name: `${bond.display_name}: $${bond.gross} x ${duration} days`,
           total: gross,
           nett: nett,
@@ -287,66 +338,77 @@ export const html = {
 
       if ("terms" in quote.details) {
         let terms = quote.details.terms;
-        let gap = dayjs(date_start).diff(dayjs(date_quote), "day");
+        // console.log(terms);
 
-        if (gap <= terms.balance) {
+        if (terms.pay_counter) {
           termsItems = [
-            {
-              name: `Full payment to agent on ${dayjs(date_quote).format("ddd, DD MMM YYYY")}`,
-              total: total,
-            },
-          ];
+              {
+                name: `Total payable to agent`,
+                total: totalAgentFee(),
+              },
+            ];
         } else {
-          termsItems = [
-            {
-              name: `Booking deposit to agent now (${
-                terms.percentage ? `${terms.deposit}%` : `$${terms.deposit}`
-              }) on ${dayjs(date_quote).format("ddd, DD MMM YYYY")}`,
-              total: terms.percentage ? (total * terms.deposit) / 100 : terms.deposit,
-            },
-          ];
-          if (terms.payment2) {
-            if (terms.balance2 < gap) {
-              termsItems.push({
-                name: `First payment to agent (${
-                  terms.percentage2 ? `${terms.deposit2}%` : `$${terms.deposit2}`
-                }) on ${dayjs(date_start).subtract(terms.balance2, "day").format("ddd, DD MMM YYYY")} (${
-                  terms.balance2
-                } days before
-                travel)`,
-                total: terms.percentage2 ? (total * terms.deposit2) / 100 : terms.deposit2,
-              });
-            }
-          }
-          if (terms.payment3) {
-            if (terms.balance3 < gap) {
-              termsItems.push({
-                name: `Second payment (${terms.percentage3 ? `${terms.deposit3}%` : `$${terms.deposit3}`}) on ${dayjs(
-                  date_start
-                )
-                  .subtract(terms.balance3, "day")
-                  .format("ddd, DD MMM YYYY")} (${terms.balance3} days before
-                travel)`,
-                total: terms.percentage3 ? (total * terms.deposit3) / 100 : terms.deposit3,
-              });
-            }
-          }
-          // balance
-          if (terms.balance < gap) {
-            let bal = total;
-            termsItems.forEach((t) => {
-              bal -= t.total;
-            });
+          let gap = dayjs(date_start).diff(dayjs(date_quote), "day");
 
-            termsItems.push({
-              name:
-                "Balance payment to " +
-                (terms.pay_counter
-                  ? `supplier at pick-up counter on ${dayjs(date_start).format("ddd, DD MMM YYYY")}`
-                  : `agent on ${dayjs(date_start).subtract(terms.balance, "day").format("ddd, DD MMM YYYY")}`) +
-                ` (${terms.balance} days before travel)`,
-              total: bal,
-            });
+          if (gap <= terms.balance) {
+            termsItems = [
+              {
+                name: `Full payment to agent on ${dayjs(date_quote).format("ddd, DD MMM YYYY")}`,
+                total: total,
+              },
+            ];
+          } else {
+            termsItems = [
+              {
+                name: `Booking deposit to agent now (${
+                  terms.percentage ? `${terms.deposit}%` : `$${terms.deposit}`
+                }) on ${dayjs(date_quote).format("ddd, DD MMM YYYY")}`,
+                total: terms.percentage ? (total * terms.deposit) / 100 : terms.deposit,
+              },
+            ];
+            if (terms.payment2) {
+              if (terms.balance2 < gap) {
+                termsItems.push({
+                  name: `First payment to agent (${
+                    terms.percentage2 ? `${terms.deposit2}%` : `$${terms.deposit2}`
+                  }) on ${dayjs(date_start).subtract(terms.balance2, "day").format("ddd, DD MMM YYYY")} (${
+                    terms.balance2
+                  } days before
+                    travel)`,
+                  total: terms.percentage2 ? (total * terms.deposit2) / 100 : terms.deposit2,
+                });
+              }
+            }
+            if (terms.payment3) {
+              if (terms.balance3 < gap) {
+                termsItems.push({
+                  name: `Second payment (${terms.percentage3 ? `${terms.deposit3}%` : `$${terms.deposit3}`}) on ${dayjs(
+                    date_start
+                  )
+                    .subtract(terms.balance3, "day")
+                    .format("ddd, DD MMM YYYY")} (${terms.balance3} days before
+                    travel)`,
+                  total: terms.percentage3 ? (total * terms.deposit3) / 100 : terms.deposit3,
+                });
+              }
+            }
+            // balance
+            if (terms.balance < gap) {
+              let bal = total;
+              termsItems.forEach((t) => {
+                bal -= t.total;
+              });
+
+              termsItems.push({
+                name:
+                  "Balance payment to " +
+                  (terms.pay_counter
+                    ? `supplier at pick-up counter on ${dayjs(date_start).format("ddd, DD MMM YYYY")}`
+                    : `agent on ${dayjs(date_start).subtract(terms.balance, "day").format("ddd, DD MMM YYYY")}`) +
+                  ` (${terms.balance} days before travel)`,
+                total: bal,
+              });
+            }
           }
         }
       }
@@ -355,7 +417,7 @@ export const html = {
     // map data
     const info = {
       doc: {
-        name: contents.name,
+        name: "Final Ticket",
         note: contents.description,
       },
       company: {
@@ -383,19 +445,22 @@ export const html = {
         pickup: {
           name: quote.details.pickup.name,
           date: date_start,
-          details: supplier.depots.filter(item => {
-            return item.Depots.id === quote.details.pickup.id
-          })[0]
+          details: supplier.depots.filter((item) => {
+            return item.Depots.id === quote.details.pickup.id;
+          })[0],
         },
         dropoff: {
           name: quote.details.dropoff.name,
           date: date_end,
-          details: supplier.depots.filter(item => {
-            return item.Depots.id === quote.details.dropoff.id
-          })[0]
+          details: supplier.depots.filter((item) => {
+            return item.Depots.id === quote.details.dropoff.id;
+          })[0],
         },
       },
       comment: quote.comment,
+      supplier: {
+        name: quote.details.supplier.name,
+      },
       vehicle: {
         name: vehicle.name,
         slug: vehicle.slug,
@@ -436,7 +501,7 @@ export const html = {
       term: getTerms(),
     };
 
-    console.log(info)
+    // console.log(info)
 
     let email = `
 <!DOCTYPE htmlPUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -511,9 +576,6 @@ table, td{
     </tr>
   </table>
   <hr />
-  <div style="margin-top: 30px; margin-bottom: 10px; font-weight: bold;">
-    ${info.doc.note}
-  </div>
   <table
     width="600"
     cellpadding="20"
@@ -595,6 +657,7 @@ table, td{
           ${info.quote.pickup.date}
         </div>
         <div>
+          <div style="text-decoration: underline">${info.supplier.name}</div>
           ${info.quote.pickup.details.Address.replace(/(?:\r\n|\r|\n)/g, "<br>")}
         </div>
         <div>
@@ -618,6 +681,7 @@ table, td{
           ${info.quote.dropoff.date}
         </div>
         <div>
+          <div style="text-decoration: underline">${info.supplier.name}</div>
           ${info.quote.dropoff.details.Address.replace(/(?:\r\n|\r|\n)/g, "<br>")}
         </div>
         <div>
@@ -956,7 +1020,11 @@ style="margin-bottom: 30px"
     </tr>
 </table>
 <div style="margin-bottom: 10px;">
-<strong>Cancellation fees</strong> will apply on <strong>AUD $${format.currency(totalAgentFee())}</strong>. The <strong>Agent Nett Deposit Fee after discount of AUD $${format.currency(totalAgentCommission())} is non-refundable</strong>. The Agent Deposit will be carried forward towards a future booking if cancellation is made more than 25 days prior to travel. An additional AUD $100.00 administration cancellation fee applies. Please read the cancellation policy found in the quote.
+<strong>Cancellation fees</strong> will apply on <strong>AUD $${format.currency(
+      totalAgentFee()
+    )}</strong>. The <strong>Agent Nett Deposit Fee after discount of AUD $${format.currency(
+      totalAgentCommission()
+    )} is non-refundable</strong>. The Agent Deposit will be carried forward towards a future booking if cancellation is made more than 25 days prior to travel. An additional AUD $100.00 administration cancellation fee applies. Please read the cancellation policy found in the quote.
 </div>
 </div>
 </body>
