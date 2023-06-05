@@ -49,7 +49,7 @@ export const html = {
         sum += fee.profit;
       });
 
-      sum -= quote.add_discount
+      sum -= quote.add_discount;
       return sum;
     };
     const totalSupplierFee = () => {
@@ -211,12 +211,14 @@ export const html = {
       let special = quote.details.specials;
       if (special.total > 0) {
         special.items.forEach((item) => {
-          agentFees.push({
-            name: item.name,
-            total: -item.discount_amount,
-            nett: 0,
-            profit: 0,
-          });
+          if (item.discount_amount > 0) {
+            agentFees.push({
+              name: item.name,
+              total: -item.discount_amount,
+              nett: 0,
+              profit: 0,
+            });
+          }
         });
       }
     };
