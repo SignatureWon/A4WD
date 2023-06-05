@@ -149,7 +149,7 @@ export const html = {
           nett: nett,
           profit: profit,
         };
-        if (bond.gross > bond.nett) {
+        if (bond.nett > 0 && bond.gross > bond.nett) {
           agentFees.push(row);
         } else {
           supplierFees.push(row);
@@ -523,7 +523,7 @@ table, td{
       >
         <div style="font-size: 12px; color: #999999">Ticket Date</div>
         <div style="font-weight: bold">
-          ${info.quote.date}
+          ${dayjs(info.quote.date).format("DD MMM YYYY")}
         </div>
       </td>
       <td

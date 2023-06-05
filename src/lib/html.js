@@ -135,7 +135,7 @@ export const html = {
           nett: nett,
           profit: profit,
         };
-        if (bond.gross > bond.nett) {
+        if (bond.nett > 0 && bond.gross > bond.nett) {
           agentFees.push(row);
         } else {
           supplierFees.push(row);
