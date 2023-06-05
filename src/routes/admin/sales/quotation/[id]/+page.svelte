@@ -459,7 +459,7 @@
         </div>
         <div class="flex py-2 border-b border-gray-200">
           <div class="flex-1">Total Discount</div>
-          <div class="text-right ml-4">{format.currency(quote.add_discount)}</div>
+          <div class="text-right ml-4">-{format.currency(quote.add_discount)}</div>
         </div>
         <div class="flex py-2 border-b border-gray-200">
           <div class="flex-1 relative">

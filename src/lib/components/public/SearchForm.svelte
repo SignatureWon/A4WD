@@ -142,20 +142,22 @@
           half={true}
         />
       </div>
-      <div class="grid grid-cols-2">
-        <InputSelect
-          name="category"
-          label="Category"
-          bind:value={search.category}
-          options={options["categories"]}
-          half={true}
-        />
-        <InputNumber
+      <div class="grid grid-cols-3">
+        <div class="grid grid-cols-2 col-span-2">
+          <InputSelect
+            name="category"
+            label="Category"
+            bind:value={search.category}
+            options={options["categories"]}
+          />
+        </div>
+        <div class="grid grid-cols-2">
+          <InputNumber
           name="pax"
           label="Passengers"
           bind:value={search.pax}
-          half={true}
         />
+        </div>
       </div>
       <!-- <div class="md:mt-6 lg:mt-0"> -->
       <div class="md:col-span-2 lg:col-span-1">

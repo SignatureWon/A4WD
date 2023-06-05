@@ -17,7 +17,7 @@
   <div class="p-4">
     <div class="px-4 py-20 text-center bg-white">
       <div class="mb-5">No confirmation detail</div>
-      <Button href="/search">Back to search</Button>
+      <Button href="/">Back to Home</Button>
     </div>
   </div>
 {:else}
