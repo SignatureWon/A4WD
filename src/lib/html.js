@@ -980,7 +980,7 @@ table, td{
     months from date of cancellation to be used towards a future security
     deposit for bookings made through the Agent and only with the same supplier.
     This clause is subject to the sole discretion of the management of the
-    Agent. Total Agent's Security Booking Deposit of ${format.currency(totalAgentCommission())} is fully included
+    Agent. Total Agent's Security Booking Deposit of $${format.currency(totalAgentCommission())} is fully included
     in the final payment.
   </div>
   <div

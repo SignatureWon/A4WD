@@ -1,32 +1,31 @@
 <script>
-    import PageTitle from "$lib/components/admin/PageTitle.svelte";
-    import SectionDataTable from "$lib/components/admin/SectionDataTable.svelte";
-  
-    export let data;
-  </script>
-  
-  <PageTitle title="Booking" path={data.path} />
-  
-  <SectionDataTable
-    rows={data.data}
-    path={data.path}
-    headers={[
-      {
-        key: "updated_at",
-        value: "Last update",
-      },
-      {
-        key: "users.first_name",
-        value: "User",
-      },
-      {
-        key: "status",
-        value: "Status",
-      },
-      {
-        key: "gross",
-        value: "Gross",
-      },
-    ]}
-  />
-  
+  import PageTitle from "$lib/components/admin/PageTitle.svelte";
+  import SectionDataTable from "$lib/components/admin/SectionDataTable.svelte";
+
+  export let data;
+</script>
+
+<PageTitle title="Customer Booking" path={data.path} />
+
+<SectionDataTable
+  rows={data.data}
+  path={data.path}
+  headers={[
+    {
+      key: "created_at",
+      value: "Booking Date",
+    },
+    {
+      key: "quote_id",
+      value: "Ref Code",
+    },
+    {
+      key: "quote_title",
+      value: "Title",
+    },
+    {
+      key: "quote_customer",
+      value: "Customer",
+    },
+  ]}
+/>
