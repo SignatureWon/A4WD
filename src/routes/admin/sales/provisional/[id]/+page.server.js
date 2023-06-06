@@ -293,7 +293,7 @@ export const actions = {
           email: "info@australia4wdrentals.com",
           name: "Australia 4WD Rentals",
         },
-        subject: `Quote: ${dataQuote.details.vehicle.name.trim()}: ${dataQuote.details.pickup.name.trim()}, ${dayjs(
+        subject: `Provisional Ticket: ${dataQuote.details.vehicle.name.trim()}: ${dataQuote.details.pickup.name.trim()}, ${dayjs(
           dataQuote.details.date_start
         ).format("DD MMM YYYY")} - ${dataQuote.details.dropoff.name.trim()}, ${dayjs(dataQuote.details.date_end).format(
           "DD MMM YYYY"

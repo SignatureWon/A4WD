@@ -307,7 +307,7 @@ export const actions = {
         attachments: [
           {
             content: buffer.toString("base64"),
-            filename: `Provisional Ticket - Q${388000 + Number(params.id)}.pdf`,
+            filename: `Final Ticket - Q${388000 + Number(params.id)}.pdf`,
             type: "application/pdf",
             disposition: "attachment",
           },
