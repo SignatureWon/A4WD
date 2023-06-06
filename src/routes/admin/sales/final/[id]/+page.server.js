@@ -10,7 +10,7 @@ import { html as confirmation } from "$lib/confirmation.js";
 // import puppeteer from "puppeteer";
 // import puppeteer from "puppeteer-core";
 // import chromium from "@sparticuz/chromium-min";
-import { chromium } from 'playwright';
+// import { chromium } from 'playwright';
 import playwright from 'playwright-aws-lambda';
 
 import { env } from "$env/dynamic/public";
@@ -331,7 +331,7 @@ export const actions = {
                 name: `${dataUser.first_name.trim()} ${dataUser.last_name.trim()}`,
               },
             ],
-            // bcc: bccList,
+            bcc: bccList,
           },
         ],
         from: {

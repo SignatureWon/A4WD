@@ -6,8 +6,9 @@ dayjs.extend(isBetween);
 import { cal } from "$lib/cal";
 import { error, redirect } from "@sveltejs/kit";
 import { html } from "$lib/provisional.js";
-import { chromium } from 'playwright';
+// import { chromium } from 'playwright';
 // import puppeteer from "puppeteer";
+import playwright from 'playwright-aws-lambda';
 import { env } from "$env/dynamic/public";
 import sgMail from "@sendgrid/mail";
 
@@ -166,9 +167,9 @@ export const actions = {
     throw redirect(303, url.pathname);
   },
   download: async ({ request, url, params, locals }) => {
-    const browser = await chromium.launch()
-    // const browser = await puppeteer.launch();
-    const page = await browser.newPage();
+    const browser = await playwright.launchChromium();
+    const context = await browser.newContext();
+    const page = await context.newPage();
     const content = await html.create(params.id);
     await page.setContent(content);
     const buffer = await page.pdf({
@@ -213,9 +214,9 @@ export const actions = {
     let getBond = Object.keys(dataQuote.details.bonds).length ? dataQuote.details.bonds : dataQuote.details.bond;
     const { data: dataUser } = await supabase.from("users").select().eq("id", dataQuote.users).single();
 
-    const browser = await chromium.launch()
-    // const browser = await puppeteer.launch();
-    const page = await browser.newPage();
+    const browser = await playwright.launchChromium();
+    const context = await browser.newContext();
+    const page = await context.newPage();
     const content = await html.create(params.id);
     await page.setContent(content);
     const buffer = await page.pdf({

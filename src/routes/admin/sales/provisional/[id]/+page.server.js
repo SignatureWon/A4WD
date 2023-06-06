@@ -10,7 +10,8 @@ import { html as confirmation } from "$lib/confirmation.js";
 // import puppeteer from "puppeteer";
 // import puppeteer from "puppeteer-core";
 // import chromium from "@sparticuz/chromium-min";
-import { chromium } from 'playwright';
+// import { chromium } from 'playwright';
+import playwright from 'playwright-aws-lambda';
 import { env } from "$env/dynamic/public";
 import sgMail from "@sendgrid/mail";
 
@@ -169,14 +170,9 @@ export const actions = {
     throw redirect(303, url.pathname);
   },
   download: async ({ request, url, params, locals }) => {
-    const browser = await chromium.launch()
-    // const browser = await puppeteer.launch({
-    //   args: chromium.args,
-    //   defaultViewport: chromium.defaultViewport,
-    //   executablePath: await chromium.executablePath("/opt/chromium"),
-    //   headless: chromium.headless,
-    // });
-    const page = await browser.newPage();
+    const browser = await playwright.launchChromium();
+    const context = await browser.newContext();
+    const page = await context.newPage();
     const content = await html.create(params.id);
     await page.setContent(content);
     const buffer = await page.pdf({
@@ -221,14 +217,9 @@ export const actions = {
     let getBond = Object.keys(dataQuote.details.bonds).length ? dataQuote.details.bonds : dataQuote.details.bond;
     const { data: dataUser } = await supabase.from("users").select().eq("id", dataQuote.users).single();
 
-    const browser = await chromium.launch()
-    // const browser = await puppeteer.launch({
-    //   args: chromium.args,
-    //   defaultViewport: chromium.defaultViewport,
-    //   executablePath: await chromium.executablePath("/opt/chromium"),
-    //   headless: chromium.headless,
-    // });
-    const page = await browser.newPage();
+    const browser = await playwright.launchChromium();
+    const context = await browser.newContext();
+    const page = await context.newPage();
     const content = await html.create(params.id);
     await page.setContent(content);
     const buffer = await page.pdf({
@@ -242,14 +233,9 @@ export const actions = {
     });
     browser.close();
 
-    const browser2 = await chromium.launch()
-    // const browser2 = await puppeteer.launch({
-    //   args: chromium.args,
-    //   defaultViewport: chromium.defaultViewport,
-    //   executablePath: await chromium.executablePath("/opt/chromium"),
-    //   headless: chromium.headless,
-    // });
-    const page2 = await browser2.newPage();
+    const browser2 = await playwright.launchChromium();
+    const context2 = await browser2.newContext();
+    const page2 = await context2.newPage();
     const content2 = await confirmation.create(params.id);
     await page2.setContent(content2);
     const buffer2 = await page2.pdf({
