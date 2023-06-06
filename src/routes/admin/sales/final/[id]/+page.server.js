@@ -9,7 +9,7 @@ import { html } from "$lib/final.js";
 import { html as confirmation } from "$lib/confirmation.js";
 // import puppeteer from "puppeteer";
 import puppeteer from "puppeteer-core";
-import chromium from "@sparticuz/chromium";
+import chromium from "@sparticuz/chromium-min";
 
 import { env } from "$env/dynamic/public";
 import sgMail from "@sendgrid/mail";
