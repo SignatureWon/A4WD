@@ -245,8 +245,11 @@ export const actions = {
     //   executablePath: await chromium.executablePath("/opt/chromium"),
     //   headless: chromium.headless,
     // });
-    const browser = await chromium.launch()
-    const page = await browser.newPage();
+    // const browser = await chromium.launch()
+    // const page = await browser.newPage();
+    const browser = await playwright.launchChromium();
+    const context = await browser.newContext();
+    const page = await context.newPage();
     const content = await html.create(params.id);
     await page.setContent(content);
     const buffer = await page.pdf({
@@ -266,8 +269,11 @@ export const actions = {
     //   executablePath: await chromium.executablePath("/opt/chromium"),
     //   headless: chromium.headless,
     // });
-    const browser2 = await chromium.launch()
-    const page2 = await browser2.newPage();
+    // const browser2 = await chromium.launch()
+    // const page2 = await browser2.newPage();
+    const browser2 = await playwright.launchChromium();
+    const context2 = await browser2.newContext();
+    const page2 = await context2.newPage();
     const content2 = await confirmation.create(params.id);
     await page2.setContent(content2);
     const buffer2 = await page2.pdf({
