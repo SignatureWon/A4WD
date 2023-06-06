@@ -11,6 +11,7 @@ import { html as confirmation } from "$lib/confirmation.js";
 // import puppeteer from "puppeteer-core";
 // import chromium from "@sparticuz/chromium-min";
 import { chromium } from 'playwright';
+import playwright from 'playwright-aws-lambda';
 
 import { env } from "$env/dynamic/public";
 import sgMail from "@sendgrid/mail";
@@ -170,8 +171,11 @@ export const actions = {
     throw redirect(303, url.pathname);
   },
   download: async ({ request, url, params, locals }) => {
-    const browser = await chromium.launch()
-    const page = await browser.newPage()
+    browser = await playwright.launchChromium();
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    // const browser = await chromium.launch()
+    // const page = await browser.newPage()
     const content = await html.create(params.id);
     await page.setContent(content);
     const buffer = await page.pdf({
