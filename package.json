@@ -8,6 +8,7 @@
 		"preview": "vite preview"
 	},
 	"devDependencies": {
+		"@sparticuz/chromium": "^113.0.1",
 		"@sveltejs/adapter-auto": "^1.0.0",
 		"@sveltejs/kit": "^1.0.0",
 		"autoprefixer": "^10.4.13",
@@ -36,6 +37,7 @@
 		"jspdf": "^2.5.1",
 		"jspdf-autotable": "^3.5.28",
 		"puppeteer": "^20.5.0",
+		"puppeteer-core": "^20.5.0",
 		"uuid": "^9.0.0"
 	}
 }
