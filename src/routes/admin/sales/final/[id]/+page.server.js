@@ -235,12 +235,13 @@ export const actions = {
     let getBond = Object.keys(dataQuote.details.bonds).length ? dataQuote.details.bonds : dataQuote.details.bond;
     const { data: dataUser } = await supabase.from("users").select().eq("id", dataQuote.users).single();
 
-    const browser = await puppeteer.launch({
-      args: chromium.args,
-      defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath("/opt/chromium"),
-      headless: chromium.headless,
-    });
+    // const browser = await puppeteer.launch({
+    //   args: chromium.args,
+    //   defaultViewport: chromium.defaultViewport,
+    //   executablePath: await chromium.executablePath("/opt/chromium"),
+    //   headless: chromium.headless,
+    // });
+    const browser = await chromium.launch()
     const page = await browser.newPage();
     const content = await html.create(params.id);
     await page.setContent(content);
@@ -255,12 +256,13 @@ export const actions = {
     });
     browser.close();
 
-    const browser2 = await puppeteer.launch({
-      args: chromium.args,
-      defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath("/opt/chromium"),
-      headless: chromium.headless,
-    });
+    // const browser2 = await puppeteer.launch({
+    //   args: chromium.args,
+    //   defaultViewport: chromium.defaultViewport,
+    //   executablePath: await chromium.executablePath("/opt/chromium"),
+    //   headless: chromium.headless,
+    // });
+    const browser2 = await chromium.launch()
     const page2 = await browser2.newPage();
     const content2 = await confirmation.create(params.id);
     await page2.setContent(content2);

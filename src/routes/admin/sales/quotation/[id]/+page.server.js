@@ -6,7 +6,8 @@ dayjs.extend(isBetween);
 import { cal } from "$lib/cal";
 import { error, redirect } from "@sveltejs/kit";
 import { html } from "$lib/html.js";
-import puppeteer from "puppeteer";
+import { chromium } from 'playwright';
+// import puppeteer from "puppeteer";
 import { env } from "$env/dynamic/public";
 import sgMail from "@sendgrid/mail";
 
@@ -160,7 +161,8 @@ export const actions = {
     throw redirect(303, url.pathname);
   },
   download: async ({ request, url, params, locals }) => {
-    const browser = await puppeteer.launch();
+    const browser = await chromium.launch()
+    // const browser = await puppeteer.launch();
     const page = await browser.newPage();
     const content = await html.create(params.id, "template_quote");
     await page.setContent(content);
