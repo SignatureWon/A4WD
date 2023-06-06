@@ -171,7 +171,7 @@ export const actions = {
     throw redirect(303, url.pathname);
   },
   download: async ({ request, url, params, locals }) => {
-    browser = await playwright.launchChromium();
+    const browser = await playwright.launchChromium();
     const context = await browser.newContext();
     const page = await context.newPage();
     // const browser = await chromium.launch()
