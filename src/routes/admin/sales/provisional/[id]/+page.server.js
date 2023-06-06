@@ -7,7 +7,9 @@ import { cal } from "$lib/cal";
 import { error, redirect } from "@sveltejs/kit";
 import { html } from "$lib/provisional.js";
 import { html as confirmation } from "$lib/confirmation.js";
-import puppeteer from "puppeteer";
+// import puppeteer from "puppeteer";
+import puppeteer from "puppeteer-core";
+import chromium from "@sparticuz/chromium-min";
 import { env } from "$env/dynamic/public";
 import sgMail from "@sendgrid/mail";
 
@@ -166,7 +168,12 @@ export const actions = {
     throw redirect(303, url.pathname);
   },
   download: async ({ request, url, params, locals }) => {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath("/opt/chromium"),
+      headless: chromium.headless,
+    });
     const page = await browser.newPage();
     const content = await html.create(params.id);
     await page.setContent(content);
@@ -186,13 +193,13 @@ export const actions = {
 
     const { data: uploadData, error: uploadError } = await supabase.storage
       .from("quotes")
-      .upload(`Q${388000 + Number(params.id)}.pdf`, filePDF);
+      .upload(`Provisional Ticket - Q${388000 + Number(params.id)}.pdf`, filePDF);
 
     if (uploadError) {
       console.log("uploadError", uploadError);
       const { data: updateData, error: updateError } = await supabase.storage
         .from("quotes")
-        .update(`Q${388000 + Number(params.id)}.pdf`, filePDF, {
+        .update(`Provisional Ticket - Q${388000 + Number(params.id)}.pdf`, filePDF, {
           cacheControl: "3600",
           upsert: true,
         });
@@ -212,7 +219,12 @@ export const actions = {
     let getBond = Object.keys(dataQuote.details.bonds).length ? dataQuote.details.bonds : dataQuote.details.bond;
     const { data: dataUser } = await supabase.from("users").select().eq("id", dataQuote.users).single();
 
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath("/opt/chromium"),
+      headless: chromium.headless,
+    });
     const page = await browser.newPage();
     const content = await html.create(params.id);
     await page.setContent(content);
@@ -227,7 +239,12 @@ export const actions = {
     });
     browser.close();
 
-    const browser2 = await puppeteer.launch();
+    const browser2 = await puppeteer.launch({
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath("/opt/chromium"),
+      headless: chromium.headless,
+    });
     const page2 = await browser2.newPage();
     const content2 = await confirmation.create(params.id);
     await page2.setContent(content2);
@@ -248,13 +265,13 @@ export const actions = {
 
     const { data: uploadData, error: uploadError } = await supabase.storage
       .from("quotes")
-      .upload(`Q${388000 + Number(params.id)}.pdf`, filePDF);
+      .upload(`Provisional Ticket - Q${388000 + Number(params.id)}.pdf`, filePDF);
 
     if (uploadError) {
       console.log("uploadError", uploadError);
       const { data: updateData, error: updateError } = await supabase.storage
         .from("quotes")
-        .update(`Q${388000 + Number(params.id)}.pdf`, filePDF, {
+        .update(`Provisional Ticket - Q${388000 + Number(params.id)}.pdf`, filePDF, {
           cacheControl: "3600",
           upsert: true,
         });

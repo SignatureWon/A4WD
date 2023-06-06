@@ -8,8 +8,9 @@ import { error, redirect } from "@sveltejs/kit";
 import { html } from "$lib/final.js";
 import { html as confirmation } from "$lib/confirmation.js";
 // import puppeteer from "puppeteer";
-import puppeteer from "puppeteer-core";
-import chromium from "@sparticuz/chromium-min";
+// import puppeteer from "puppeteer-core";
+// import chromium from "@sparticuz/chromium-min";
+import { chromium } from 'playwright';
 
 import { env } from "$env/dynamic/public";
 import sgMail from "@sendgrid/mail";
@@ -169,24 +170,38 @@ export const actions = {
     throw redirect(303, url.pathname);
   },
   download: async ({ request, url, params, locals }) => {
-    const browser = await puppeteer.launch({
-      args: chromium.args,
-      defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath("/opt/chromium"),
-      headless: chromium.headless,
-    });
-    const page = await browser.newPage();
+    const browser = await chromium.launch()
+    const page = await browser.newPage()
     const content = await html.create(params.id);
     await page.setContent(content);
     const buffer = await page.pdf({
-      format: "A4",
-      margin: {
-        top: "1cm",
-        bottom: "1cm",
-        left: "1cm",
-        right: "1cm",
-      },
-    });
+        format: "A4",
+        margin: {
+          top: "1cm",
+          bottom: "1cm",
+          left: "1cm",
+          right: "1cm",
+        },
+      })
+    await browser.close()
+    // const browser = await puppeteer.launch({
+    //   args: chromium.args,
+    //   defaultViewport: chromium.defaultViewport,
+    //   executablePath: await chromium.executablePath("/opt/chromium"),
+    //   headless: chromium.headless,
+    // });
+    // const page = await browser.newPage();
+    // const content = await html.create(params.id);
+    // await page.setContent(content);
+    // const buffer = await page.pdf({
+    //   format: "A4",
+    //   margin: {
+    //     top: "1cm",
+    //     bottom: "1cm",
+    //     left: "1cm",
+    //     right: "1cm",
+    //   },
+    // });
 
     let filePDF = new Blob([buffer], {
       type: "application/pdf",
