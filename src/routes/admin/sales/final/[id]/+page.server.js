@@ -194,13 +194,13 @@ export const actions = {
 
     const { data: uploadData, error: uploadError } = await supabase.storage
       .from("quotes")
-      .upload(`Q${388000 + Number(params.id)}.pdf`, filePDF);
+      .upload(`Final Ticket - Q${388000 + Number(params.id)}.pdf`, filePDF);
 
     if (uploadError) {
       console.log("uploadError", uploadError);
       const { data: updateData, error: updateError } = await supabase.storage
         .from("quotes")
-        .update(`Q${388000 + Number(params.id)}.pdf`, filePDF, {
+        .update(`Final Ticket - Q${388000 + Number(params.id)}.pdf`, filePDF, {
           cacheControl: "3600",
           upsert: true,
         });
@@ -220,7 +220,12 @@ export const actions = {
     let getBond = Object.keys(dataQuote.details.bonds).length ? dataQuote.details.bonds : dataQuote.details.bond;
     const { data: dataUser } = await supabase.from("users").select().eq("id", dataQuote.users).single();
 
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath("/opt/chromium"),
+      headless: chromium.headless,
+    });
     const page = await browser.newPage();
     const content = await html.create(params.id);
     await page.setContent(content);
@@ -235,7 +240,12 @@ export const actions = {
     });
     browser.close();
 
-    const browser2 = await puppeteer.launch();
+    const browser2 = await puppeteer.launch({
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath("/opt/chromium"),
+      headless: chromium.headless,
+    });
     const page2 = await browser2.newPage();
     const content2 = await confirmation.create(params.id);
     await page2.setContent(content2);
@@ -256,13 +266,13 @@ export const actions = {
 
     const { data: uploadData, error: uploadError } = await supabase.storage
       .from("quotes")
-      .upload(`Q${388000 + Number(params.id)}.pdf`, filePDF);
+      .upload(`Final Ticket - Q${388000 + Number(params.id)}.pdf`, filePDF);
 
     if (uploadError) {
       console.log("uploadError", uploadError);
       const { data: updateData, error: updateError } = await supabase.storage
         .from("quotes")
-        .update(`Q${388000 + Number(params.id)}.pdf`, filePDF, {
+        .update(`Final Ticket - Q${388000 + Number(params.id)}.pdf`, filePDF, {
           cacheControl: "3600",
           upsert: true,
         });
@@ -294,7 +304,7 @@ export const actions = {
                 name: `${dataUser.first_name.trim()} ${dataUser.last_name.trim()}`,
               },
             ],
-            bcc: bccList,
+            // bcc: bccList,
           },
         ],
         from: {
