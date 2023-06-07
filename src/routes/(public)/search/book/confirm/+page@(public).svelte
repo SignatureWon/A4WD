@@ -9,8 +9,8 @@
 
   export let data;
   export let form;
-  console.log("data", data);
-  console.log("form", form);
+  // console.log("data", data);
+  // console.log("form", form);
 </script>
 
 {#if !form}

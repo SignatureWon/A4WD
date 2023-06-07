@@ -149,9 +149,10 @@ export const actions = {
     delete quote.created_at;
     delete quote.updated_at;
 
-    // console.log("quote", quote);
+    // console.log("quote", quote.details.daily.items);
 
     const { error: err } = await locals.sb.from("quotes").update(quote).eq("id", id);
+    // console.log(err);
 
     if (err) {
       throw error(404, {

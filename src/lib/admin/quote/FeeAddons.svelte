@@ -79,7 +79,7 @@
               }
               addons = fees
 
-              console.log(addons);
+              // console.log(addons);
               
               count();
             }}

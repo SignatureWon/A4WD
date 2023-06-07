@@ -4,7 +4,7 @@
   import { dummy } from "./dummy.js";
   import dayjs from "dayjs";
   export let data;
-  console.log(data);
+  // console.log(data);
 
   data = dummy;
 
@@ -27,7 +27,7 @@
     return sum;
   };
   const totalAgentCommission = () => {
-    console.log(agentFees);
+    // console.log(agentFees);
     let sum = 0;
     agentFees.forEach((fee) => {
       sum += fee.profit;

@@ -138,8 +138,8 @@
         let img1 = await img.upload(file, filename, "gallery", 800, 600);
         let img2 = await img.upload(file, `thumb-${filename}`, "gallery", 400, 300);
 
-        console.log('img1', img1);
-        console.log('img2', img2);
+        // console.log('img1', img1);
+        // console.log('img2', img2);
         
 
         setTimeout(async () => {

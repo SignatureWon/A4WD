@@ -29,7 +29,7 @@ const countDiscountAmount = (
   list,
   start_date
 ) => {
-  console.log("list", list);
+  // console.log("list", list);
   let results = {
     total: 0,
     items: [],

@@ -35,7 +35,7 @@ export const html = {
       .select("depots")
       .eq("id", quote.details.supplier.id)
       .single();
-      console.log("supplier", supplier);
+      // console.log("supplier", supplier);
 
 
     const duration = quote.details.duration;
@@ -436,7 +436,7 @@ export const html = {
       term: getTerms(),
     };
 
-    console.log(info)
+    // console.log(info)
 
     let email = `
 <!DOCTYPE htmlPUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

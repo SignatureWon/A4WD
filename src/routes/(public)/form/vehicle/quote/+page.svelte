@@ -25,8 +25,8 @@
   let count_adults = 0;
   let count_children = 0;
   const genGuests = () => {
-    console.log("count_adults", count_adults);
-    console.log("count_children", count_children);
+    // console.log("count_adults", count_adults);
+    // console.log("count_children", count_children);
     let adults = [];
     let children = [];
 
@@ -61,7 +61,7 @@
         }
       }
     });
-    console.log([...adults, ...children]);
+    // console.log([...adults, ...children]);
     return [...adults, ...children];
   };
 </script>

@@ -362,7 +362,7 @@
                   b.gross *
                   (d.duration < (b.cap || 0) ? d.duration : b.cap || 0);
                 booking.bonds = b;
-                console.log(booking);
+                // console.log(booking);
               }}>Select</Button
             >
           {/if}
@@ -394,7 +394,7 @@
                         addon_fee -= fee;
                         delete booking.addons[`${index1}-${index2}`];
                       }
-                      console.log(booking);
+                      // console.log(booking);
                     }}
                   />
                 </div>

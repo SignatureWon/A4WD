@@ -15,7 +15,7 @@
   export let data;
 
   const d = data.detail;
-  console.log(d);
+  // console.log(d);
   // console.log(data);
 
   const formatCurrency = (num) => {
