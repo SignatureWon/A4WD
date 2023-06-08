@@ -9,6 +9,7 @@
   import InputNumber from "$lib/components/admin/InputNumber.svelte";
   import InputRichText from "$lib/components/admin/InputRichText.svelte";
   import InputSelect from "$lib/components/admin/InputSelect.svelte";
+  import { CopyButton } from "carbon-components-svelte";
   export let data;
   console.log(data);
 </script>
@@ -59,6 +60,10 @@
       bind:value={data.data.rank}
       half={true}
     />
+    <div class="col-span-2">
+      <div class="mb-2 text-sm font-bold tracking-wide">Copy attachment URL</div>
+      <CopyButton text="https://www.australia4wdrentals.com/files/{data.data.slug}" />
+    </div>
   </FormSection>
   <input type="hidden" name="type" value="attachments">
 </Form>

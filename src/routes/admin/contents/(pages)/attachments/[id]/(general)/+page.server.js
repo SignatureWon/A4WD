@@ -7,6 +7,7 @@ const keys = [
   "attachment",
   "status",
   "rank",
+  "slug",
 ];
 
 export async function load({ url, params, locals }) {
