@@ -58,7 +58,7 @@
 {:else}
   <PageHeader>
     <div
-      class="h-96 bg-cover bg-center"
+      class="h-[460px] bg-cover bg-center"
       style="background-image: url('{env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/{record.image}');"
     >
       <div

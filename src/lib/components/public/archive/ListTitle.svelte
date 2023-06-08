@@ -22,7 +22,7 @@
   });
 </script>
 
-<div class="h-96 bg-cover bg-center">
+<div class="h-[460px] bg-cover bg-center">
   <div
     class="w-full h-full bg-black/20 flex flex-col items-center justify-center text-center p-10"
   >

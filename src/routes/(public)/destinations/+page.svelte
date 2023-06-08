@@ -16,7 +16,7 @@
   bind:records
   fetch={{
     from: "contents",
-    select: "id, image, caption, name",
+    select: "id, image, caption, name, slug",
     eq: [{name: "type", value: "destinations"}],
   }}
 >

@@ -1,12 +1,13 @@
 <script>
   import { env } from "$env/dynamic/public";
   export let record = {};
+  console.log(record);
 </script>
 
-<a href="/vehicles/{record.slug}">
+<a href="/destinations/{record.slug}">
   <div class="bg-white rounded overflow-hidden group">
     <div class="bg-white rounded overflow-hidden group">
-      <a href="/vehicles/{record.slug}">
+      <a href="/destinations/{record.slug}">
         <div class="h-60 sm:h-48 overflow-hidden">
           <div
             class="h-60 sm:h-48 bg-cover bg-center transition-all group-hover:scale-125 bg-gray-300"
