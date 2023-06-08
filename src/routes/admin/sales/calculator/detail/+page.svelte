@@ -475,7 +475,7 @@
             name:
               "Balance payment to " +
               (terms.pay_counter
-                ? `supplier at pick-up counter on ${date_start.format("ddd, DD MMM YYYY")}`
+                ? `supplier at pick-up counter on ${dayjs(date_start).format("ddd, DD MMM YYYY")}`
                 : `agent on ${dayjs(date_start).subtract(terms.balance, "day").format("ddd, DD MMM YYYY")}`) +
               ` (${terms.balance} days before travel)`,
             total: bal,

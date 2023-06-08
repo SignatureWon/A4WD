@@ -9,7 +9,7 @@
   export let step = 1;
   export let hideSteppers = false;
 
-  console.log(hideSteppers);
+  // console.log(hideSteppers);
 </script>
 
 <div class={half ? "" : "md:col-span-2"}>
