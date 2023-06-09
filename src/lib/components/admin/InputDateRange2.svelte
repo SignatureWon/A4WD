@@ -14,7 +14,7 @@
   export let required = false;
 </script>
 
-<div class="grid grid-cols-2">
+<div class="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-0">
   <DatePicker
     datePickerType="single"
     dateFormat="d/m/Y"
