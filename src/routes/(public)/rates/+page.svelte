@@ -57,7 +57,7 @@
       .order("vehicle_id", { ascending: true })
       .order("date_start", { ascending: true });
 
-    console.log(getSeasonRates);
+    // console.log(getSeasonRates);
 
     rows = [...getSeasonRates];
   };

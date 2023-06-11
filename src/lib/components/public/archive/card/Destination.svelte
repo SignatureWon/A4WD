@@ -1,7 +1,7 @@
 <script>
   import { env } from "$env/dynamic/public";
   export let record = {};
-  console.log(record);
+  // console.log(record);
 </script>
 
 <a href="/destinations/{record.slug}">

@@ -36,6 +36,8 @@ export async function load({ url, params, locals }) {
     // allRates = [...flexData]
     const { data: seasonalData } = await cal.getSeasonal(supabase, search);
     allRates = [...flexData, ...seasonalData];
+    // console.log("flexData", flexData);
+
     // console.log("flex:", flexData.length, "seasonal:", seasonalData.length);
 
     // const { data: ratesData, error: ratesError } = await cal.getRates(
@@ -61,6 +63,7 @@ export async function load({ url, params, locals }) {
     // console.log(bondsData);
 
     const filteredRoutes = cal.filterRoutes(allRates, search);
+
     const arrangedRates = cal.arrangeRates(filteredRoutes, search);
     const filteredBlockouts = cal.filterBlockouts(arrangedRates, blockoutsData);
     const addedFees = cal.addFees(filteredBlockouts.rates, feesData);

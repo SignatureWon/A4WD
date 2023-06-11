@@ -126,6 +126,6 @@
 <Pagination
   bind:pageSize
   bind:page
-  totalItems={rows.length}
+  totalItems={filteredRowIds.length}
   pageSizeInputDisabled
 />

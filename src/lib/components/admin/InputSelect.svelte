@@ -9,7 +9,7 @@
   export let required = false;
   export let no_blank = false;
 
-  console.log(value);
+  // console.log(value);
 
   if (no_blank && !value) {
     value = options[0].id

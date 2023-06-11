@@ -23,7 +23,7 @@ export const actions = {
     fd.date_deposit = dayjs();
     fd.status = "Booking";
 
-    console.log("fd", fd);
+    // console.log("fd", fd);
 
     const { error: err } = await locals.sb.from("quotes").update(fd).eq("id", id);
     if (err) {

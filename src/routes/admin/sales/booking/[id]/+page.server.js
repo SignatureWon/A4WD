@@ -148,13 +148,13 @@ export const actions = {
     const quote = JSON.parse(fd.quote);
     const id = quote.id;
 
-    console.log("id", id);
+    // console.log("id", id);
 
     delete quote.id;
     delete quote.created_at;
     delete quote.updated_at;
 
-    console.log("quote", quote);
+    // console.log("quote", quote);
 
     const { error: err } = await locals.sb.from("quotes").update(quote).eq("id", id);
 

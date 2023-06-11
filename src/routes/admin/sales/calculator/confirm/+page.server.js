@@ -89,7 +89,7 @@ export const actions = {
       console.log("errQuote", errQuote);
     }
 
-    console.log("dataQuote", dataQuote);
+    // console.log("dataQuote", dataQuote);
 
     let filePDF = new Blob(
       [await pdf.create(dataQuote.id, "template_quote")],

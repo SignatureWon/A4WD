@@ -1,6 +1,6 @@
 <script>
   export let data;
-  console.log(data.results);
+  // console.log(data.results);
 </script>
 
 <div class="px-5 py-10 bg-white text-center">

@@ -11,7 +11,7 @@
     description: "",
   };
 
-  console.log(title);
+  // console.log(title);
   export let records = [];
 
   onMount(() => {

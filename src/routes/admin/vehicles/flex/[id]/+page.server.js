@@ -23,16 +23,28 @@ const generateRates = async (ratesID, data) => {
   let matrix = {};
   if (data.matrix) {
     data.matrix.split(/\r?\n/).forEach((row, rowIndex) => {
-      if (row.trim() !== "") {
-        row
-          .trim()
-          .split(",")
-          .forEach((col, colIndex) => {
-            matrix[`${az[rowIndex]}${colIndex + zero}`] = Number(col);
-          });
+      let thisRow = row.trim()
+      if (thisRow !== "") {
+        if (thisRow.indexOf(",") > 0) {
+          row
+            .trim()
+            .split(",")
+            .forEach((col, colIndex) => {
+              matrix[`${az[rowIndex]}${colIndex + zero}`] = Number(col);
+            });
+        } else {
+          row
+            .trim()
+            .split(" ")
+            .forEach((col, colIndex) => {
+              matrix[`${az[rowIndex]}${colIndex + zero}`] = Number(col);
+            });
+        }
       }
     });
   }
+
+  console.log(matrix);
   // console.log("matrix", matrix);
 
   let ratesValid = [];

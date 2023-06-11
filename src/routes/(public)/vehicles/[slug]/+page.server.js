@@ -4,7 +4,7 @@ import { supabase } from "$lib/supabaseClient";
 export async function load({ params }) {
   const slug = params.slug;
 
-  console.log("slug", slug);
+  // console.log("slug", slug);
 
   const { data, error } = await supabase
     .from("vehicles")
@@ -12,7 +12,7 @@ export async function load({ params }) {
     .eq("slug", slug)
     .single();
 
-  console.log("data", data);
+  // console.log("data", data);
 
   return {data};
 }

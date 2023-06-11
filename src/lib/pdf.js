@@ -11,7 +11,7 @@ export const pdf = {
       .eq("id", quote_id)
       .single();
 
-    console.log("quote", quote);
+    // console.log("quote", quote);
 
     const { data: user } = await supabase
       .from("users")
@@ -49,7 +49,7 @@ export const pdf = {
       .select()
       .eq("suppliers", quote.details.supplier.id)
       .single();
-    console.log("terms", terms);
+    // console.log("terms", terms);
 
     const pickup = supplier.depots.filter((d) => {
       return d.Depots.id === quote.details.pickup.id;
@@ -268,7 +268,7 @@ export const pdf = {
 
     for (const key in quote.details.addons) {
       let addon = quote.details.addons[key];
-      console.log("addon", addon);
+      // console.log("addon", addon);
       billingDetail.push([
         {
           content: `Add-on: ${addon.name}`,

@@ -64,7 +64,7 @@
       return d.Depots.id === quote.details.dropoff.id;
     })[0];
 
-    console.log(d);
+    // console.log(d);
   }
 </script>
 <div class="">

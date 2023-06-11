@@ -217,7 +217,7 @@ export const db = {
   update: async (locals, fetch) => {
     setNull(fetch.data);
 
-    console.log("fetch.data", fetch.data);
+    // console.log("fetch.data", fetch.data);
     // convertToDate(fetch.data);
     // convertToJson(fetch.data);
     // slugifyName(fetch, fetch.data);
@@ -283,7 +283,7 @@ export const db = {
     updatePassword: async (request, url, locals, fetch) => {
       const formData = await request.formData();
       let newData = Object.fromEntries(formData.entries());
-      console.log(newData);
+      // console.log(newData);
 
       const { data: user, error: err } = await locals.sb.auth.admin.updateUserById(
         fetch.id,

@@ -17,11 +17,13 @@ const keys = [
   "days",
   "value",
   "factor",
+  "own",
   "discount2",
   "type2",
   "days2",
   "value2",
   "factor2",
+  "own2",
   "image",
   "caption",
 ];

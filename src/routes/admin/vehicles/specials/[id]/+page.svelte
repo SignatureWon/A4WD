@@ -16,17 +16,8 @@
 <PageTitle title="Special" path={data.path} data={data.data} id={data.id} />
 <Form id={data.id} path={data.path}>
   <FormSection title="Info">
-    <InputText
-      name="name"
-      label="Name"
-      bind:value={data.data.name}
-      required={true}
-    />
-    <InputTextArea
-      name="description"
-      label="Description"
-      bind:value={data.data.description}
-    />
+    <InputText name="name" label="Name" bind:value={data.data.name} required={true} />
+    <InputTextArea name="description" label="Description" bind:value={data.data.description} />
   </FormSection>
   <FormSection title="Date">
     <InputDateRange
@@ -116,25 +107,15 @@
           name: "Every X day",
         },
       ]}
+      half={true}
     />
+    <InputToggle name="own" label="A4 Specials" bind:value={data.data.own} half={true} />
     {#if data.data.type === "Early bird"}
-      <InputNumber
-        name="days"
-        label="X days before travel"
-        bind:value={data.data.days}
-      />
+      <InputNumber name="days" label="X days before travel" bind:value={data.data.days} />
     {:else if data.data.type === "Long term"}
-      <InputNumber
-        name="days"
-        label="Travel longer than X days"
-        bind:value={data.data.days}
-      />
+      <InputNumber name="days" label="Travel longer than X days" bind:value={data.data.days} />
     {:else if data.data.type === "Every X day"}
-      <InputNumber
-        name="days"
-        label="On every X day"
-        bind:value={data.data.days}
-      />
+      <InputNumber name="days" label="On every X day" bind:value={data.data.days} />
     {/if}
     <InputSelect
       name="factor"
@@ -161,20 +142,11 @@
       half={true}
     />
     {#if data.data.factor !== "No One Way Fee"}
-      <InputNumber
-        name="value"
-        label="Value"
-        bind:value={data.data.value}
-        half={true}
-      />
+      <InputNumber name="value" label="Value" bind:value={data.data.value} half={true} />
     {/if}
     <div class="bg-gray-100 p-4 md:col-span-2">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <InputToggle
-          name="discount2"
-          label="Second discount"
-          bind:value={data.data.discount2}
-        />
+        <InputToggle name="discount2" label="Second discount" bind:value={data.data.discount2} />
 
         {#if data.data.discount2}
           <InputSelect
@@ -199,25 +171,15 @@
                 name: "Every X day",
               },
             ]}
+            half={true}
           />
+          <InputToggle name="own2" label="A4 Specials" bind:value={data.data.own2} half={true} />
           {#if data.data.type2 === "Early bird"}
-            <InputNumber
-              name="days2"
-              label="X days before travel"
-              bind:value={data.data.days2}
-            />
+            <InputNumber name="days2" label="X days before travel" bind:value={data.data.days2} />
           {:else if data.data.type2 === "Long term"}
-            <InputNumber
-              name="days2"
-              label="Travel longer than X days"
-              bind:value={data.data.days2}
-            />
+            <InputNumber name="days2" label="Travel longer than X days" bind:value={data.data.days2} />
           {:else if data.data.type2 === "Every X day"}
-            <InputNumber
-              name="days2"
-              label="On every X day"
-              bind:value={data.data.days2}
-            />
+            <InputNumber name="days2" label="On every X day" bind:value={data.data.days2} />
           {/if}
           <InputSelect
             name="factor2"
@@ -244,12 +206,7 @@
             half={true}
           />
           {#if data.data.factor2 !== "No One Way Fee"}
-            <InputNumber
-              name="value2"
-              label="Value"
-              bind:value={data.data.value2}
-              half={true}
-            />
+            <InputNumber name="value2" label="Value" bind:value={data.data.value2} half={true} />
           {/if}
         {/if}
       </div>
