@@ -13,7 +13,7 @@ export async function load({ url, params }) {
     data: db.all({
       table: "users",
       keys: keys,
-      order: [{ name: "created_at", ascend: true }],
+      order: [{ name: "created_at", ascend: false }],
     }),
     path: url.pathname,
   };

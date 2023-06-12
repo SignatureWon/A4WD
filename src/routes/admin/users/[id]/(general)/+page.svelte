@@ -43,7 +43,7 @@
   </FormSection>
   <FormSection title="Contacts">
     <InputText name="email" label="Email" bind:value={data.data.email} required={true} />
-    <InputText name="phone" label="Phone" bind:value={data.data.phone} />
+    <InputText name="phone" label="Phone" bind:value={data.data.phone} required={true} />
   </FormSection>
   <FormSection title="Address">
     <InputText
@@ -73,9 +73,10 @@
       label="State"
       bind:value={data.data.state}
       half={true}
+      required={true}
     />
     <div>
-      <Select labelText="Country" name="country" bind:selected={data.data.country}>
+      <Select labelText="Country" name="country" bind:selected={data.data.country} required={true}>
         <SelectItem value="" text="Select country" />
         {#each data.options.countries as country}
           <SelectItem value={country.name} text={country.name} />

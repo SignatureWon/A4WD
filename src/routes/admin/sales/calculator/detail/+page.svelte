@@ -126,6 +126,7 @@
     state: null,
     country: null,
   };
+  let searchCustomer = ""
 
   let quote = {
     details: details,
@@ -153,7 +154,8 @@
     const { data: dataCustomer, error: errorData } = await supabase
       .from("users")
       .select()
-      .eq("email", user.email)
+      .or(`email.eq.${searchCustomer},last_name.eq.${searchCustomer}`)
+      // .eq("email", user.email)
       .single();
 
     // console.log(dataCustomer);
@@ -636,7 +638,7 @@
         {#if !user.id}
           <div class="py-5 text-center flex items-end">
             <div class="flex-1">
-              <TextInput labelText="Customer Email" bind:value={user.email} />
+              <TextInput labelText="Customer Email or Name" bind:value={searchCustomer} />
             </div>
             <Button on:click={lookupCustomer}>Search</Button>
           </div>

@@ -1,12 +1,5 @@
 <script>
-  import {
-    Button,
-    DataTable,
-    Pagination,
-    Toolbar,
-    ToolbarContent,
-    ToolbarSearch,
-  } from "carbon-components-svelte";
+  import { Button, DataTable, Pagination, Toolbar, ToolbarContent, ToolbarSearch } from "carbon-components-svelte";
   import { goto } from "$app/navigation";
   import dayjs from "dayjs";
 
@@ -14,6 +7,8 @@
   export let path = "";
   export let headers = [{ key: "name", value: "Name" }];
   export let modal = false;
+
+  console.log(rows);
 
   const formatCurrency = (num) => {
     return num.toLocaleString("en-US", {
@@ -40,7 +35,7 @@
   };
 
   let page = 1;
-  let pageSize = 100;
+  let pageSize = 250;
   let filteredRowIds = [];
   let open = false;
 </script>
@@ -58,13 +53,7 @@
 >
   <Toolbar class="mb-4">
     <ToolbarContent>
-      <ToolbarSearch
-        size="lg"
-        persistent
-        value=""
-        shouldFilterRows
-        bind:filteredRowIds
-      />
+      <ToolbarSearch size="lg" persistent value="" shouldFilterRows bind:filteredRowIds />
       <Button on:click={() => goto(`${path}/add`)}>+ New</Button>
     </ToolbarContent>
   </Toolbar>
@@ -108,14 +97,16 @@
     {:else if cell.key === "quote_id"}
       Q{388000 + row.id}
     {:else if cell.key === "quote_title"}
-      {row.details.vehicle.name.trim()}: {row.details.pickup.name.trim()}, {dayjs(
-        row.details.date_start
-      ).format("DD MMM YYYY")} - {row.details.dropoff.name.trim()}, {dayjs(
-        row.details.date_end
-      ).format("DD MMM YYYY")}
+      {row.details.vehicle.name.trim()}: {row.details.pickup.name.trim()}, {dayjs(row.details.date_start).format(
+        "DD MMM YYYY"
+      )} - {row.details.dropoff.name.trim()}, {dayjs(row.details.date_end).format("DD MMM YYYY")}
       {getBond(row.details).trim()}
     {:else if cell.key === "quote_customer"}
-      {row.users.first_name} {row.users.last_name}
+      {#if row.users}
+        {row.users.first_name} {row.users.last_name}
+      {:else}
+        No User
+      {/if}
     {:else if cell.key === "quote_status"}
       {row.status}
     {:else}
@@ -123,9 +114,4 @@
     {/if}
   </svelte:fragment>
 </DataTable>
-<Pagination
-  bind:pageSize
-  bind:page
-  totalItems={filteredRowIds.length}
-  pageSizeInputDisabled
-/>
+<Pagination bind:pageSize bind:page totalItems={filteredRowIds.length} pageSizeInputDisabled />
