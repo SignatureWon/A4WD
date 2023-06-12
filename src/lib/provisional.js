@@ -217,7 +217,7 @@ export const html = {
           nett: nett,
           profit: nett > 0 ? gross - nett : 0,
         };
-        if (addon.gross_rate > addon.nett_rate) {
+        if (addon.nett_rate > 0 && addon.gross_rate > addon.nett_rate) {
           agentFees.push(row);
         } else {
           supplierFees.push(row);
