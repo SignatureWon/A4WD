@@ -1,11 +1,5 @@
 <script>
-  import {
-    Button,
-    Select,
-    SelectItem,
-    TextArea,
-    TextInput,
-  } from "carbon-components-svelte";
+  import { Button, Select, SelectItem, TextArea, TextInput } from "carbon-components-svelte";
 
   export let data;
   export let form;
@@ -22,27 +16,22 @@
   <div class="p-4 bg-white">
     <div class="mx-auto max-w-3xl p-4">
       <h1 class="text-2xl mb-5">Customer Details</h1>
-      <form
-        method="post"
-        action="/search/book/confirm"
-        class="bg-white rounded-lg p-6 space-y-6"
-      >
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <form method="post" action="/search/book/confirm" class="bg-white rounded-lg p-6 space-y-6">
+        <div class="grid grid-cols-1 sm:grid-cols-5 gap-6">
           <div>
-            <TextInput
-              name="first_name"
-              labelText="First Name"
-              value={form.user.first_name}
-              required
-            />
+            <Select name="title" labelText="Title" value={form.user.title} required>
+              <SelectItem value="Mr." text="Mr." />
+              <SelectItem value="Ms." text="Ms." />
+              <SelectItem value="Mrs." text="Mrs." />
+              <SelectItem value="Miss" text="Miss" />
+              <SelectItem value="Dr." text="Dr." />
+            </Select>
           </div>
-          <div>
-            <TextInput
-              name="last_name"
-              labelText="Last Name"
-              value={form.user.last_name}
-              required
-            />
+          <div class="sm:col-span-2">
+            <TextInput name="first_name" labelText="First Name" value={form.user.first_name} required />
+          </div>
+          <div class="sm:col-span-2">
+            <TextInput name="last_name" labelText="Last Name" value={form.user.last_name} required />
           </div>
         </div>
         <div>
@@ -57,61 +46,27 @@
           />
         </div>
         <div>
-          <TextInput
-            name="phone"
-            labelText="Phone"
-            value={form.user.phone}
-            required
-          />
+          <TextInput name="phone" labelText="Phone" value={form.user.phone} required />
         </div>
         <div class="font-bold text-lg pt-10">Home Address</div>
         <div>
-          <TextInput
-            name="address_1"
-            labelText="Address 1"
-            value={form.user.address_1}
-            required
-          />
+          <TextInput name="address_1" labelText="Address 1" value={form.user.address_1} required />
         </div>
         <div>
-          <TextInput
-            name="address_2"
-            labelText="Address 2"
-            value={form.user.address_2}
-            required
-          />
+          <TextInput name="address_2" labelText="Address 2" value={form.user.address_2} required />
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>
-            <TextInput
-              name="postcode"
-              labelText="Postcode"
-              value={form.user.postcode}
-              required
-            />
+            <TextInput name="postcode" labelText="Postcode" value={form.user.postcode} required />
           </div>
           <div>
-            <TextInput
-              name="city"
-              labelText="City"
-              value={form.user.city}
-              required
-            />
+            <TextInput name="city" labelText="City" value={form.user.city} required />
           </div>
           <div>
-            <TextInput
-              name="state"
-              labelText="State"
-              value={form.user.state}
-              required
-            />
+            <TextInput name="state" labelText="State" value={form.user.state} required />
           </div>
           <div>
-            <Select
-              labelText="Country"
-              name="country"
-              value={form.user.country}
-            >
+            <Select labelText="Country" name="country" value={form.user.country}>
               {#each data.countries as country}
                 <SelectItem value={country.name} />
               {/each}
@@ -125,11 +80,7 @@
           <Button type="submit" class="px-10">Send Quote</Button>
         </div>
         <input type="hidden" name="user_id" value={form.user.id || ""} />
-        <input
-          type="hidden"
-          name="data"
-          value={JSON.stringify(form.postData)}
-        />
+        <input type="hidden" name="data" value={JSON.stringify(form.postData)} />
       </form>
     </div>
   </div>

@@ -91,7 +91,7 @@
 
 <svelte:window bind:innerWidth={innerWidth} />
 
-<form action="https://www.australia4wdrentals.com/search/redirect" method="get" target="_top">
+<form action="https://www.australia4wdrentals.com/search/redirect" method="get" target="_blank">
   <div class="bg-white px-5 py-3">
     <h2 class="font-bold text-brand-600 text-lg mb-4">Check Prices</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6">
