@@ -70,7 +70,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
         <InputToggle
           name="payment2"
-          label="Second Payment"
+          label="First Payment"
           bind:value={data.data.payment2}
         />
 
@@ -109,7 +109,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
               <InputToggle
                 name="payment3"
-                label="Third Payment"
+                label="Second Payment"
                 bind:value={data.data.payment3}
               />
 
