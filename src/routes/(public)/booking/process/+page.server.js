@@ -22,6 +22,8 @@ export const actions = {
 
     fd.date_deposit = dayjs();
     fd.status = "Booking";
+    fd.cc_number = CryptoJS.AES.encrypt(fd.cc_number, env.PUBLIC_AES_KEY).toString();
+    fd.cc_cvv = CryptoJS.AES.encrypt(fd.cc_cvv, env.PUBLIC_AES_KEY).toString();
 
     // console.log("fd", fd);
 

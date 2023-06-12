@@ -23,13 +23,14 @@ export const actions = {
 
     let id = Number(fd.reference.replace(/\D+/g, "")) - 388000;
 
-    console.log(id);
+    // console.log(id);
 
     const { data: quote, error: quoteError } = await supabase
       .from("quotes")
       .select("*, users (*)")
       .eq("id", id)
       .eq("users.email", fd.email)
+      .eq("users.last_name", fd.last_name)
       .single();
 
     return { quote };

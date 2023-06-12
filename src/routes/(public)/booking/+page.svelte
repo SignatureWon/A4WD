@@ -8,8 +8,15 @@
     <form action="/booking/detail" method="post">
       <TextInput
         name="email"
-        labelText="Your email address"
+        labelText="Your Email Address"
         type="email"
+        value=""
+        class="mb-5"
+        required
+      />
+      <TextInput
+        name="last_name"
+        labelText="Your Last Name"
         value=""
         class="mb-5"
         required
