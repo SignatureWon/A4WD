@@ -738,7 +738,7 @@
     on:submit={pdf.generate_pdf(guest, booking, "Quotation")} 
   -->
   <div class="max-w-md mx-auto mt-10 mb-5">
-    <form action="/search/book" method="post">
+    <form action="/search/book" method="get">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="col-span-2">
           <TextInput

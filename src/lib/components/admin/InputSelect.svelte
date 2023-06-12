@@ -8,6 +8,7 @@
   export let half = false;
   export let required = false;
   export let no_blank = false;
+  export let size = "standard"
 
   // console.log(value);
 
@@ -29,3 +30,4 @@
     {/each}
   </Select>
 </div>
+
