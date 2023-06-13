@@ -1,27 +1,43 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap");
 
-:root {
+/* :root {
   --brand-color: #EA580C;
   --brand-color-hover: #9A3412;
+} */
+/* 
+html {
+  font-size: 15px;
 }
-
+ */
 body {
-    font-family: 'DM Sans', sans-serif;
+  font-family: "DM Sans", sans-serif;
 }
 .content h1 {
-  @apply text-2xl font-bold
+  @apply text-2xl font-bold;
 }
 .content h2 {
-  @apply text-lg font-bold
+  @apply text-lg font-bold;
 }
 .content ul {
-  @apply list-disc pl-4
+  @apply list-disc pl-4;
 }
 .content ol {
-  @apply list-decimal pl-4
+  @apply list-decimal pl-4;
 }
 .content a {
   @apply text-brand-600 hover:underline;
+}
+.label {
+  @apply uppercase tracking-wider font-bold mb-0.5 text-xs text-gray-400;
+}
+.value {
+  @apply font-bold;
+}
+.h1 {
+  @apply font-bold text-2xl;
+}
+.h2 {
+  @apply font-bold text-lg;
 }
 /* h1 {
   @apply !text-2xl !font-bold !mb-4

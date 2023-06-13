@@ -1,14 +1,6 @@
 <script>
   import { supabase } from "$lib/supabaseClient";
-  import {
-    Button,
-    Checkbox,
-    Modal,
-    NumberInput,
-    Select,
-    SelectItem,
-    TextInput,
-  } from "carbon-components-svelte";
+  import { Button, Checkbox, Modal, NumberInput, Select, SelectItem, TextInput } from "carbon-components-svelte";
   import { env } from "$env/dynamic/public";
   import dayjs from "dayjs";
   // import { pdf } from "$lib/pdf.js";
@@ -119,16 +111,13 @@
   let bond_fee = 0;
   if (d.bond_items.length) {
     bond_fee =
-      d.bond_items[0].gross *
-      (d.duration < (d.bond_items[0].cap || 0)
-        ? d.duration
-        : d.bond_items[0].cap || 0);
+      d.bond_items[0].gross * (d.duration < (d.bond_items[0].cap || 0) ? d.duration : d.bond_items[0].cap || 0);
     booking.bond = d.bond_items[0];
   }
   // console.log(booking);
   let addon_fee = 0;
-  let total =
-    d.gross + d.one_way + d.fee_total + bond_fee + addon_fee - d.special_total;
+  let total = d.gross + d.one_way + d.fee_total + bond_fee + addon_fee - d.special_total;
+  let deposit = 0;
 
   let modalSendQuote = false;
 
@@ -153,49 +142,36 @@
         },
       ];
     } else {
+      deposit = d.terms.percentage ? (total * d.terms.deposit) / 100 : d.terms.deposit;
+      let oriDeposit = deposit
       // console.log("MORE");
 
-      terms = [
-        {
-          name: `Booking Deposit (${
-            d.terms.percentage ? `${d.terms.deposit}%` : `$${d.terms.deposit}`
-          })`,
-          description: d.terms.description || "",
-          amount: d.terms.percentage
-            ? (total * d.terms.deposit) / 100
-            : d.terms.deposit,
-        },
-      ];
       if (d.terms.payment2) {
         if (d.terms.balance2 < gap) {
           terms.push({
-            name: `1st Payment (${
-              d.terms.percentage2
-                ? `${d.terms.deposit2}%`
-                : `$${d.terms.deposit2}`
-            } - ${d.terms.balance2} days before
+            name: `1st Payment (${d.terms.percentage2 ? `${d.terms.deposit2}%` : `$${d.terms.deposit2}`} - ${
+              d.terms.balance2
+            } days before
               travel)`,
             description: d.terms.description2 || "",
-            amount: d.terms.percentage2
-              ? (total * d.terms.deposit2) / 100
-              : d.terms.deposit2,
+            amount: d.terms.percentage2 ? (total * d.terms.deposit2) / 100 : d.terms.deposit2,
           });
+        } else {
+          deposit += d.terms.percentage2 ? (total * d.terms.deposit2) / 100 : d.terms.deposit2;
         }
       }
       if (d.terms.payment3) {
         if (d.terms.balance3 < gap) {
           terms.push({
-            name: `2nd Payment (${
-              d.terms.percentage3
-                ? `${d.terms.deposit3}%`
-                : `$${d.terms.deposit3}`
-            } - ${d.terms.balance3} days before
+            name: `2nd Payment (${d.terms.percentage3 ? `${d.terms.deposit3}%` : `$${d.terms.deposit3}`} - ${
+              d.terms.balance3
+            } days before
               travel)`,
             description: d.terms.description3 || "",
-            amount: d.terms.percentage3
-              ? (total * d.terms.deposit3) / 100
-              : d.terms.deposit3,
+            amount: d.terms.percentage3 ? (total * d.terms.deposit3) / 100 : d.terms.deposit3,
           });
+        } else {
+          deposit += d.terms.percentage3 ? (total * d.terms.deposit3) / 100 : d.terms.deposit3;
         }
       }
       // balance
@@ -204,17 +180,27 @@
         terms.forEach((t) => {
           bal -= t.amount;
         });
+        bal -= deposit;
 
         terms.push({
           name:
             "Balance (" +
-            (d.terms.pay_counter
-              ? "Pay at pick-up counter"
-              : `${d.terms.balance} days before travel`) +
+            (d.terms.pay_counter ? "Pay at pick-up counter" : `${d.terms.balance} days before travel`) +
             ")",
           amount: bal,
         });
+      } else {
+        deposit += bal;
       }
+      let depositText = `(${d.terms.percentage ? `${d.terms.deposit}%` : `$${d.terms.deposit}`})`
+      terms = [
+        {
+          name: `Booking Deposit ${deposit === oriDeposit ? depositText : ""}`,
+          description: d.terms.description || "",
+          amount: deposit,
+        },
+        ...terms,
+      ];
     }
 
     // console.log("terms", terms);
@@ -223,8 +209,7 @@
     // }
   }
 
-  $: total =
-    d.gross + d.one_way + d.fee_total + bond_fee + addon_fee - d.special_total;
+  $: total = d.gross + d.one_way + d.fee_total + bond_fee + addon_fee - d.special_total;
 </script>
 
 <section class="bg-white mb-8">
@@ -243,11 +228,7 @@
       <h2 class="text-lg font-bold mb-4">{d.vehicle_name}</h2>
       <div class="flex items-center justify-between py-2">
         <div class="w-5/12">
-          <div
-            class="uppercase tracking-wider font-bold mb-1 text-xs text-gray-400"
-          >
-            Pick-up
-          </div>
+          <div class="uppercase tracking-wider font-bold mb-1 text-xs text-gray-400">Pick-up</div>
           <div class="font-bold text-lg">{d.depot_name}</div>
           <div>{dayjs(data.search.date_start).format("DD/MM/YYYY (ddd)")}</div>
         </div>
@@ -265,11 +246,7 @@
           >
         </div>
         <div class="w-5/12">
-          <div
-            class="uppercase tracking-wider font-bold mb-1 text-xs text-gray-400"
-          >
-            Drop-off
-          </div>
+          <div class="uppercase tracking-wider font-bold mb-1 text-xs text-gray-400">Drop-off</div>
           <div class="font-bold text-lg">{d.dropoff_name}</div>
           <div>{dayjs(data.search.date_end).format("DD/MM/YYYY (ddd)")}</div>
         </div>
@@ -292,24 +269,17 @@
           <div>
             Daily Rental ({d.duration} days)
             <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <span
-              class="cursor-pointer text-brand-600 text-sm"
-              on:click={() => (showFeeDetails = !showFeeDetails)}>Details</span
+            <span class="cursor-pointer text-brand-600 text-sm" on:click={() => (showFeeDetails = !showFeeDetails)}
+              >Details</span
             >
           </div>
           <div class="whitespace-nowrap pl-4">${formatCurrency(d.gross)}</div>
         </div>
-        <div
-          class="col-span-2 text-sm text-gray-400 {showFeeDetails
-            ? 'block'
-            : 'hidden'}"
-        >
+        <div class="col-span-2 text-sm text-gray-400 {showFeeDetails ? 'block' : 'hidden'}">
           {#each d.list as item, index}
             <div class="flex justify-between mb-2">
               <div>
-                Day {index + 1} ({item.flex}): {dayjs(item.day).format(
-                  "DD/MM/YYYY"
-                )}
+                Day {index + 1} ({item.flex}): {dayjs(item.day).format("DD/MM/YYYY")}
               </div>
               <div class="whitespace-nowrap pl-4">
                 ${formatCurrency(item.gross)}
@@ -318,9 +288,7 @@
           {/each}
         </div>
         {#if d.min_days > d.duration}
-          <div
-            class="col-span-2 bg-amber-50 p-3 text-sm text-amber-600 rounded mb-3"
-          >
+          <div class="col-span-2 bg-amber-50 p-3 text-sm text-amber-600 rounded mb-3">
             Price is based on minimum {d.min_days} days, less days will average out.
           </div>
         {/if}
@@ -437,9 +405,7 @@
   </div>
   <div class="p-2">
     <div class="p-2">
-      <div class="uppercase tracking-wider font-bold mb-3 flex justify-between">
-        Accident Liability
-      </div>
+      <div class="uppercase tracking-wider font-bold mb-3 flex justify-between">Accident Liability</div>
       <div>Select your level of liability from the options below</div>
     </div>
     <div class="flex">
@@ -452,21 +418,10 @@
           <div class="flex-1 pb-8">
             <h4 class="font-bold text-brand-600">{b.display_name}</h4>
             <div class="text-xl font-bold">
-              AUD ${formatCurrency(
-                (b.gross || 0) *
-                  (b.cap
-                    ? b.cap > d.duration
-                      ? d.duration
-                      : b.cap
-                    : d.duration)
-              )}
+              AUD ${formatCurrency((b.gross || 0) * (b.cap ? (b.cap > d.duration ? d.duration : b.cap) : d.duration))}
             </div>
             <div class="mb-4">
-              ${formatCurrency(b.gross || 0)} x {b.cap
-                ? b.cap > d.duration
-                  ? d.duration
-                  : b.cap
-                : d.duration} days
+              ${formatCurrency(b.gross || 0)} x {b.cap ? (b.cap > d.duration ? d.duration : b.cap) : d.duration} days
             </div>
             <div class="mb-4 font-bold">
               ${b.liability.toLocaleString("en-US")} Excess<br />
@@ -489,9 +444,7 @@
               kind="ghost"
               on:click={() => {
                 selected_bond = i;
-                bond_fee =
-                  b.gross *
-                  (d.duration < (b.cap || 0) ? d.duration : b.cap || 0);
+                bond_fee = b.gross * (d.duration < (b.cap || 0) ? d.duration : b.cap || 0);
                 booking.bonds = b;
                 // console.log(booking);
               }}>Select</Button
@@ -515,9 +468,7 @@
                 <div>
                   <Checkbox
                     on:change={(e) => {
-                      let fee = addon.daily
-                        ? addon.gross_rate * d.duration
-                        : addon.gross_rate;
+                      let fee = addon.daily ? addon.gross_rate * d.duration : addon.gross_rate;
                       if (e.target.checked) {
                         addon_fee += fee;
                         booking.addons[`${index1}-${index2}`] = addon;
@@ -556,9 +507,7 @@
       </div>
     </div>
   {/if}
-  <div
-    class="p-4 border-t border-gray-200 flex justify-between text-xl font-bold"
-  >
+  <div class="p-4 border-t border-gray-200 flex justify-between text-xl font-bold">
     <div>Total</div>
     <div>${formatCurrency(total)}</div>
   </div>
@@ -696,9 +645,7 @@
     )} deposit only
   </div> -->
   <div class="text-center">
-    <Button type="submit" class="px-10" on:click={() => (modalSendQuote = true)}
-      >Get Instant Quote</Button
-    >
+    <Button type="submit" class="px-10" on:click={() => (modalSendQuote = true)}>Get Instant Quote</Button>
   </div>
   <!-- <div class="grid grid-cols-2">
     <Button
@@ -741,20 +688,10 @@
     <form action="/search/book" method="get">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="col-span-2">
-          <TextInput
-            labelText="Email"
-            type="email"
-            name="email"
-            value=""
-            required
-          />
+          <TextInput labelText="Email" type="email" name="email" value="" required />
         </div>
         <div>
-          <Select
-            name="license"
-            labelText="Driver's License"
-            value={data.search.license}
-          >
+          <Select name="license" labelText="Driver's License" value={data.search.license}>
             {#each data.options.licenses as license}
               <SelectItem value={license.name} />
             {/each}
@@ -764,31 +701,14 @@
           <NumberInput name="age" label="Driver's Age" allowEmpty required />
         </div>
         <div>
-          <NumberInput
-            name="adult"
-            label="No. of Adult"
-            value={1}
-            allowEmpty
-            required
-          />
+          <NumberInput name="adult" label="No. of Adult" value={1} allowEmpty required />
         </div>
         <div>
-          <NumberInput
-            name="children"
-            label="No. of Children"
-            value={0}
-            allowEmpty
-            required
-          />
+          <NumberInput name="children" label="No. of Children" value={0} allowEmpty required />
         </div>
         <div class="col-span-2">
           <Button type="submit" class="w-full">Next</Button>
-          <Button
-            kind="ghost"
-            type="button"
-            class="w-full"
-            on:click={() => (modalSendQuote = false)}>Cancel</Button
-          >
+          <Button kind="ghost" type="button" class="w-full" on:click={() => (modalSendQuote = false)}>Cancel</Button>
         </div>
       </div>
       <input type="hidden" name="detail" value={JSON.stringify(booking)} />

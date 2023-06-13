@@ -134,7 +134,7 @@ export const actions = {
                 name: `${user.first_name.trim()} ${user.last_name.trim()}`,
               },
             ],
-            // bcc: bccList,
+            bcc: bccList,
           },
         ],
         from: {

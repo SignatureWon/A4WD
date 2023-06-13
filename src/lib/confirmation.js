@@ -418,7 +418,7 @@ export const html = {
 body{
     margin:0;
     padding:0;
-    font-family: sans-serif;
+    font-family: "DM Sans", sans-serif;
 }
 
 img{
@@ -440,7 +440,7 @@ a img{
 table, td{
     border-collapse:collapse;
     font-size: 14px;
-    font-family: sans-serif;
+    font-family: "DM Sans", sans-serif;
 }
 
 #bodyTable{
@@ -459,7 +459,7 @@ table, td{
 </head>
 <body>
 <div
-  style="width: 600px; background-color: #ffffff; margin: auto; padding: 0; font-size: 14px; font-family: sans-serif;"
+  style="width: 600px; background-color: #ffffff; margin: auto; padding: 0; font-size: 14px; font-family: "DM Sans", sans-serif;"
 >
   <table width="600" style="margin-bottom: 30px;">
     <tr>

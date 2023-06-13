@@ -40,14 +40,14 @@
       supabase,
       search
     );
-    console.log(ratesData);
+    // console.log(ratesData);
 
     const filteredRoutes = cal.filterRoutes(ratesData, search);
     const arrangedRates = cal.arrangeRates(filteredRoutes, search);
     const filteredBlockouts = cal.filterBlockouts(arrangedRates, blockoutsData);
     const addedFees = cal.addFees(filteredBlockouts, feesData);
     const addedSpecials = cal.addSpecials(addedFees, specialsData, search);
-    console.log(addedSpecials);
+    // console.log(addedSpecials);
 
     rows = addedSpecials
     // console.log(filteredBlockouts);
