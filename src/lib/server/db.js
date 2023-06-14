@@ -142,6 +142,11 @@ export const db = {
         query = query.eq(col.name, col.value);
       });
     }
+    if (fetch.notNull) {
+      fetch.notNull.forEach((col) => {
+        query = query.not(col, 'is', null);
+      });
+    }
     if (fetch.order) {
       fetch.order.forEach((col) => {
         query = query.order(col.name, { ascending: col.ascend });

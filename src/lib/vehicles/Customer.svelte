@@ -1,13 +1,12 @@
 <script>
   import dayjs from "dayjs";
   import { supabase } from "$lib/supabaseClient";
-  import {
-    Select,
-    SelectItem,
-    TextInput,
-  } from "carbon-components-svelte";
+  import { Select, SelectItem, TextArea, TextInput } from "carbon-components-svelte";
   import { onMount } from "svelte";
+  export let title = "Customer Information";
+  export let description = null;
   export let user;
+  export let quote;
   let countries = [];
 
   onMount(async () => {
@@ -21,10 +20,15 @@
 </script>
 
 <div class="bg-white rounded mb-4">
-  <div class="px-4 py-2 border-b border-gray-200">
-    <h2 class="h2">Customer Information</h2>
+  <div class="p-5 border-b border-gray-200">
+    <h2 class="h2">{title}</h2>
+    {#if description}
+      <div class="text-gray-500">
+        {description}
+      </div>
+    {/if}
   </div>
-  <div class="p-4 grid grid-cols-1 gap-5">
+  <div class="p-5 grid grid-cols-1 gap-5">
     <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
       <div>
         <Select labelText="Title" name="title" bind:selected={user.title}>
@@ -91,6 +95,9 @@
           {/each}
         </Select>
       </div>
+    </div>
+    <div>
+      <TextArea labelText="Travel Plans & Comments" name="comment" bind:value={quote.comment} />
     </div>
   </div>
 </div>

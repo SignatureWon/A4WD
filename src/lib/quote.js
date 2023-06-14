@@ -1,13 +1,14 @@
 import dayjs from "dayjs";
 import { format } from "$lib/format";
-export const quote = {
-  getDetail: (details) => {
-    const duration = details.duration;
-    const date_quote = dayjs(details.date_book).format("DD MMM YYYY");
-    const date_start = dayjs(details.date_start).format("ddd, DD MMM YYYY");
-    const date_end = dayjs(details.date_end).format("ddd, DD MMM YYYY");
+export const q = {
+  getPayments: (quote) => {
+    const duration = quote.details.duration;
+    const date_quote = dayjs(quote.created_at).format("DD MMM YYYY");
+    const date_start = dayjs(quote.details.date_start).format("ddd, DD MMM YYYY");
+    const date_end = dayjs(quote.details.date_end).format("ddd, DD MMM YYYY");
     let agentFees = [];
     let supplierFees = [];
+    let pickupFees = [];
 
     const totalAgentFee = () => {
       let sum = 0;
@@ -22,6 +23,8 @@ export const quote = {
       agentFees.forEach((fee) => {
         sum += fee.profit;
       });
+
+      sum -= quote.add_discount;
       return sum;
     };
     const totalSupplierFee = () => {
@@ -32,29 +35,31 @@ export const quote = {
       return sum;
     };
 
-    // const getDailyRates = () => {
-    let obj = details.daily;
-    let type = details.rates_type;
-    let arr = obj.items;
-    if (type === "flex") {
+    /**
+     * Daily Rates
+     */
+    const daily = quote.details.daily;
+    const rateType = quote.details.rates_type;
+
+    if (rateType === "flex") {
       let week = 1;
       let day = 0;
-      arr.forEach((o, i) => {
+      daily.items.forEach((o, i) => {
         if (i !== 0 && i % 7 === 0) {
           agentFees.push({
-            name: `Daily basic rental: Week ${week}: Flex[${arr[i - 1].flex}]: $${format.currency(
-              arr[i - 1].gross
+            name: `Daily basic rental: Week ${week}: Flex[${daily.items[i - 1].flex}]: $${format.currency(
+              daily.items[i - 1].gross
             )} x ${day} days`,
-            total: arr[i - 1].gross * day,
-            nett: arr[i - 1].nett * day,
-            profit: arr[i - 1].profit * day,
+            total: daily.items[i - 1].gross * day,
+            nett: daily.items[i - 1].nett * day,
+            profit: daily.items[i - 1].profit * day,
           });
           day = 1;
           week++;
         } else {
           day++;
         }
-        if (i === arr.length - 1) {
+        if (i === daily.items.length - 1) {
           agentFees.push({
             name: `Daily basic rental: Week ${week}: Flex[${o.flex}]: $${format.currency(o.gross)} x ${day} days`,
             total: o.gross * day,
@@ -65,35 +70,30 @@ export const quote = {
       });
     } else {
       agentFees.push({
-        name: `Daily basic rental: $${format.currency(obj.gross / arr.length)} x ${arr.length} days`,
-        total: obj.gross,
-        nett: obj.nett,
-        profit: obj.profit,
+        name: `Daily basic rental: $${format.currency(daily.gross / daily.items.length)} x ${daily.items.length} days`,
+        total: daily.gross,
+        nett: daily.nett,
+        profit: daily.profit,
       });
     }
-    // };
 
-    // const getBonds = () => {
-    const bond = Object.keys(details.bonds).length ? details.bonds : details.bond;
-
-    let gross = bond.gross * duration;
-    let nett = bond.nett * duration;
-    let profit = gross - nett;
-
-    if (bond.gross > 0) {
-      const row = {
-        name: `${bond.display_name}: $${bond.gross} x ${duration} days`,
-        total: gross,
-        nett: nett,
-        profit: profit,
-      };
-      if (bond.gross > bond.nett) {
-        agentFees.push(row);
-      } else {
-        supplierFees.push(row);
-      }
+    /**
+     * Discount
+     */
+    if (quote.add_discount > 0) {
+      agentFees.push({
+        name: `Discount: ${quote.add_discount_remark}`,
+        total: -quote.add_discount,
+        nett: 0,
+        profit: 0,
+      });
     }
-    supplierFees.push({
+
+    /**
+     * Bonds
+     */
+    const bond = Object.keys(quote.details.bonds).length ? quote.details.bonds : quote.details.bond;
+    pickupFees.push({
       name: `Bond: $${format.currency(
         bond.bond,
         0
@@ -102,10 +102,40 @@ export const quote = {
       nett: 0,
       profit: 0,
     });
-    // };
 
-    // const getOneways = () => {
-    let one_way = details.one_way;
+    let gross = 0;
+    let nett = 0;
+    let profit = 0;
+
+    if ("gross" in bond) {
+      gross = bond.gross * duration;
+      nett = bond.nett * duration;
+      profit = nett > 0 ? gross - nett : 0;
+    } else {
+      bond.gross = 0;
+      bond.nett = 0;
+      bond.bond = 0;
+    }
+
+    if (bond.gross > 0) {
+      const row = {
+        name: `${bond.display_name}: $${bond.gross} x ${duration} days`,
+        total: gross,
+        nett: nett,
+        profit: profit,
+      };
+      if (bond.nett > 0 && bond.gross > bond.nett) {
+        agentFees.push(row);
+      } else {
+        supplierFees.push(row);
+        pickupFees.push(row);
+      }
+    }
+
+    /**
+     * One-way
+     */
+    let one_way = quote.details.one_way;
     if (one_way > 0) {
       supplierFees.push({
         name: `One-way fee`,
@@ -113,10 +143,18 @@ export const quote = {
         nett: 0,
         profit: 0,
       });
+      pickupFees.push({
+        name: `One-way fee`,
+        total: one_way,
+        nett: 0,
+        profit: 0,
+      });
     }
-    // };
-    // const getAddons = () => {
-    let addons = details.addons;
+
+    /**
+     * Add-ons
+     */
+    let addons = quote.details.addons;
     for (const key in addons) {
       const addon = addons[key];
       let gross = addon.gross_rate;
@@ -138,34 +176,40 @@ export const quote = {
         }
       }
       const row = {
-        name: `Add-on: ${addon.name}${addon.daily ? `$${addon.gross_rate} x ${duration} days` : ""}`,
+        name: `Add-on: ${addon.name} ${addon.daily ? `$${addon.gross_rate} x ${duration} days` : ""}`,
         total: gross,
         nett: nett,
-        profit: gross - nett,
+        profit: nett > 0 ? gross - nett : 0,
       };
-      if (addon.gross_rate > addon.nett_rate) {
+      if (addon.nett_rate > 0 && addon.gross_rate > addon.nett_rate) {
         agentFees.push(row);
       } else {
         supplierFees.push(row);
+        pickupFees.push(row);
       }
     }
-    // };
 
-    // const getSpecials = () => {
-    let special = details.specials;
+    /**
+     * Specials
+     */
+    let special = quote.details.specials;
     if (special.total > 0) {
       special.items.forEach((item) => {
-        agentFees.push({
-          name: item.name,
-          total: -item.discount_amount,
-          nett: 0,
-          profit: 0,
-        });
+        if (item.discount_amount > 0) {
+          agentFees.push({
+            name: item.name,
+            total: -item.discount_amount,
+            nett: 0,
+            profit: 0,
+          });
+        }
       });
     }
-    // };
-    // const getFees = () => {
-    let fee = details.fees;
+
+    /**
+     * Fees
+     */
+    let fee = quote.details.fees;
     if (fee.total > 0) {
       fee.items.forEach((item) => {
         supplierFees.push({
@@ -174,46 +218,64 @@ export const quote = {
           nett: 0,
           profit: 0,
         });
+        pickupFees.push({
+          name: item.name,
+          total: item.fee,
+          nett: 0,
+          profit: 0,
+        });
       });
     }
-    // };
-    // const getCcs = () => {
-    let agentFee = (totalAgentFee() * 2) / 100;
-    if (agentFee > 0) {
+
+    /**
+     * Credit Card
+     */
+    if (quote.cc_charge) {
+      let fee = totalAgentFee() * 0.02;
+      if (fee > 0) {
+        agentFees.push({
+          name: "Credit card surcharge (2%)",
+          total: fee,
+          nett: 0,
+          profit: 0,
+        });
+      }
+    } else {
       agentFees.push({
-        name: "Credit card surcharge (2%)",
-        total: agentFee,
+        name: "Credit card surcharge (WAIVED)",
+        total: 0,
         nett: 0,
         profit: 0,
       });
     }
-    // };
+
+    /**
+     * Payment Terms
+     */
+    const totalAgent = totalAgentFee();
+    const totalCommission = totalAgentCommission();
+    const totalSupplier = totalSupplierFee();
 
     let termsItems = [];
-    // const getTerms = () => {
-    let total = totalAgentFee();
-
     if ("terms" in quote.details) {
-      let terms = details.terms;
+      let terms = quote.details.terms;
       let gap = dayjs(date_start).diff(dayjs(date_quote), "day");
 
-      if (gap < terms.balance) {
+      if (gap <= terms.balance) {
         termsItems = [
           {
-            name: `Full payment to agent on ${dayjs(date_quote).format()}`,
-            total: total,
+            name: `Full payment to agent on ${dayjs(date_quote).format("ddd, DD MMM YYYY")}`,
+            total: totalAgent,
           },
         ];
       } else {
-        termsItems = [
-          {
-            name: `Booking deposit to agent now (${
-              terms.percentage ? `${terms.deposit}%` : `$${terms.deposit}`
-            }) on ${dayjs(date_quote).format("ddd, DD MMM YYYY")}`,
-            total: terms.percentage ? (total * terms.deposit) / 100 : terms.deposit,
-          },
-        ];
+        let deposit = quote.details.terms.percentage
+          ? (total * quote.details.terms.deposit) / 100
+          : quote.details.terms.deposit;
+        let depositOri = deposit;
+
         if (terms.payment2) {
+          let total2 = terms.percentage2 ? (totalAgent * terms.deposit2) / 100 : terms.deposit2;
           if (terms.balance2 < gap) {
             termsItems.push({
               name: `First payment to agent (${
@@ -221,55 +283,69 @@ export const quote = {
               }) on ${dayjs(date_start).subtract(terms.balance2, "day").format("ddd, DD MMM YYYY")} (${
                 terms.balance2
               } days before
-                    travel)`,
-              total: terms.percentage2 ? (total * terms.deposit2) / 100 : terms.deposit2,
+              travel)`,
+              total: total2,
             });
+          } else {
+            deposit += total2;
           }
         }
         if (terms.payment3) {
+          let total3 = terms.percentage3 ? (totalAgent * terms.deposit3) / 100 : terms.deposit3;
           if (terms.balance3 < gap) {
             termsItems.push({
-              name: `Second payment (${terms.percentage3 ? `${terms.deposit3}%` : `$${terms.deposit3}`}) on ${dayjs(
-                date_start
-              )
-                .subtract(terms.balance3, "day")
-                .format("ddd, DD MMM YYYY")} (${terms.balance3} days before
-                    travel)`,
-              total: terms.percentage3 ? (total * terms.deposit3) / 100 : terms.deposit3,
+              name: `First payment to agent (${
+                terms.percentage3 ? `${terms.deposit3}%` : `$${terms.deposit3}`
+              }) on ${dayjs(date_start).subtract(terms.balance3, "day").format("ddd, DD MMM YYYY")} (${
+                terms.balance3
+              } days before
+              travel)`,
+              total: total3,
             });
+          } else {
+            deposit += total3;
           }
         }
         // balance
         if (terms.balance < gap) {
-          let bal = total;
+          let bal = totalAgent;
           termsItems.forEach((t) => {
             bal -= t.total;
           });
+          bal -= deposit;
 
           termsItems.push({
             name:
               "Balance payment to " +
               (terms.pay_counter
-                ? `supplier at pick-up counter on ${date_start.format("ddd, DD MMM YYYY")}`
+                ? `supplier at pick-up counter on ${dayjs(date_start).format("ddd, DD MMM YYYY")}`
                 : `agent on ${dayjs(date_start).subtract(terms.balance, "day").format("ddd, DD MMM YYYY")}`) +
               ` (${terms.balance} days before travel)`,
             total: bal,
           });
+        } else {
+          deposit += bal;
         }
+        termsItems = [
+          {
+            name: `Booking deposit to agent now (${
+              terms.percentage ? `${terms.deposit}%` : `$${terms.deposit}`
+            }) on ${dayjs(date_quote).format("ddd, DD MMM YYYY")}`,
+            total: terms.percentage ? (totalAgent * terms.deposit) / 100 : terms.deposit,
+          },
+          ...termsItems,
+        ];
       }
     }
-    // };
 
     return {
-      agent: {
-        items: agentFees,
-        total: totalAgentFee(),
-        commission: totalAgentCommission(),
-      },
-      supplier: {
-        items: supplierFees,
-        total: totalSupplierFee(),
-      },
+      agentItems: agentFees,
+      supplierItems: supplierFees,
+      pickupItems: pickupFees,
+      termsItems: termsItems,
+      totalAgent: totalAgent,
+      totalCommission: totalCommission,
+      totalSupplier: totalSupplier,
     };
   },
 };

@@ -1,27 +1,56 @@
 <script>
   import { Button, Modal, Select, SelectItem, TextArea, TextInput, InlineNotification } from "carbon-components-svelte";
+  import { format } from "$lib/format.js";
+  import { q } from "$lib/quote.js";
+  import { onMount } from "svelte";
+  export let title = "Payment Information";
+  export let description = null;
   export let quote;
   const thisYear = new Date().getFullYear();
   const pad = (num) => {
     var s = "0" + num;
     return s.slice(-2);
   };
+  let summary = {
+    agentItems: [],
+    supplierItems: [],
+    pickupItems: [],
+    termsItems: [],
+    totalAgent: 0,
+    totalCommission: 0,
+    totalSupplier: 0,
+  };
+  onMount(async () => {
+    summary = q.getPayments(quote);
+  });
 </script>
 
 <div class="bg-white rounded mb-4">
   <div class="px-4 py-2 border-b border-gray-200">
-    <h2 class="h2">Payment Information</h2>
-    <InlineNotification
+    <h2 class="h2">{title}</h2>
+    {#if description}
+      <div class="text-gray-500">
+        {description}
+      </div>
+    {/if}
+    <!-- <InlineNotification
       lowContrast
       hideCloseButton
       kind="warning"
       title="Important"
       subtitle="Suppliers / operators may require a deposit or full payment - please refer to your quote for details; Please note your credit card statement will show billing as Australia 4 Wheel Drive Rentals."
       class="mx-auto"
-    />
+    /> -->
   </div>
   <div class="p-4 grid grid-cols-1 gap-5">
     <div class="grid grid-cols-1 gap-5">
+      <div>
+        <Select labelText="Amount to Pay" name="deposit" bind:selected={quote.deposit} required>
+          {#each summary.termsItems as item}
+            <SelectItem value={item.total} text={`${item.name} (AUD $${format.currency(item.total)})`} />
+          {/each}
+        </Select>
+      </div>
       <div>
         <Select labelText="Card Type" name="cc_type" bind:selected={quote.cc_type} required>
           <SelectItem value="" text="Select a card type" />
