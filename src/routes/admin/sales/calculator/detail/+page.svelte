@@ -154,8 +154,8 @@
     const { data: dataCustomer, error: errorData } = await supabase
       .from("users")
       .select()
-      .or(`email.eq.${searchCustomer},last_name.eq.${searchCustomer}`)
-      // .eq("email", user.email)
+      // .or(`email.eq.${searchCustomer},last_name.eq.${searchCustomer}`)
+      .eq("email", user.email)
       .single();
 
     // console.log(dataCustomer);
@@ -166,6 +166,7 @@
     } else {
       // console.log("NO");
       user.id = "add";
+      // user.email = searchCustomer
     }
   };
   const changeCustomer = () => {
@@ -638,7 +639,7 @@
         {#if !user.id}
           <div class="py-5 text-center flex items-end">
             <div class="flex-1">
-              <TextInput labelText="Customer Email or Name" bind:value={searchCustomer} />
+              <TextInput labelText="Customer Email or Name" bind:value={user.email} />
             </div>
             <Button on:click={lookupCustomer}>Search</Button>
           </div>
@@ -659,8 +660,6 @@
                 type="email"
                 bind:value={user.email}
                 required
-                readonly
-                title="Not editable"
               />
             </div>
             <div>
