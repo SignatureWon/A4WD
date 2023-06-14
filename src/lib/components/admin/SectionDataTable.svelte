@@ -8,7 +8,7 @@
   export let headers = [{ key: "name", value: "Name" }];
   export let modal = false;
 
-  console.log(rows);
+  // console.log(rows);
 
   const formatCurrency = (num) => {
     return num.toLocaleString("en-US", {

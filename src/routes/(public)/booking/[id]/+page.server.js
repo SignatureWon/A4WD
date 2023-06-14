@@ -7,7 +7,7 @@ import { redirect } from "@sveltejs/kit";
 
 export async function load({ url, params, locals }) {
   const id =
-    Number(CryptoJS.AES.decrypt(params.id.replace("__", "/"), env.PUBLIC_AES_KEY).toString(CryptoJS.enc.Utf8)) - 388000;
+    Number(CryptoJS.AES.decrypt(params.id.replaceAll("__", "/"), env.PUBLIC_AES_KEY).toString(CryptoJS.enc.Utf8)) - 388000;
   let quote = null;
   let user = null;
 

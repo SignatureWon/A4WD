@@ -1,6 +1,8 @@
 import dayjs from "dayjs";
 import { supabase } from "$lib/supabaseClient";
 import { format } from "$lib/format.js";
+import { env } from "$env/dynamic/public";
+import CryptoJS from "crypto-js";
 
 export const html = {
   create: async (quote_id, type) => {
@@ -407,6 +409,7 @@ export const html = {
       cc: getCcs(),
       term: getTerms(),
     };
+    const encId = CryptoJS.AES.encrypt(info.quote.id.toString(), env.PUBLIC_AES_KEY).toString().replaceAll("/", "__");
 
     let email = `
 <!DOCTYPE htmlPUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -841,7 +844,7 @@ table, td{
     </div>
     <div style="margin-bottom: 10px;">
       <a
-        href="https://australia4wdrentals.com/form/vehicle/booking"
+        href="https://australia4wdrentals.com/booking/${encId}"
         style="display: block; width: 200px; padding-top: 10px; padding-bottom: 10px; text-align: center; font-weight: bold; font-size: 20px; background-color: #1d4ed8; text-decoration: none; color: #ffffff; border-radius: 5px"
       >
         <b style="text-decoration: none; color: #ffffff;">Book Now</b>
