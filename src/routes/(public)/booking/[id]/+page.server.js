@@ -4,6 +4,7 @@ import { supabase } from "$lib/supabaseClient";
 import dayjs from "dayjs";
 import sgMail from "@sendgrid/mail";
 import { redirect } from "@sveltejs/kit";
+import { html } from "$lib/booked.js";
 
 export async function load({ url, params, locals }) {
   const id =
@@ -74,10 +75,12 @@ export const actions = {
     let emailSubject = `Booking Submitted: ${vehicle_name.trim()}: ${pickup_name.trim()}, ${pickup_date} - ${dropoff_name.trim()}, ${dropoff_date} ${
       bond_name ? `(${bond_name.trim()})` : ""
     } ${user_name}`;
-    let emailBody = `
-        <div style="font-size:18px; font-weight:bold;margin-bottom:20px">Booking submitted!</div>
-        <div>Booking Reference</div>
-        <div style="font-size: 24px; font-weight: bold">Q${388000 + Number(quote_id)}</div>`;
+    let emailBody = await html.create(quote_id);
+
+    // let emailBody = `
+    //     <div style="font-size:18px; font-weight:bold;margin-bottom:20px">Booking submitted!</div>
+    //     <div>Booking Reference</div>
+    //     <div style="font-size: 24px; font-weight: bold">Q${388000 + Number(quote_id)}</div>`;
     const { data: emailData } = await supabase.from("constants").select("name").eq("type", "email_quote").single();
     let bcc = emailData.name.split(",");
     let bccList = [];
