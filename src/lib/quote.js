@@ -41,40 +41,104 @@ export const q = {
     const daily = quote.details.daily;
     const rateType = quote.details.rates_type;
 
-    if (rateType === "flex") {
-      let week = 1;
-      let day = 0;
-      daily.items.forEach((o, i) => {
-        if (i !== 0 && i % 7 === 0) {
-          agentFees.push({
-            name: `Daily basic rental: Week ${week}: Flex[${daily.items[i - 1].flex}]: $${format.currency(
-              daily.items[i - 1].gross
-            )} x ${day} days`,
-            total: daily.items[i - 1].gross * day,
-            nett: daily.items[i - 1].nett * day,
-            profit: daily.items[i - 1].profit * day,
-          });
-          day = 1;
-          week++;
-        } else {
-          day++;
-        }
-        if (i === daily.items.length - 1) {
-          agentFees.push({
-            name: `Daily basic rental: Week ${week}: Flex[${o.flex}]: $${format.currency(o.gross)} x ${day} days`,
-            total: o.gross * day,
-            nett: o.nett * day,
-            profit: o.profit * day,
-          });
-        }
+    let terms = {
+      name: null,
+      id: null,
+      confirmation: null,
+      confirmation_terms: null,
+      summary: null,
+      summary_terms: null,
+      counter: null,
+      counter_terms: null,
+      deposit: 0,
+      percentage: false,
+      balance: 0,
+      description: null,
+      payment2: false,
+      deposit2: null,
+      percentage2: null,
+      balance2: null,
+      description2: null,
+      payment3: null,
+      deposit3: null,
+      percentage3: null,
+      balance3: null,
+      description3: null,
+      pay_counter: false,
+      suppliers: {
+        id: null,
+        name: null,
+      },
+    };
+
+    if ("terms" in quote.details) {
+      terms = quote.details.terms;
+    }
+    if (terms.pay_counter) {
+      let toAgent = terms.percentage ? (quote.details.daily.gross * terms.deposit) / 100 : terms.deposit;
+
+      agentFees.push({
+        name: `${terms.percentage ? `${terms.deposit}%` : `$${terms.deposit}%`} deposit of daily basic rental ${
+          terms.percentage ? `($${format.currency(quote.details.daily.gross)} x ${terms.deposit}%)` : ""
+        }`,
+        total: toAgent,
+        nett: 0,
+        profit: toAgent,
+      });
+      supplierFees.push({
+        name: `Balance of daily basic rental ($${format.currency(quote.details.daily.gross)} - $${format.currency(
+          toAgent
+        )})`,
+        total: quote.details.daily.gross - toAgent,
+        nett: 0,
+        profit: 0,
+      });
+      pickupFees.push({
+        name: `Balance of daily basic rental ($${format.currency(quote.details.daily.gross)} - $${format.currency(
+          toAgent
+        )})`,
+        total: quote.details.daily.gross - toAgent,
+        nett: 0,
+        profit: 0,
       });
     } else {
-      agentFees.push({
-        name: `Daily basic rental: $${format.currency(daily.gross / daily.items.length)} x ${daily.items.length} days`,
-        total: daily.gross,
-        nett: daily.nett,
-        profit: daily.profit,
-      });
+      if (rateType === "flex") {
+        let week = 1;
+        let day = 0;
+        daily.items.forEach((o, i) => {
+          if (i !== 0 && i % 7 === 0) {
+            agentFees.push({
+              name: `Daily basic rental: Week ${week}: Flex[${daily.items[i - 1].flex}]: $${format.currency(
+                daily.items[i - 1].gross
+              )} x ${day} days`,
+              total: daily.items[i - 1].gross * day,
+              nett: daily.items[i - 1].nett * day,
+              profit: daily.items[i - 1].profit * day,
+            });
+            day = 1;
+            week++;
+          } else {
+            day++;
+          }
+          if (i === daily.items.length - 1) {
+            agentFees.push({
+              name: `Daily basic rental: Week ${week}: Flex[${o.flex}]: $${format.currency(o.gross)} x ${day} days`,
+              total: o.gross * day,
+              nett: o.nett * day,
+              profit: o.profit * day,
+            });
+          }
+        });
+      } else {
+        agentFees.push({
+          name: `Daily basic rental: $${format.currency(daily.gross / daily.items.length)} x ${
+            daily.items.length
+          } days`,
+          total: daily.gross,
+          nett: daily.nett,
+          profit: daily.profit,
+        });
+      }
     }
 
     /**
@@ -257,8 +321,14 @@ export const q = {
     const totalSupplier = totalSupplierFee();
 
     let termsItems = [];
-    if ("terms" in quote.details) {
-      let terms = quote.details.terms;
+    if (terms.pay_counter) {
+      termsItems = [
+        {
+          name: `Total payable to agent`,
+          total: totalAgent,
+        },
+      ];
+    } else {
       let gap = dayjs(date_start).diff(dayjs(date_quote), "day");
 
       if (gap <= terms.balance) {
@@ -270,7 +340,7 @@ export const q = {
         ];
       } else {
         let deposit = quote.details.terms.percentage
-          ? (total * quote.details.terms.deposit) / 100
+          ? (totalAgent * quote.details.terms.deposit) / 100
           : quote.details.terms.deposit;
         let depositOri = deposit;
 

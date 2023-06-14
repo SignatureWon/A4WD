@@ -22,10 +22,10 @@ export const html = {
       )
       .eq("id", quote_id)
       .single();
-    console.log("quote", quote);
+    // console.log("quote", quote);
     let summary = q.getPayments(quote);
 
-    console.log(summary);
+    // console.log(summary);
 
     const { data: vehicle } = await supabase
       .from("vehicles")

@@ -43,7 +43,7 @@
   import CryptoJS from "crypto-js";
 
   export let data;
-  console.log(data.quote);
+  console.log(data);
 
   let emailContent = "";
 
@@ -598,7 +598,7 @@
           </div>
           <div class="mb-4">
             <div class="text-sm text-gray-400">Card date</div>
-            <div>{data.quote.cc_month}/{data.quote.cc_month}</div>
+            <div>{data.quote.cc_month}/{data.quote.cc_year}</div>
           </div>
           <div class="mb-4">
             <div class="text-sm text-gray-400">Card CVV</div>
