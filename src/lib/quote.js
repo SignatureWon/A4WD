@@ -18,7 +18,6 @@ export const q = {
       return sum;
     };
     const totalAgentCommission = () => {
-      // console.log(agentFees);
       let sum = 0;
       agentFees.forEach((fee) => {
         sum += fee.profit;
@@ -292,6 +291,35 @@ export const q = {
     }
 
     /**
+     * Adjustments
+     */
+    let adjustments = quote.adjustments;
+    // let adjAgentItems = []
+    // let adjSupplierItems = []
+    let totalAgentAdjustments = 0;
+    let totalSupplierAdjustments = 0;
+
+    adjustments.forEach((item) => {
+      if (item.own) {
+        agentFees.push({
+          name: item.name,
+          total: item.value,
+          nett: 0,
+          profit: 0,
+        });
+        totalAgentAdjustments += item.value;
+      } else {
+        supplierFees.push({
+          name: item.name,
+          total: item.value,
+          nett: 0,
+          profit: 0,
+        });
+        totalSupplierAdjustments += item.value;
+      }
+    });
+
+    /**
      * Credit Card
      */
     if (quote.cc_charge) {
@@ -330,6 +358,11 @@ export const q = {
       ];
     } else {
       let gap = dayjs(date_start).diff(dayjs(date_quote), "day");
+      // console.log(dayjs(date_start).isBefore(dayjs(date_quote)));
+      // if (dayjs(date_start).isBefore(dayjs(date_quote))) {
+      //   gap = gap * -1
+      // }
+      // console.log("gap", gap);
 
       if (gap <= terms.balance) {
         termsItems = [
@@ -416,6 +449,8 @@ export const q = {
       totalAgent: totalAgent,
       totalCommission: totalCommission,
       totalSupplier: totalSupplier,
+      totalAgentAdjustments: totalAgentAdjustments,
+      totalSupplierAdjustments: totalSupplierAdjustments,
     };
   },
 };

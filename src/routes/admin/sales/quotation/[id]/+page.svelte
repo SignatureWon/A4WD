@@ -1,12 +1,14 @@
 <script>
   import PageTitle from "$lib/components/admin/PageTitle.svelte";
-  import Form from "$lib/components/admin/Form.svelte";
-  import FormSection from "$lib/components/admin/FormSection.svelte";
-  import InputText from "$lib/components/admin/InputText.svelte";
-  import InputSelect from "$lib/components/admin/InputSelect.svelte";
-  import { enhance } from "$app/forms";
+  // import Form from "$lib/components/admin/Form.svelte";
+  // import FormSection from "$lib/components/admin/FormSection.svelte";
+  // import InputText from "$lib/components/admin/InputText.svelte";
+  // import InputSelect from "$lib/components/admin/InputSelect.svelte";
+  // import { enhance } from "$app/forms";
   import { html } from "$lib/html.js";
-  import { jsPDF } from "jspdf";
+  // import { jsPDF } from "jspdf";
+import { q } from "$lib/quote.js";
+
   import {
     Button,
     Checkbox,
@@ -35,6 +37,7 @@
   import FeeAddons from "$lib/admin/quote/FeeAddons.svelte";
   import FeeOthers from "$lib/admin/quote/FeeOthers.svelte";
   import FeeSpecials from "$lib/admin/quote/FeeSpecials.svelte";
+  import FeeAdjustments from "$lib/admin/quote/FeeAdjustments.svelte";
 
   export let data;
 
@@ -54,6 +57,8 @@
   let noCustomer = false;
   let user = data.user;
   let quote = data.quote;
+
+    // console.log(summary);
 
   const duration = details.duration;
   const date_quote = dayjs().format("DD MMM YYYY");
@@ -158,78 +163,78 @@
     return sum;
   };
 
-  let termsItems = [];
-  const getTerms = () => {
-    let total = getTotalAgentFee();
-    getTotalAgentCommission();
-    getTotalSupplierFee();
+  // let termsItems = [];
+  // const getTerms = () => {
+  //   let total = getTotalAgentFee();
+  //   getTotalAgentCommission();
+  //   getTotalSupplierFee();
 
-    if ("terms" in quote.details) {
-      let terms = details.terms;
-      let gap = dayjs(date_start).diff(dayjs(date_quote), "day");
+  //   if ("terms" in quote.details) {
+  //     let terms = details.terms;
+  //     let gap = dayjs(date_start).diff(dayjs(date_quote), "day");
 
-      if (gap < terms.balance) {
-        termsItems = [
-          {
-            name: `Full payment to agent on ${dayjs(date_quote).format("ddd, DD MMM YYYY")}`,
-            total: total,
-          },
-        ];
-      } else {
-        termsItems = [
-          {
-            name: `Booking deposit to agent now (${
-              terms.percentage ? `${terms.deposit}%` : `$${terms.deposit}`
-            }) on ${dayjs(date_quote).format("ddd, DD MMM YYYY")}`,
-            total: terms.percentage ? (total * terms.deposit) / 100 : terms.deposit,
-          },
-        ];
-        if (terms.payment2) {
-          if (terms.balance2 < gap) {
-            termsItems.push({
-              name: `First payment to agent (${
-                terms.percentage2 ? `${terms.deposit2}%` : `$${terms.deposit2}`
-              }) on ${dayjs(date_start).subtract(terms.balance2, "day").format("ddd, DD MMM YYYY")} (${
-                terms.balance2
-              } days before
-                travel)`,
-              total: terms.percentage2 ? (total * terms.deposit2) / 100 : terms.deposit2,
-            });
-          }
-        }
-        if (terms.payment3) {
-          if (terms.balance3 < gap) {
-            termsItems.push({
-              name: `Second payment (${terms.percentage3 ? `${terms.deposit3}%` : `$${terms.deposit3}`}) on ${dayjs(
-                date_start
-              )
-                .subtract(terms.balance3, "day")
-                .format("ddd, DD MMM YYYY")} (${terms.balance3} days before
-                travel)`,
-              total: terms.percentage3 ? (total * terms.deposit3) / 100 : terms.deposit3,
-            });
-          }
-        }
-        // balance
-        if (terms.balance < gap) {
-          let bal = total;
-          termsItems.forEach((t) => {
-            bal -= t.total;
-          });
+  //     if (gap < terms.balance) {
+  //       termsItems = [
+  //         {
+  //           name: `Full payment to agent on ${dayjs(date_quote).format("ddd, DD MMM YYYY")}`,
+  //           total: total,
+  //         },
+  //       ];
+  //     } else {
+  //       termsItems = [
+  //         {
+  //           name: `Booking deposit to agent now (${
+  //             terms.percentage ? `${terms.deposit}%` : `$${terms.deposit}`
+  //           }) on ${dayjs(date_quote).format("ddd, DD MMM YYYY")}`,
+  //           total: terms.percentage ? (total * terms.deposit) / 100 : terms.deposit,
+  //         },
+  //       ];
+  //       if (terms.payment2) {
+  //         if (terms.balance2 < gap) {
+  //           termsItems.push({
+  //             name: `First payment to agent (${
+  //               terms.percentage2 ? `${terms.deposit2}%` : `$${terms.deposit2}`
+  //             }) on ${dayjs(date_start).subtract(terms.balance2, "day").format("ddd, DD MMM YYYY")} (${
+  //               terms.balance2
+  //             } days before
+  //               travel)`,
+  //             total: terms.percentage2 ? (total * terms.deposit2) / 100 : terms.deposit2,
+  //           });
+  //         }
+  //       }
+  //       if (terms.payment3) {
+  //         if (terms.balance3 < gap) {
+  //           termsItems.push({
+  //             name: `Second payment (${terms.percentage3 ? `${terms.deposit3}%` : `$${terms.deposit3}`}) on ${dayjs(
+  //               date_start
+  //             )
+  //               .subtract(terms.balance3, "day")
+  //               .format("ddd, DD MMM YYYY")} (${terms.balance3} days before
+  //               travel)`,
+  //             total: terms.percentage3 ? (total * terms.deposit3) / 100 : terms.deposit3,
+  //           });
+  //         }
+  //       }
+  //       // balance
+  //       if (terms.balance < gap) {
+  //         let bal = total;
+  //         termsItems.forEach((t) => {
+  //           bal -= t.total;
+  //         });
 
-          termsItems.push({
-            name:
-              "Balance payment to " +
-              (terms.pay_counter
-                ? `supplier at pick-up counter on ${date_start.format("ddd, DD MMM YYYY")}`
-                : `agent on ${dayjs(date_start).subtract(terms.balance, "day").format("ddd, DD MMM YYYY")}`) +
-              ` (${terms.balance} days before travel)`,
-            total: bal,
-          });
-        }
-      }
-    }
-  };
+  //         termsItems.push({
+  //           name:
+  //             "Balance payment to " +
+  //             (terms.pay_counter
+  //               ? `supplier at pick-up counter on ${date_start.format("ddd, DD MMM YYYY")}`
+  //               : `agent on ${dayjs(date_start).subtract(terms.balance, "day").format("ddd, DD MMM YYYY")}`) +
+  //             ` (${terms.balance} days before travel)`,
+  //           total: bal,
+  //         });
+  //       }
+  //     }
+  //   }
+  // };
   // const updateQuote = () => {
   //   agentFees = [];
   //   supplierFees = [];
@@ -333,6 +338,7 @@
     quote.profit = 0;
     // quote.add_discount = 0;
     quote.discount = 0;
+    quote.discount_agent = 0;
     quote.receivables = 0;
     quote.cc_fee = 0;
     quote.system_fee = 0;
@@ -370,11 +376,27 @@
 
     // specials
     fee_discount.specials.forEach((obj) => {
-      quote.discount += obj.total;
+      quote.discount -= obj.total;
     });
 
-    quote.cc_fee = quote.cc_charge ? (quote.gross - quote.discount - quote.add_discount) * 0.02 : 0;
-    quote.receivables = quote.gross - quote.discount - quote.add_discount + quote.cc_fee;
+    // adjustment
+    if (!quote.adjustments) {
+      quote.adjustments = []
+    }
+    quote.adjustments.forEach((obj) => {
+      if (obj.own) {
+        quote.discount_agent += obj.value
+        quote.profit += obj.value;
+      } else {
+        quote.discount += obj.value
+      }
+      // quote.gross += obj.value;
+      // quote.nett += obj.value;
+    });
+
+
+    quote.cc_fee = quote.cc_charge ? (quote.gross + quote.discount + quote.discount_agent - quote.add_discount) * 0.02 : 0;
+    quote.receivables = quote.gross + quote.discount + quote.discount_agent - quote.add_discount + quote.cc_fee;
 
     quote.profit -= quote.add_discount;
     quote.system_fee = quote.profit * 0.08;
@@ -385,6 +407,7 @@
   let openEmail = false;
 
   let emailPreview = "";
+  // let summary = q.getPayments(quote);
 
   onMount(() => {
     countFees();
@@ -443,6 +466,9 @@
       <Section title="Specials">
         <FeeSpecials bind:fees={fee_discount.specials} specials={details.specials} />
       </Section>
+      <Section title="Adjustments">
+        <FeeAdjustments bind:adjustments={quote.adjustments} count={countFees} />
+      </Section>
     </div>
   </div>
   <div class="h-full w-80 overflow-y-auto bg-brand-50">
@@ -457,12 +483,12 @@
           <div class="text-right ml-4">{format.currency(quote.gross)}</div>
         </div>
         <div class="flex py-2 border-b border-gray-200">
-          <div class="flex-1">Total Specials</div>
-          <div class="text-right ml-4">-{format.currency(quote.discount)}</div>
+          <div class="flex-1">Supplier Discount</div>
+          <div class="text-right ml-4">{format.currency(quote.discount)}</div>
         </div>
         <div class="flex py-2 border-b border-gray-200">
-          <div class="flex-1">Total Discount</div>
-          <div class="text-right ml-4">-{format.currency(quote.add_discount)}</div>
+          <div class="flex-1">A4 Discount</div>
+          <div class="text-right ml-4">{format.currency(quote.discount_agent)}</div>
         </div>
         <div class="flex py-2 border-b border-gray-200">
           <div class="flex-1 relative">

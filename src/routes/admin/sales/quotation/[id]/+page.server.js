@@ -28,6 +28,7 @@ export async function load({ url, params }) {
     "gross",
     "profit",
     "discount",
+    "discount_agent",
     "agent",
     "agent_fee",
     "system_fee",
@@ -50,6 +51,7 @@ export async function load({ url, params }) {
     "cc_charge",
     "system_fee",
     "nett_profit",
+    "adjustments",
   ];
 
   const quote = await db.one({
