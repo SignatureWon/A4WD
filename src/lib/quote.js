@@ -74,12 +74,14 @@ export const q = {
       terms = quote.details.terms;
     }
     if (terms.pay_counter) {
+
+      console.log(quote.details.daily);
       let toAgent = terms.percentage ? (quote.details.daily.gross * terms.deposit) / 100 : terms.deposit;
 
       agentFees.push({
-        name: `${terms.percentage ? `${terms.deposit}%` : `$${terms.deposit}%`} deposit of daily basic rental ${
+        name: `${terms.percentage ? `${terms.deposit}%` : `$${terms.deposit}`} deposit of daily basic rental ${
           terms.percentage ? `($${format.currency(quote.details.daily.gross)} x ${terms.deposit}%)` : ""
-        }`,
+        }<br><span style="color: #999999">Daily basic rental: $${format.currency(quote.details.daily.items[0].gross)} x ${duration} days = $${format.currency(quote.details.daily.gross)}</span>`,
         total: toAgent,
         nett: 0,
         profit: toAgent,
@@ -87,7 +89,7 @@ export const q = {
       supplierFees.push({
         name: `Balance of daily basic rental ($${format.currency(quote.details.daily.gross)} - $${format.currency(
           toAgent
-        )})`,
+        )})<br><span style="color: #999999">Daily basic rental: $${format.currency(quote.details.daily.items[0].gross)} x ${duration} days = $${format.currency(quote.details.daily.gross)}</span>`,
         total: quote.details.daily.gross - toAgent,
         nett: 0,
         profit: 0,
@@ -95,7 +97,7 @@ export const q = {
       pickupFees.push({
         name: `Balance of daily basic rental ($${format.currency(quote.details.daily.gross)} - $${format.currency(
           toAgent
-        )})`,
+        )})<br><span style="color: #999999">Daily basic rental: $${format.currency(quote.details.daily.items[0].gross)} x ${duration} days = $${format.currency(quote.details.daily.gross)}</span>`,
         total: quote.details.daily.gross - toAgent,
         nett: 0,
         profit: 0,
