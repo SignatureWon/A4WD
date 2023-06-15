@@ -108,6 +108,10 @@
       subtotal.profit += item.profit;
     });
 
+    if (quote.add_discount > 0) {
+      quote.add_discount = 0;
+    }
+
     subtotal.total -= quote.add_discount;
     subtotal.profit -= quote.add_discount;
 
@@ -231,7 +235,7 @@
     <TextInput placeholder="Discount for daily basic rental" bind:value={quote.add_discount_remark} />
   </div>
   <div class="text-right w-20">
-    <NumberInput bind:value={quote.add_discount} hideSteppers on:keyup={getDailyTotal} class="text-right" />
+    <NumberInput bind:value={quote.add_discount} max={0} hideSteppers on:keyup={getDailyTotal} class="text-right" />
   </div>
 </div>
 <div class="border-b border-gray-200 py-3 bg-gray-50 px-2">

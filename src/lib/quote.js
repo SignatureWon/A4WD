@@ -143,10 +143,10 @@ export const q = {
     /**
      * Discount
      */
-    if (quote.add_discount > 0) {
+    if (quote.add_discount < 0) {
       agentFees.push({
         name: `Discount: ${quote.add_discount_remark}`,
-        total: -quote.add_discount,
+        total: quote.add_discount,
         nett: 0,
         profit: 0,
       });
@@ -258,6 +258,7 @@ export const q = {
     let special = quote.details.specials;
     if (special.total > 0) {
       special.items.forEach((item) => {
+        console.log(item);
         if (item.discount_amount > 0) {
           agentFees.push({
             name: item.name,
@@ -300,11 +301,26 @@ export const q = {
     let totalSupplierAdjustments = 0;
 
     if (!adjustments) {
-      adjustments = []
+      adjustments = [];
     }
 
     adjustments.forEach((item) => {
-      // if (item.own) {
+      if (!item.own && item.value > 0) {
+        supplierFees.push({
+          name: item.name,
+          total: item.value,
+          nett: 0,
+          profit: 0,
+        });
+        totalSupplierAdjustments += item.value;
+
+        pickupFees.push({
+          name: item.name,
+          total: item.value,
+          nett: 0,
+          profit: 0,
+        });
+      } else {
         agentFees.push({
           name: item.name,
           total: item.value,
@@ -312,15 +328,7 @@ export const q = {
           profit: 0,
         });
         totalAgentAdjustments += item.value;
-      // } else {
-      //   supplierFees.push({
-      //     name: item.name,
-      //     total: item.value,
-      //     nett: 0,
-      //     profit: 0,
-      //   });
-      //   totalSupplierAdjustments += item.value;
-      // }
+      }
     });
 
     /**
