@@ -57,7 +57,7 @@ export const html = {
         sum += fee.profit;
       });
 
-      sum -= quote.add_discount;
+      sum += quote.add_discount;
       return sum;
     };
     const totalSupplierFee = () => {

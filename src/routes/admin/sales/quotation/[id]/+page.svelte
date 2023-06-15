@@ -491,7 +491,7 @@
                   on:toggle={countFees}
                   class="absolute -mt-1.5"
                 />
-                <div class="pl-10">{item.name}</div>
+                <div class="pl-10">{@html item.name}</div>
               </div>
               <div class="text-right ml-4">{format.currency(item.total)}</div>
             </div>
@@ -506,14 +506,14 @@
                   on:toggle={countFees}
                   class="absolute -mt-1.5"
                 />
-                <div class="pl-10">{item.name}</div>
+                <div class="pl-10">{@html item.name}</div>
               </div>
               <div class="text-right ml-4">{format.currency(item.total)}</div>
             </div>
           {:else}
             <div class="flex py-2 border-b border-gray-200">
               <div class="flex-1">
-                {item.name}
+                {@html item.name}
               </div>
               <div class="text-right ml-4">{format.currency(item.total)}</div>
             </div>
@@ -527,7 +527,7 @@
         {#each summary.supplierItems as item}
           <div class="flex py-2 border-b border-gray-200">
             <div class="flex-1">
-              {item.name}
+              {@html item.name}
             </div>
             <div class="text-right ml-4">{format.currency(item.total)}</div>
           </div>
