@@ -443,7 +443,7 @@
         <Passenger passenger={details.passenger} />
       </Section>
       <Section title="Daily basic rental">
-        <FeeDaily bind:fees={fees.daily} daily={details.daily} type={details.rates_type} {quote} count={countFees} />
+        <FeeDaily bind:fees={fees.daily} daily={details.daily} type={details.rates_type} bind:quote={quote} count={countFees} />
       </Section>
       <Section title="Adjustments">
         <FeeAdjustments bind:adjustments={quote.adjustments} count={countFees} />
