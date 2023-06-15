@@ -205,7 +205,7 @@ table, td{
     Your booking has been successfully submitted to us. We look forward to serving you.
   </div>
   <div style="margin-bottom: 10px;">
-    Our team will check for availability of your desired vehicle and your credit card will be charged <b>$100.00</b> upon confirmation of availability.
+    Our team will check for availability of your desired vehicle and your credit card will be charged <b>$${format.currency(summary.termsItems[0].total)}</b> upon confirmation of availability.
   </div>
 
   <div style="margin-bottom: 10px;">

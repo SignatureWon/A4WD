@@ -128,5 +128,5 @@
     {/if}
   </div>
 {:else}
-  <div class="border border-gray-200 p-8 text-center">No add-ons</div>
+  <div class="border border-gray-200 p-4 text-center">No add-ons</div>
 {/each}

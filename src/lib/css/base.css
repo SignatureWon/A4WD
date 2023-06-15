@@ -1,9 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap");
 
-/* :root {
-  --brand-color: #EA580C;
-  --brand-color-hover: #9A3412;
-} */
+:root {
+  --brand-color: #1eb314;
+  --brand-color-hover: #17860f;
+}
 /* 
 html {
   font-size: 15px;

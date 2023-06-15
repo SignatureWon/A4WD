@@ -42,7 +42,7 @@
     </div>
   </div>
 {:else}
-  <div class="px-5 py-10 border border-gray-200 text-center">No adjustments</div>
+  <div class="p-4 border border-gray-200 text-center">No adjustments</div>
 {/each}
 <div class="py-2">
   <Button kind="tertiary" class="text-sm py-0.5 h-6" on:click={addAdjustment}>Add Adjustment</Button>

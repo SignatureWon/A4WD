@@ -299,8 +299,12 @@ export const q = {
     let totalAgentAdjustments = 0;
     let totalSupplierAdjustments = 0;
 
+    if (!adjustments) {
+      adjustments = []
+    }
+
     adjustments.forEach((item) => {
-      if (item.own) {
+      // if (item.own) {
         agentFees.push({
           name: item.name,
           total: item.value,
@@ -308,15 +312,15 @@ export const q = {
           profit: 0,
         });
         totalAgentAdjustments += item.value;
-      } else {
-        supplierFees.push({
-          name: item.name,
-          total: item.value,
-          nett: 0,
-          profit: 0,
-        });
-        totalSupplierAdjustments += item.value;
-      }
+      // } else {
+      //   supplierFees.push({
+      //     name: item.name,
+      //     total: item.value,
+      //     nett: 0,
+      //     profit: 0,
+      //   });
+      //   totalSupplierAdjustments += item.value;
+      // }
     });
 
     /**

@@ -29,5 +29,5 @@
     {/if}
   {/each}
 {:else}
-  <div class="border border-gray-200 p-8 text-center">No specials</div>
+  <div class="border border-gray-200 p-4 text-center">No specials</div>
 {/if}

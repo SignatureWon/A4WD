@@ -7,7 +7,7 @@
   // import { enhance } from "$app/forms";
   import { html } from "$lib/html.js";
   // import { jsPDF } from "jspdf";
-import { q } from "$lib/quote.js";
+  import { q } from "$lib/quote.js";
 
   import {
     Button,
@@ -58,7 +58,7 @@ import { q } from "$lib/quote.js";
   let user = data.user;
   let quote = data.quote;
 
-    // console.log(summary);
+  // console.log(summary);
 
   const duration = details.duration;
   const date_quote = dayjs().format("DD MMM YYYY");
@@ -331,8 +331,10 @@ import { q } from "$lib/quote.js";
   // let quote.cc_charge = true;
   // let quote.system_fee = 0;
   // let quote.nett_profit = 0;
-
+  let summary = {};
   const countFees = () => {
+    summary = q.getPayments(quote);
+
     quote.gross = 0;
     quote.nett = 0;
     quote.profit = 0;
@@ -381,22 +383,24 @@ import { q } from "$lib/quote.js";
 
     // adjustment
     if (!quote.adjustments) {
-      quote.adjustments = []
+      quote.adjustments = [];
     }
     quote.adjustments.forEach((obj) => {
       if (obj.own) {
-        quote.discount_agent += obj.value
+        quote.discount_agent += obj.value;
         quote.profit += obj.value;
       } else {
-        quote.discount += obj.value
+        quote.discount += obj.value;
       }
       // quote.gross += obj.value;
       // quote.nett += obj.value;
     });
 
+    // quote.discount_agent += obj.value
+    quote.discount_agent += quote.add_discount;
 
-    quote.cc_fee = quote.cc_charge ? (quote.gross + quote.discount + quote.discount_agent - quote.add_discount) * 0.02 : 0;
-    quote.receivables = quote.gross + quote.discount + quote.discount_agent - quote.add_discount + quote.cc_fee;
+    quote.cc_fee = quote.cc_charge ? (quote.gross + quote.discount + quote.discount_agent) * 0.02 : 0;
+    quote.receivables = quote.gross + quote.discount + quote.discount_agent + quote.cc_fee;
 
     quote.profit -= quote.add_discount;
     quote.system_fee = quote.profit * 0.08;
@@ -441,6 +445,12 @@ import { q } from "$lib/quote.js";
       <Section title="Daily basic rental">
         <FeeDaily bind:fees={fees.daily} daily={details.daily} type={details.rates_type} {quote} count={countFees} />
       </Section>
+      <Section title="Adjustments">
+        <FeeAdjustments bind:adjustments={quote.adjustments} count={countFees} />
+      </Section>
+      <Section title="Specials">
+        <FeeSpecials bind:fees={fee_discount.specials} specials={details.specials} />
+      </Section>
       <Section title="Bond Options">
         <FeeBond
           bind:fees={fees.bond}
@@ -451,6 +461,9 @@ import { q } from "$lib/quote.js";
           count={countFees}
         />
       </Section>
+      <Section title="Other Fees">
+        <FeeOthers bind:fees={fees.others} one_way={details.one_way} others={details.fees} />
+      </Section>
       <Section title="Add-ons">
         <FeeAddons
           bind:fees={fees.addons}
@@ -460,21 +473,70 @@ import { q } from "$lib/quote.js";
           count={countFees}
         />
       </Section>
-      <Section title="Other Fees">
-        <FeeOthers bind:fees={fees.others} one_way={details.one_way} others={details.fees} />
-      </Section>
-      <Section title="Specials">
-        <FeeSpecials bind:fees={fee_discount.specials} specials={details.specials} />
-      </Section>
-      <Section title="Adjustments">
-        <FeeAdjustments bind:adjustments={quote.adjustments} count={countFees} />
-      </Section>
     </div>
   </div>
   <div class="h-full w-80 overflow-y-auto bg-brand-50">
     <div class="overflow-y-auto" style="height: {paneHeight - 490}px">
-      <div class="p-5">
+      <div class="p-5 text-sm">
         <h2 class="text-xl font-bold mb-2">Quote Summary</h2>
+        {#each summary.agentItems as item}
+          {#if item.name === "Credit card surcharge (2%)"}
+            <div class="flex py-2 border-b border-gray-200">
+              <div class="flex-1 relative">
+                <Toggle
+                  labelA=""
+                  labelB=""
+                  size="sm"
+                  bind:toggled={quote.cc_charge}
+                  on:toggle={countFees}
+                  class="absolute -mt-1.5"
+                />
+                <div class="pl-10">{item.name}</div>
+              </div>
+              <div class="text-right ml-4">{format.currency(item.total)}</div>
+            </div>
+          {:else if item.name === "Credit card surcharge (WAIVED)"}
+            <div class="flex py-2 border-b border-gray-200">
+              <div class="flex-1 relative">
+                <Toggle
+                  labelA=""
+                  labelB=""
+                  size="sm"
+                  bind:toggled={quote.cc_charge}
+                  on:toggle={countFees}
+                  class="absolute -mt-1.5"
+                />
+                <div class="pl-10">{item.name}</div>
+              </div>
+              <div class="text-right ml-4">{format.currency(item.total)}</div>
+            </div>
+          {:else}
+            <div class="flex py-2 border-b border-gray-200">
+              <div class="flex-1">
+                {item.name}
+              </div>
+              <div class="text-right ml-4">{format.currency(item.total)}</div>
+            </div>
+          {/if}
+        {/each}
+
+        <div class="flex py-2 border-b border-gray-200 font-bold bg-brand-200">
+          <div class="flex-1">Total payable to agent</div>
+          <div class="text-right ml-4">{format.currency(summary.totalAgent)}</div>
+        </div>
+        {#each summary.supplierItems as item}
+          <div class="flex py-2 border-b border-gray-200">
+            <div class="flex-1">
+              {item.name}
+            </div>
+            <div class="text-right ml-4">{format.currency(item.total)}</div>
+          </div>
+        {/each}
+        <div class="flex py-2 border-b border-gray-200 font-bold bg-brand-200">
+          <div class="flex-1">Total payable to supplier</div>
+          <div class="text-right ml-4">{format.currency(summary.totalSupplier)}</div>
+        </div>
+        <!-- 
         <div class="flex py-2 border-b border-gray-200">
           <div class="flex-1">
             Total Gross
@@ -507,7 +569,7 @@ import { q } from "$lib/quote.js";
         <div class="flex py-2 border-b border-gray-200">
           <div class="flex-1 font-bold">Total Receivables</div>
           <div class="text-right ml-4 font-bold">{format.currency(quote.receivables)}</div>
-        </div>
+        </div> -->
         <div class="flex py-2 border-b border-gray-200">
           <div class="flex-1">Total Nett</div>
           <div class="text-right ml-4">{format.currency(quote.nett)}</div>
@@ -516,14 +578,14 @@ import { q } from "$lib/quote.js";
           <div class="flex-1">Total Profit</div>
           <div class="text-right ml-4">{format.currency(quote.profit)}</div>
         </div>
-        <div class="flex py-2 border-b border-gray-200">
+        <!-- <div class="flex py-2 border-b border-gray-200">
           <div class="flex-1">Total System Fee</div>
           <div class="text-right ml-4">{format.currency(quote.system_fee)}</div>
         </div>
         <div class="flex py-2 border-b border-gray-200">
           <div class="flex-1 font-bold">Total A4 Profit</div>
           <div class="text-right ml-4 font-bold">{format.currency(quote.nett_profit)}</div>
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="p-4">
@@ -580,20 +642,20 @@ import { q } from "$lib/quote.js";
     <div class="p-4 bg-brand-200">
       <form action={ticketAction} method="POST">
         <TextInput name="supplier_reference" placeholder="Supplier Confirmation Code" class="text-center" required />
-          <Button
-            type="submit"
-            class="w-full mt-1"
-            on:click={() => {
-              ticketAction = "?/provisional";
-            }}>Create Provisional Ticket</Button
-          >
-          <Button
-            type="submit"
-            class="w-full mt-1"
-            on:click={() => {
-              ticketAction = "?/final";
-            }}>Create Final Ticket</Button
-          >
+        <Button
+          type="submit"
+          class="w-full mt-1"
+          on:click={() => {
+            ticketAction = "?/provisional";
+          }}>Create Provisional Ticket</Button
+        >
+        <Button
+          type="submit"
+          class="w-full mt-1"
+          on:click={() => {
+            ticketAction = "?/final";
+          }}>Create Final Ticket</Button
+        >
       </form>
     </div>
   </div>
