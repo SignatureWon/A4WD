@@ -402,7 +402,7 @@
     quote.cc_fee = quote.cc_charge ? (quote.gross + quote.discount + quote.discount_agent) * 0.02 : 0;
     quote.receivables = quote.gross + quote.discount + quote.discount_agent + quote.cc_fee;
 
-    quote.profit -= quote.add_discount;
+    quote.profit += quote.add_discount;
     quote.system_fee = quote.profit * 0.08;
     quote.nett_profit = quote.profit - quote.system_fee;
   };

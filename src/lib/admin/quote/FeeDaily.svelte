@@ -112,8 +112,8 @@
       quote.add_discount = 0;
     }
 
-    subtotal.total -= quote.add_discount;
-    subtotal.profit -= quote.add_discount;
+    subtotal.total += quote.add_discount;
+    subtotal.profit += quote.add_discount;
 
     count();
   };
