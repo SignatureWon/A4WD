@@ -1,6 +1,9 @@
 import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+dayjs.extend(customParseFormat);
 import { supabase } from "$lib/supabaseClient";
 import { format } from "$lib/format.js";
+import { q } from "$lib/quote.js";
 
 export const html = {
   create: async (quote_id) => {
@@ -24,6 +27,8 @@ export const html = {
       .eq("id", quote_id)
       .single();
 
+      let summary = q.getPayments(quote);
+
     const { data: vehicle } = await supabase
       .from("vehicles")
       .select("name, slug, image")
@@ -42,36 +47,36 @@ export const html = {
     const date_quote = dayjs(quote.created_at).format("DD MMM YYYY");
     const date_start = dayjs(quote.details.date_start).format("ddd, DD MMM YYYY");
     const date_end = dayjs(quote.details.date_end).format("ddd, DD MMM YYYY");
-    let agentFees = [];
-    let supplierFees = [];
-    let pickupFees = [];
+    // let agentFees = [];
+    // let supplierFees = [];
+    // let pickupFees = [];
 
-    const totalAgentFee = () => {
-      let sum = 0;
-      agentFees.forEach((fee) => {
-        sum += fee.total;
-      });
-      return sum;
-    };
-    const totalAgentCommission = () => {
-      // console.log(agentFees);
-      let sum = 0;
-      agentFees.forEach((fee) => {
-        sum += fee.profit;
-      });
+    // const totalAgentFee = () => {
+    //   let sum = 0;
+    //   agentFees.forEach((fee) => {
+    //     sum += fee.total;
+    //   });
+    //   return sum;
+    // };
+    // const totalAgentCommission = () => {
+    //   // console.log(agentFees);
+    //   let sum = 0;
+    //   agentFees.forEach((fee) => {
+    //     sum += fee.profit;
+    //   });
 
-      sum += quote.add_discount;
-      return sum;
-    };
-    const totalSupplierFee = () => {
-      let sum = 0;
-      supplierFees.forEach((fee) => {
-        sum += fee.total;
-      });
-      return sum;
-    };
+    //   sum += quote.add_discount;
+    //   return sum;
+    // };
+    // const totalSupplierFee = () => {
+    //   let sum = 0;
+    //   supplierFees.forEach((fee) => {
+    //     sum += fee.total;
+    //   });
+    //   return sum;
+    // };
     const totalOutstanding = () => {
-      let total = totalSupplierFee() + totalAgentFee();
+      let total = summary.totalAgent;
       let payments = quote.payments || [];
       payments.forEach((obj) => {
         total -= obj.amount;
@@ -79,278 +84,278 @@ export const html = {
       return total;
     };
 
-    const getDailyRates = () => {
-      let obj = quote.details.daily;
-      let type = quote.details.rates_type;
-      let arr = obj.items;
-      if (type === "flex") {
-        let week = 1;
-        let day = 0;
-        arr.forEach((o, i) => {
-          if (i !== 0 && i % 7 === 0) {
-            agentFees.push({
-              name: `Daily basic rental: Week ${week}: Flex[${arr[i - 1].flex}]: $${format.currency(
-                arr[i - 1].gross
-              )} x ${day} days`,
-              total: arr[i - 1].gross * day,
-              nett: arr[i - 1].nett * day,
-              profit: arr[i - 1].profit * day,
-            });
-            day = 1;
-            week++;
-          } else {
-            day++;
-          }
-          if (i === arr.length - 1) {
-            agentFees.push({
-              name: `Daily basic rental: Week ${week}: Flex[${o.flex}]: $${format.currency(o.gross)} x ${day} days`,
-              total: o.gross * day,
-              nett: o.nett * day,
-              profit: o.profit * day,
-            });
-          }
-        });
-      } else {
-        agentFees.push({
-          name: `Daily basic rental: $${format.currency(obj.gross / arr.length)} x ${arr.length} days`,
-          total: obj.gross,
-          nett: obj.nett,
-          profit: obj.profit,
-        });
-      }
-    };
-    const getDiscount = () => {
-      if (quote.add_discount > 0) {
-        agentFees.push({
-          name: `Discount: ${quote.add_discount_remark}`,
-          total: -quote.add_discount,
-          nett: 0,
-          profit: 0,
-        });
-      }
-    };
+    // const getDailyRates = () => {
+    //   let obj = quote.details.daily;
+    //   let type = quote.details.rates_type;
+    //   let arr = obj.items;
+    //   if (type === "flex") {
+    //     let week = 1;
+    //     let day = 0;
+    //     arr.forEach((o, i) => {
+    //       if (i !== 0 && i % 7 === 0) {
+    //         agentFees.push({
+    //           name: `Daily basic rental: Week ${week}: Flex[${arr[i - 1].flex}]: $${format.currency(
+    //             arr[i - 1].gross
+    //           )} x ${day} days`,
+    //           total: arr[i - 1].gross * day,
+    //           nett: arr[i - 1].nett * day,
+    //           profit: arr[i - 1].profit * day,
+    //         });
+    //         day = 1;
+    //         week++;
+    //       } else {
+    //         day++;
+    //       }
+    //       if (i === arr.length - 1) {
+    //         agentFees.push({
+    //           name: `Daily basic rental: Week ${week}: Flex[${o.flex}]: $${format.currency(o.gross)} x ${day} days`,
+    //           total: o.gross * day,
+    //           nett: o.nett * day,
+    //           profit: o.profit * day,
+    //         });
+    //       }
+    //     });
+    //   } else {
+    //     agentFees.push({
+    //       name: `Daily basic rental: $${format.currency(obj.gross / arr.length)} x ${arr.length} days`,
+    //       total: obj.gross,
+    //       nett: obj.nett,
+    //       profit: obj.profit,
+    //     });
+    //   }
+    // };
+    // const getDiscount = () => {
+    //   if (quote.add_discount > 0) {
+    //     agentFees.push({
+    //       name: `Discount: ${quote.add_discount_remark}`,
+    //       total: -quote.add_discount,
+    //       nett: 0,
+    //       profit: 0,
+    //     });
+    //   }
+    // };
 
-    const getBonds = () => {
-      const bond = Object.keys(quote.details.bonds).length ? quote.details.bonds : quote.details.bond;
-      pickupFees.push({
-        name: `Bond: $${format.currency(
-          bond.bond,
-          0
-        )} is taken from the hirer's credit or debit card <div style="font-size: 14px; color: #999999">Refundable as per supplier's Summary of Terms<div>`,
-        total: bond.bond,
-        nett: 0,
-        profit: 0,
-      });
+    // const getBonds = () => {
+    //   const bond = Object.keys(quote.details.bonds).length ? quote.details.bonds : quote.details.bond;
+    //   pickupFees.push({
+    //     name: `Bond: $${format.currency(
+    //       bond.bond,
+    //       0
+    //     )} is taken from the hirer's credit or debit card <div style="font-size: 14px; color: #999999">Refundable as per supplier's Summary of Terms<div>`,
+    //     total: bond.bond,
+    //     nett: 0,
+    //     profit: 0,
+    //   });
 
-      let gross = 0;
-      let nett = 0;
-      let profit = 0;
+    //   let gross = 0;
+    //   let nett = 0;
+    //   let profit = 0;
 
-      if ("gross" in bond) {
-        gross = bond.gross * duration;
-        nett = bond.nett * duration;
-        profit = nett > 0 ? gross - nett : 0;
-      } else {
-        bond.gross = 0;
-        bond.nett = 0;
-        bond.bond = 0;
-      }
+    //   if ("gross" in bond) {
+    //     gross = bond.gross * duration;
+    //     nett = bond.nett * duration;
+    //     profit = nett > 0 ? gross - nett : 0;
+    //   } else {
+    //     bond.gross = 0;
+    //     bond.nett = 0;
+    //     bond.bond = 0;
+    //   }
 
-      if (bond.gross > 0) {
-        const row = {
-          name: `${bond.display_name}: $${bond.gross} x ${duration} days`,
-          total: gross,
-          nett: nett,
-          profit: profit,
-        };
-        if (bond.nett > 0 && bond.gross > bond.nett) {
-          agentFees.push(row);
-        } else {
-          supplierFees.push(row);
-          pickupFees.push(row);
-        }
-      }
-    };
+    //   if (bond.gross > 0) {
+    //     const row = {
+    //       name: `${bond.display_name}: $${bond.gross} x ${duration} days`,
+    //       total: gross,
+    //       nett: nett,
+    //       profit: profit,
+    //     };
+    //     if (bond.nett > 0 && bond.gross > bond.nett) {
+    //       agentFees.push(row);
+    //     } else {
+    //       supplierFees.push(row);
+    //       pickupFees.push(row);
+    //     }
+    //   }
+    // };
 
-    const getOneways = () => {
-      let one_way = quote.details.one_way;
-      if (one_way > 0) {
-        supplierFees.push({
-          name: `One-way fee`,
-          total: one_way,
-          nett: 0,
-          profit: 0,
-        });
-        pickupFees.push({
-          name: `One-way fee`,
-          total: one_way,
-          nett: 0,
-          profit: 0,
-        });
-      }
-    };
-    const getAddons = () => {
-      let addons = quote.details.addons;
-      for (const key in addons) {
-        const addon = addons[key];
-        let gross = addon.gross_rate;
-        if (addon.daily) {
-          gross = gross * duration;
-        }
-        if (addon.gross_cap > 0) {
-          if (gross > addon.gross_cap) {
-            gross = addon.gross_cap;
-          }
-        }
-        let nett = addon.nett_rate;
-        if (addon.daily) {
-          nett = nett * duration;
-        }
-        if (addon.nett_cap > 0) {
-          if (nett > addon.nett_cap) {
-            nett = addon.nett_cap;
-          }
-        }
-        const row = {
-          name: `Add-on: ${addon.name} ${addon.daily ? `$${addon.gross_rate} x ${duration} days` : ""}`,
-          total: gross,
-          nett: nett,
-          profit: nett > 0 ? gross - nett : 0,
-        };
-        if (addon.nett_rate > 0 && addon.gross_rate > addon.nett_rate) {
-          agentFees.push(row);
-        } else {
-          supplierFees.push(row);
-          pickupFees.push(row);
-        }
-      }
-    };
+    // const getOneways = () => {
+    //   let one_way = quote.details.one_way;
+    //   if (one_way > 0) {
+    //     supplierFees.push({
+    //       name: `One-way fee`,
+    //       total: one_way,
+    //       nett: 0,
+    //       profit: 0,
+    //     });
+    //     pickupFees.push({
+    //       name: `One-way fee`,
+    //       total: one_way,
+    //       nett: 0,
+    //       profit: 0,
+    //     });
+    //   }
+    // };
+    // const getAddons = () => {
+    //   let addons = quote.details.addons;
+    //   for (const key in addons) {
+    //     const addon = addons[key];
+    //     let gross = addon.gross_rate;
+    //     if (addon.daily) {
+    //       gross = gross * duration;
+    //     }
+    //     if (addon.gross_cap > 0) {
+    //       if (gross > addon.gross_cap) {
+    //         gross = addon.gross_cap;
+    //       }
+    //     }
+    //     let nett = addon.nett_rate;
+    //     if (addon.daily) {
+    //       nett = nett * duration;
+    //     }
+    //     if (addon.nett_cap > 0) {
+    //       if (nett > addon.nett_cap) {
+    //         nett = addon.nett_cap;
+    //       }
+    //     }
+    //     const row = {
+    //       name: `Add-on: ${addon.name} ${addon.daily ? `$${addon.gross_rate} x ${duration} days` : ""}`,
+    //       total: gross,
+    //       nett: nett,
+    //       profit: nett > 0 ? gross - nett : 0,
+    //     };
+    //     if (addon.nett_rate > 0 && addon.gross_rate > addon.nett_rate) {
+    //       agentFees.push(row);
+    //     } else {
+    //       supplierFees.push(row);
+    //       pickupFees.push(row);
+    //     }
+    //   }
+    // };
 
-    const getSpecials = () => {
-      let special = quote.details.specials;
-      if (special.total > 0) {
-        special.items.forEach((item) => {
-          if (item.discount_amount > 0) {
-            agentFees.push({
-              name: item.name,
-              total: -item.discount_amount,
-              nett: 0,
-              profit: 0,
-            });
-          }
-        });
-      }
-    };
-    const getFees = () => {
-      let fee = quote.details.fees;
-      if (fee.total > 0) {
-        fee.items.forEach((item) => {
-          supplierFees.push({
-            name: item.name,
-            total: item.fee,
-            nett: 0,
-            profit: 0,
-          });
-          pickupFees.push({
-            name: item.name,
-            total: item.fee,
-            nett: 0,
-            profit: 0,
-          });
-        });
-      }
-    };
-    const getCcs = () => {
-      if (quote.cc_charge) {
-        let fee = (totalAgentFee() * 2) / 100;
-        if (fee > 0) {
-          agentFees.push({
-            name: "Credit card surcharge (2%)",
-            total: fee,
-            nett: 0,
-            profit: 0,
-          });
-        }
-      } else {
-        agentFees.push({
-          name: "Credit card surcharge (WAIVED)",
-          total: 0,
-          nett: 0,
-          profit: 0,
-        });
-      }
-    };
+    // const getSpecials = () => {
+    //   let special = quote.details.specials;
+    //   if (special.total > 0) {
+    //     special.items.forEach((item) => {
+    //       if (item.discount_amount > 0) {
+    //         agentFees.push({
+    //           name: item.name,
+    //           total: -item.discount_amount,
+    //           nett: 0,
+    //           profit: 0,
+    //         });
+    //       }
+    //     });
+    //   }
+    // };
+    // const getFees = () => {
+    //   let fee = quote.details.fees;
+    //   if (fee.total > 0) {
+    //     fee.items.forEach((item) => {
+    //       supplierFees.push({
+    //         name: item.name,
+    //         total: item.fee,
+    //         nett: 0,
+    //         profit: 0,
+    //       });
+    //       pickupFees.push({
+    //         name: item.name,
+    //         total: item.fee,
+    //         nett: 0,
+    //         profit: 0,
+    //       });
+    //     });
+    //   }
+    // };
+    // const getCcs = () => {
+    //   if (quote.cc_charge) {
+    //     let fee = (totalAgentFee() * 2) / 100;
+    //     if (fee > 0) {
+    //       agentFees.push({
+    //         name: "Credit card surcharge (2%)",
+    //         total: fee,
+    //         nett: 0,
+    //         profit: 0,
+    //       });
+    //     }
+    //   } else {
+    //     agentFees.push({
+    //       name: "Credit card surcharge (WAIVED)",
+    //       total: 0,
+    //       nett: 0,
+    //       profit: 0,
+    //     });
+    //   }
+    // };
 
-    let termsItems = [];
-    const getTerms = () => {
-      let total = totalAgentFee();
+    // let termsItems = [];
+    // const getTerms = () => {
+    //   let total = totalAgentFee();
 
-      if ("terms" in quote.details) {
-        let terms = quote.details.terms;
-        let gap = dayjs(date_start).diff(dayjs(date_quote), "day");
+    //   if ("terms" in quote.details) {
+    //     let terms = quote.details.terms;
+    //     let gap = dayjs(date_start).diff(dayjs(date_quote), "day");
 
-        if (gap <= terms.balance) {
-          termsItems = [
-            {
-              name: `Full payment to agent on ${dayjs(date_quote).format("ddd, DD MMM YYYY")}`,
-              total: total,
-            },
-          ];
-        } else {
-          termsItems = [
-            {
-              name: `Booking deposit to agent now (${
-                terms.percentage ? `${terms.deposit}%` : `$${terms.deposit}`
-              }) on ${dayjs(date_quote).format("ddd, DD MMM YYYY")}`,
-              total: terms.percentage ? (total * terms.deposit) / 100 : terms.deposit,
-            },
-          ];
-          if (terms.payment2) {
-            if (terms.balance2 < gap) {
-              termsItems.push({
-                name: `First payment to agent (${
-                  terms.percentage2 ? `${terms.deposit2}%` : `$${terms.deposit2}`
-                }) on ${dayjs(date_start).subtract(terms.balance2, "day").format("ddd, DD MMM YYYY")} (${
-                  terms.balance2
-                } days before
-                travel)`,
-                total: terms.percentage2 ? (total * terms.deposit2) / 100 : terms.deposit2,
-              });
-            }
-          }
-          if (terms.payment3) {
-            if (terms.balance3 < gap) {
-              termsItems.push({
-                name: `Second payment (${terms.percentage3 ? `${terms.deposit3}%` : `$${terms.deposit3}`}) on ${dayjs(
-                  date_start
-                )
-                  .subtract(terms.balance3, "day")
-                  .format("ddd, DD MMM YYYY")} (${terms.balance3} days before
-                travel)`,
-                total: terms.percentage3 ? (total * terms.deposit3) / 100 : terms.deposit3,
-              });
-            }
-          }
-          // balance
-          if (terms.balance < gap) {
-            let bal = total;
-            termsItems.forEach((t) => {
-              bal -= t.total;
-            });
+    //     if (gap <= terms.balance) {
+    //       termsItems = [
+    //         {
+    //           name: `Full payment to agent on ${dayjs(date_quote).format("ddd, DD MMM YYYY")}`,
+    //           total: total,
+    //         },
+    //       ];
+    //     } else {
+    //       termsItems = [
+    //         {
+    //           name: `Booking deposit to agent now (${
+    //             terms.percentage ? `${terms.deposit}%` : `$${terms.deposit}`
+    //           }) on ${dayjs(date_quote).format("ddd, DD MMM YYYY")}`,
+    //           total: terms.percentage ? (total * terms.deposit) / 100 : terms.deposit,
+    //         },
+    //       ];
+    //       if (terms.payment2) {
+    //         if (terms.balance2 < gap) {
+    //           termsItems.push({
+    //             name: `First payment to agent (${
+    //               terms.percentage2 ? `${terms.deposit2}%` : `$${terms.deposit2}`
+    //             }) on ${dayjs(date_start).subtract(terms.balance2, "day").format("ddd, DD MMM YYYY")} (${
+    //               terms.balance2
+    //             } days before
+    //             travel)`,
+    //             total: terms.percentage2 ? (total * terms.deposit2) / 100 : terms.deposit2,
+    //           });
+    //         }
+    //       }
+    //       if (terms.payment3) {
+    //         if (terms.balance3 < gap) {
+    //           termsItems.push({
+    //             name: `Second payment (${terms.percentage3 ? `${terms.deposit3}%` : `$${terms.deposit3}`}) on ${dayjs(
+    //               date_start
+    //             )
+    //               .subtract(terms.balance3, "day")
+    //               .format("ddd, DD MMM YYYY")} (${terms.balance3} days before
+    //             travel)`,
+    //             total: terms.percentage3 ? (total * terms.deposit3) / 100 : terms.deposit3,
+    //           });
+    //         }
+    //       }
+    //       // balance
+    //       if (terms.balance < gap) {
+    //         let bal = total;
+    //         termsItems.forEach((t) => {
+    //           bal -= t.total;
+    //         });
 
-            termsItems.push({
-              name:
-                "Balance payment to " +
-                (terms.pay_counter
-                  ? `supplier at pick-up counter on ${dayjs(date_start).format("ddd, DD MMM YYYY")}`
-                  : `agent on ${dayjs(date_start).subtract(terms.balance, "day").format("ddd, DD MMM YYYY")}`) +
-                ` (${terms.balance} days before travel)`,
-              total: bal,
-            });
-          }
-        }
-      }
-    };
+    //         termsItems.push({
+    //           name:
+    //             "Balance payment to " +
+    //             (terms.pay_counter
+    //               ? `supplier at pick-up counter on ${dayjs(date_start).format("ddd, DD MMM YYYY")}`
+    //               : `agent on ${dayjs(date_start).subtract(terms.balance, "day").format("ddd, DD MMM YYYY")}`) +
+    //             ` (${terms.balance} days before travel)`,
+    //           total: bal,
+    //         });
+    //       }
+    //     }
+    //   }
+    // };
 
     // map data
     const info = {
@@ -425,15 +430,15 @@ export const html = {
         },
       },
       payments: quote.payments || [],
-      daily: getDailyRates(),
-      discount: getDiscount(),
-      bond: getBonds(),
-      oneway: getOneways(),
-      addon: getAddons(),
-      special: getSpecials(),
-      fee: getFees(),
-      cc: getCcs(),
-      term: getTerms(),
+      // daily: getDailyRates(),
+      // discount: getDiscount(),
+      // bond: getBonds(),
+      // oneway: getOneways(),
+      // addon: getAddons(),
+      // special: getSpecials(),
+      // fee: getFees(),
+      // cc: getCcs(),
+      // term: getTerms(),
     };
 
     // console.log(info)
@@ -528,7 +533,7 @@ table, td{
       >
         <div style="font-size: 12px; color: #999999">Ticket No.</div>
         <div style="font-weight: bold">
-          Q${info.quote.id}
+          PT${info.quote.id}
         </div>
       </td>
       <td
@@ -751,7 +756,7 @@ table, td{
         <div style="font-size: 12px; color: #999999">Total ($)</div>
       </td>
     </tr>`;
-    agentFees.forEach((item) => {
+    summary.agentItems.forEach((item) => {
       email += `
     <tr>
       <td valign="top" align="left" style="border: 1px solid #CCCCCC">
@@ -806,7 +811,7 @@ table, td{
         <div style="font-size: 12px; color: #999999">Total ($)</div>
       </td>
     </tr>`;
-    supplierFees.forEach((item) => {
+    summary.supplierItems.forEach((item) => {
       email += `
       <tr>
         <td valign="top" align="left" style="border: 1px solid #CCCCCC">
@@ -837,7 +842,7 @@ table, td{
         style="border: 1px solid #CCCCCC; background-color: #dbeafe;"
       >
         <div style="font-weight: bold;">
-          ${format.currency(totalSupplierFee())}
+          ${format.currency(summary.totalSupplier)}
         </div>
       </td>
     </tr>
@@ -866,7 +871,7 @@ table, td{
         style="background-color: #1d4ed8; color: #ffffff"
       >
         <div style="font-weight: bold; padding-top: 10px; padding-bottom: 10px">
-          ${format.currency(totalAgentFee() + totalSupplierFee())}
+          ${format.currency(summary.totalAgent + summary.totalSupplier)}
         </div>
       </td>
     </tr>
@@ -883,7 +888,7 @@ table, td{
     cellspacing="0"
     style="margin-bottom: 10px;"
   >`;
-    termsItems.forEach((item) => {
+    summary.termsItems.forEach((item) => {
       email += `
     <tr>
       <td style="border: 1px solid #CCCCCC">${item.name}</td>
@@ -912,7 +917,7 @@ table, td{
     cellspacing="0"
     style="margin-bottom: 10px;"
     >`;
-    pickupFees.forEach((item) => {
+    summary.pickupItems.forEach((item) => {
       email += `
       <tr>
         <td style="border: 1px solid #CCCCCC">${item.name}</td>
@@ -956,7 +961,7 @@ style="margin-bottom: 30px"
     </tr>
 </table>
 <div style="margin-bottom: 10px;">
-<strong>Cancellation fees</strong> will apply on <strong>AUD $${format.currency(totalAgentFee())}</strong>. The <strong>Agent Nett Deposit Fee after discount of AUD $${format.currency(totalAgentCommission())} is non-refundable</strong>. The Agent Deposit will be carried forward towards a future booking if cancellation is made more than 25 days prior to travel. An additional AUD $100.00 administration cancellation fee applies. Please read the cancellation policy found in the quote.
+<strong>Cancellation fees</strong> will apply on <strong>AUD $${format.currency(summary.totalAgent)}</strong>. The <strong>Agent Nett Deposit Fee after discount of AUD $${format.currency(summary.totalCommission)} is non-refundable</strong>. The Agent Deposit will be carried forward towards a future booking if cancellation is made more than 25 days prior to travel. An additional AUD $100.00 administration cancellation fee applies. Please read the cancellation policy found in the quote.
 </div>
 </div>
 </body>

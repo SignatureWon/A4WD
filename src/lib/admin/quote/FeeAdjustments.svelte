@@ -3,6 +3,9 @@
   import { Button, Checkbox, NumberInput, TextInput, Toggle } from "carbon-components-svelte";
   export let adjustments;
   export let count;
+  if (!adjustments) {
+      adjustments = [];
+    }
 
   const addAdjustment = () => {
     if (!adjustments) {
@@ -36,7 +39,7 @@
         <NumberInput hideSteppers bind:value={item.value} on:keyup={count} />
       </div>
       <div class="pt-1 w-6">
-        <Checkbox bind:checked={item.own} />
+        <Checkbox bind:checked={item.own} on:check={count} />
         <!-- <Toggle labelText="A4" labelA="" labelB="" bind:toggled={item.own} /> -->
       </div>
     </div>

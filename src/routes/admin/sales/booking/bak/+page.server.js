@@ -5,7 +5,7 @@ import isBetween from "dayjs/plugin/isBetween";
 dayjs.extend(isBetween);
 import { cal } from "$lib/cal";
 import { error, redirect } from "@sveltejs/kit";
-import { html } from "$lib/final.js";
+import { html } from "$lib/provisional.js";
 // import { chromium } from 'playwright';
 // import puppeteer from "puppeteer";
 import playwright from 'playwright-aws-lambda';
@@ -21,7 +21,6 @@ export async function load({ url, params }) {
     "users",
     "status",
     "deposit",
-    "payments",
     "payment_1",
     "payment_2",
     "balance",
@@ -29,7 +28,6 @@ export async function load({ url, params }) {
     "gross",
     "profit",
     "discount",
-    "discount_agent",
     "agent",
     "agent_fee",
     "system_fee",
@@ -48,18 +46,17 @@ export async function load({ url, params }) {
     "add_discount",
     "add_discount_remark",
     "receivables",
-    "cc_fee",
-    "cc_charge",
     "cc_type",
     "cc_name",
     "cc_number",
-    "cc_cvv",
     "cc_month",
     "cc_year",
+    "cc_cvv",
     "cc_remark",
+    "cc_fee",
+    "cc_charge",
     "system_fee",
     "nett_profit",
-    "adjustments",
     "supplier_reference",
   ];
 
@@ -132,13 +129,13 @@ export async function load({ url, params }) {
     options[opt.name] = opt.options;
   });
 
-  if (!quote.adjustments) {
-    quote.adjustments = [];
-  }
+  const { data: templates } = await supabase.from("contents").select("name, content").eq("type", "emails");
+
 
   return {
     quote: quote,
     user: user,
+    templates: templates,
     detail: JSON.parse(JSON.stringify(addTerms[0])),
     options: JSON.parse(JSON.stringify(options)),
     path: url.pathname,
@@ -167,7 +164,6 @@ export const actions = {
     // console.log("quote", quote);
 
     const { error: err } = await locals.sb.from("quotes").update(quote).eq("id", id);
-    // console.log(err);
 
     if (err) {
       throw error(404, {
@@ -199,50 +195,32 @@ export const actions = {
 
     const { data: uploadData, error: uploadError } = await supabase.storage
       .from("quotes")
-      .upload(`FT${388000 + Number(params.id)}.pdf`, filePDF);
-    // if (uploadData) {
-    //   console.log(uploadData);
-    // }
+      .upload(`P${388000 + Number(params.id)}.pdf`, filePDF);
 
     if (uploadError) {
       console.log("uploadError", uploadError);
       const { data: updateData, error: updateError } = await supabase.storage
         .from("quotes")
-        .update(`FT${388000 + Number(params.id)}.pdf`, filePDF, {
+        .update(`P${388000 + Number(params.id)}.pdf`, filePDF, {
           cacheControl: "3600",
           upsert: true,
         });
       if (updateError) {
         console.log(updateError);
       }
-      // if (updateData) {
-      //   console.log(updateData);
-      // }
     }
-    // const { data, error } = await supabase.storage.from("quotes").download(`Q${388000 + Number(params.id)}.pdf`);
-
-    // await browser.close();
-    // console.log(buffer);
     throw redirect(303, url.pathname);
   },
   email: async ({ request, url, params, locals }) => {
     const formData = await request.formData();
     let fd = Object.fromEntries(formData.entries());
 
-    let emailBody = await html.create(params.id);
+    let emailBody = await html.create(params.id, "template_quote");
     const { data: emailData } = await supabase.from("constants").select("name").eq("type", "email_quote").single();
     const { data: dataQuote } = await supabase.from("quotes").select().eq("id", params.id).single();
     let getBond = Object.keys(dataQuote.details.bonds).length ? dataQuote.details.bonds : dataQuote.details.bond;
     const { data: dataUser } = await supabase.from("users").select().eq("id", dataQuote.users).single();
 
-    // const browser = await puppeteer.launch({
-    //   args: chromium.args,
-    //   defaultViewport: chromium.defaultViewport,
-    //   executablePath: await chromium.executablePath("/opt/chromium"),
-    //   headless: chromium.headless,
-    // });
-    // const browser = await chromium.launch()
-    // const page = await browser.newPage();
     const browser = await playwright.launchChromium();
     const context = await browser.newContext();
     const page = await context.newPage();
@@ -257,31 +235,6 @@ export const actions = {
         right: "1cm",
       },
     });
-    browser.close();
-
-    // const browser2 = await puppeteer.launch({
-    //   args: chromium.args,
-    //   defaultViewport: chromium.defaultViewport,
-    //   executablePath: await chromium.executablePath("/opt/chromium"),
-    //   headless: chromium.headless,
-    // });
-    // const browser2 = await chromium.launch()
-    // const page2 = await browser2.newPage();
-    const browser2 = await playwright.launchChromium();
-    const context2 = await browser2.newContext();
-    const page2 = await context2.newPage();
-    const content2 = await confirmation.create(params.id);
-    await page2.setContent(content2);
-    const buffer2 = await page2.pdf({
-      format: "A4",
-      margin: {
-        top: "1cm",
-        bottom: "1cm",
-        left: "1cm",
-        right: "1cm",
-      },
-    });
-    browser2.close();
 
     let filePDF = new Blob([buffer], {
       type: "application/pdf",
@@ -289,13 +242,13 @@ export const actions = {
 
     const { data: uploadData, error: uploadError } = await supabase.storage
       .from("quotes")
-      .upload(`Final Ticket - Q${388000 + Number(params.id)}.pdf`, filePDF);
+      .upload(`P${388000 + Number(params.id)}.pdf`, filePDF);
 
     if (uploadError) {
       console.log("uploadError", uploadError);
       const { data: updateData, error: updateError } = await supabase.storage
         .from("quotes")
-        .update(`Final Ticket - Q${388000 + Number(params.id)}.pdf`, filePDF, {
+        .update(`P${388000 + Number(params.id)}.pdf`, filePDF, {
           cacheControl: "3600",
           upsert: true,
         });
@@ -304,7 +257,7 @@ export const actions = {
       }
     }
 
-    emailBody = `<div style="margin-bottom: 50px; font-size: 16px;">${fd.message}</div>` + emailBody;
+    emailBody = `<div>${fd.message}</div>` + emailBody;
     // console.log(emailBody);
     // console.log("send to", dataUser.email)
 
@@ -334,7 +287,7 @@ export const actions = {
           email: "info@australia4wdrentals.com",
           name: "Australia 4WD Rentals",
         },
-        subject: `Final Ticket: ${dataQuote.details.vehicle.name.trim()}: ${dataQuote.details.pickup.name.trim()}, ${dayjs(
+        subject: `Quote: ${dataQuote.details.vehicle.name.trim()}: ${dataQuote.details.pickup.name.trim()}, ${dayjs(
           dataQuote.details.date_start
         ).format("DD MMM YYYY")} - ${dataQuote.details.dropoff.name.trim()}, ${dayjs(dataQuote.details.date_end).format(
           "DD MMM YYYY"
@@ -348,13 +301,7 @@ export const actions = {
         attachments: [
           {
             content: buffer.toString("base64"),
-            filename: `Final Ticket - Q${388000 + Number(params.id)}.pdf`,
-            type: "application/pdf",
-            disposition: "attachment",
-          },
-          {
-            content: buffer2.toString("base64"),
-            filename: `Booking Confirmation - Q${388000 + Number(params.id)}.pdf`,
+            filename: `P${388000 + Number(params.id)}.pdf`,
             type: "application/pdf",
             disposition: "attachment",
           },
@@ -383,8 +330,7 @@ export const actions = {
     const updateData = {
       supplier_reference: fd.supplier_reference,
       status: "Provisional",
-      date_provisional: dayjs()
-    }
+    };
     const { error: err } = await locals.sb.from("quotes").update(updateData).eq("id", params.id);
 
     if (err) {
@@ -394,25 +340,6 @@ export const actions = {
     }
 
     throw redirect(303, `/admin/sales/provisional/${params.id}`);
-  },
-  final: async ({ request, url, params, locals }) => {
-    const formData = await request.formData();
-    let fd = Object.fromEntries(formData.entries());
-
-    const updateData = {
-      supplier_reference: fd.supplier_reference,
-      status: "Final",
-      date_provisional: dayjs()
-    }
-    const { error: err } = await locals.sb.from("quotes").update(updateData).eq("id", params.id);
-
-    if (err) {
-      throw error(404, {
-        message: err.message,
-      });
-    }
-
-    throw redirect(303, `/admin/sales/final/${params.id}`);
   },
 
   // delete: async ({ request, url, params, locals }) => {
