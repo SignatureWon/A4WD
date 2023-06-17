@@ -74,7 +74,7 @@ export const q = {
       terms = quote.details.terms;
     }
     if (terms.pay_counter) {
-      console.log(quote.details.daily);
+      // console.log(quote.details.daily);
       let toAgent = terms.percentage ? (quote.details.daily.gross * terms.deposit) / 100 : terms.deposit;
 
       agentFees.push({
@@ -163,42 +163,44 @@ export const q = {
      * Bonds
      */
     const bond = Object.keys(quote.details.bonds).length ? quote.details.bonds : quote.details.bond;
-    pickupFees.push({
-      name: `Bond: $${format.currency(
-        bond.bond,
-        0
-      )} is taken from the hirer's credit or debit card <div style="font-size: 14px; color: #999999">Refundable as per supplier's Summary of Terms<div>`,
-      total: bond.bond,
-      nett: 0,
-      profit: 0,
-    });
+    if (bond) {
+      pickupFees.push({
+        name: `Bond: $${format.currency(
+          bond.bond,
+          0
+        )} is taken from the hirer's credit or debit card <div style="font-size: 14px; color: #999999">Refundable as per supplier's Summary of Terms<div>`,
+        total: bond.bond,
+        nett: 0,
+        profit: 0,
+      });
 
-    let gross = 0;
-    let nett = 0;
-    let profit = 0;
+      let gross = 0;
+      let nett = 0;
+      let profit = 0;
 
-    if ("gross" in bond) {
-      gross = bond.gross * duration;
-      nett = bond.nett * duration;
-      profit = nett > 0 ? gross - nett : 0;
-    } else {
-      bond.gross = 0;
-      bond.nett = 0;
-      bond.bond = 0;
-    }
-
-    if (bond.gross > 0) {
-      const row = {
-        name: `${bond.display_name}: $${bond.gross} x ${duration} days`,
-        total: gross,
-        nett: nett,
-        profit: profit,
-      };
-      if (bond.nett > 0 && bond.gross > bond.nett) {
-        agentFees.push(row);
+      if ("gross" in bond) {
+        gross = bond.gross * duration;
+        nett = bond.nett * duration;
+        profit = nett > 0 ? gross - nett : 0;
       } else {
-        supplierFees.push(row);
-        pickupFees.push(row);
+        bond.gross = 0;
+        bond.nett = 0;
+        bond.bond = 0;
+      }
+
+      if (bond.gross > 0) {
+        const row = {
+          name: `${bond.display_name}: $${bond.gross} x ${duration} days`,
+          total: gross,
+          nett: nett,
+          profit: profit,
+        };
+        if (bond.nett > 0 && bond.gross > bond.nett) {
+          agentFees.push(row);
+        } else {
+          supplierFees.push(row);
+          pickupFees.push(row);
+        }
       }
     }
 
@@ -475,7 +477,7 @@ export const q = {
   getDailyRates: (quote) => {
     const daily = quote.details.daily;
     const rateType = quote.details.rates_type;
-    let list = []
+    let list = [];
 
     if (rateType === "flex") {
       let week = 1;

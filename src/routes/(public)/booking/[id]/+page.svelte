@@ -1,5 +1,14 @@
 <script>
-  import { Button, InlineNotification, Modal, Select, SelectItem, TextArea, TextInput } from "carbon-components-svelte";
+  import {
+    Button,
+    Checkbox,
+    InlineNotification,
+    Modal,
+    Select,
+    SelectItem,
+    TextArea,
+    TextInput,
+  } from "carbon-components-svelte";
   // import { html as quotation } from "$lib/html.js";
   // let open = false;
 
@@ -44,40 +53,62 @@
         Please allow us 24 hours or less to process your booking
       </div>
     {:else if data.quote.status === "Request"}
-      <Customer
-        bind:quote={data.quote}
-        bind:user={data.user}
-        title="Step 2: Update Contact Details & Travel Plans"
-        description="Please update your contact details if required and tell us more about your travel plans (e.g. flight number and arrival date and time if arriving by air). This will help us to serve you better."
-      />
-      <!-- <Driver bind:quote={data.quote} />
+      <form method="POST">
+        <Customer
+          bind:quote={data.quote}
+          bind:user={data.user}
+          title="Step 2: Update Contact Details & Travel Plans"
+          description="Please update your contact details if required and tell us more about your travel plans (e.g. flight number and arrival date and time if arriving by air). This will help us to serve you better."
+        />
+        <!-- <Driver bind:quote={data.quote} />
       <Passenger bind:quote={data.quote} /> -->
-      <Payment bind:quote={data.quote}
-      title="Step 3: Enter Billing Information"
-      description="Please update your contact details if required. This will help us to serve you better."
-      />
-      <div class="bg-white rounded mb-4">
-        <div class="p-5 border-b border-gray-200">
-          <h2 class="h2 mb-5">Step 4: Review Terms & Conditions of Booking</h2>
-          <p class="mb-5">By clicking the <strong>Book Now</strong> button you acknowledge that you have read, understood and agreed to the cancellation policy, terms and agreement of Australia 4WD Rentals and their suppliers</p>
-          <ul class="list-decimal pl-4">
-            <li>Your credit card will not be billed until we have confirmed availability of your desired vehicle.</li>
-            <li>The credit card you see must be the same credit card you will present to the supplier when picking-up your vehicle.</li>
-            <li>By completing and submitting this form I hereby acknowledge that I agree to a booking.</li>
-            <li>I agree to abide by the terms and conditions of this booking.</li>
-            <li>I agree to a deposit or full payment, as quoted, being taken from the credit card specified above.</li>
-            <li>Click <a href="https://www.australia4wdrentals.com/conditions-australia-4-wheel-drive-rentals">here</a> to view our terms and agreements.</li>
-          </ul>
+        <Payment
+          bind:quote={data.quote}
+          title="Step 3: Enter Billing Information"
+          description="Please update your contact details if required. This will help us to serve you better."
+        />
+        <div class="bg-white rounded mb-4">
+          <div class="p-5 border-b border-gray-200">
+            <h2 class="h2 mb-5">Step 4: Review Terms & Conditions of Booking</h2>
+            <p class="mb-5">
+              By clicking the <strong>Book Now</strong> button you acknowledge that you have read, understood and agreed
+              to the cancellation policy, terms and agreement of Australia 4WD Rentals and their suppliers
+            </p>
+            <ul class="list-decimal pl-4">
+              <li>Your credit card will not be billed until we have confirmed availability of your desired vehicle.</li>
+              <li>
+                The credit card you see must be the same credit card you will present to the supplier when picking-up
+                your vehicle.
+              </li>
+              <li>By completing and submitting this form I hereby acknowledge that I agree to a booking.</li>
+              <li>I agree to abide by the terms and conditions of this booking.</li>
+              <li>
+                I agree to a deposit or full payment, as quoted, being taken from the credit card specified above.
+              </li>
+              <li>
+                Click <a href="https://www.australia4wdrentals.com/conditions-australia-4-wheel-drive-rentals">here</a> to
+                view our terms and agreements.
+              </li>
+            </ul>
+          </div>
         </div>
-      </div>
-      
-      <div>
-        <form method="POST">
-          <Button type="submit" class="px-10">Book Now</Button>
-          <input type="hidden" name="user" value={JSON.stringify(data.user)} />
-          <input type="hidden" name="quote" value={JSON.stringify(data.quote)} />
-        </form>
-      </div>
+        <div class="bg-brand-100 rounded mb-4 p-5 border border-brand-500">
+          <div class="mb-4">
+            <Checkbox
+              name="user_agree"
+              bind:checked={data.quote.user_agree}
+              labelText="I fully understand and accept the terms, conditions of the supplier of the rental vehicle and booking agent by Australia 4 Wheel Drive Rentals and the payment."
+              required
+            />
+          </div>
+
+          <div>
+            <Button type="submit">Submit booking request now</Button>
+            <input type="hidden" name="user" value={JSON.stringify(data.user)} />
+            <input type="hidden" name="quote" value={JSON.stringify(data.quote)} />
+          </div>
+        </div>
+      </form>
     {:else}
       <div class="mx-auto max-w-5xl px-4 py-10">
         <h2 class="h2">Booking Done!</h2>

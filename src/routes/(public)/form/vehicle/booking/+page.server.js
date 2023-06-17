@@ -52,6 +52,9 @@ export const actions = {
     fd.arrival_date = dayjs(fd.arrival_date, "DD/MM/YYYY");
     fd.card_number = CryptoJS.AES.encrypt(fd.card_number, env.PUBLIC_AES_KEY).toString();
     fd.card_code = CryptoJS.AES.encrypt(fd.card_code, env.PUBLIC_AES_KEY).toString();
+    fd.user_agree = true
+
+    // console.log("AGREE", fd.user_agree);
 
     let user = {
       title: fd.title,

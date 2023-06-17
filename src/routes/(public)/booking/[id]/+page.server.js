@@ -37,6 +37,8 @@ export const actions = {
     const formData = await request.formData();
     let fd = Object.fromEntries(formData.entries());
 
+    console.log(fd);
+
     let user = JSON.parse(fd.user);
     const user_id = user.id;
     delete user.id;

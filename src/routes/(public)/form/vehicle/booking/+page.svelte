@@ -8,6 +8,7 @@
     TextInput,
     TextArea,
     NumberInput,
+    Checkbox,
   } from "carbon-components-svelte";
   import InputDateRange2 from "$lib/components/admin/InputDateRange2.svelte";
   import dayjs from "dayjs";
@@ -447,7 +448,13 @@
               <TextInput labelText="Name on Card" name="card_name" required />
             </div>
             <div>
-              <TextInput labelText="Credit Card No." name="card_number" required />
+              <TextInput
+                labelText="Credit Card No."
+                name="card_number"
+                title="MasterCard and Visa number"
+                pattern={`^[0-9]{16}$`}
+                required
+              />
             </div>
             <div>
               <div class="font-bold text-sm tracking-wide">Card Expiry</div>
@@ -471,6 +478,8 @@
                 labelText="Security Code (CVV)"
                 helperText="Last 3 numbers on back of credit card - VISA and MasterCard only."
                 name="card_code"
+                pattern={`^[0-9]{3,4}$`}
+                title="Last 3 numbers on back of credit card - VISA and MasterCard only."
                 required
               />
             </div>
@@ -503,9 +512,17 @@
       </ol>
     </section>
     <footer class="p-5 border-t border-gray-200">
+      <div class="mb-4">
+        <Checkbox
+          name="user_agree"
+          labelText="I fully understand and accept the terms, conditions of the supplier of the rental vehicle and booking agent by Australia 4 Wheel Drive Rentals and the payment."
+          required
+        />
+      </div>
+      <Button type="submit">Submit booking request now</Button>
+
       <input type="hidden" name="guests" value={JSON.stringify(guests)} />
       <input type="hidden" name="type" value="bookings" />
-      <Button type="submit">Submit</Button>
     </footer>
   </div>
 </form>

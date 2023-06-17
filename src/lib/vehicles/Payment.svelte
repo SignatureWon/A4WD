@@ -62,7 +62,7 @@
         <TextInput labelText="Name on Card" name="cc_name" bind:value={quote.cc_name} required />
       </div>
       <div>
-        <TextInput labelText="Credit Card No." name="cc_number" bind:value={quote.cc_number} required />
+        <TextInput labelText="Credit Card No." name="cc_number" bind:value={quote.cc_number} title="MasterCard and Visa number" pattern={`^[0-9]{16}$`} required />
       </div>
       <div>
         <div class="font-bold text-sm tracking-wide">Card Expiry</div>
@@ -87,6 +87,8 @@
           helperText="Last 3 numbers on back of credit card - VISA and MasterCard only."
           name="cc_cvv"
           bind:value={quote.cc_cvv}
+          pattern={`^[0-9]{3,4}$`}
+          title="Last 3 numbers on back of credit card - VISA and MasterCard only."
           required
         />
       </div>
