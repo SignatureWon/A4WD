@@ -393,9 +393,9 @@ export const q = {
           },
         ];
       } else {
-        let deposit = quote.details.terms.percentage
-          ? (totalAgent * quote.details.terms.deposit) / 100
-          : quote.details.terms.deposit;
+        let deposit = terms.percentage
+          ? (totalAgent * terms.deposit) / 100
+          : terms.deposit;
         let depositOri = deposit;
 
         if (terms.payment2) {
