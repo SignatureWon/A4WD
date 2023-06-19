@@ -147,7 +147,7 @@
     <DatePicker datePickerType="single" dateFormat="d/m/Y" bind:value={newPayment.date} required>
       <DatePickerInput labelText="Date" placeholder="dd/mm/yyyy" />
     </DatePicker>
-    <Select labelText="Method" bind:value={newPayment.method}>
+    <Select labelText="Method" bind:selected={newPayment.method}>
       <SelectItem value="Credit Card" text="Credit Card" />
       <SelectItem value="Bank Transfer" text="Bank Transfer" />
       <SelectItem value="Cash" text="Cash" />
