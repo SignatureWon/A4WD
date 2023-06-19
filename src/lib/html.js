@@ -26,6 +26,40 @@ export const html = {
 
     let summary = q.getPayments(quote);
 
+    let terms = {
+      name: null,
+      id: null,
+      confirmation: null,
+      confirmation_terms: null,
+      summary: null,
+      summary_terms: null,
+      counter: null,
+      counter_terms: null,
+      deposit: 0,
+      percentage: false,
+      balance: 0,
+      description: null,
+      payment2: false,
+      deposit2: null,
+      percentage2: null,
+      balance2: null,
+      description2: null,
+      payment3: null,
+      deposit3: null,
+      percentage3: null,
+      balance3: null,
+      description3: null,
+      pay_counter: false,
+      suppliers: {
+        id: null,
+        name: null,
+      },
+    };
+
+    if ("terms" in quote.details) {
+      terms = quote.details.terms;
+    }
+
     const { data: vehicle } = await supabase
       .from("vehicles")
       .select("name, slug, image")
@@ -388,18 +422,18 @@ export const html = {
         license: quote.details.driver.license,
       },
       terms: {
-        id: quote.details.terms.id,
+        id: terms.id,
         confirmation: {
-          text: quote.details.terms.confirmation_terms,
-          pdf: quote.details.terms.confirmation,
+          text: terms.confirmation_terms,
+          pdf: terms.confirmation,
         },
         summary: {
-          text: quote.details.terms.summary_terms,
-          pdf: quote.details.terms.summary,
+          text: terms.summary_terms,
+          pdf: terms.summary,
         },
         counter: {
-          text: quote.details.terms.counter_terms,
-          pdf: quote.details.terms.counter,
+          text: terms.counter_terms,
+          pdf: terms.counter,
         },
       },
       // daily: getDailyRates(),
@@ -838,7 +872,7 @@ table, td{
       </td>
     </tr>
   </table>
-  <div style="background-color: #dbeafe; padding: 20px; margin-bottom: 30px;" class="no-print">
+  <div style="background-color: #dbeafe; padding: 20px; margin-bottom: 30px; width: 600px;" class="no-print">
     <div style="margin-bottom: 20px; font-size: 14px;">
       <a href="https://www.australia4wdrentals.com" style="color: #1d4ed8"
         >www.australia4wdrentals.com</a
@@ -1085,8 +1119,8 @@ table, td{
     style="background-color: #dbeafe;padding: 50px; margin-bottom: 30px; text-align: center;"
     class="no-print"
   >
-    <div style="">THANK YOU FOR CHOOSING</div>
-    <div style="font-weight: bold; font-size: 20px">
+    <div style="font-size: 12px">THANK YOU FOR CHOOSING</div>
+    <div style="font-weight: bold; font-size: 16px">
       <a href="https://www.australia4wdrentals.com" style="color: #1d4ed8">
         AUSTRALIA 4WD RENTALS
       </a>

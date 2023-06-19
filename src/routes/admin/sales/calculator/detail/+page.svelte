@@ -126,7 +126,7 @@
     state: null,
     country: null,
   };
-  let searchCustomer = ""
+  let searchCustomer = "";
 
   let quote = {
     details: details,
@@ -654,13 +654,7 @@
               </div>
             </div>
             <div>
-              <TextInput
-                name="email"
-                labelText="Email"
-                type="email"
-                bind:value={user.email}
-                required
-              />
+              <TextInput name="email" labelText="Email" type="email" bind:value={user.email} required />
             </div>
             <div>
               <TextInput name="phone" labelText="Phone" bind:value={user.phone} required />
@@ -865,7 +859,7 @@
                         {addon.name}
                         {#if addon.daily}
                           {#if addon.gross_rate * d.duration > addon.gross_cap}
-                            {addon.gross_cap}
+                            ${format.currency(addon.gross_cap)}
                           {:else}
                             (${format.currency(addon.gross_rate)} x {d.duration} days)
                           {/if}
@@ -876,7 +870,13 @@
                   </div>
                   <div class="pl-4">
                     {#if addon.daily}
-                      ${format.currency(addon.gross_rate * d.duration)}
+                      <!-- ${format.currency(addon.gross_rate * d.duration)} -->
+                      {#if addon.gross_rate * d.duration > addon.gross_cap}
+                        ${format.currency(addon.gross_cap)}
+                      {:else}
+                        ${format.currency(addon.gross_rate * d.duration)}
+                      {/if}
+
                     {:else}
                       ${format.currency(addon.gross_rate)}
                     {/if}

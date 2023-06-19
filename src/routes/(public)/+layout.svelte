@@ -46,7 +46,7 @@
 >
   <section
     id="topbar"
-    class="bg-gray-800 text-white p-2 text-sm lg:flex items-center"
+    class="bg-gray-800 text-white p-2 text-sm lg:flex items-center" style="height: 45px;"
   >
     <div class="flex-1 h-8 overflow-hidden hidden lg:block">
       <Announcements records={getContent("announcements")} />
