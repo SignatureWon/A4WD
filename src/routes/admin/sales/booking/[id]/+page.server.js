@@ -114,9 +114,42 @@ export async function load({ url, params }) {
   const addedSpecials = cal.addSpecials(addedFees, specialsData, search);
   const addedBonds = cal.addBonds(addedSpecials, bondsData);
   const addAddons = cal.addAddons(addedBonds, addonsData);
-  const addTerms = cal.addTerms(addAddons, termsData);
+  let addTerms = cal.addTerms(addAddons, termsData);
 
-  // console.log(addTerms.length);
+  console.log("terms", addTerms.length);
+
+  if (!addTerms.length) {
+    addTerms = [{
+      name: null,
+      id: null,
+      confirmation: null,
+      confirmation_terms: null,
+      summary: null,
+      summary_terms: null,
+      counter: null,
+      counter_terms: null,
+      deposit: 0,
+      percentage: false,
+      balance: 0,
+      description: null,
+      payment2: false,
+      deposit2: null,
+      percentage2: null,
+      balance2: null,
+      description2: null,
+      payment3: null,
+      deposit3: null,
+      percentage3: null,
+      balance3: null,
+      description3: null,
+      pay_counter: false,
+      suppliers: {
+        id: null,
+        name: null,
+      },
+    }]
+  }
+
 
   //   const { data: vehicle } = await supabase
   //     .from("vehicles")

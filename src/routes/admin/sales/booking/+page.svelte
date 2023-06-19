@@ -12,7 +12,7 @@
   path={data.path}
   headers={[
     {
-      key: "created_at",
+      key: "date_deposit",
       value: "Booking Date",
     },
     {

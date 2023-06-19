@@ -41,15 +41,19 @@
   import FeeSpecials from "$lib/admin/quote/FeeSpecials.svelte";
   import FeeAdjustments from "$lib/admin/quote/FeeAdjustments.svelte";
   import FeePayment from "$lib/admin/quote/FeePayment.svelte";
+  import BookingDetails from "$lib/admin/quote/BookingDetails.svelte";
 
   export let data;
 
-  // console.log(data);
+  // console.log("data", data);
   let paneHeight = 0;
   const d = data.detail;
   let details = data.quote.details;
   let selected_bond = 0;
   let bond_fee = 0;
+  if (!d.bond_items) {
+    d.bond_items = [];
+  }
   if (d.bond_items.length) {
     bond_fee =
       d.bond_items[0].gross * (d.duration < (d.bond_items[0].cap || 0) ? d.duration : d.bond_items[0].cap || 0);
@@ -209,6 +213,7 @@
       <Section title="Trip Details">
         <Trip {info} />
         <SupplierReference bind:reference={quote.supplier_reference} />
+        <BookingDetails bind:quote />
       </Section>
       <Section title="Customer Details">
         <Customer {user} />

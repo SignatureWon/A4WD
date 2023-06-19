@@ -16,6 +16,10 @@
   let day = 0;
   let name = "";
 
+  if (!list) {
+    list = []
+  }
+
   if (list.length) {
     if (Object.keys(bonds).length) {
       list.forEach((item, index) => {

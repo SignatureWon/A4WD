@@ -8,6 +8,10 @@
   export let duration;
   export let count;
   // export let bond;
+  
+  if (!list) {
+    list = []
+  }
 
   let poplist = [];
   const getAddons = () => {

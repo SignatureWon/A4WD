@@ -73,6 +73,7 @@ export const q = {
     if ("terms" in quote.details) {
       terms = quote.details.terms;
     }
+
     if (terms.pay_counter) {
       // console.log(quote.details.daily);
       let toAgent = terms.percentage ? (quote.details.daily.gross * terms.deposit) / 100 : terms.deposit;
@@ -393,10 +394,8 @@ export const q = {
           },
         ];
       } else {
-        let deposit = terms.percentage
-          ? (totalAgent * terms.deposit) / 100
-          : terms.deposit;
-        let depositOri = deposit;
+        let deposit = terms.percentage ? (totalAgent * terms.deposit) / 100 : terms.deposit;
+        let oriDeposit = deposit;
 
         if (terms.payment2) {
           let total2 = terms.percentage2 ? (totalAgent * terms.deposit2) / 100 : terms.deposit2;
@@ -430,6 +429,7 @@ export const q = {
             deposit += total3;
           }
         }
+
         // balance
         if (terms.balance < gap) {
           let bal = totalAgent;
@@ -450,15 +450,27 @@ export const q = {
         } else {
           deposit += bal;
         }
+        let depositText = `(${terms.percentage ? `${terms.deposit}%` : `$${terms.deposit}`})`;
+        // console.log("deposit", deposit);
+
         termsItems = [
           {
-            name: `Booking deposit to agent now (${
-              terms.percentage ? `${terms.deposit}%` : `$${terms.deposit}`
-            }) on ${dayjs(date_quote).format("ddd, DD MMM YYYY")}`,
-            total: terms.percentage ? (totalAgent * terms.deposit) / 100 : terms.deposit,
+            name: `Booking Deposit ${deposit === oriDeposit ? depositText : ""}`,
+            total: deposit,
           },
           ...termsItems,
         ];
+
+        // console.log("termsItems", termsItems);
+        // termsItems = [
+        //   {
+        //     name: `Booking deposit to agent now (${
+        //       terms.percentage ? `${terms.deposit}%` : `$${terms.deposit}`
+        //     }) on ${dayjs(date_quote).format("ddd, DD MMM YYYY")}`,
+        //     total: terms.percentage ? (totalAgent * terms.deposit) / 100 : terms.deposit,
+        //   },
+        //   ...termsItems,
+        // ];
       }
     }
 
