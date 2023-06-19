@@ -108,6 +108,9 @@ export async function load({ url, params }) {
   const addAddons = cal.addAddons(addedBonds, addonsData);
   const addTerms = cal.addTerms(addAddons, termsData);
 
+  let terms = addTerms.length ? addTerms[0] : addTerms
+
+
   // console.log(addTerms.length);
 
   //   const { data: vehicle } = await supabase
@@ -126,7 +129,7 @@ export async function load({ url, params }) {
   return {
     quote: quote,
     user: user,
-    detail: JSON.parse(JSON.stringify(addTerms[0])),
+    detail: JSON.parse(JSON.stringify(terms)),
     options: JSON.parse(JSON.stringify(options)),
     path: url.pathname,
     id: params.id,

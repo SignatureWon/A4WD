@@ -3,6 +3,7 @@
   import dayjs from "dayjs";
 
   export let info;
+  console.log(info);
 </script>
 
 <div class="grid grid-cols-1 md:grid-cols-3 py-4 gap-4">

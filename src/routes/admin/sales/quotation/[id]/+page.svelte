@@ -47,6 +47,9 @@
   let details = data.quote.details;
   let selected_bond = 0;
   let bond_fee = 0;
+  if (!d.bond_items) {
+    d.bond_items = []
+  }
   if (d.bond_items.length) {
     bond_fee =
       d.bond_items[0].gross * (d.duration < (d.bond_items[0].cap || 0) ? d.duration : d.bond_items[0].cap || 0);
@@ -251,7 +254,7 @@
   //   getTotalAgentCommission();
   //   getTotalSupplierFee();
   // };
-
+// console.log("details", details);
   // map data
   const info = {
     // user: {
@@ -281,9 +284,9 @@
     },
     // comment: quote.comment,
     vehicle: {
-      name: d.vehicle_name,
-      slug: d.vehicle_slug,
-      image: d.vehicle_image,
+      name: d.vehicle_name || details.vehicle.name,
+      slug: d.vehicle_slug || details.vehicle.slug,
+      image: d.vehicle_image || details.vehicle.image.replace("https://api.australia4wdrentals.com/storage/v1/render/image/public/contents/", "").replace("?width=600&height=600&resize=contain", ""),
     },
     // passenger: {
     //   adult: details.passenger.adult,
