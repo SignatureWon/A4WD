@@ -253,6 +253,7 @@
           list={d.addon_items}
           duration={d.duration}
           count={countFees}
+          bind:bond={selected_bond}
         />
       </Section>
       <Section title="Payment Information">

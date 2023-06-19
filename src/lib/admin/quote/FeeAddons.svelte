@@ -7,7 +7,9 @@
   export let fees;
   export let duration;
   export let count;
-  // export let bond;
+  export let bond;
+
+  console.log("bond", bond);
   
   if (!list) {
     list = []

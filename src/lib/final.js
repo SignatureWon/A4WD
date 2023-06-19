@@ -939,7 +939,7 @@ table, td{
     </tr>
   </table>
   <div style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 16px;page-break-before: always">
-    Payment Details & Schedule
+    Original Payment Schedule
   </div>
   <div style="margin-bottom: 10px;">
     Payments are to be made (by credit card or Internet transfer) according to the schedule below. Unless advised otherwise, your credit card (supplied to us at the time of booking) will be charged accordingly. Kindly refer to the Payments Summary found on your provisional or e-ticket issued to you for more details.
@@ -991,7 +991,7 @@ table, td{
     email += `
   </table>
   <div style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 16px">
-    Payments
+    New Updated Payment Schedule
   </div>
   <table
   width="600"
