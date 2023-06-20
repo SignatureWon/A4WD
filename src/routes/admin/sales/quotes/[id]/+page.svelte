@@ -6,6 +6,11 @@
   import Driver from "$lib/vehicles/Driver.svelte";
   import Passenger from "$lib/vehicles/Passenger.svelte";
   import Daily from "$lib/vehicles/Daily.svelte";
+  import Adjustments from "$lib/vehicles/Adjustments.svelte";
+  import Specials from "$lib/vehicles/Specials.svelte";
+  import Bonds from "$lib/vehicles/Bonds.svelte";
+  import Fees from "$lib/vehicles/view/Fees.svelte";
+  import Addons from "$lib/vehicles/Addons.svelte";
   export let data;
 
   let quote = data.quote;
@@ -21,10 +26,21 @@
     <div class="bg-white rounded mb-4">
       <Trip {quote} />
       <Customer user={quote.users} />
-      <Driver bind:quote />
-      <Passenger bind:quote />
+      <div class="grid grid-cols-1 md:grid-cols-2">
+        <Driver bind:quote />
+        <Passenger bind:quote />
+      </div>
     </div>
-    <Daily {quote} />
+    <Daily bind:quote />
+    <div class="bg-white rounded mb-4">
+      <Adjustments bind:quote />
+      <Specials bind:quote />
+    </div>
+    <Bonds bind:quote />
+    <div class="bg-white rounded mb-4">
+      <Fees bind:quote />
+      <Addons bind:quote />
+    </div>
 
     <div class="bg-white p-4 h-screen">
       <div class="">

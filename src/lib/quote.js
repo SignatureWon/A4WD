@@ -75,19 +75,33 @@ export const q = {
     }
 
     if (terms.pay_counter) {
-      // console.log(quote.details.daily);
+      // console.log("quote.details", quote.details);
       let toAgent = terms.percentage ? (quote.details.daily.gross * terms.deposit) / 100 : terms.deposit;
 
-      agentFees.push({
-        name: `${terms.percentage ? `${terms.deposit}%` : `$${terms.deposit}`} deposit of daily basic rental ${
-          terms.percentage ? `($${format.currency(quote.details.daily.gross)} x ${terms.deposit}%)` : ""
-        }<br><span style="color: #999999">Daily basic rental: $${format.currency(
-          quote.details.daily.items[0].gross
-        )} x ${duration} days = $${format.currency(quote.details.daily.gross)}</span>`,
-        total: toAgent,
-        nett: 0,
-        profit: toAgent,
-      });
+      if (quote.details.rates_nett === 1) {
+        toAgent = terms.percentage
+          ? (quote.details.daily.gross * terms.deposit) / (100 + terms.deposit)
+          : terms.deposit;
+        agentFees.push({
+          // name: `$${format.currency(toAgent)} deposit of daily basic rental to agent`,
+          name: `Deposit of daily basic rental to agent`,
+          total: toAgent,
+          nett: 0,
+          profit: toAgent,
+        });
+      } else {
+        agentFees.push({
+          name: `${terms.percentage ? `${terms.deposit}%` : `$${terms.deposit}`} deposit of daily basic rental ${
+            terms.percentage ? `($${format.currency(quote.details.daily.gross)} x ${terms.deposit}%)` : ""
+          }<br><span style="color: #999999">Daily basic rental: $${format.currency(
+            quote.details.daily.items[0].gross
+          )} x ${duration} days = $${format.currency(quote.details.daily.gross)}</span>`,
+          total: toAgent,
+          nett: 0,
+          profit: toAgent,
+        });
+      }
+
       supplierFees.push({
         name: `Balance of daily basic rental ($${format.currency(quote.details.daily.gross)} - $${format.currency(
           toAgent
@@ -179,9 +193,11 @@ export const q = {
       let nett = 0;
       let profit = 0;
 
+      let cap = duration < (bond.cap || 99999) ? duration : bond.cap;
+
       if ("gross" in bond) {
-        gross = bond.gross * duration;
-        nett = bond.nett * duration;
+        gross = bond.gross * cap;
+        nett = bond.nett * cap;
         profit = nett > 0 ? gross - nett : 0;
       } else {
         bond.gross = 0;
@@ -191,7 +207,7 @@ export const q = {
 
       if (bond.gross > 0) {
         const row = {
-          name: `${bond.display_name}: $${bond.gross} x ${duration} days`,
+          name: `${bond.display_name}: $${bond.gross} x ${cap} days`,
           total: gross,
           nett: nett,
           profit: profit,
@@ -503,6 +519,14 @@ export const q = {
             total: daily.items[i - 1].gross * day,
             nett: daily.items[i - 1].nett * day,
             profit: daily.items[i - 1].profit * day,
+            week: week,
+            days: day,
+            flex: daily.items[i - 1].flex,
+            daily: {
+              gross: daily.items[i - 1].gross,
+              nett: daily.items[i - 1].nett,
+              profit: daily.items[i - 1].profit,
+            },
           });
           day = 1;
           week++;
@@ -515,15 +539,32 @@ export const q = {
             total: o.gross * day,
             nett: o.nett * day,
             profit: o.profit * day,
+            week: week,
+            days: day,
+            flex: o.flex,
+            daily: {
+              gross: o.gross,
+              nett: o.nett,
+              profit: o.profit,
+            },
           });
         }
       });
     } else {
+      let days = daily.items.length;
       list.push({
-        name: `Daily basic rental: $${format.currency(daily.gross / daily.items.length)} x ${daily.items.length} days`,
+        name: `Daily basic rental: $${format.currency(daily.gross / days)} x ${days} days`,
         total: daily.gross,
         nett: daily.nett,
         profit: daily.profit,
+        week: null,
+        days: days,
+        flex: null,
+        daily: {
+          gross: daily.gross / days,
+          nett: daily.nett / days,
+          profit: daily.profit / days,
+        },
       });
     }
     return list;

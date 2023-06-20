@@ -9,25 +9,25 @@
     <h2 class="h2">Trip Information</h2>
   </div>
   <div class="p-4">
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-      <div>
+    <div class="flex">
+      <div class="w-1/4 max-w-xs pr-4">
         <img src={quote.details.vehicle.image} alt={quote.details.vehicle.name} class="rounded" />
       </div>
-      <div class="col-span-3">
+      <div class="flex-1">
         <div class="mb-4">
           <div class="label">Vehicle</div>
           <div class="value">{quote.details.vehicle.name}</div>
         </div>
         <div class="flex items-center justify-between">
-          <div class="w-5/12">
+          <div class="flex-1">
             <div class="label">Pick-up</div>
             <div class="value">{quote.details.pickup.name}</div>
             <div>{dayjs(quote.details.date_start).format("DD/MM/YYYY (ddd)")}</div>
           </div>
-          <div>
+          <div class="w-8">
             {@html iconRight}
           </div>
-          <div class="w-5/12">
+          <div class="flex-1">
             <div class="label">Drop-off</div>
             <div class="value">{quote.details.dropoff.name}</div>
             <div>{dayjs(quote.details.date_end).format("DD/MM/YYYY (ddd)")}</div>
