@@ -142,7 +142,7 @@
       half={true}
     />
     {#if data.data.factor !== "No One Way Fee"}
-      <InputNumber name="value" label="Value" bind:value={data.data.value} half={true} />
+      <InputNumber name="value" label="Value" bind:value={data.data.value} step={0.01} half={true} />
     {/if}
     <div class="bg-gray-100 p-4 md:col-span-2">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -206,7 +206,7 @@
             half={true}
           />
           {#if data.data.factor2 !== "No One Way Fee"}
-            <InputNumber name="value2" label="Value" bind:value={data.data.value2} half={true} />
+            <InputNumber name="value2" label="Value" bind:value={data.data.value2} step={0.01} half={true} />
           {/if}
         {/if}
       </div>
