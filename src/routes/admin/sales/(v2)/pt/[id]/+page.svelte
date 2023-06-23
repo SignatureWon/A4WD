@@ -1,6 +1,6 @@
 <script>
   import PageTitle from "$lib/components/admin/PageTitle.svelte";
-  import { html } from "$lib/email/booking.js";
+  import { html } from "$lib/email/provisional.js";
   import { q } from "$lib/quote.js";
   import Trip from "$lib/vehicles/Trip.svelte";
   import Customer from "$lib/vehicles/view/Customer.svelte";
@@ -79,11 +79,11 @@
     <Status bind:quote />
   </div>
 </div>
-<aside class="h-screen w-80 bg-brand-100 fixed top-0 right-0 pt-12 pb-72 overflow-y-auto">
-  <Summary bind:quote bind:summary count={getSummary} title="Booking" />
+<aside class="h-screen w-80 bg-brand-100 fixed top-0 right-0 pt-12 pb-60 overflow-y-auto">
+  <Summary bind:quote bind:summary count={getSummary} title="Provisional Ticket" />
   <div class="fixed bottom-0 right-0 bg-brand-200 w-80 p-4">
     <form action="?/update" method="POST">
-      <Button type="submit" class="w-full">Update Booking</Button>
+      <Button type="submit" class="w-full">Update Provisional Ticket</Button>
       <input type="hidden" name="quote" value={JSON.stringify(quote)} />
     </form>
     <div class="grid grid-cols-3 gap-1 my-3">
@@ -96,13 +96,13 @@
       <div>
         <Button
           class="p-0.5 h-6 w-full inline-block"
-          href="https://api.australia4wdrentals.com/storage/v1/object/public/quotes/Q{388000 + quote.id}.pdf"
+          href="https://api.australia4wdrentals.com/storage/v1/object/public/quotes/Provisional Ticket - PT${388000 + Number(quote.id)}.pdf"
           >Download</Button
         >
       </div>
     </div>
     <div class="grid grid-cols-3 gap-1 mb-3">
-      <div>Booking</div>
+      <div>P. Ticket</div>
       <div>
         <Button
           kind="tertiary"
@@ -122,9 +122,6 @@
         >
       </div>
     </div>
-    <form action="?/provisional" method="POST">
-      <Button type="submit" kind="tertiary" class="w-full mb-2">Proceed to Provisional Ticket</Button>
-    </form>
     <form action="?/final" method="POST">
       <Button type="submit" class="w-full">Proceed to Final Ticket</Button>
     </form>

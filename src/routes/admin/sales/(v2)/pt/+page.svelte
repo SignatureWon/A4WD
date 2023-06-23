@@ -5,15 +5,15 @@
   export let data;
 </script>
 
-<PageTitle title="Quotation" path={data.path} />
+<PageTitle title="Provisional Ticket" path={data.path} />
 
 <SectionDataTable
   rows={data.data}
   path={data.path}
   headers={[
     {
-      key: "created_at",
-      value: "Booking Date",
+      key: "date_provisional",
+      value: "PT Date",
     },
     {
       key: "quote_id",

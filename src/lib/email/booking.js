@@ -216,7 +216,7 @@ export const html = {
                 ${letterhead.content.replace(/(?:\r\n|\r|\n)/g, "<br>")}
             </div>
           </td>
-          <td class="col" width="276" align="right" style="font-size: 20px; font-weight: bold">QUOTATION</td>
+          <td class="col" width="276" align="right" style="font-size: 20px; font-weight: bold">BOOKING</td>
         </tr>
       </table>
     </td>
@@ -246,12 +246,13 @@ export const html = {
                     in and operating out of Darwin, Australia.
                 </p>
                 <p style="font-weight: bold; padding-bottom: 10px">
-                    Availability and validity of this quotation
+                    Thank you for booking with us
                 </p>
                 <p style="padding-bottom: 10px">
-                    Vehicle is subject to availability and rates are subject to change prior to
-                    confirmation. We suggest you book as soon as possible to ensure you get the
-                    vehicle you want at the best price.
+                    Your booking has been successfully submitted to us. We look forward to serving you.
+                </p>
+                <p style="padding-bottom: 10px">
+                    Our team will check for availability of your desired vehicle and your credit card will be charged <b>$${format.currency(summary.termsItems[0].total)}</b> upon confirmation of availability.
                 </p>
                 <p style="padding-bottom: 10px">
                     If you have any queries please 
@@ -274,12 +275,12 @@ export const html = {
       <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
         <tr>
           <td class="col" width="184" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
-            <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Quote No.</div>
-            <div><b>Q${388000 + quote.id}</b></div>
+            <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Booking No.</div>
+            <div><b>B${388000 + quote.id}</b></div>
           </td>
           <td class="col" width="184" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
-            <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Quote Date</div>
-            <div><b>${dayjs(quote.created_at).format("DD MMM YYYY")}</b></div>
+            <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Booking Date</div>
+            <div><b>${dayjs(quote.date_deposit).format("DD MMM YYYY")}</b></div>
           </td>
           <td class="col" width="184" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
             <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Duration</div>
@@ -462,28 +463,6 @@ export const html = {
     <td style="padding: 0 24px;">
       <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
         <tr>
-            <td class="col" width="100%" style="background-color: ${c.brand100}; padding: 15px">
-                <p><a href="https://www.australia4wdrentals.com" style="color: ${c.brand500}">www.australia4wdrentals.com</a> is protected by a 256-bit ssl for complete peace of mind when booking online.</p>
-                <br>
-                <table cellpadding="0" cellspacing="0" role="presentation">
-                    <tr>
-                        <th bgcolor="${c.brand500}" style="border-radius: 3px; mso-padding-alt: 6px 42px 12px;">
-                            <a href="https://australia4wdrentals.com/booking/${encId}" style="color: #FFFFFF; display: inline-block; font-size: 13px; line-height: 100%; padding: 12px 42px; text-decoration: none;">Book Now</a>
-                        </th>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-</table>
-<br>
-<table cellpadding="0" cellspacing="0" role="presentation" width="100%">
-  <tr>
-    <td style="padding: 0 24px;">
-      <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
-        <tr>
           <td class="col" width="414" style="padding-top: 15px;">
             <div style="font-size: 16px"><b>Payment Details & Schedule</b></div>
           </td>
@@ -581,7 +560,7 @@ export const html = {
                 <p style="font-weight: bold; font-size: 11px">
                     Terms & Conditions
                 </p>
-                <p style="font-size: 11px; padding-bottom: 10px">
+                <p style="font-size: 11px">
                     For your convenience please find links to the summary of the full terms and
                     conditions and the supplier counter agreement for the rental of this
                     vehicle. You will also find links to the user agreement and agent terms and

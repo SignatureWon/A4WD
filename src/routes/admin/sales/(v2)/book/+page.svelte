@@ -5,14 +5,14 @@
   export let data;
 </script>
 
-<PageTitle title="Quotation" path={data.path} />
+<PageTitle title="Pax Booking" path={data.path} />
 
 <SectionDataTable
   rows={data.data}
   path={data.path}
   headers={[
     {
-      key: "created_at",
+      key: "date_deposit",
       value: "Booking Date",
     },
     {
@@ -27,9 +27,9 @@
       key: "quote_customer",
       value: "Customer",
     },
-    {
-      key: "status",
-      value: "Status",
-    },
+    // {
+    //   key: "status",
+    //   value: "Status",
+    // },
   ]}
 />

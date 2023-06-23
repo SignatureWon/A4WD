@@ -1,4 +1,6 @@
 import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+dayjs.extend(customParseFormat);
 import { supabase } from "$lib/supabaseClient";
 import { format } from "$lib/format.js";
 import { env } from "$env/dynamic/public";
@@ -8,11 +10,7 @@ import { theme } from "$lib/theme.js";
 
 export const html = {
   create: async (quote_id) => {
-    const { data: color } = await supabase
-      .from("constants")
-      .select("name")
-      .eq("type", "color")
-      .single();
+    const { data: color } = await supabase.from("constants").select("name").eq("type", "color").single();
 
     const c = theme.brandcolor(color.name);
 
@@ -22,6 +20,14 @@ export const html = {
       .eq("type", "template_letterhead")
       .single();
     const { data: quote } = await supabase.from("quotes").select("*, users (*)").eq("id", quote_id).single();
+    const { data: supplier } = await supabase.from("suppliers").select().eq("id", quote.details.supplier.id).single();
+
+    const pickup = supplier.depots.filter((item) => {
+      return item.Depots.id === quote.details.pickup.id;
+    })[0];
+    const dropoff = supplier.depots.filter((item) => {
+      return item.Depots.id === quote.details.dropoff.id;
+    })[0];
 
     let summary = q.getPayments(quote);
     let terms = {
@@ -57,7 +63,14 @@ export const html = {
     if ("terms" in quote.details) {
       terms = quote.details.terms;
     }
-    const encId = CryptoJS.AES.encrypt(quote.id.toString(), env.PUBLIC_AES_KEY).toString().replaceAll("/", "__");
+    const totalOutstanding = () => {
+      let total = summary.totalAgent;
+      let payments = quote.payments || [];
+      payments.forEach((obj) => {
+        total -= obj.amount;
+      });
+      return total;
+    };
 
     let email = `
 <!DOCTYPE html>
@@ -216,52 +229,7 @@ export const html = {
                 ${letterhead.content.replace(/(?:\r\n|\r|\n)/g, "<br>")}
             </div>
           </td>
-          <td class="col" width="276" align="right" style="font-size: 20px; font-weight: bold">QUOTATION</td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-</table>
-<table cellpadding="0" cellspacing="0" role="presentation" width="100%">
-  <tr>
-    <td class="divider" style="padding: 24px 16px;">
-      <div style="background: #DDDDDD; height: 1px; line-height: 1px;">‌</div>
-    </td>
-  </tr>
-</table>
-<table cellpadding="0" cellspacing="0" role="presentation" width="100%">
-  <tr>
-    <td style="padding: 0 24px;">
-      <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
-        <tr>
-            <td class="col" width="100%">
-                <p style="font-weight: bold; padding-bottom: 10px">
-                    Dear ${quote.users.first_name},
-                </p>
-                <p style="padding-bottom: 10px">
-                    Thank you for contacting <a href="www.australia4wdrentals.com"
-                    style="color: ${c.brand500}">www.australia4wdrentals.com</a> 
-                    one of Australia's leading officially licensed specialist agents for vehicle
-                    rentals (motorhomes, campers, 4WD, 4WD campers) and guided safari tours based
-                    in and operating out of Darwin, Australia.
-                </p>
-                <p style="font-weight: bold; padding-bottom: 10px">
-                    Availability and validity of this quotation
-                </p>
-                <p style="padding-bottom: 10px">
-                    Vehicle is subject to availability and rates are subject to change prior to
-                    confirmation. We suggest you book as soon as possible to ensure you get the
-                    vehicle you want at the best price.
-                </p>
-                <p style="padding-bottom: 10px">
-                    If you have any queries please 
-                    <a href="https://www.australia4wdrentals.com/contact-us">contact</a> 
-                    our friendly staff. Please be advised that the prices stated in our quote are confidential.
-                </p>
-                <p>
-                    Please note that all prices are quoted in <b>Australian Dollars (AUD)</b>.
-                </p>
-            </td>
+          <td class="col" width="276" align="right" style="font-size: 20px; font-weight: bold; line-height: 25px">FINAL<br>TICKET</td>
         </tr>
       </table>
     </td>
@@ -273,15 +241,15 @@ export const html = {
     <td style="padding: 0 24px;">
       <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
         <tr>
-          <td class="col" width="184" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
-            <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Quote No.</div>
-            <div><b>Q${388000 + quote.id}</b></div>
+          <td class="col" width="184" style="padding: 10px; border-top: 1px solid #DDDDDD; border-bottom: 1px solid #DDDDDD">
+            <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Ticket No.</div>
+            <div><b>FT${388000 + quote.id}</b></div>
           </td>
-          <td class="col" width="184" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
-            <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Quote Date</div>
-            <div><b>${dayjs(quote.created_at).format("DD MMM YYYY")}</b></div>
+          <td class="col" width="184" style="padding: 10px; border-top: 1px solid #DDDDDD; border-bottom: 1px solid #DDDDDD">
+            <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Ticket Date</div>
+            <div><b>${quote.date_balance ? dayjs(quote.date_balance).format("DD MMM YYYY") : "&mdash;"}</b></div>
           </td>
-          <td class="col" width="184" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
+          <td class="col" width="184" style="padding: 10px; border-top: 1px solid #DDDDDD; border-bottom: 1px solid #DDDDDD">
             <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Duration</div>
             <div><b>${quote.details.duration} days</b></div>
           </td>
@@ -299,11 +267,33 @@ export const html = {
             <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Pick-up from</div>
             <div><b>${quote.details.pickup.name} days</b></div>
             <div>${dayjs(quote.details.date_start).format("ddd, DD MMM YYYY")} days</div>
+            <br>
+            <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Depot</div>
+            <div>${pickup.Address.replace(/(?:\r\n|\r|\n)/g, "<br>")}</div>
+            ${pickup["Contact (Australia)"] ? `<div>Australia: ${pickup["Contact (Australia)"]}</div>` : ""}
+            ${pickup["Contact (International)"] ? `<div>International: ${pickup["Contact (International)"]}</div>` : ""}
           </td>
           <td class="col" width="276" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
             <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Drop-off to</div>
             <div><b>${quote.details.dropoff.name} days</b></div>
             <div>${dayjs(quote.details.date_end).format("ddd, DD MMM YYYY")} days</div>
+            <br>
+            <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Depot</div>
+            <div>${pickup.Address.replace(/(?:\r\n|\r|\n)/g, "<br>")}</div>
+            ${pickup["Contact (Australia)"] ? `<div>Australia: ${pickup["Contact (Australia)"]}</div>` : ""}
+            ${pickup["Contact (International)"] ? `<div>International: ${pickup["Contact (International)"]}</div>` : ""}
+          </td>
+        </tr>
+        <tr>
+          <td class="col" width="276" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
+            <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Supplier</div>
+            <div><b>${supplier.name}</b></div>
+            ${supplier.url ? `<div><a href="${supplier.url}">Self Check-in</a></div>` : ""}
+            ${supplier.phone ? `<div>Customer Service: ${supplier.phone}"</div>` : ""}
+          </td>
+          <td class="col" width="276" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
+            <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Confirmation Code</div>
+            <div><b>${quote.supplier_reference || "&mdash;"}</b></div>
           </td>
         </tr>
         <tr>
@@ -392,10 +382,14 @@ export const html = {
     });
     email += `
         <tr>
-          <td class="col" width="414" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${c.brand100}">
+          <td class="col" width="414" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${
+            c.brand100
+          }">
             <div><b>Total payable to agent</b></div>
           </td>
-          <td class="col" width="138" align="right" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${c.brand100}">
+          <td class="col" width="138" align="right" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${
+            c.brand100
+          }">
             <div><b>${format.currency(summary.totalAgent)}</b></div>
           </td>
         </tr>
@@ -429,10 +423,14 @@ export const html = {
     });
     email += `
         <tr>
-          <td class="col" width="414" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${c.brand100}">
+          <td class="col" width="414" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${
+            c.brand100
+          }">
             <div><b>Total payable to supplier</b></div>
           </td>
-          <td class="col" width="138" align="right" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${c.brand100}">
+          <td class="col" width="138" align="right" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${
+            c.brand100
+          }">
             <div><b>${format.currency(summary.totalSupplier)}</b></div>
           </td>
         </tr>
@@ -445,10 +443,14 @@ export const html = {
     <td style="padding: 0 24px;">
       <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
         <tr>
-          <td class="col" width="414" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${c.brand500}; color: #FFFFFF">
+          <td class="col" width="414" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${
+            c.brand500
+          }; color: #FFFFFF">
             <div><b>Total amount</b></div>
           </td>
-          <td class="col" width="138" align="right" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${c.brand500}; color: #FFFFFF">
+          <td class="col" width="138" align="right" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${
+            c.brand500
+          }; color: #FFFFFF">
             <div><b>${format.currency(summary.totalAgent + summary.totalSupplier)}</b></div>
           </td>
         </tr>
@@ -462,30 +464,24 @@ export const html = {
     <td style="padding: 0 24px;">
       <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
         <tr>
-            <td class="col" width="100%" style="background-color: ${c.brand100}; padding: 15px">
-                <p><a href="https://www.australia4wdrentals.com" style="color: ${c.brand500}">www.australia4wdrentals.com</a> is protected by a 256-bit ssl for complete peace of mind when booking online.</p>
-                <br>
-                <table cellpadding="0" cellspacing="0" role="presentation">
-                    <tr>
-                        <th bgcolor="${c.brand500}" style="border-radius: 3px; mso-padding-alt: 6px 42px 12px;">
-                            <a href="https://australia4wdrentals.com/booking/${encId}" style="color: #FFFFFF; display: inline-block; font-size: 13px; line-height: 100%; padding: 12px 42px; text-decoration: none;">Book Now</a>
-                        </th>
-                    </tr>
-                </table>
+            <td class="col" width="100%">
+                <p style="font-size: 16px; padding-bottom: 10px"><b>Original Payment Schedule</b></p>
+                <p>
+                    Payments are to be made (by credit card or Internet transfer) according to the schedule below. Unless advised otherwise, your credit card (supplied to us at the time of booking) will be charged accordingly. Kindly refer to the Payments Summary found on your provisional or e-ticket issued to you for more details.
+                </p>
             </td>
         </tr>
       </table>
     </td>
   </tr>
 </table>
-<br>
 <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
   <tr>
     <td style="padding: 0 24px;">
       <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
         <tr>
           <td class="col" width="414" style="padding-top: 15px;">
-            <div style="font-size: 16px"><b>Payment Details & Schedule</b></div>
+            <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Description</div>
           </td>
           <td class="col" width="138" align="right" style="padding-top: 15px;">
             <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Total (AUD)</div>
@@ -513,11 +509,18 @@ export const html = {
     <td style="padding: 0 24px;">
       <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
         <tr>
-            <td class="col" width="100%"><p>
-                The security deposit and balance payment to the agent is taken from the
-                credit or debit card supplied at the time of booking - book now using our
-                secure online booking form.
-            </p></td>
+            <td class="col" width="100%">
+                <p style="font-size: 16px; padding-bottom: 10px"><b>Pay At Pick-Up</b></p>
+                <p style="padding-bottom: 10px">
+                    Any optional or extra items are to be paid directly to ${supplier.name} at the time of pick-up. Please refer to your e-Ticket for more details.
+                </p>
+                <p style="padding-bottom: 10px">
+                    Please ensure that you have sufficient funds in your credit card to pay the bond. Information on applicable bond charges can be found in this document.
+                </p>
+                <p>
+                    Please ensure that you pick-up and drop-off your rental vehicle during depot business hours to avoid any inconvenience or extra charges. Depot addresses and booking times can be found in this document.
+                </p>
+            </td>
         </tr>
       </table>
     </td>
@@ -530,7 +533,7 @@ export const html = {
       <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
         <tr>
           <td class="col" width="414" style="padding-top: 15px;">
-            <div style="font-size: 16px"><b>Pay At Pick-Up</b></div>
+            <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Description</div>
           </td>
           <td class="col" width="138" align="right" style="padding-top: 15px;">
             <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Total (AUD)</div>
@@ -558,214 +561,67 @@ export const html = {
     <td style="padding: 0 24px;">
       <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
         <tr>
+          <td class="col" width="414" style="padding-top: 15px;">
+            <div style="font-size: 16px"><b>New Updated Payment Schedule</b></div>
+          </td>
+          <td class="col" width="138" align="right" style="padding-top: 15px;">
+            <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Total (AUD)</div>
+          </td>
+        </tr>
+      </table>
+      <br>
+      <table cellpadding="0" cellspacing="0" role="presentation" width="100%">`;
+    (quote.payments || []).forEach((item) => {
+      email += `
+        <tr>
+          <td class="col" width="138" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${
+            c.brand100
+          }">
+            <div>${dayjs(item.date, "DD/MM/YYYY").format("DD MMM YYYY")}</div>
+          </td>
+          <td class="col" width="276" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${
+            c.brand100
+          }">
+            <div>${item.method}</div>
+            <div style="color:#999999">${item.remark || ""}</div>
+          </td>
+          <td class="col" width="138" align="right" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${
+            c.brand100
+          }">
+            <div>${format.currency(item.amount)}</div>
+          </td>
+        </tr>`;
+    });
+    email += `
+      </table>
+      <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
+        <tr>
+          <td class="col" width="414" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${
+            c.brand100
+          }">
+            <b>Total Outstanding</b>
+          </td>
+          <td class="col" width="138" align="right" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${
+            c.brand100
+          }">
+            <b>${format.currency(totalOutstanding())}</b>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<br>
+<table cellpadding="0" cellspacing="0" role="presentation" width="100%">
+  <tr>
+    <td style="padding: 0 24px;">
+      <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
+        <tr>
             <td class="col" width="100%">
-                <p style="font-size: 16px; padding-bottom: 10px"><b>Alternative payment options</b></p>
-                <p>
-                    Balance payment collected by Australia 4 Wheel Drive Rentals can be paid via
-                    internet banking instead of credit card. Details will be supplied upon
-                    request.            
-                </p>
-            </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-</table>
-<br>
-<table cellpadding="0" cellspacing="0" role="presentation" width="100%">
-  <tr>
-    <td style="padding: 0 24px;">
-      <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
-        <tr>
-            <td class="col" width="100%" style="background-color: #F6F6F6; padding: 15px">
-                <p style="font-weight: bold; font-size: 11px">
-                    Terms & Conditions
-                </p>
-                <p style="font-size: 11px; padding-bottom: 10px">
-                    For your convenience please find links to the summary of the full terms and
-                    conditions and the supplier counter agreement for the rental of this
-                    vehicle. You will also find links to the user agreement and agent terms and
-                    conditions. Please ensure that you read and understand the terms and
-                    conditions found at the following links:
-                </p>`;
-    if (terms.confirmation_terms !== "<p></p>" || terms.confirmation) {
-      email += `
-      <p>&bull; 
-        <a
-          href="https://www.australia4wdrentals.com/terms/${terms.id}/confirmation"
-          style="color: ${c.brand500}; font-size: 11px">Booking Confirmation Terms</a
-        >
-      </p>`;
-    }
-    if (terms.summary_terms !== "<p></p>" || terms.summary) {
-      email += `
-      <p>&bull; 
-        <a
-          href="https://www.australia4wdrentals.com/terms/${terms.id}/summary"
-          style="color: ${c.brand500}; font-size: 11px">Summary of Terms</a
-        >
-      </p>`;
-    }
-    if (terms.counter_terms !== "<p></p>" || terms.counter) {
-      email += `
-      <p>&bull; 
-        <a
-          href="https://www.australia4wdrentals.com/terms/${terms.id}/counter"
-          style="color: ${c.brand500}; font-size: 11px">Counter Agreement</a
-        >
-      </p>`;
-    }
-                email += `
-                <br>
-                <p style="font-weight: bold; font-size: 11px">
-                    Domestic Rates
-                </p>
-                <p style="font-size: 11px; padding-bottom: 10px">
-                    This rate is for Australian and New Zealand residents only. The hirer must
-                    be able to produce their Australian or New Zealand drivers licence upon
-                    vehicle collection. Should the hirer not be able to do so on the day of pick
-                    up, the hirer will be refused the rental at the rate nominated. The hirer
-                    will be charged the difference between the Domestic rate and the Standard
-                    rate.
-                </p>
-                <p style="font-weight: bold; font-size: 11px">
-                    The agent - Australia 4 Wheel Drive Rentals
-                </p>
-                <p style="font-size: 11px; padding-bottom: 10px">
-                    From here onwards Australia 4 Wheel Drive Rentals and it's associated group
-                    of companies shall henceforth be referred to as the 'Agent', 'we' or 'our'.
-                </p>
-                <p style="font-weight: bold; font-size: 11px">
-                    Agent security deposit
-                </p>
-                <p style="font-size: 11px; padding-bottom: 10px">
-                    Security deposits taken by the Agent are to help ensure that your
-                    reservations are secure and in order. The security deposit is
-                    non-refundable. In the event of a cancellation the security deposit, may be
-                    used towards a future booking (given at the discretion of the Agent). In the
-                    event of a cancellation the security deposit will be held for a further 6
-                    months from date of cancellation to be used towards a future security
-                    deposit for bookings made through the Agent and only with the same supplier.
-                    This clause is subject to the sole discretion of the management of the
-                    Agent. Total Agent's Security Booking Deposit of $${format.currency(summary.totalCommission)} is fully included
-                    in the final payment.
-                </p>
-                <p style="font-weight: bold; font-size: 11px">
-                    Agent credit card surcharge
-                </p>
-                <p style="font-size: 11px; padding-bottom: 10px">
-                    A 2.0% surcharge for all VISA / Mastercard credit card transactions paid
-                    towards the booking will apply. Please note that these credit card fees do
-                    not overlap with the supplier surcharge. Please note when choosing a
-                    Standard rate you will be paying extra credit card fees to the supplier for
-                    any administration surcharges and / or if you choose to take up any excess
-                    plan upon pickup. The Agent does NOT accept American Express or Diners
-                    credit cards.
-                </p>
-                <p style="font-weight: bold; font-size: 11px">
-                    Calculation errors
-                </p>
-                <p style="font-size: 11px; padding-bottom: 10px">
-                    We rely heavily on accurate information provided to us by our suppliers and
-                    we endeavour to ensure that all our prices are up to date. However we cannot
-                    be held liable for any errors in price calculation. In the event of an
-                    erroneous quotation or invoice, we will re-issue another quotation
-                    superseding the original quote or invoice with the necessary corrections in
-                    pricing.
-                </p>
-                <p style="font-weight: bold; font-size: 11px">
-                    Suppliers Responsibility
-                </p>
-                <p style="font-size: 11px; padding-bottom: 10px">
-                    We are a booking service for the Suppliers. You will be required to complete
-                    a rental agreement directly with the relevant Supplier on collection of the
-                    rented vehicle. Your rental is subject to the terms and conditions of the
-                    respective Supplier with whom the rental agreement is made. Each Supplier is
-                    responsible for notifying inventory levels to the Agent. We do not accept
-                    any liability for unavailability of vehicles caused by the Supplier
-                    over-selling its own vehicle inventory or vehicle movement disruption.
-                </p>
-                <p style="font-weight: bold; font-size: 11px">
-                    Disclaimer
-                </p>
-                <p style="font-size: 11px; padding-bottom: 10px">
-                    These details are indicative of the vehicle that will be supplied under
-                    your booking. Actual vehicles may vary according to year of manufacture
-                    and availability but your vehicle will be suitable for the required number
-                    of persons and have equivalent or better specifications to those listed in
-                    this website.
-                </p>
-                <p style="font-size: 11px; padding-bottom: 10px">
-                    We will NOT accept responsibility for any/the loss or damage or injury
-                    caused to any passenger. We will not be held responsible for any changes
-                    to any or all of the above services provided by the operator. We STRONGLY
-                    recommends you take out adequate travel insurance including cancellation
-                    insurance for your holiday.
-                </p>
-                <p style="font-size: 11px; padding-bottom: 10px">
-                    Unless we hear from you that you can't access this information before your
-                    booking of the vehicle it will be generally understood and accepted by all
-                    parties that you have successfully accessed all links then read and
-                    understood our terms and conditions and those of the supplier.
-                </p>
-                <p style="font-size: 11px; padding-bottom: 10px">
-                    This electronic message and any attachments are supplied in good faith and
-                    is believed to be free of viruses or related problems. The contents of the
-                    message and any advice contained (this quote will be voided if
-                    intentionally misused or distributed) therein are supplied on the basis
-                    that the recipient understands that they should seek their own expert
-                    opinions. We accept no responsibility for the damage or loss (arising from
-                    negligence or otherwise) which may occur through the use of the contents
-                    or from transmission of this message and attachments. The contents of this
-                    electronic message and any attachments are intended only for the addressee
-                    and may contain privileged or confidential information. If you are not the
-                    addressee, you are notified that any transmission, distribution,
-                    downloading, printing or photocopying of the contents of this message or
-                    attachments is strictly prohibited. The privilege of confidentiality
-                    attached to this message and attachments is not waived, lost or destroyed
-                    by reason of mistaken delivery to you. If you are not the addressee, you
-                    are notified that any transmission, distribution, downloading, printing or
-                    photocopying of the contents of this message or attachments is strictly
-                    prohibited. The privilege of confidentiality attached to this message and
-                    attachments is not waived, lost or destroyed.
-                </p>
-            </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-</table>
-<br>
-<table cellpadding="0" cellspacing="0" role="presentation" width="100%">
-  <tr>
-    <td style="padding: 0 24px;">
-      <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
-        <tr>
-            <td class="col" width="100%" align="center" style="background-color: #e9f7e8; padding: 15px">
-                <p>Thank you for choosing</p>
-                <p>
-                    <b><a href="https://www.australia4wdrentals.com" style="color: ${c.brand500}">
-                        AUSTRALIA 4WD RENTALS
-                    </a></b>
-                </p>
-            </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-</table>
-<br>
-<table cellpadding="0" cellspacing="0" role="presentation" width="100%">
-  <tr>
-    <td style="padding: 0 24px;">
-      <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
-        <tr>
-            <td class="col" width="100%" align="center" style="font-size: 11px">
-                <p>
-                    <a href="https://www.australia4wdrentals.com/conditions-australia-4-wheel-drive-rentals" style="color: ${c.brand500}">
-                        Terms & Conditions of Australia 4 Wheel Drive Rentals
-                    </a>
-                </p>
+                <b>Cancellation fees</b> will apply on <b>AUD $${format.currency(summary.totalAgent)}</b>. 
+                The <b>Agent Nett Deposit Fee after discount of AUD $${format.currency(summary.totalCommission)} is non-refundable</b>. 
+                The Agent Deposit will be carried forward towards a future booking if cancellation is made more than 25 days prior to travel. 
+                An additional AUD $100.00 administration cancellation fee applies. Please read the cancellation policy found in the quote.
             </td>
         </tr>
       </table>

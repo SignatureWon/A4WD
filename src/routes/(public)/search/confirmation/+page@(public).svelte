@@ -1,5 +1,5 @@
 <script>
-  import { html } from "$lib/final.js";
+  import { html } from "$lib/confirmation.js";
   import { onMount } from "svelte";
 
   let email = ""

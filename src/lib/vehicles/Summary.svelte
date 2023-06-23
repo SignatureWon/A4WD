@@ -5,10 +5,11 @@
   export let quote;
   export let summary;
   export let count;
+  export let title = "Quote"
 </script>
 
 <div class="p-5 text-sm">
-  <h2 class="text-xl font-bold mb-2">Quote Summary</h2>
+  <h2 class="text-xl font-bold mb-2">{title} Summary</h2>
   {#each summary.agentItems as item}
     {#if item.name === "Credit card surcharge (2%)"}
       <div class="flex py-2 border-b border-gray-200">

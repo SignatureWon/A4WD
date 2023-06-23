@@ -783,7 +783,7 @@ table, td{
         align="right"
         style="border: 1px solid #CCCCCC; background-color: #dbeafe;"
       >
-        <div style="font-weight: bold;">${format.currency(totalAgentFee())}</div>
+        <div style="font-weight: bold;">${format.currency(summary.totalAgent)}</div>
       </td>
     </tr>
   </table>

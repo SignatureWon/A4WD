@@ -5,7 +5,8 @@ import isBetween from "dayjs/plugin/isBetween";
 dayjs.extend(isBetween);
 import { cal } from "$lib/cal";
 import { error, redirect } from "@sveltejs/kit";
-import { html } from "$lib/email/booking.js";
+import { html } from "$lib/email/final.js";
+import { html as confirmation } from "$lib/confirmation.js";
 import playwright from "playwright-aws-lambda";
 import { env } from "$env/dynamic/public";
 import sgMail from "@sendgrid/mail";
@@ -91,7 +92,7 @@ export const actions = {
         message: err.message,
       });
     }
-    throw redirect(303, `/admin/sales/book/${params.id}`);
+    throw redirect(303, `/admin/sales/pt/${params.id}`);
   },
   trash: async ({ request, url, params, locals }) => {
     const { error: err } = await locals.sb
@@ -105,7 +106,7 @@ export const actions = {
         message: err.message,
       });
     }
-    throw redirect(303, `/admin/sales/book`);
+    throw redirect(303, `/admin/sales/pt`);
   },
   archive: async ({ request, url, params, locals }) => {
     const { error: err } = await locals.sb
@@ -119,7 +120,7 @@ export const actions = {
         message: err.message,
       });
     }
-    throw redirect(303, `/admin/sales/book`);
+    throw redirect(303, `/admin/sales/pt`);
   },
   download: async ({ request, url, params, locals }) => {
     const browser = await playwright.launchChromium();
@@ -143,13 +144,13 @@ export const actions = {
 
     const { data: uploadData, error: uploadError } = await supabase.storage
       .from("quotes")
-      .upload(`B${388000 + Number(params.id)}.pdf`, filePDF);
+      .upload(`Final Ticket - FT${388000 + Number(params.id)}.pdf`, filePDF);
 
     if (uploadError) {
       console.log("uploadError", uploadError);
       const { data: updateData, error: updateError } = await supabase.storage
         .from("quotes")
-        .update(`B${388000 + Number(params.id)}.pdf`, filePDF, {
+        .update(`Final Ticket - FT${388000 + Number(params.id)}.pdf`, filePDF, {
           cacheControl: "3600",
           upsert: true,
         });
@@ -168,6 +169,59 @@ export const actions = {
     const { data: dataQuote } = await supabase.from("quotes").select().eq("id", params.id).single();
     let getBond = Object.keys(dataQuote.details.bonds).length ? dataQuote.details.bonds : dataQuote.details.bond;
     const { data: dataUser } = await supabase.from("users").select().eq("id", dataQuote.users).single();
+
+    const browser = await playwright.launchChromium();
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    const content = await html.create(params.id);
+    await page.setContent(content);
+    const buffer = await page.pdf({
+      format: "A4",
+      margin: {
+        top: "1cm",
+        bottom: "1cm",
+        left: "1cm",
+        right: "1cm",
+      },
+    });
+    browser.close();
+
+    const browser2 = await playwright.launchChromium();
+    const context2 = await browser2.newContext();
+    const page2 = await context2.newPage();
+    const content2 = await confirmation.create(params.id);
+    await page2.setContent(content2);
+    const buffer2 = await page2.pdf({
+      format: "A4",
+      margin: {
+        top: "1cm",
+        bottom: "1cm",
+        left: "1cm",
+        right: "1cm",
+      },
+    });
+    browser2.close();
+
+    let filePDF = new Blob([buffer], {
+      type: "application/pdf",
+    });
+
+    const { data: uploadData, error: uploadError } = await supabase.storage
+      .from("quotes")
+      .upload(`Final Ticket - FT${388000 + Number(params.id)}.pdf`, filePDF);
+
+    if (uploadError) {
+      console.log("uploadError", uploadError);
+      const { data: updateData, error: updateError } = await supabase.storage
+        .from("quotes")
+        .update(`Final Ticket - FT${388000 + Number(params.id)}.pdf`, filePDF, {
+          cacheControl: "3600",
+          upsert: true,
+        });
+      if (updateError) {
+        console.log(updateError);
+      }
+    }
 
     emailBody = `<div style="font-size: 24px; margin-bottom: 50px">${fd.message}</div>` + emailBody;
 
@@ -196,7 +250,7 @@ export const actions = {
           email: "info@australia4wdrentals.com",
           name: "Australia 4WD Rentals",
         },
-        subject: `Booking: ${dataQuote.details.vehicle.name.trim()}: ${dataQuote.details.pickup.name.trim()}, ${dayjs(
+        subject: `Final Ticket: ${dataQuote.details.vehicle.name.trim()}: ${dataQuote.details.pickup.name.trim()}, ${dayjs(
           dataQuote.details.date_start
         ).format("DD MMM YYYY")} - ${dataQuote.details.dropoff.name.trim()}, ${dayjs(dataQuote.details.date_end).format(
           "DD MMM YYYY"
@@ -205,6 +259,20 @@ export const actions = {
           {
             type: "text/html",
             value: emailBody,
+          },
+        ],
+        attachments: [
+          {
+            content: buffer.toString("base64"),
+            filename: `Final Ticket - FT${388000 + Number(params.id)}.pdf`,
+            type: "application/pdf",
+            disposition: "attachment",
+          },
+          {
+            content: buffer2.toString("base64"),
+            filename: `Booking Confirmation - PT${388000 + Number(params.id)}.pdf`,
+            type: "application/pdf",
+            disposition: "attachment",
           },
         ],
         // mail_settings: {

@@ -505,7 +505,7 @@ table, td{
         Date of Issue
       </td>
       <td valign="top" style="font-weight: bold">
-        Q${info.quote.date}
+        ${info.quote.date}
       </td>
     </tr>
     <tr>
