@@ -6,6 +6,7 @@
   import { onMount } from "svelte";
   import { RadioButton, RadioButtonGroup } from "carbon-components-svelte";
   export let quote;
+  export let count;
 
   let bonds = [];
   let duration = 0;
@@ -74,7 +75,7 @@
                   on:change={() => {
                     selected = index;
                     quote.details.bonds = item;
-                    //   count();
+                    count();
                   }}
                 />
               </div>

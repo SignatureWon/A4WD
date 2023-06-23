@@ -20,7 +20,7 @@
   <div class="p-4 grid grid-cols-1 gap-5">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
       <div>
-        <Select labelText="Driver's License" name="license" bind:selected={quote.details.driver.license} required>
+        <Select labelText="License" name="license" bind:selected={quote.details.driver.license} required>
           <SelectItem value="" text="Select license" />
           {#each licenses.options as license}
             <SelectItem value={license.name} />
@@ -28,7 +28,7 @@
         </Select>
       </div>
       <div>
-        <TextInput labelText="Driver's Age" name="age" bind:value={quote.details.driver.age} required />
+        <TextInput labelText="Age" name="age" bind:value={quote.details.driver.age} required />
       </div>
     </div>
   </div>

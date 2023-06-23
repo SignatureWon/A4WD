@@ -15,8 +15,8 @@
         </div>
         <div>
           <div class="label">Contact</div>
-          <div class="value">
-            {user.email}<br />
+          <div class="value break-words">
+            <div class="mb-2">{user.email}</div>
             {user.phone}
           </div>
         </div>

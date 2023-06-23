@@ -1,5 +1,6 @@
 <script>
-  import dayjs from "dayjs";
+  import { TextInput } from "carbon-components-svelte";
+import dayjs from "dayjs";
   export let quote;
   const iconRight = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" class="w-4 h-4" fill="currentColor" ><path fill="none" d="M0 0h24v24H0z" /><path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z" /></svg>`;
 </script>
@@ -32,6 +33,9 @@
             <div class="value">{quote.details.dropoff.name}</div>
             <div>{dayjs(quote.details.date_end).format("DD/MM/YYYY (ddd)")}</div>
           </div>
+        </div>
+        <div class="p-3 mt-4 bg-gray-100">
+          <TextInput labelText="Supplier Confirmation Code" bind:value={quote.supplier_reference} />
         </div>
       </div>
     </div>

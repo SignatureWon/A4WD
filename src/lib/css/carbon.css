@@ -15703,7 +15703,7 @@ screen and (-ms-high-contrast: none) {
 
 .bx--modal-content p,
 .bx--modal-content__regular-content {
-    padding-right: 20%;
+    /* padding-right: 20%; */
     font-size: 1rem;
     font-weight: 400;
     line-height: 1.42857;

@@ -269,7 +269,9 @@ export const cal = {
         discount2,
         name,
         description,
-        id
+        id,
+        own,
+        own2
     `);
     query = query.or(
       `travel_start.lte.${search.date_start.format(

@@ -284,7 +284,8 @@ export const q = {
     let special = quote.details.specials;
     if (special.total > 0) {
       special.items.forEach((item) => {
-        console.log(item);
+        // console.log("specials", item);
+        // console.log(item);
         if (item.discount_amount > 0) {
           agentFees.push({
             name: item.name,
@@ -331,7 +332,7 @@ export const q = {
     }
 
     adjustments.forEach((item) => {
-      if (!item.own && item.value > 0) {
+      if (!item.own) {
         supplierFees.push({
           name: item.name,
           total: item.value,
@@ -340,18 +341,20 @@ export const q = {
         });
         totalSupplierAdjustments += item.value;
 
-        pickupFees.push({
-          name: item.name,
-          total: item.value,
-          nett: 0,
-          profit: 0,
-        });
+        if (item.value > 0) {
+          pickupFees.push({
+            name: item.name,
+            total: item.value,
+            nett: 0,
+            profit: 0,
+          });
+        }
       } else {
         agentFees.push({
           name: item.name,
           total: item.value,
           nett: 0,
-          profit: 0,
+          profit: item.value,
         });
         totalAgentAdjustments += item.value;
       }
@@ -489,6 +492,8 @@ export const q = {
         // ];
       }
     }
+
+    // console.log("agentFees", agentFees);
 
     return {
       agentItems: agentFees,

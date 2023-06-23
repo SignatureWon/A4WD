@@ -20,5 +20,8 @@
         <div class="w-20 text-right">${format.currency(item.fee)}</div>
       </div>
     {/each}
+    {#if quote.details.one_way === 0 && quote.details.fees.items.length === 0}
+      <div class="p-3 bg-gray-50 text-gray-400 text-center">No fees</div>
+    {/if}
   </div>
 </div>

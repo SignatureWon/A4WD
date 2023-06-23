@@ -4,6 +4,7 @@
   import { Button, NumberInput, TextInput } from "carbon-components-svelte";
   import { onMount } from "svelte";
   export let quote;
+  export let count;
 
   let list = [];
   let editRow = [];
@@ -31,7 +32,7 @@
     quote.details.daily.gross += quote.add_discount;
     quote.details.daily.profit += quote.add_discount;
 
-    // count();
+    count();
   };
 
   onMount(() => {
@@ -87,6 +88,8 @@
                 daily.items[i].nett = item.daily.nett;
                 daily.items[i].profit = item.daily.profit;
               }
+              console.log("daily", daily);
+              
               getDailyTotal();
               editRow[index] = false;
             }}
