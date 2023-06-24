@@ -316,15 +316,15 @@ export const html = {
             <div>${quote.users.email}</div>
             <div>${quote.users.phone}</div>
             <br>
-            <div>${quote.users.address_1.trim() !== "" ? `${quote.users.address_1.trim()},` : ""}</div>
-            <div>${quote.users.address_2.trim() !== "" ? `${quote.users.address_2.trim()},` : ""}</div>
+            <div>${(quote.users.address_1 || "").trim() !== "" ? `${(quote.users.address_1 || "").trim()},` : ""}</div>
+            <div>${(quote.users.address_2 || "").trim() !== "" ? `${(quote.users.address_2 || "").trim()},` : ""}</div>
             <div>
-                ${quote.users.postcode.trim() !== "" ? `${quote.users.postcode.trim()}` : ""}
-                ${quote.users.city.trim() !== "" ? `${quote.users.city.trim()},` : ""}
+                ${(quote.users.postcode || "").trim() !== "" ? `${(quote.users.postcode || "").trim()}` : ""}
+                ${(quote.users.city || "").trim() !== "" ? `${(quote.users.city || "").trim()},` : ""}
             </div>
             <div>
-                ${quote.users.state.trim() !== "" ? `${quote.users.state.trim()},` : ""}
-                ${quote.users.country.trim() !== "" ? `${quote.users.country.trim()},` : ""}
+                ${(quote.users.state || "").trim() !== "" ? `${(quote.users.state || "").trim()},` : ""}
+                ${(quote.users.country || "").trim() !== "" ? `${(quote.users.country || "").trim()},` : ""}
             </div>
           </td>
           <td class="col" width="276" style="padding: 10px; border-bottom: 1px solid #DDDDDD">

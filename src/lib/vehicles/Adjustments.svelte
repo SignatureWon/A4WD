@@ -20,6 +20,12 @@
       },
     ];
   };
+  const delAdjustment = async (index) => {
+    let newArr = quote.adjustments;
+    newArr.splice(index, 1);
+    quote.adjustments = [...newArr];
+    count();
+  };
 </script>
 
 <div class="bg-white rounded mb-4">
@@ -34,6 +40,7 @@
             <div class="flex-1 text-sm text-gray-600 tracking-wide font-bold">Name</div>
             <div class="w-24 mx-2 text-sm text-gray-600 tracking-wide font-bold">Value</div>
             <div class="text-sm text-gray-600 tracking-wide font-bold w-6">A4</div>
+            <div class="w-6">&nbsp;</div>
           </div>
         </div>
       {/if}
@@ -46,6 +53,22 @@
           <div class="pt-1 w-6">
             <Checkbox bind:checked={item.own} on:check={count} />
             <!-- <Toggle labelText="A4" labelA="" labelB="" bind:toggled={item.own} /> -->
+          </div>
+          <div class="pt-1 w-6">
+            <Button
+              kind="danger-ghost"
+              size="small"
+              class="!px-1 h-6"
+              on:click={() => {
+                delAdjustment(index);
+              }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-4 h-4" fill="currentColor"
+                ><path
+                  d="M17 6H22V8H20V21C20 21.5523 19.5523 22 19 22H5C4.44772 22 4 21.5523 4 21V8H2V6H7V3C7 2.44772 7.44772 2 8 2H16C16.5523 2 17 2.44772 17 3V6ZM18 8H6V20H18V8ZM9 4V6H15V4H9Z"
+                /></svg
+              >
+            </Button>
           </div>
         </div>
       </div>

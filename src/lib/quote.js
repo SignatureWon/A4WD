@@ -333,22 +333,28 @@ export const q = {
 
     adjustments.forEach((item) => {
       if (!item.own) {
-        supplierFees.push({
-          name: item.name,
-          total: item.value,
-          nett: 0,
-          profit: 0,
-        });
-        totalSupplierAdjustments += item.value;
-
         if (item.value > 0) {
+          supplierFees.push({
+            name: item.name,
+            total: item.value,
+            nett: 0,
+            profit: 0,
+          });
           pickupFees.push({
             name: item.name,
             total: item.value,
             nett: 0,
             profit: 0,
           });
+        } else {
+          agentFees.push({
+            name: item.name,
+            total: item.value,
+            nett: 0,
+            profit: 0,
+          });
         }
+        totalSupplierAdjustments += item.value;
       } else {
         agentFees.push({
           name: item.name,
