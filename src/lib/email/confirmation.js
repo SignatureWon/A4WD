@@ -305,7 +305,7 @@ export const html = {
         </tr>
         <tr>
           <td class="col" width="138" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
-            Confirmation Code
+            ${quote.details.supplier.name} Confirmation Code
           </td>
           <td class="col" width="414" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
             <b>${quote.supplier_reference}</b>

@@ -1,11 +1,11 @@
 <script>
   import { Button } from "carbon-components-svelte";
-  import { html } from "$lib/email/quotation.js";
+  import { html } from "$lib/email/final.js";
   import { onMount } from "svelte";
 
   let email = "";
   onMount(async () => {
-    email = await html.create(163);
+    email = await html.create(59);
   });
 </script>
 

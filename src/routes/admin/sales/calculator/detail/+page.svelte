@@ -910,14 +910,14 @@
         <TextArea labelText="Remark" bind:value={quote.add_discount_remark} class="mb-2" />
         <NumberInput label="Amount" bind:value={quote.add_discount} on:blur={getTotalAgentCommission} />
       </div>
-      <div class="flex py-3 border-b border-gray-200">
+      <!-- <div class="flex py-3 border-b border-gray-200">
         <div class="flex-1">Total System Commission (8%)</div>
         <div class="text-right ml-4">{format.currency(quote.system_fee)}</div>
       </div>
       <div class="flex py-3 border-b border-gray-200 font-bold">
         <div class="flex-1">Nett Commission</div>
         <div class="text-right ml-4">{format.currency(quote.nett_profit)}</div>
-      </div>
+      </div> -->
       <div class="pt-4">
         <h2 class="font-bold">Payment Schedule</h2>
       </div>
