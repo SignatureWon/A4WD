@@ -87,7 +87,6 @@
 
   onMount(() => {
     summary = q.getPayments(quote);
-    console.log("summary", summary);
     totalPayment();
   });
 </script>

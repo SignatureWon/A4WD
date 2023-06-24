@@ -14,7 +14,7 @@
   import Addons from "$lib/vehicles/Addons.svelte";
   import Summary from "$lib/vehicles/Summary.svelte";
   import { onMount } from "svelte";
-  import { Button, Modal, TextArea } from "carbon-components-svelte";
+  import { Button, Modal, TextArea, Toggle } from "carbon-components-svelte";
   import Receivables from "$lib/vehicles/Receivables.svelte";
   import Status from "$lib/vehicles/view/Status.svelte";
   export let data;
@@ -143,6 +143,7 @@
 <Modal passiveModal bind:open={openEmail} modalHeading="Email Quote" on:open on:close>
   <form action="?/email" method="POST">
     <TextArea labelText="Message" name="message" class="mb-2" placeholder="Add message here" />
+    <Toggle name="a4only" labelText="Send to" labelA="Everyone" labelB="A4 only" />
     <Button type="submit" class="w-full">Send</Button>
   </form>
 </Modal>

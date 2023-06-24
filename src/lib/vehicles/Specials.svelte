@@ -1,7 +1,6 @@
 <script>
   import { format } from "$lib/format.js";
   export let quote;
-  console.log(quote);
 </script>
 
 <div class="bg-white rounded mb-4">
