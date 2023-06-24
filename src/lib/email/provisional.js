@@ -310,7 +310,7 @@ export const html = {
             <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Supplier</div>
             <div><b>${supplier.name}</b></div>
             ${supplier.url ? `<div><a href="${supplier.url}">Self Check-in</a></div>` : ""}
-            ${supplier.phone ? `<div>Customer Service: ${supplier.phone}"</div>` : ""}
+            ${supplier.phone ? `<div>Customer Service: ${supplier.phone}</div>` : ""}
           </td>
           <td class="col" width="276" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
             <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">${quote.details.supplier.name} Confirmation Code</div>
