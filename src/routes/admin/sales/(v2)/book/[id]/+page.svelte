@@ -96,7 +96,7 @@
       <div>
         <Button
           class="p-0.5 h-6 w-full inline-block"
-          href="https://api.australia4wdrentals.com/storage/v1/object/public/quotes/Q{388000 + quote.id}.pdf"
+          href="https://api.australia4wdrentals.com/storage/v1/object/public/quotes/B{388000 + quote.id}.pdf"
           >Download</Button
         >
       </div>

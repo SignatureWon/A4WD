@@ -289,11 +289,9 @@ export const actions = {
         // },
       })
       .then(() => {
-        emailResponse = "Email sent";
         console.log("Email sent");
       })
       .catch((error) => {
-        emailResponse = error;
         console.error(error);
       });
 

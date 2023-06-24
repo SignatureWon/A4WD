@@ -89,7 +89,11 @@
         {cell.value}
       {/if}
     {:else if ["date_start", "date_end", "date_deposit", "date_balance", "date_provisional", "travel_start", "travel_end", "created_at", "updated_at"].includes(cell.key)}
-      {dayjs(cell.value).format("DD/MM/YYYY")}
+      {#if cell.value}
+        {dayjs(cell.value).format("DD/MM/YYYY")}
+      {:else}
+        &mdash;
+      {/if}
     {:else if cell.value === null}
       &mdash;
     {:else if cell.key === "gross"}

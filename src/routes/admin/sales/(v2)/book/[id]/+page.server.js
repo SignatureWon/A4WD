@@ -178,18 +178,32 @@ export const actions = {
         email: email.trim(),
       });
     });
+    let email_to = [
+      {
+        email: dataUser.email,
+        name: `${dataUser.first_name.trim()} ${dataUser.last_name.trim()}`,
+      },
+    ]
+    let email_bcc = bccList
+
+    if (fd.a4only) {
+      email_to = bccList
+      email_bcc = []
+    }
     sgMail.setApiKey(env.PUBLIC_SENDGRID_API_KEY);
     await sgMail
       .send({
         personalizations: [
           {
-            to: [
-              {
-                email: dataUser.email,
-                name: `${dataUser.first_name.trim()} ${dataUser.last_name.trim()}`,
-              },
-            ],
-            bcc: bccList,
+            to: email_to,
+            bcc: email_bcc,
+            // to: [
+            //   {
+            //     email: dataUser.email,
+            //     name: `${dataUser.first_name.trim()} ${dataUser.last_name.trim()}`,
+            //   },
+            // ],
+            // bcc: bccList,
           },
         ],
         from: {
@@ -214,11 +228,9 @@ export const actions = {
         // },
       })
       .then(() => {
-        emailResponse = "Email sent";
         console.log("Email sent");
       })
       .catch((error) => {
-        emailResponse = error;
         console.error(error);
       });
 

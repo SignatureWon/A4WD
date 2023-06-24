@@ -96,7 +96,7 @@
       <div>
         <Button
           class="p-0.5 h-6 w-full inline-block"
-          href="https://api.australia4wdrentals.com/storage/v1/object/public/quotes/Provisional Ticket - PT${388000 + Number(quote.id)}.pdf"
+          href="https://api.australia4wdrentals.com/storage/v1/object/public/quotes/Provisional Ticket - PT{388000 + Number(quote.id)}.pdf"
           >Download</Button
         >
       </div>
