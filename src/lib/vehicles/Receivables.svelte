@@ -102,13 +102,13 @@
         <div class="w-20 text-right">${format.currency(item.total)}</div>
       </div>
     {/each}
-    <div class="bg-brand-100 p-4 border border-brand-500">
+    <div class="bg-green-50 p-4 border border-green-300">
       <h3 class="h3">Payment Summary</h3>
-      <div class="py-3 flex border-b border-gray-300">
+      <div class="py-3 flex border-b border-green-300">
         <div class="flex-1">Total payable to agent</div>
         <div class="w-20 text-right">${format.currency(summary.totalAgent)}</div>
       </div>
-      <div class="py-3 flex border-b border-gray-300">
+      <div class="py-3 flex border-b border-green-300">
         <div class="flex-1">Total amount paid</div>
         <div class="w-20 text-right">${format.currency(totalPaid)}</div>
       </div>
@@ -152,7 +152,7 @@
     {:else}
       <div class="p-3 mb-3 border border-dashed border-gray-200 text-gray-400 text-center">No Payment</div>
     {/each}
-    <div class="p-4 bg-gray-100">
+    <div class="p-4 bg-green-50 border border-green-300">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
         <DatePicker datePickerType="single" dateFormat="d/m/Y" bind:value={newPayment.date} required>
           <DatePickerInput labelText="Date" placeholder="dd/mm/yyyy" />

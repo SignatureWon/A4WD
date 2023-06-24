@@ -32,7 +32,7 @@
   <div class="px-4 py-2 border-b border-gray-200">
     <h2 class="h2">Adjustments</h2>
   </div>
-  <div class="p-4">
+  <div class="p-4 bg-red-50 border border-red-300">
     {#each quote.adjustments || [] as item, index}
       {#if index === 0}
         <div class="pb-3">

@@ -13,6 +13,9 @@
   if (!quote.add_discount) {
     quote.add_discount = 0;
   }
+  if (!quote.add_discount_supplier) {
+    quote.add_discount_supplier = quote.add_discount
+  }
   const getDailyTotal = () => {
     quote.details.daily.gross = 0;
     quote.details.daily.nett = 0;
@@ -143,12 +146,15 @@
       {/if}
     {/each}
   </div>
-  <div class="p-4 bg-gray-100 border border-gray-300 flex">
+  <div class="p-4 bg-red-50 border border-red-300 flex">
     <div class="flex-1">
-      <TextInput placeholder="Add discount for daily basic rental" bind:value={quote.add_discount_remark} />
+      <TextInput labelText="Discount name for daily basic rental" bind:value={quote.add_discount_remark} />
     </div>
-    <div class="text-right w-20">
-      <NumberInput bind:value={quote.add_discount} hideSteppers on:keyup={getDailyTotal} class="text-right" />
+    <div class="w-20 ml-2">
+      <NumberInput label="Gross" bind:value={quote.add_discount_supplier} step={0.01} hideSteppers on:keyup={getDailyTotal} class="text-right" />
+    </div>
+    <div class="w-20 ml-2">
+      <NumberInput label="Comm." bind:value={quote.add_discount} step={0.01} hideSteppers on:keyup={getDailyTotal} class="text-right" />
     </div>
   </div>
   <div class="p-4">

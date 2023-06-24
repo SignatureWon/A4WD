@@ -23,7 +23,7 @@ export const q = {
         sum += fee.profit;
       });
 
-      sum += quote.add_discount;
+      // sum += quote.add_discount;
       return sum;
     };
     const totalSupplierFee = () => {
@@ -168,9 +168,9 @@ export const q = {
     if (quote.add_discount < 0) {
       agentFees.push({
         name: `Discount: ${quote.add_discount_remark}`,
-        total: quote.add_discount,
+        total: quote.add_discount_supplier || quote.add_discount,
         nett: 0,
-        profit: 0,
+        profit: quote.add_discount,
       });
     }
 
