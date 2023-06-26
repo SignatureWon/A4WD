@@ -1,6 +1,6 @@
 <script>
   import { Button } from "carbon-components-svelte";
-  import { html } from "$lib/email/confirmation.js";
+  import { html } from "$lib/email/quotation.js";
   import { onMount } from "svelte";
 
   let email = "";

@@ -373,43 +373,6 @@ export const html = {
       <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
         <tr>
           <td class="col" width="414" style="padding-top: 15px;">
-            <div style="font-size: 16px"><b></b></div>
-          </td>
-          <td class="col" width="138" align="right" style="padding-top: 15px;">
-            <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Total (AUD)</div>
-          </td>
-        </tr>`;
-    summary.agentItems.forEach((item) => {
-      email += `
-        <tr>
-          <td class="col" width="414" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
-            <div>${item.name}</div>
-          </td>
-          <td class="col" width="138" align="right" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
-            <div>${format.currency(item.total)}</div>
-          </td>
-        </tr>`;
-    });
-    email += `
-        <tr>
-          <td class="col" width="414" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${c.brand100}">
-            <div><b>Total payable to agent</b></div>
-          </td>
-          <td class="col" width="138" align="right" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${c.brand100}">
-            <div><b>${format.currency(summary.totalAgent)}</b></div>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-</table>
-<br>
-<table cellpadding="0" cellspacing="0" role="presentation" width="100%">
-  <tr>
-    <td style="padding: 0 24px;">
-      <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
-        <tr>
-          <td class="col" width="414" style="padding-top: 15px;">
             <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Payable to Agent</div>
           </td>
           <td class="col" width="138" align="right" style="padding-top: 15px;">
