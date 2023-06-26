@@ -602,7 +602,7 @@ export const html = {
       <p>&bull; 
         <a
           href="https://www.australia4wdrentals.com/terms/${terms.id}/summary"
-          style="color: ${c.brand500}; font-size: 11px">Summary of Terms</a
+          style="color: ${c.brand500}; font-size: 11px">Supplier's Summary of Terms</a
         >
       </p>`;
     }
@@ -611,7 +611,7 @@ export const html = {
       <p>&bull; 
         <a
           href="https://www.australia4wdrentals.com/terms/${terms.id}/counter"
-          style="color: ${c.brand500}; font-size: 11px">Counter Agreement</a
+          style="color: ${c.brand500}; font-size: 11px">Supplier's Counter Agreement</a
         >
       </p>`;
     }

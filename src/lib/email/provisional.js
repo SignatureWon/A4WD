@@ -650,6 +650,94 @@ export const html = {
   </tr>
 </table>
 <br>
+<table cellpadding="0" cellspacing="0" role="presentation" width="100%">
+  <tr>
+    <td style="padding: 0 24px;">
+      <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
+        <tr>
+            <td class="col" width="100%" style="background-color: #F6F6F6; padding: 15px">
+                <p style="font-weight: bold; font-size: 11px">
+                    Terms & Conditions
+                </p>
+                <p style="font-size: 11px; padding-bottom: 10px">
+                    For your convenience please find links to the summary of the full terms and
+                    conditions and the supplier counter agreement for the rental of this
+                    vehicle. You will also find links to the user agreement and agent terms and
+                    conditions. Please ensure that you read and understand the terms and
+                    conditions found at the following links:
+                </p>`;
+    if (terms.confirmation_terms !== "<p></p>" || terms.confirmation) {
+      email += `
+      <p>&bull; 
+        <a
+          href="https://www.australia4wdrentals.com/terms/${terms.id}/confirmation"
+          style="color: ${c.brand500}; font-size: 11px">Booking Confirmation Terms</a
+        >
+      </p>`;
+    }
+    if (terms.summary_terms !== "<p></p>" || terms.summary) {
+      email += `
+      <p>&bull; 
+        <a
+          href="https://www.australia4wdrentals.com/terms/${terms.id}/summary"
+          style="color: ${c.brand500}; font-size: 11px">Supplier's Summary of Terms</a
+        >
+      </p>`;
+    }
+    if (terms.counter_terms !== "<p></p>" || terms.counter) {
+      email += `
+      <p>&bull; 
+        <a
+          href="https://www.australia4wdrentals.com/terms/${terms.id}/counter"
+          style="color: ${c.brand500}; font-size: 11px">Supplier's Counter Agreement</a
+        >
+      </p>`;
+    }
+                email += `
+            </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<br>
+<table cellpadding="0" cellspacing="0" role="presentation" width="100%">
+  <tr>
+    <td style="padding: 0 24px;">
+      <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
+        <tr>
+            <td class="col" width="100%" align="center" style="background-color: #e9f7e8; padding: 15px">
+                <p>Thank you for choosing</p>
+                <p>
+                    <b><a href="https://www.australia4wdrentals.com" style="color: ${c.brand500}">
+                        AUSTRALIA 4WD RENTALS
+                    </a></b>
+                </p>
+            </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<br>
+<table cellpadding="0" cellspacing="0" role="presentation" width="100%">
+  <tr>
+    <td style="padding: 0 24px;">
+      <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
+        <tr>
+            <td class="col" width="100%" align="center" style="font-size: 11px">
+                <p>
+                    <a href="https://www.australia4wdrentals.com/conditions-australia-4-wheel-drive-rentals" style="color: ${c.brand500}">
+                        Terms & Conditions of Australia 4 Wheel Drive Rentals
+                    </a>
+                </p>
+            </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<br>
               </td>
             </tr>
           </table>
