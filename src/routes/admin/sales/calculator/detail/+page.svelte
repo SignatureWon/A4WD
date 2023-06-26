@@ -24,7 +24,37 @@
   // console.log(data);
   let paneHeight = 0;
   const d = data.detail;
-  // console.log("d", d);
+  console.log("d", d);
+  let terms = {
+    name: null,
+    id: null,
+    confirmation: null,
+    confirmation_terms: null,
+    summary: null,
+    summary_terms: null,
+    counter: null,
+    counter_terms: null,
+    deposit: 0,
+    percentage: false,
+    balance: 0,
+    description: null,
+    payment2: false,
+    deposit2: null,
+    percentage2: null,
+    balance2: null,
+    description2: null,
+    payment3: null,
+    deposit3: null,
+    percentage3: null,
+    balance3: null,
+    description3: null,
+    pay_counter: false,
+    suppliers: {
+      id: null,
+      name: null,
+    },
+  };
+
   let details = {
     date_book: dayjs(),
     date_start: dayjs(data.search.date_start),
@@ -97,9 +127,9 @@
       total: d.special_total,
       items: d.special_items,
     },
-    bonds: d.bond_items[0],
+    bonds: d.bond_items.length ? d.bond_items[0] : [],
     addons: {},
-    terms: d.terms,
+    terms: d.terms || terms,
     add_discount: 0,
     add_discount_remark: "",
   };
@@ -286,33 +316,37 @@
   };
 
   const getBonds = () => {
-    const bond = Object.keys(details.bonds).length ? details.bonds : details.bond;
-    let gross = bond.gross * duration;
-    let nett = bond.nett * duration;
-    let profit = gross - nett;
+    if (details.bonds.length) {
+      const bond = Object.keys(details.bonds).length ? details.bonds : details.bond;
+      if (bond) {
+        let gross = bond.gross * duration;
+        let nett = bond.nett * duration;
+        let profit = gross - nett;
 
-    if (bond.gross > 0) {
-      const row = {
-        name: `${bond.display_name}: $${bond.gross} x ${duration} days`,
-        total: gross,
-        nett: nett,
-        profit: profit,
-      };
-      if (bond.gross > bond.nett) {
-        agentFees.push(row);
-      } else {
-        supplierFees.push(row);
+        if (bond.gross > 0) {
+          const row = {
+            name: `${bond.display_name}: $${bond.gross} x ${duration} days`,
+            total: gross,
+            nett: nett,
+            profit: profit,
+          };
+          if (bond.gross > bond.nett) {
+            agentFees.push(row);
+          } else {
+            supplierFees.push(row);
+          }
+        }
+        pickupFees.push({
+          name: `Bond: $${format.currency(
+            bond.bond,
+            0
+          )} is taken from the hirer's credit or debit card <div style="font-size: 14px; color: #999999">Refundable as per supplier's Summary of Terms<div>`,
+          total: bond.bond,
+          nett: 0,
+          profit: 0,
+        });
       }
     }
-    pickupFees.push({
-      name: `Bond: $${format.currency(
-        bond.bond,
-        0
-      )} is taken from the hirer's credit or debit card <div style="font-size: 14px; color: #999999">Refundable as per supplier's Summary of Terms<div>`,
-      total: bond.bond,
-      nett: 0,
-      profit: 0,
-    });
   };
 
   const getOneways = () => {
@@ -885,7 +919,6 @@
                       {:else}
                         ${format.currency(addon.gross_rate * d.duration)}
                       {/if}
-
                     {:else}
                       ${format.currency(addon.gross_rate)}
                     {/if}
