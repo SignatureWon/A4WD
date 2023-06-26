@@ -576,7 +576,7 @@
     if (quote.users) {
       const { data, error } = await supabase.from("quotes").insert(quote).select().single();
       setTimeout(() => {
-        goto(`/admin/sales/quotation/${data.id}`);
+        goto(`/admin/sales/quotes/${data.id}`);
       }, 500);
     } else {
       noCustomer = true;
@@ -645,11 +645,20 @@
           </div>
         {:else if user.id === "add"}
           <div class="grid grid-cols-1 gap-6 py-5">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-5 gap-6">
               <div>
+                <Select name="title" labelText="Title" value={user.title} required>
+                  <SelectItem value="Mr." text="Mr." />
+                  <SelectItem value="Ms." text="Ms." />
+                  <SelectItem value="Mrs." text="Mrs." />
+                  <SelectItem value="Miss" text="Miss" />
+                  <SelectItem value="Dr." text="Dr." />
+                </Select>
+              </div>
+              <div class="col-span-2">
                 <TextInput name="first_name" labelText="First Name" bind:value={user.first_name} required />
               </div>
-              <div>
+              <div class="col-span-2">
                 <TextInput name="last_name" labelText="Last Name" bind:value={user.last_name} required />
               </div>
             </div>
