@@ -258,7 +258,6 @@ export const html = {
     </td>
   </tr>
 </table>
-<br>
 <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
   <tr>
     <td style="padding: 0 24px;">
@@ -276,7 +275,7 @@ export const html = {
             Date of Issue
           </td>
           <td class="col" width="414" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
-            <b>${dayjs(quote.date_deposit).format("DD MMM YYYY")}</b>
+            <b>${dayjs(quote.date_balance || quote.date_provisional).format("DD MMM YYYY")}</b>
           </td>
         </tr>
         <tr>
@@ -292,7 +291,7 @@ export const html = {
             Pick-up
           </td>
           <td class="col" width="414" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
-            <b>${quote.details.pickup.name} - ${dayjs(quote.details.pickup.date).format("ddd, DD MMM YYYY")}, 09:00AM</b>
+            <b>${quote.details.pickup.name} - ${dayjs(quote.details.date_start).format("ddd, DD MMM YYYY")}, 09:00AM</b>
           </td>
         </tr>
         <tr>
@@ -300,7 +299,7 @@ export const html = {
             Drop-off
           </td>
           <td class="col" width="414" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
-            <b>${quote.details.dropoff.name} - ${dayjs(quote.details.dropoff.date).format("ddd, DD MMM YYYY")}, 09:00AM</b>
+            <b>${quote.details.dropoff.name} - ${dayjs(quote.details.date_end).format("ddd, DD MMM YYYY")}, 03:00PM</b>
           </td>
         </tr>
         <tr>
@@ -353,7 +352,6 @@ export const html = {
     </td>
   </tr>
 </table>
-<br>
 <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
   <tr>
     <td style="padding: 0 24px;">
@@ -384,7 +382,6 @@ export const html = {
     </td>
   </tr>
 </table>
-<br>
 <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
   <tr>
     <td style="padding: 0 24px;">
@@ -400,7 +397,6 @@ export const html = {
     </td>
   </tr>
 </table>
-<br>
               </td>
             </tr>
           </table>
