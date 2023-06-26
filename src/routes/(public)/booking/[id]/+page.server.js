@@ -7,8 +7,14 @@ import { redirect } from "@sveltejs/kit";
 import { html } from "$lib/booked.js";
 
 export async function load({ url, params, locals }) {
-  const id =
+  let id =
     Number(CryptoJS.AES.decrypt(params.id.replaceAll("__", "/"), env.PUBLIC_AES_KEY).toString(CryptoJS.enc.Utf8)) - 388000;
+  
+  if (id < 0) {
+    id = Number(CryptoJS.AES.decrypt(params.id.replaceAll("__", "/"), env.PUBLIC_AES_KEY).toString(CryptoJS.enc.Utf8))
+  }
+
+  console.log("id", id);
   let quote = null;
   let user = null;
 
@@ -20,6 +26,8 @@ export async function load({ url, params, locals }) {
       // .eq("status", "Request")
       .single();
     quote = quoteData;
+
+    console.log(quote);
 
     if (quote) {
       const { data: userData, error: userError } = await supabase.from("users").select().eq("id", quote.users).single();
