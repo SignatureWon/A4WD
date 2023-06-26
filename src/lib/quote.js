@@ -26,6 +26,18 @@ export const q = {
       // sum += quote.add_discount;
       return sum;
     };
+    const totalNettFee = () => {
+      let sum = 0;
+      agentFees.forEach((fee) => {
+        sum += fee.nett;
+      });
+      supplierFees.forEach((fee) => {
+        sum += fee.nett;
+      });
+
+      // sum += quote.add_discount;
+      return sum;
+    };
     const totalSupplierFee = () => {
       let sum = 0;
       supplierFees.forEach((fee) => {
@@ -169,7 +181,7 @@ export const q = {
       agentFees.push({
         name: `Discount: ${quote.add_discount_remark}`,
         total: quote.add_discount_supplier || quote.add_discount,
-        nett: 0,
+        nett: quote.add_discount_supplier || 0,
         profit: quote.add_discount,
       });
     }
@@ -229,13 +241,13 @@ export const q = {
       supplierFees.push({
         name: `One-way fee`,
         total: one_way,
-        nett: 0,
+        nett: one_way,
         profit: 0,
       });
       pickupFees.push({
         name: `One-way fee`,
         total: one_way,
-        nett: 0,
+        nett: one_way,
         profit: 0,
       });
     }
@@ -290,7 +302,7 @@ export const q = {
           agentFees.push({
             name: item.name,
             total: -item.discount_amount,
-            nett: 0,
+            nett: -item.discount_amount,
             profit: 0,
           });
         }
@@ -306,13 +318,13 @@ export const q = {
         supplierFees.push({
           name: item.name,
           total: item.fee,
-          nett: 0,
+          nett: item.fee,
           profit: 0,
         });
         pickupFees.push({
           name: item.name,
           total: item.fee,
-          nett: 0,
+          nett: item.fee,
           profit: 0,
         });
       });
@@ -337,13 +349,13 @@ export const q = {
           supplierFees.push({
             name: item.name,
             total: item.value,
-            nett: 0,
+            nett: item.value,
             profit: 0,
           });
           pickupFees.push({
             name: item.name,
             total: item.value,
-            nett: 0,
+            nett: item.value,
             profit: 0,
           });
         } else {
@@ -351,10 +363,10 @@ export const q = {
             name: item.name,
             total: item.value,
             nett: 0,
-            profit: 0,
+            profit: item.value,
           });
         }
-        totalSupplierAdjustments += item.value;
+        // totalSupplierAdjustments += item.value;
       } else {
         agentFees.push({
           name: item.name,
@@ -362,7 +374,7 @@ export const q = {
           nett: 0,
           profit: item.value,
         });
-        totalAgentAdjustments += item.value;
+        // totalAgentAdjustments += item.value;
       }
     });
 
@@ -394,6 +406,7 @@ export const q = {
     const totalAgent = totalAgentFee();
     const totalCommission = totalAgentCommission();
     const totalSupplier = totalSupplierFee();
+    const totalNett = totalNettFee();
 
     let termsItems = [];
     if (terms.pay_counter) {
@@ -509,6 +522,7 @@ export const q = {
       totalAgent: totalAgent,
       totalCommission: totalCommission,
       totalSupplier: totalSupplier,
+      totalNett: totalNett,
       totalAgentAdjustments: totalAgentAdjustments,
       totalSupplierAdjustments: totalSupplierAdjustments,
     };

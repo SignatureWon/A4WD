@@ -41,6 +41,7 @@
     quote.agent_fee = summary.totalAgent;
     quote.supplier_fee = summary.totalSupplier;
     quote.profit = summary.totalCommission;
+    quote.nett = summary.totalNett;
     // console.log("summary", summary);
     // console.log("quote", quote);
   };

@@ -32,7 +32,8 @@
       quote.add_discount = 0;
     }
 
-    quote.details.daily.gross += quote.add_discount;
+    quote.details.daily.gross += quote.add_discount_supplier;
+    quote.details.daily.nett += quote.add_discount_supplier;
     quote.details.daily.profit += quote.add_discount;
 
     count();
@@ -159,7 +160,7 @@
   </div>
   <div class="p-4">
     <div class="flex mb-2">
-      <div class="flex-1 font-bold">Total Agent Fees</div>
+      <div class="flex-1 font-bold">Total Daily Rental Fee</div>
       <div class="text-right">
         {format.currency(quote.details.daily.gross)}
       </div>
