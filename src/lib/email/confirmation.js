@@ -322,9 +322,6 @@ export const html = {
                 <p style="padding-bottom: 10px; margin: 0; font-size: 11px">
                     Any optional or extra items are to be paid directly to the supplier at the time of pick-up. Please refer to your e-Ticket for more details.
                 </p>
-                <p style="padding-bottom: 10px; margin: 0; font-size: 11px">
-                    <b>Important:</b> Please read and understand the supplier’s and agent’s terms and conditions found in your quote.
-                </p>
             <div width="100%">
                 <p style="font-weight: bold; font-size: 11px; margin: 0">
                     Terms & Conditions
@@ -367,10 +364,7 @@ export const html = {
             </div>
             <br>
                 <p style="padding-bottom: 10px; margin: 0; font-size: 11px">
-                    Please ensure that you pick-up and drop-off your rental vehicle during depot business hours to avoid any inconvenience or extra charges.
-                </p>
-                <p style="padding-bottom: 10px; margin: 0; font-size: 11px">
-                    Depot addresses and booking times can be found in this document.
+                    Please ensure that you pick-up and drop-off your rental vehicle during depot business hours to avoid any inconvenience or extra charges. Depot addresses and booking times can be found in this document.
                 </p>
                 <p style="padding-bottom: 10px; margin: 0; font-size: 11px">
                     <b>Cancellation fees</b> will apply on <b>AUD $${format.currency(summary.totalAgent)}</b>. 
@@ -378,7 +372,7 @@ export const html = {
                     The Agent Deposit will be carried forward towards a future booking if cancellation is made more than 25 days prior to travel. 
                     An additional AUD $100.00 administration cancellation fee applies. Please read the cancellation policy found in the quote.
                 </p>
-                <p style="font-style: italic; margin: 0">
+                <p style="font-style: italic; margin: 0; font-size: 11px">
                     I acknowledge that I have read, verified and understood the terms and conditions associated with this vehicle rental, and have authorised Australia 4 Wheel Drive Rentals to debit my credit card for the amounts nominated above.
                 </p>
             </td>
