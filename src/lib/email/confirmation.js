@@ -432,26 +432,9 @@ export const html = {
       <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
         <tr>
             <td class="col" width="100%">
-                <p style="margin: 0; font-size: 11px; ">Thank you for choosing</p>
-                <p style="margin: 0; font-size: 11px; ">
-                    <b><a href="https://www.australia4wdrentals.com" style="color: ${c.brand500}">
-                        AUSTRALIA 4WD RENTALS
-                    </a></b>
-                </p>
-            </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-</table>
-<table cellpadding="0" cellspacing="0" role="presentation" width="100%">
-  <tr>
-    <td style="padding: 0 24px;">
-      <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
-        <tr>
-            <td class="col" width="100%" style="font-size: 11px">
-                <p style="margin: 0">
-                    <a href="https://www.australia4wdrentals.com/conditions-australia-4-wheel-drive-rentals" style="color: ${c.brand500}">
+                <p style="margin: 0; font-size: 11px;">Thank you for choosing <a href="https://www.australia4wdrentals.com">Australia 4WD Rentals</a></p>
+                <p style="margin: 0; font-size: 11px;">
+                    <a href="https://www.australia4wdrentals.com/conditions-australia-4-wheel-drive-rentals">
                         Terms & Conditions of Australia 4 Wheel Drive Rentals
                     </a>
                 </p>
