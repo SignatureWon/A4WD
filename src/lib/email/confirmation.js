@@ -225,7 +225,7 @@ export const html = {
             <div style="font-size: 10px; color: #999999">
                 ${letterhead.description}
             </div>
-            <div>
+            <div style="font-size: 11px">
                 ${letterhead.content.replace(/(?:\r\n|\r|\n)/g, "<br>")}
             </div>
           </td>
@@ -242,8 +242,8 @@ export const html = {
       <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
         <tr>
             <td class="col" width="100%">
-                <p style="font-size: 16px; padding-bottom: 10px; margin: 0"><b>CONFIRMATION PAGE</b></p>
-                <p style="padding-bottom: 10px; margin: 0">
+                <p style="font-size: 14px; padding-bottom: 10px; margin: 0"><b>CONFIRMATION PAGE</b></p>
+                <p style="padding-bottom: 10px; margin: 0; font-size: 11px">
                     Please sign, scan and send via email attachment (this page only) to <b><a href="mailto:info@australia4wdrentals.com">info@australia4wdrentals.com</a></b>
                 </p>
             </td>
@@ -315,17 +315,17 @@ export const html = {
       <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
         <tr>
             <td class="col" width="100%">
-                <p style="font-size: 16px; padding-bottom: 10px; margin: 0"><b>Payment Schedule</b></p>
-                <p style="padding-bottom: 10px; margin: 0">
+                <p style="font-size: 14px; padding-bottom: 10px; margin: 0"><b>Payment Schedule</b></p>
+                <p style="padding-bottom: 10px; margin: 0; font-size: 11px">
                     Payments are to be made (by credit card or Internet transfer) according to the schedule below. Unless advised otherwise, your credit card (supplied to us at the time of booking) will be charged accordingly. Kindly refer to the Payments Summary found on your provisional or final e-ticket issued to you for more details.
                 </p>
-                <p style="padding-bottom: 10px; margin: 0">
+                <p style="padding-bottom: 10px; margin: 0; font-size: 11px">
                     Any optional or extra items are to be paid directly to the supplier at the time of pick-up. Please refer to your e-Ticket for more details.
                 </p>
-                <p style="padding-bottom: 10px; margin: 0">
+                <p style="padding-bottom: 10px; margin: 0; font-size: 11px">
                     <b>Important:</b> Please read and understand the supplier’s and agent’s terms and conditions found in your quote.
                 </p>
-            <div width="100%" style="background-color: #F6F6F6; padding: 10px">
+            <div width="100%">
                 <p style="font-weight: bold; font-size: 11px; margin: 0">
                     Terms & Conditions
                 </p>
@@ -366,13 +366,13 @@ export const html = {
                 email += `
             </div>
             <br>
-                <p style="padding-bottom: 10px; margin: 0">
+                <p style="padding-bottom: 10px; margin: 0; font-size: 11px">
                     Please ensure that you pick-up and drop-off your rental vehicle during depot business hours to avoid any inconvenience or extra charges.
                 </p>
-                <p style="padding-bottom: 10px; margin: 0">
+                <p style="padding-bottom: 10px; margin: 0; font-size: 11px">
                     Depot addresses and booking times can be found in this document.
                 </p>
-                <p style="padding-bottom: 10px; margin: 0">
+                <p style="padding-bottom: 10px; margin: 0; font-size: 11px">
                     <b>Cancellation fees</b> will apply on <b>AUD $${format.currency(summary.totalAgent)}</b>. 
                     The <b>Agent Nett Deposit Fee after discount of AUD $${format.currency(summary.totalCommission)} is non-refundable</b>. 
                     The Agent Deposit will be carried forward towards a future booking if cancellation is made more than 25 days prior to travel. 
@@ -403,7 +403,7 @@ export const html = {
         </tr>
         <tr>
           <td class="col" width="138">
-            <div style="padding-top: 5px">
+            <div style="padding-top: 5px; font-size: 11px; ">
                 Signature:
                 <b>
                     <span style="text-transform:uppercase">${quote.users.first_name}</span>
@@ -423,7 +423,7 @@ export const html = {
       <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
         <tr>
             <td class="col" width="100%">
-                <p style="padding-bottom: 10px; margin: 0">
+                <p style="padding-bottom: 10px; margin: 0; font-size: 11px">
                     Please sign, scan and send via email attachment (this page only) to <b><a href="mailto:info@australia4wdrentals.com">info@australia4wdrentals.com</a></b>
                 </p>
             </td>
@@ -432,15 +432,14 @@ export const html = {
     </td>
   </tr>
 </table>
-<br>
 <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
   <tr>
     <td style="padding: 0 24px;">
       <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
         <tr>
-            <td class="col" width="100%" align="center" style="background-color: #e9f7e8; padding: 10px">
-                <p style="margin: 0">Thank you for choosing</p>
-                <p style="margin: 0">
+            <td class="col" width="100%">
+                <p style="margin: 0; font-size: 11px; ">Thank you for choosing</p>
+                <p style="margin: 0; font-size: 11px; ">
                     <b><a href="https://www.australia4wdrentals.com" style="color: ${c.brand500}">
                         AUSTRALIA 4WD RENTALS
                     </a></b>
@@ -456,7 +455,7 @@ export const html = {
     <td style="padding: 0 24px;">
       <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
         <tr>
-            <td class="col" width="100%" align="center" style="font-size: 11px">
+            <td class="col" width="100%" style="font-size: 11px">
                 <p style="margin: 0">
                     <a href="https://www.australia4wdrentals.com/conditions-australia-4-wheel-drive-rentals" style="color: ${c.brand500}">
                         Terms & Conditions of Australia 4 Wheel Drive Rentals

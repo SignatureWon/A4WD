@@ -194,10 +194,10 @@ export const actions = {
     const buffer2 = await page2.pdf({
       format: "A4",
       margin: {
-        top: "1cm",
-        bottom: "1cm",
-        left: "1cm",
-        right: "1cm",
+        top: "0.5cm",
+        bottom: "0.5cm",
+        left: "0.5cm",
+        right: "0.5cm",
       },
     });
     browser2.close();
