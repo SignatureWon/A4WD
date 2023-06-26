@@ -6,9 +6,12 @@ export async function load({ url, params }) {
     data: db.all({
       table: "quotes",
       keys: keys,
-      // eq: [{ name: "status", value: "Request" }],
+      in: {
+        name: "status",
+        value: ["Request", "Booking", "Provisional", "Final"],
+      },
       notNull: ["users"],
-      order: [{ name: "created_at", ascend: false}]
+      order: [{ name: "created_at", ascend: false }],
     }),
     path: url.pathname,
   };

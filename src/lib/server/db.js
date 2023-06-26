@@ -26,14 +26,7 @@ const setNull = (data) => {
 };
 
 const convertToDate = (data) => {
-  [
-    "date_start",
-    "date_end",
-    "travel_start",
-    "travel_end",
-    "booking_start",
-    "booking_end",
-  ].forEach((key) => {
+  ["date_start", "date_end", "travel_start", "travel_end", "booking_start", "booking_end"].forEach((key) => {
     if (key in data) {
       data[key] = dayjs(data[key], "DD/MM/YYYY").format("MM/DD/YYYY");
     }
@@ -70,16 +63,7 @@ const slugifyName = (fetch, data) => {
   }
 };
 const sanitize = (data) => {
-  [
-    "inserted",
-    "deleted",
-    "updated",
-    "error",
-    "duplicated",
-    "id",
-    "created_at",
-    "updated_at",
-  ].forEach((key) => {
+  ["inserted", "deleted", "updated", "error", "duplicated", "id", "created_at", "updated_at"].forEach((key) => {
     if (key in data) {
       delete data[key];
     }
@@ -142,9 +126,12 @@ export const db = {
         query = query.eq(col.name, col.value);
       });
     }
+    if (fetch.in) {
+      query = query.in(fetch.in.name, fetch.in.value);
+    }
     if (fetch.notNull) {
       fetch.notNull.forEach((col) => {
-        query = query.not(col, 'is', null);
+        query = query.not(col, "is", null);
       });
     }
     if (fetch.order) {
@@ -205,10 +192,7 @@ export const db = {
 
     // console.log("fetch.data", fetch.data);
 
-    const { data, error: err } = await locals.sb
-      .from(fetch.table)
-      .insert(fetch.data)
-      .select();
+    const { data, error: err } = await locals.sb.from(fetch.table).insert(fetch.data).select();
     // .single()
 
     if (err) {
@@ -227,10 +211,7 @@ export const db = {
     // convertToJson(fetch.data);
     // slugifyName(fetch, fetch.data);
 
-    const { error: err } = await locals.sb
-      .from(fetch.table)
-      .update(fetch.data)
-      .eq("id", fetch.id);
+    const { error: err } = await locals.sb.from(fetch.table).update(fetch.data).eq("id", fetch.id);
 
     if (err) {
       throw error(404, {
@@ -239,10 +220,7 @@ export const db = {
     }
   },
   delete: async (locals, fetch) => {
-    const { data, error: err } = await locals.sb
-      .from(fetch.table)
-      .delete()
-      .eq(fetch.key, fetch.value);
+    const { data, error: err } = await locals.sb.from(fetch.table).delete().eq(fetch.key, fetch.value);
 
     if (err) {
       throw error(404, {
@@ -257,11 +235,7 @@ export const db = {
       let path = url.pathname.split("/");
       path.pop();
 
-      const { data: checkUser } = await locals.sb
-        .from("profiles")
-        .select()
-        .eq("email", newData.email)
-        .single();
+      const { data: checkUser } = await locals.sb.from("profiles").select().eq("email", newData.email).single();
 
       if (!checkUser) {
         const { data: newUser, error: errUser } = await locals.sb.auth.signUp({
@@ -269,10 +243,7 @@ export const db = {
           password: "password",
         });
 
-        const { data, error: err } = await locals.sb
-          .from(fetch.table)
-          .update(newData)
-          .eq("id", newUser.user.id);
+        const { data, error: err } = await locals.sb.from(fetch.table).update(newData).eq("id", newUser.user.id);
 
         if (err) {
           console.log("err", err);
@@ -290,10 +261,9 @@ export const db = {
       let newData = Object.fromEntries(formData.entries());
       // console.log(newData);
 
-      const { data: user, error: err } = await locals.sb.auth.admin.updateUserById(
-        fetch.id,
-        { password: newData.password }
-      );
+      const { data: user, error: err } = await locals.sb.auth.admin.updateUserById(fetch.id, {
+        password: newData.password,
+      });
       if (err) {
         console.log("err", err);
         throw error(404, {
@@ -322,10 +292,7 @@ export const db = {
           if (newData[key].size) {
             const { data: dataFile, error: errFile } = await locals.sb.storage
               .from(newData[`fileBucket_${field}`])
-              .upload(
-                newData[`fileName_${field}`],
-                newData[`fileUpload_${field}`]
-              );
+              .upload(newData[`fileName_${field}`], newData[`fileUpload_${field}`]);
             if (errFile) {
               throw error(404, {
                 message: errFile.message,
@@ -342,10 +309,7 @@ export const db = {
           if (newData[key].size) {
             const { data: imageFile, error: errFile } = await locals.sb.storage
               .from(newData[`imageBucket_${field}`])
-              .upload(
-                newData[`imageName_${field}`],
-                newData[`imageUpload_${field}`]
-              );
+              .upload(newData[`imageName_${field}`], newData[`imageUpload_${field}`]);
             if (errFile) {
               throw error(404, {
                 message: errFile.message,
@@ -371,11 +335,7 @@ export const db = {
         }
       }
 
-      const { data, error: err } = await locals.sb
-        .from(fetch.table)
-        .insert(newData)
-        .select()
-        .single();
+      const { data, error: err } = await locals.sb.from(fetch.table).insert(newData).select().single();
 
       if (err) {
         console.log("err", err);
@@ -388,15 +348,9 @@ export const db = {
         const table = manyTables[key].table;
         const many = table.split("_");
         const id = data.id;
-        const selected = manyTables[key].selected
-          ? manyTables[key].selected.split(",")
-          : [];
-        const newselected = manyTables[key].newselected
-          ? manyTables[key].newselected.split(",")
-          : [];
-        const unselected = manyTables[key].unselected
-          ? manyTables[key].unselected.split(",")
-          : [];
+        const selected = manyTables[key].selected ? manyTables[key].selected.split(",") : [];
+        const newselected = manyTables[key].newselected ? manyTables[key].newselected.split(",") : [];
+        const unselected = manyTables[key].unselected ? manyTables[key].unselected.split(",") : [];
 
         newselected.forEach(async (item) => {
           if (!selected.includes(item)) {
@@ -408,11 +362,7 @@ export const db = {
         });
         unselected.forEach(async (item) => {
           if (selected.includes(item)) {
-            await locals.sb
-              .from(table)
-              .delete()
-              .eq(many[0], id)
-              .eq(many[1], item);
+            await locals.sb.from(table).delete().eq(many[0], id).eq(many[1], item);
           }
         });
       }
@@ -438,10 +388,7 @@ export const db = {
           if (newData[key].size) {
             const { data: dataFile, error: errFile } = await locals.sb.storage
               .from(newData[`fileBucket_${field}`])
-              .upload(
-                newData[`fileName_${field}`],
-                newData[`fileUpload_${field}`]
-              );
+              .upload(newData[`fileName_${field}`], newData[`fileUpload_${field}`]);
             if (errFile) {
               throw error(404, {
                 message: errFile.message,
@@ -458,10 +405,7 @@ export const db = {
           if (newData[key].size) {
             const { data: imageFile, error: errFile } = await locals.sb.storage
               .from(newData[`imageBucket_${field}`])
-              .upload(
-                newData[`imageName_${field}`],
-                newData[`imageUpload_${field}`]
-              );
+              .upload(newData[`imageName_${field}`], newData[`imageUpload_${field}`]);
             if (errFile) {
               throw error(404, {
                 message: errFile.message,
@@ -488,10 +432,7 @@ export const db = {
         }
       }
 
-      const { error: err } = await locals.sb
-        .from(fetch.table)
-        .update(newData)
-        .eq("id", fetch.id);
+      const { error: err } = await locals.sb.from(fetch.table).update(newData).eq("id", fetch.id);
 
       if (err) {
         throw error(404, {
@@ -503,15 +444,9 @@ export const db = {
         const table = manyTables[key].table;
         const many = table.split("_");
         const id = fetch.id;
-        const selected = manyTables[key].selected
-          ? manyTables[key].selected.split(",")
-          : [];
-        const newselected = manyTables[key].newselected
-          ? manyTables[key].newselected.split(",")
-          : [];
-        const unselected = manyTables[key].unselected
-          ? manyTables[key].unselected.split(",")
-          : [];
+        const selected = manyTables[key].selected ? manyTables[key].selected.split(",") : [];
+        const newselected = manyTables[key].newselected ? manyTables[key].newselected.split(",") : [];
+        const unselected = manyTables[key].unselected ? manyTables[key].unselected.split(",") : [];
 
         newselected.forEach(async (item) => {
           if (!selected.includes(item)) {
@@ -523,11 +458,7 @@ export const db = {
         });
         unselected.forEach(async (item) => {
           if (selected.includes(item)) {
-            await locals.sb
-              .from(table)
-              .delete()
-              .eq(many[0], id)
-              .eq(many[1], item);
+            await locals.sb.from(table).delete().eq(many[0], id).eq(many[1], item);
           }
         });
       }
@@ -537,10 +468,7 @@ export const db = {
       // return newData;
     },
     delete: async (request, url, locals, fetch) => {
-      const { error: err } = await locals.sb
-        .from(fetch.table)
-        .delete()
-        .eq("id", fetch.id);
+      const { error: err } = await locals.sb.from(fetch.table).delete().eq("id", fetch.id);
 
       if (err) {
         throw error(404, {
@@ -562,11 +490,7 @@ export const db = {
     duplicate: async (request, url, locals, fetch) => {
       let newData = {};
 
-      const { data: dataOri, error: errOri } = await locals.sb
-        .from(fetch.table)
-        .select()
-        .eq("id", fetch.id)
-        .single();
+      const { data: dataOri, error: errOri } = await locals.sb.from(fetch.table).select().eq("id", fetch.id).single();
 
       // get only valued fields, remove all null fields
       for (const key in dataOri) {
@@ -579,11 +503,7 @@ export const db = {
       sanitize(newData);
       slugifyName(fetch, newData);
 
-      const { data: dataNew, error: errNew } = await locals.sb
-        .from(fetch.table)
-        .insert(newData)
-        .select()
-        .single();
+      const { data: dataNew, error: errNew } = await locals.sb.from(fetch.table).insert(newData).select().single();
 
       if (errNew) {
         throw error(404, {
@@ -629,12 +549,11 @@ export const db = {
 
         datavehicles.forEach(async (row) => {
           row[fetch.table] = dataNew.id;
-          const { data: dataNewvehicles, error: errNewvehicles } =
-            await locals.sb
-              .from(`${fetch.table}_vehicles`)
-              .insert(row)
-              .select()
-              .single();
+          const { data: dataNewvehicles, error: errNewvehicles } = await locals.sb
+            .from(`${fetch.table}_vehicles`)
+            .insert(row)
+            .select()
+            .single();
         });
       }
       if ("all_suppliers" in dataNew) {
@@ -645,12 +564,11 @@ export const db = {
 
         datasuppliers.forEach(async (row) => {
           row[fetch.table] = dataNew.id;
-          const { data: dataNewsuppliers, error: errNewsuppliers } =
-            await locals.sb
-              .from(`${fetch.table}_suppliers`)
-              .insert(row)
-              .select()
-              .single();
+          const { data: dataNewsuppliers, error: errNewsuppliers } = await locals.sb
+            .from(`${fetch.table}_suppliers`)
+            .insert(row)
+            .select()
+            .single();
         });
       }
       if ("all_categories" in dataNew) {
@@ -661,12 +579,11 @@ export const db = {
 
         datacategories.forEach(async (row) => {
           row[fetch.table] = dataNew.id;
-          const { data: dataNewcategories, error: errNewcategories } =
-            await locals.sb
-              .from(`${fetch.table}_categories`)
-              .insert(row)
-              .select()
-              .single();
+          const { data: dataNewcategories, error: errNewcategories } = await locals.sb
+            .from(`${fetch.table}_categories`)
+            .insert(row)
+            .select()
+            .single();
         });
       }
 

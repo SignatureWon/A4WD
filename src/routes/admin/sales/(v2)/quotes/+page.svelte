@@ -27,9 +27,9 @@
       key: "quote_customer",
       value: "Customer",
     },
-    // {
-    //   key: "status",
-    //   value: "Status",
-    // },
+    {
+      key: "status",
+      value: "Status",
+    },
   ]}
 />

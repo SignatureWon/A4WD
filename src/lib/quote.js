@@ -10,6 +10,8 @@ export const q = {
     let supplierFees = [];
     let pickupFees = [];
 
+    console.log(quote);
+
     const totalAgentFee = () => {
       let sum = 0;
       agentFees.forEach((fee) => {
