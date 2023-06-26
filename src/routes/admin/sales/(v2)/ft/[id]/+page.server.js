@@ -6,7 +6,7 @@ dayjs.extend(isBetween);
 import { cal } from "$lib/cal";
 import { error, redirect } from "@sveltejs/kit";
 import { html } from "$lib/email/final.js";
-import { html as confirmation } from "$lib/confirmation.js";
+import { html as confirmation } from "$lib/email/confirmation.js";
 import playwright from "playwright-aws-lambda";
 import { env } from "$env/dynamic/public";
 import sgMail from "@sendgrid/mail";
