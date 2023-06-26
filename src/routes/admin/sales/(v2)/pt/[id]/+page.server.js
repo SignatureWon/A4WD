@@ -235,7 +235,7 @@ export const actions = {
     let email_to = [
       {
         email: dataUser.email,
-        name: `${dataUser.first_name.trim()} ${dataUser.last_name.trim()}`,
+        name: `${dataUser.first_name ? dataUser.first_name.trim() : "-"} ${dataUser.last_name ? dataUser.last_name.trim() : "-"}`,
       },
     ]
     let email_bcc = bccList
