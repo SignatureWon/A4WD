@@ -13,8 +13,6 @@ export async function load({ url, params, locals }) {
   if (id < 0) {
     id = Number(CryptoJS.AES.decrypt(params.id.replaceAll("__", "/"), env.PUBLIC_AES_KEY).toString(CryptoJS.enc.Utf8))
   }
-
-  console.log("id", id);
   let quote = null;
   let user = null;
 

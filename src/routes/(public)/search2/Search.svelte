@@ -76,7 +76,7 @@
             </Select>
             <Select name="age" bind:selected={search.age}>
               <SelectItem text="Age" value="" />
-              {#each options[4].options || [] as item}
+              {#each options[2].options || [] as item}
                 <SelectItem text={item.name} value={item.id} />
               {/each}
             </Select>

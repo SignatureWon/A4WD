@@ -4,10 +4,11 @@
   export let name = "";
   export let label = "";
   export let value = "";
+  export let type = "text";
   export let half = false;
   export let required = false;
 </script>
 
 <div class={half ? "" : "md:col-span-2"}>
-  <TextInput {name} labelText={label} bind:value {required} />
+  <TextInput {name} labelText={label} {type} bind:value {required} />
 </div>

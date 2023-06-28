@@ -24,6 +24,11 @@
       bind:value={data.data.description}
     />
     <InputRichText
+      name="specs"
+      label="Specs (Show in quotation)"
+      bind:value={data.data.specs}
+    />
+    <InputRichText
       name="restrictions"
       label="Restrictions"
       bind:value={data.data.restrictions}

@@ -7,6 +7,8 @@ const keys = [
   "phone",
   "status",
   "rank",
+  "start_time",
+  "end_time",
 ];
 
 export async function load({ url, params, locals }) {
