@@ -19,8 +19,11 @@
     <InputText name="phone" label="Customer Service Number" bind:value={data.data.phone} />
   </FormSection>
   <FormSection title="Time">
-    <InputText name="start_time" label="Start Time" type="time" bind:value={data.data.start_time} half={true} />
-    <InputText name="end_time" label="End Time" type="time" bind:value={data.data.end_time} half={true} />
+    <InputToggle name="all_day" label="24-hour" bind:value={data.data.all_day} />
+    {#if !data.data.all_day}
+      <InputText name="start_time" label="Start Time" type="time" bind:value={data.data.start_time} half={true} />
+      <InputText name="end_time" label="End Time" type="time" bind:value={data.data.end_time} half={true} />
+    {/if}
   </FormSection>
   <FormSection title="Publish">
     <InputToggle name="status" label="Status" bind:value={data.data.status} init="true" half={true} />

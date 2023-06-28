@@ -7,6 +7,7 @@ const keys = [
   "phone",
   "status",
   "rank",
+  "all_day",
   "start_time",
   "end_time",
 ];
