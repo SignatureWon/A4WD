@@ -280,7 +280,7 @@ export const html = {
           </td>
           <td class="col" width="184" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
             <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Booking Date</div>
-            <div><b>${dayjs(quote.date_deposit).format("DD MMM YYYY")}</b></div>
+            <div><b>${quote.date_deposit ? dayjs(quote.date_deposit).format("DD MMM YYYY") : "&mdash;"}</b></div>
           </td>
           <td class="col" width="184" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
             <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Duration</div>
@@ -366,8 +366,55 @@ export const html = {
       </table>
     </td>
   </tr>
-</table>
-<br>
+  </table>`
+  if (terms.pay_counter) {
+    email += `
+  <br>
+  <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
+    <tr>
+      <td style="padding: 0 24px;">
+        <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
+          <tr>
+              <td class="col" width="100%">
+      <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
+        <tr>
+          <td class="col" width="414" style="padding-top: 15px;">
+            <p style="font-size: 16px; padding-bottom: 10px"><b>Summary</b></p>
+          </td>
+          <td class="col" width="138" align="right" style="padding-top: 15px;">
+            <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Total (AUD)</div>
+          </td>
+        </tr>`;
+    summary.summaryItems.forEach((item) => {
+      email += `
+        <tr>
+          <td class="col" width="414" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
+            <div>${item.name}</div>
+          </td>
+          <td class="col" width="138" align="right" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
+            <div>${format.currency(item.total)}</div>
+          </td>
+        </tr>`;
+    });
+    email += `
+        <tr>
+          <td class="col" width="414" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${c.brand100}">
+            <div><b>Total</b></div>
+          </td>
+          <td class="col" width="138" align="right" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${c.brand100}">
+            <div><b>${format.currency(summary.totalSummary)}</b></div>
+          </td>
+        </tr>
+      </table>
+              </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>`
+  }
+  email += `
+  <br>
 <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
   <tr>
     <td style="padding: 0 24px;">
@@ -567,32 +614,34 @@ export const html = {
                     conditions. Please ensure that you read and understand the terms and
                     conditions found at the following links:
                 </p>`;
-    if (terms.confirmation_terms !== "<p></p>" || terms.confirmation) {
-      email += `
-      <p>&bull; 
-        <a
-          href="https://www.australia4wdrentals.com/terms/${terms.id}/confirmation"
-          style="color: ${c.brand500}; font-size: 11px">Booking Confirmation Terms</a
-        >
-      </p>`;
-    }
-    if (terms.summary_terms !== "<p></p>" || terms.summary) {
-      email += `
-      <p>&bull; 
-        <a
-          href="https://www.australia4wdrentals.com/terms/${terms.id}/summary"
-          style="color: ${c.brand500}; font-size: 11px">Summary of Terms</a
-        >
-      </p>`;
-    }
-    if (terms.counter_terms !== "<p></p>" || terms.counter) {
-      email += `
-      <p>&bull; 
-        <a
-          href="https://www.australia4wdrentals.com/terms/${terms.id}/counter"
-          style="color: ${c.brand500}; font-size: 11px">Counter Agreement</a
-        >
-      </p>`;
+    if (terms.id) {
+      if (terms.confirmation_terms !== "<p></p>" || terms.confirmation) {
+        email += `
+        <p>&bull; 
+          <a
+            href="https://www.australia4wdrentals.com/terms/${terms.id}/confirmation"
+            style="color: ${c.brand500}; font-size: 11px">Booking Confirmation Terms</a
+          >
+        </p>`;
+      }
+      if (terms.summary_terms !== "<p></p>" || terms.summary) {
+        email += `
+        <p>&bull; 
+          <a
+            href="https://www.australia4wdrentals.com/terms/${terms.id}/summary"
+            style="color: ${c.brand500}; font-size: 11px">Summary of Terms</a
+          >
+        </p>`;
+      }
+      if (terms.counter_terms !== "<p></p>" || terms.counter) {
+        email += `
+        <p>&bull; 
+          <a
+            href="https://www.australia4wdrentals.com/terms/${terms.id}/counter"
+            style="color: ${c.brand500}; font-size: 11px">Counter Agreement</a
+          >
+        </p>`;
+      }
     }
                 email += `
                 <br>

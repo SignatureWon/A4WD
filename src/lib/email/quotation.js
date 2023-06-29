@@ -22,6 +22,7 @@ export const html = {
       .eq("type", "template_letterhead")
       .single();
     const { data: quote } = await supabase.from("quotes").select("*, users (*)").eq("id", quote_id).single();
+    const { data: vehicle } = await supabase.from("vehicles").select().eq("id", quote.details.vehicle.id).single();
 
     let summary = q.getPayments(quote);
     let terms = {
@@ -297,13 +298,13 @@ export const html = {
         <tr>
           <td class="col" width="276" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
             <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Pick-up from</div>
-            <div><b>${quote.details.pickup.name} days</b></div>
-            <div>${dayjs(quote.details.date_start).format("ddd, DD MMM YYYY")} days</div>
+            <div><b>${quote.details.pickup.name}</b></div>
+            <div>${dayjs(quote.details.date_start).format("ddd, DD MMM YYYY")}</div>
           </td>
           <td class="col" width="276" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
             <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Drop-off to</div>
-            <div><b>${quote.details.dropoff.name} days</b></div>
-            <div>${dayjs(quote.details.date_end).format("ddd, DD MMM YYYY")} days</div>
+            <div><b>${quote.details.dropoff.name}</b></div>
+            <div>${dayjs(quote.details.date_end).format("ddd, DD MMM YYYY")}</div>
           </td>
         </tr>
         <tr>
@@ -328,7 +329,7 @@ export const html = {
           </td>
           <td class="col" width="276" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
             <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Vehicle</div>
-            <div><b>${quote.details.vehicle.name} days</b></div>
+            <div><b>${quote.details.vehicle.name}</b></div>
             <div><a href="https://www.australia4wdrentals.com/vehicles/${
               quote.details.vehicle.slug
             }">View vehicle specs</a></div>
@@ -365,9 +366,56 @@ export const html = {
       </table>
     </td>
   </tr>
-</table>
-<br>
-<table cellpadding="0" cellspacing="0" role="presentation" width="100%">
+  </table>`
+  if (terms.pay_counter) {
+    email += `
+  <br>
+  <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
+    <tr>
+      <td style="padding: 0 24px;">
+        <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
+          <tr>
+              <td class="col" width="100%">
+      <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
+        <tr>
+          <td class="col" width="414" style="padding-top: 15px;">
+            <p style="font-size: 16px; padding-bottom: 10px"><b>Summary</b></p>
+          </td>
+          <td class="col" width="138" align="right" style="padding-top: 15px;">
+            <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Total (AUD)</div>
+          </td>
+        </tr>`;
+    summary.summaryItems.forEach((item) => {
+      email += `
+        <tr>
+          <td class="col" width="414" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
+            <div>${item.name}</div>
+          </td>
+          <td class="col" width="138" align="right" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
+            <div>${format.currency(item.total)}</div>
+          </td>
+        </tr>`;
+    });
+    email += `
+        <tr>
+          <td class="col" width="414" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${c.brand100}">
+            <div><b>Total</b></div>
+          </td>
+          <td class="col" width="138" align="right" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${c.brand100}">
+            <div><b>${format.currency(summary.totalSummary)}</b></div>
+          </td>
+        </tr>
+      </table>
+              </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>`
+  }
+  email += `
+  <br>
+  <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
   <tr>
     <td style="padding: 0 24px;">
       <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
@@ -570,7 +618,26 @@ export const html = {
       </table>
     </td>
   </tr>
-</table>
+</table>`
+if (vehicle.specs !== "<p></p>" && vehicle.specs) {
+  email += `
+<br>
+<table cellpadding="0" cellspacing="0" role="presentation" width="100%">
+  <tr>
+    <td style="padding: 0 24px;">
+      <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
+        <tr>
+            <td class="col" width="100%">
+                <p style="font-size: 16px; padding-bottom: 10px"><b>Specifications</b></p>
+                ${vehicle.specs.replaceAll("<li><p>", "<li><p>&bull; ")}
+            </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>`
+}
+email += `
 <br>
 <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
   <tr>
@@ -588,32 +655,34 @@ export const html = {
                     conditions. Please ensure that you read and understand the terms and
                     conditions found at the following links:
                 </p>`;
-    if (terms.confirmation_terms !== "<p></p>" || terms.confirmation) {
-      email += `
-      <p>&bull; 
-        <a
-          href="https://www.australia4wdrentals.com/terms/${terms.id}/confirmation"
-          style="color: ${c.brand500}; font-size: 11px">Booking Confirmation Terms</a
-        >
-      </p>`;
-    }
-    if (terms.summary_terms !== "<p></p>" || terms.summary) {
-      email += `
-      <p>&bull; 
-        <a
-          href="https://www.australia4wdrentals.com/terms/${terms.id}/summary"
-          style="color: ${c.brand500}; font-size: 11px">Supplier's Summary of Terms</a
-        >
-      </p>`;
-    }
-    if (terms.counter_terms !== "<p></p>" || terms.counter) {
-      email += `
-      <p>&bull; 
-        <a
-          href="https://www.australia4wdrentals.com/terms/${terms.id}/counter"
-          style="color: ${c.brand500}; font-size: 11px">Supplier's Counter Agreement</a
-        >
-      </p>`;
+    if (terms.id) {
+      if (terms.confirmation_terms !== "<p></p>" || terms.confirmation) {
+        email += `
+        <p>&bull; 
+          <a
+            href="https://www.australia4wdrentals.com/terms/${terms.id}/confirmation"
+            style="color: ${c.brand500}; font-size: 11px">Booking Confirmation Terms</a
+          >
+        </p>`;
+      }
+      if (terms.summary_terms !== "<p></p>" || terms.summary) {
+        email += `
+        <p>&bull; 
+          <a
+            href="https://www.australia4wdrentals.com/terms/${terms.id}/summary"
+            style="color: ${c.brand500}; font-size: 11px">Summary of Terms</a
+          >
+        </p>`;
+      }
+      if (terms.counter_terms !== "<p></p>" || terms.counter) {
+        email += `
+        <p>&bull; 
+          <a
+            href="https://www.australia4wdrentals.com/terms/${terms.id}/counter"
+            style="color: ${c.brand500}; font-size: 11px">Counter Agreement</a
+          >
+        </p>`;
+      }
     }
                 email += `
                 <br>

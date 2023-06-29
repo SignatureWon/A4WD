@@ -257,50 +257,50 @@ export const html = {
     <td style="padding: 0 24px;">
       <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
         <tr>
-          <td class="col" width="138" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
+          <td class="col" width="138" style="padding: 5px; font-size: 11px; border-bottom: 1px solid #DDDDDD">
             Booking Reference
           </td>
-          <td class="col" width="414" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
+          <td class="col" width="414" style="padding: 5px; font-size: 11px; border-bottom: 1px solid #DDDDDD">
             <b>B${388000 + quote.id}</b>
           </td>
         </tr>
         <tr>
-          <td class="col" width="138" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
+          <td class="col" width="138" style="padding: 5px; font-size: 11px; border-bottom: 1px solid #DDDDDD">
             Date of Issue
           </td>
-          <td class="col" width="414" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
+          <td class="col" width="414" style="padding: 5px; font-size: 11px; border-bottom: 1px solid #DDDDDD">
             <b>${dayjs(quote.date_balance || quote.date_provisional).format("DD MMM YYYY")}</b>
           </td>
         </tr>
         <tr>
-          <td class="col" width="138" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
+          <td class="col" width="138" style="padding: 5px; font-size: 11px; border-bottom: 1px solid #DDDDDD">
             Vehicle
           </td>
-          <td class="col" width="414" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
+          <td class="col" width="414" style="padding: 5px; font-size: 11px; border-bottom: 1px solid #DDDDDD">
             <b>${quote.details.vehicle.name}</b>
           </td>
         </tr>
         <tr>
-          <td class="col" width="138" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
+          <td class="col" width="138" style="padding: 5px; font-size: 11px; border-bottom: 1px solid #DDDDDD">
             Pick-up
           </td>
-          <td class="col" width="414" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
-            <b>${quote.details.pickup.name} - ${dayjs(quote.details.date_start).format("ddd, DD MMM YYYY")}, 09:00AM</b>
+          <td class="col" width="414" style="padding: 5px; font-size: 11px; border-bottom: 1px solid #DDDDDD">
+            <b>${quote.details.pickup.name} - ${dayjs(quote.details.date_start).format("ddd, DD MMM YYYY")}${supplier.all_day ? " (24hrs)" : `, ${supplier.start_time ? q.showtime(supplier.start_time) : "09:00AM"}`}</b>
           </td>
         </tr>
         <tr>
-          <td class="col" width="138" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
+          <td class="col" width="138" style="padding: 5px; font-size: 11px; border-bottom: 1px solid #DDDDDD">
             Drop-off
           </td>
-          <td class="col" width="414" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
-            <b>${quote.details.dropoff.name} - ${dayjs(quote.details.date_end).format("ddd, DD MMM YYYY")}, 03:00PM</b>
+          <td class="col" width="414" style="padding: 5px; font-size: 11px; border-bottom: 1px solid #DDDDDD">
+            <b>${quote.details.dropoff.name} - ${dayjs(quote.details.date_end).format("ddd, DD MMM YYYY")}${supplier.all_day ? " (24hrs)" : `, ${supplier.end_time ? q.showtime(supplier.end_time) : "03:00PM"}`}</b>
           </td>
         </tr>
         <tr>
-          <td class="col" width="138" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
+          <td class="col" width="138" style="padding: 5px; font-size: 11px; border-bottom: 1px solid #DDDDDD">
             ${quote.details.supplier.name} Confirmation Code
           </td>
-          <td class="col" width="414" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
+          <td class="col" width="414" style="padding: 5px; font-size: 11px; border-bottom: 1px solid #DDDDDD">
             <b>${quote.supplier_reference}</b>
           </td>
         </tr>
@@ -335,7 +335,7 @@ export const html = {
                 </p>`;
     if (terms.confirmation_terms !== "<p></p>" || terms.confirmation) {
       email += `
-      <p style="margin: 0">&bull; 
+      <p style="font-size: 11px; padding-bottom: 10px; margin: 0">&bull; 
         <a
           href="https://www.australia4wdrentals.com/terms/${terms.id}/confirmation"
           style="color: ${c.brand500}; font-size: 11px">Booking Confirmation Terms</a
@@ -344,7 +344,7 @@ export const html = {
     }
     if (terms.summary_terms !== "<p></p>" || terms.summary) {
       email += `
-      <p style="margin: 0">&bull; 
+      <p style="font-size: 11px; padding-bottom: 10px; margin: 0">&bull; 
         <a
           href="https://www.australia4wdrentals.com/terms/${terms.id}/summary"
           style="color: ${c.brand500}; font-size: 11px">Supplier's Summary of Terms</a
@@ -353,7 +353,7 @@ export const html = {
     }
     if (terms.counter_terms !== "<p></p>" || terms.counter) {
       email += `
-      <p style="margin: 0">&bull; 
+      <p style="font-size: 11px; padding-bottom: 10px; margin: 0">&bull; 
         <a
           href="https://www.australia4wdrentals.com/terms/${terms.id}/counter"
           style="color: ${c.brand500}; font-size: 11px">Supplier's Counter Agreement</a
@@ -362,7 +362,6 @@ export const html = {
     }
                 email += `
             </div>
-            <br>
                 <p style="padding-bottom: 10px; margin: 0; font-size: 11px">
                     Please ensure that you pick-up and drop-off your rental vehicle during depot business hours to avoid any inconvenience or extra charges. Depot addresses and booking times can be found in this document.
                 </p>
@@ -388,7 +387,6 @@ export const html = {
         <tr>
           <td class="col" width="138">
             <div style="border-bottom: 1px solid #DDDDDD">
-                <br>
                 <br>
                 <br>
             </div>

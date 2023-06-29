@@ -6,11 +6,19 @@ export const q = {
     const date_quote = dayjs(quote.created_at).format("DD MMM YYYY");
     const date_start = dayjs(quote.details.date_start).format("ddd, DD MMM YYYY");
     const date_end = dayjs(quote.details.date_end).format("ddd, DD MMM YYYY");
+    let summaryFees = [];
     let agentFees = [];
     let supplierFees = [];
     let pickupFees = [];
 
-    console.log(quote);
+    // console.log(quote);
+    const totalSummaryFee = () => {
+      let sum = 0;
+      summaryFees.forEach((fee) => {
+        sum += fee.total;
+      });
+      return sum;
+    };
 
     const totalAgentFee = () => {
       let sum = 0;
@@ -115,6 +123,12 @@ export const q = {
           profit: toAgent,
         });
       }
+      summaryFees.push({
+        name: `Daily basic rental ($${format.currency(quote.details.daily.items[0].gross)} x ${duration} days)`,
+        total: quote.details.daily.gross,
+        nett: 0,
+        profit: 0,
+      });
 
       supplierFees.push({
         name: `Balance of daily basic rental ($${format.currency(quote.details.daily.gross)} - $${format.currency(
@@ -186,6 +200,12 @@ export const q = {
         nett: quote.add_discount_supplier || 0,
         profit: quote.add_discount,
       });
+      summaryFees.push({
+        name: `Discount: ${quote.add_discount_remark}`,
+        total: quote.add_discount_supplier || quote.add_discount,
+        nett: 0,
+        profit: 0,
+      });
     }
 
     /**
@@ -232,6 +252,7 @@ export const q = {
           supplierFees.push(row);
           pickupFees.push(row);
         }
+        summaryFees.push(row);
       }
     }
 
@@ -240,6 +261,12 @@ export const q = {
      */
     let one_way = quote.details.one_way;
     if (one_way > 0) {
+      summaryFees.push({
+        name: `One-way fee`,
+        total: one_way,
+        nett: 0,
+        profit: 0,
+      });
       supplierFees.push({
         name: `One-way fee`,
         total: one_way,
@@ -290,6 +317,7 @@ export const q = {
         supplierFees.push(row);
         pickupFees.push(row);
       }
+      summaryFees.push(row);
     }
 
     /**
@@ -305,6 +333,12 @@ export const q = {
             name: item.name,
             total: -item.discount_amount,
             nett: -item.discount_amount,
+            profit: 0,
+          });
+          summaryFees.push({
+            name: item.name,
+            total: -item.discount_amount,
+            nett: 0,
             profit: 0,
           });
         }
@@ -327,6 +361,12 @@ export const q = {
           name: item.name,
           total: item.fee,
           nett: item.fee,
+          profit: 0,
+        });
+        summaryFees.push({
+          name: item.name,
+          total: item.fee,
+          nett: 0,
           profit: 0,
         });
       });
@@ -378,6 +418,12 @@ export const q = {
         });
         // totalAgentAdjustments += item.value;
       }
+      summaryFees.push({
+        name: item.name,
+        total: item.value,
+        nett: 0,
+        profit: 0,
+      });
     });
 
     /**
@@ -405,6 +451,7 @@ export const q = {
     /**
      * Payment Terms
      */
+    const totalSummary = totalSummaryFee();
     const totalAgent = totalAgentFee();
     const totalCommission = totalAgentCommission();
     const totalSupplier = totalSupplierFee();
@@ -517,10 +564,12 @@ export const q = {
     // console.log("agentFees", agentFees);
 
     return {
+      summaryItems: summaryFees,
       agentItems: agentFees,
       supplierItems: supplierFees,
       pickupItems: pickupFees,
       termsItems: termsItems,
+      totalSummary: totalSummary,
       totalAgent: totalAgent,
       totalCommission: totalCommission,
       totalSupplier: totalSupplier,
@@ -601,5 +650,18 @@ export const q = {
     Request: "Q",
     Provisional: "PT",
     Final: "FT",
+  },
+  showtime: (str) => {
+    let time = str.split(":");
+    let hr = Number(time[0]);
+    let ampm = "AM";
+    if (hr > 12) {
+      hr -= 12;
+      ampm = "PM";
+    }
+    if (hr < 10) {
+      hr = `0${hr}`;
+    }
+    return `${hr}:${time[1]}${ampm}`;
   },
 };
