@@ -44,12 +44,22 @@
   </div>
   <div class="p-4 grid grid-cols-1 gap-5">
     <div class="grid grid-cols-1 gap-5">
-      <div>
-        <Select labelText="Amount to Pay" name="deposit" bind:selected={quote.deposit} required>
+      <div class="divide-y divide-gray-200 border border-gray-200 px-2 bg-gray-100">
+        {#each summary.termsItems as item}
+          <div class="py-2">
+            <div class="flex">
+              <div class="flex-1">{item.name}</div>
+              <div class="text-right w-28">
+                ${format.currency(item.total)}
+              </div>
+            </div>
+          </div>
+        {/each}
+        <!-- <Select labelText="Amount to Pay" name="deposit" bind:selected={quote.deposit} required>
           {#each summary.termsItems as item}
             <SelectItem value={item.total} text={`${item.name} (AUD $${format.currency(item.total)})`} />
           {/each}
-        </Select>
+        </Select> -->
       </div>
       <div>
         <Select labelText="Card Type" name="cc_type" bind:selected={quote.cc_type} required>
@@ -62,7 +72,14 @@
         <TextInput labelText="Name on Card" name="cc_name" bind:value={quote.cc_name} required />
       </div>
       <div>
-        <TextInput labelText="Credit Card No." name="cc_number" bind:value={quote.cc_number} title="MasterCard and Visa number" pattern={`^[0-9]{16}$`} required />
+        <TextInput
+          labelText="Credit Card No."
+          name="cc_number"
+          bind:value={quote.cc_number}
+          title="MasterCard and Visa number"
+          pattern={`^[0-9]{16}$`}
+          required
+        />
       </div>
       <div>
         <div class="font-bold text-sm tracking-wide">Card Expiry</div>

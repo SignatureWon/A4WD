@@ -67,8 +67,8 @@
     </div>
     <Daily bind:quote count={getSummary} />
     <div class="bg-white rounded mb-4">
-      <Adjustments bind:quote count={getSummary} />
       <Specials bind:quote />
+      <Adjustments bind:quote count={getSummary} />
     </div>
     <Bonds bind:quote count={getSummary} />
     <div class="bg-white rounded mb-4">

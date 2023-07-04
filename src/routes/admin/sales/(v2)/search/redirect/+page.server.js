@@ -9,6 +9,6 @@ export async function load({ url }) {
 
   throw redirect(
     301,
-    `/search2?${search.join("&")}`
+    `/admin/sales/search?${search.join("&")}`
   );
 }

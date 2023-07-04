@@ -1,0 +1,52 @@
+<script>
+  import { onMount } from "svelte";
+  import Search from "../../../../../(public)/search2/Search.svelte";
+  import Action from "./Action.svelte";
+  import Bonds from "./Bonds.svelte";
+  import Daily from "./Daily.svelte";
+  import Fees from "./Fees.svelte";
+  import Payments from "./Payments.svelte";
+  import Specials from "./Specials.svelte";
+  import Trip from "./Trip.svelte";
+  import { q } from "$lib/quote.js";
+  import Summary from "./Summary.svelte";
+  import Customer from "./Customer.svelte";
+  export let data;
+  // console.log(data);
+
+  let quote = {
+    details: data.details,
+  };
+  let summary = {
+    agentItems: [],
+    supplierItems: [],
+    pickupItems: [],
+    termsItems: [],
+    totalAgent: 0,
+    totalCommission: 0,
+    totalSupplier: 0,
+  };
+  const count = () => {
+    summary = q.getPayments(quote);
+    quote.agent_fee = summary.totalAgent;
+    quote.supplier_fee = summary.totalSupplier;
+    quote.profit = summary.totalCommission;
+    quote.nett = summary.totalNett;
+  };
+  onMount(() => {
+    count()
+  });
+</script>
+
+<Search options={data.options} search={data.search} />
+<section class="container xl:max-w-7xl mx-auto p-4">
+  <Trip data={quote.details} />
+  <Daily data={quote.details} />
+  <Specials data={quote.details} />
+  <Bonds bind:data={quote.details} search={data.search} {count} />
+  <Fees data={quote.details} search={data.search} {count} />
+  <Payments data={quote.details} search={data.search} />
+  <Summary bind:quote bind:summary {count} />
+  <Customer options={data.options} />
+  <Action {quote} />
+</section>

@@ -9,6 +9,7 @@
   import { calculator } from "$lib/calculator";
   import { page } from "$app/stores";
   import Search from "../Search.svelte";
+  import Results from "../Results.svelte";
 
   export let data;
 
@@ -25,26 +26,21 @@
   // console.log("DD", search.date_start);
 
   let options = {};
+  let results = {
+    available: [],
+    blocked: [],
+  };
 
   onMount(async () => {
     const { data: data_options, data_error } = await supabase.rpc("search_options").select();
     options = data_options;
 
     $page.url.searchParams.forEach((value, key) => {
-      // if (["date_start", "date_end"].includes(key)) {
-      //   console.log(key, value);
-      //   // value = dayjs(value);
-      //   value = dayjs(value).format("YYYY-MM-DD");
-      // }
       search[key] = value;
     });
-
-    // console.log("searchsearch", search);
-
-    const results = await calculator(search);
-
-    // console.log("results", results);
+    results = await calculator.search(search);
   });
 </script>
 
 <Search options={data.options} {search} />
+<Results {results} {search} />

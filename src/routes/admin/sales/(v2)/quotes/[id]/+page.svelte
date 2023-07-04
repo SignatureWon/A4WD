@@ -41,7 +41,7 @@
     quote.profit = summary.totalCommission;
     quote.nett = summary.totalNett;
     // console.log("summary", summary);
-    // console.log("quote", quote);
+    console.log("quote", quote);
   };
 
   onMount(async () => {
@@ -66,8 +66,8 @@
     </div>
     <Daily bind:quote count={getSummary} />
     <div class="bg-white rounded mb-4">
-      <Adjustments bind:quote count={getSummary} />
       <Specials bind:quote />
+      <Adjustments bind:quote count={getSummary} />
     </div>
     <Bonds bind:quote count={getSummary} />
     <div class="bg-white rounded mb-4">

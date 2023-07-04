@@ -6,6 +6,7 @@
   import { cal } from "$lib/cal.js";
   import { onMount } from "svelte";
   export let quote;
+  console.log(quote);
   export let count;
 
   let addons = [];

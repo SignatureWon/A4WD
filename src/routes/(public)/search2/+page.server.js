@@ -9,10 +9,10 @@ import { calculator } from "$lib/calculator";
 export async function load({ url, params, locals }) {
   const { data: options, error } = await supabase.rpc("search_options").select();
 
-  let results = [];
-  let blocked = [];
-  let allRates = [];
-  let specials = [];
+  // let results = [];
+  // let blocked = [];
+  // let allRates = [];
+  // let specials = [];
 
   let search = {
     pickup: "",
@@ -25,15 +25,15 @@ export async function load({ url, params, locals }) {
     pax: 2,
   };
   url.searchParams.forEach((value, key) => {
-    if (["date_start", "date_end"].includes(key)) {
-      value = dayjs(value).format("YYYY-MM-DD");
-    }
     search[key] = value;
   });
+
+  let results = await calculator.search(search);
+
   // console.log("search", search);
 
-  let all_rates = {}
-  if (search.pickup !== "" && search.dropoff !== "") {
+  // let all_rates = {}
+  // if (search.pickup !== "" && search.dropoff !== "") {
     // all_rates = calculator(search);
     // const { data: flexData } = await cal.getFlex(supabase, search);
     // const { data: seasonalData } = await cal.getSeasonal(supabase, search);
@@ -53,11 +53,11 @@ export async function load({ url, params, locals }) {
     // results = [...addedBonds];
     // blocked = [...filteredBlockouts.blocked];
     // specials = [...addedSpecials];
-  }
+  // }
   return {
     options: options,
     search: JSON.parse(JSON.stringify(search)),
-    all: all_rates,
+    // all: all_rates,
     // blocked: JSON.parse(JSON.stringify(blocked)),
     results: JSON.parse(JSON.stringify(results)),
     // specials: JSON.parse(JSON.stringify(specials)),

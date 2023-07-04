@@ -11,6 +11,27 @@
   import InputImage from "$lib/components/admin/InputImage.svelte";
   import InputToggle from "$lib/components/admin/InputToggle.svelte";
   export let data;
+
+  const discountOptions = {
+    Deduction: [
+      { id: "Percentage", name: "Percentage" },
+      { id: "Price", name: "Price" },
+      { id: "No One Way Fee", name: "No One Way Fee" },
+    ],
+    "Early bird": [
+      { id: "Percentage", name: "Percentage" },
+      { id: "Price", name: "Price" },
+      { id: "No One Way Fee", name: "No One Way Fee" },
+    ],
+    "Long term": [
+      { id: "Percentage", name: "Percentage" },
+      { id: "Price", name: "Price" },
+      { id: "No One Way Fee", name: "No One Way Fee" },
+    ],
+    "Every X day": [
+      { id: "Day", name: "Day" },
+    ],
+  };
 </script>
 
 <PageTitle title="Special" path={data.path} data={data.data} id={data.id} />
@@ -121,7 +142,10 @@
       name="factor"
       label="Discount by"
       bind:value={data.data.factor}
-      options={[
+      options={discountOptions[data.data.type] || []}
+      half={true}
+    />
+    <!-- [
         {
           id: "Percentage",
           name: "Percentage",
@@ -138,9 +162,7 @@
           id: "No One Way Fee",
           name: "No One Way Fee",
         },
-      ]}
-      half={true}
-    />
+      ] -->
     {#if data.data.factor !== "No One Way Fee"}
       <InputNumber name="value" label="Value" bind:value={data.data.value} step={0.01} half={true} />
     {/if}
@@ -185,24 +207,7 @@
             name="factor2"
             label="Discount by"
             bind:value={data.data.factor2}
-            options={[
-              {
-                id: "Percentage",
-                name: "Percentage",
-              },
-              {
-                id: "Price",
-                name: "Price",
-              },
-              {
-                id: "Day",
-                name: "Day",
-              },
-              {
-                id: "No One Way Fee",
-                name: "No One Way Fee",
-              },
-            ]}
+            options={discountOptions[data.data.type2] || []}
             half={true}
           />
           {#if data.data.factor2 !== "No One Way Fee"}
