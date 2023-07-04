@@ -79,9 +79,18 @@
       <h1 class="text-4xl font-bold mb-5">{record.name}</h1>
       {@html record.content}
       {#if filePreview}
-        <div class="pt-5 mt-5 border-t border-gray-200">
+      <div class="h-screen">
+        <iframe
+          src="https://drive.google.com/viewerng/viewer?embedded=true&url=https://api.australia4wdrentals.com/storage/v1/object/public/terms/{record.attachment}#toolbar=0&scrollbar=0"
+          frameBorder="0"
+          scrolling="auto"
+          height="100%"
+          width="100%"
+          title={record.name}
+        />
+      </div>
+              <!-- <div class="pt-5 mt-5 border-t border-gray-200">
           <div class="font-bold mb-4">Attachment</div>
-          <!-- svelte-ignore a11y-missing-content -->
           <a
             href="{env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/terms/{record.attachment}"
             target="_blank"
@@ -89,7 +98,7 @@
             class="file-icon file-icon-xl"
             data-type={filePreview}
           />
-        </div>
+        </div> -->
       {/if}
     </div>
   </div>
