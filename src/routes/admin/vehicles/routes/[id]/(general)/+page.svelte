@@ -49,7 +49,7 @@
     <InputManyRelation
       name="all_depots"
       label="depots"
-      value={data.data.all_depots}
+      bind:value={data.data.all_depots}
       table="routes_depots"
       options={data.depots}
       selected={data.depots_selected}
@@ -57,7 +57,7 @@
     <InputManyRelation
       name="all_suppliers"
       label="Suppliers"
-      value={data.data.all_suppliers}
+      bind:value={data.data.all_suppliers}
       table="routes_suppliers"
       options={data.suppliers}
       selected={data.suppliers_selected}

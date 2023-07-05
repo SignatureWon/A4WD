@@ -118,7 +118,7 @@
           <div class="flex flex-col h-full">
             <div class="flex-1">
               {#if d.special_total > 0}
-                <div class="text-sm pt-2 opacity-30">
+                <div class="text-sm pt-2 opacity-30 -mt-2">
                   <s>${format.currency(d.gross)}</s>
                   <!-- <s>${format.currency(d.gross + d.one_way + d.fee_total)}</s> -->
                 </div>
@@ -133,7 +133,8 @@
                 </div>
               {/if}
               <div class="text-sm mb-1">
-                Avg. per day ${format.currency((d.gross - d.special_total) / d.duration)}
+                Avg. ${format.currency((d.gross - d.special_total) / d.duration)} per day
+                on daily basic rental
                 <!-- Avg. per day ${format.currency((d.gross + d.one_way + d.fee_total - d.special_total) / d.duration)} -->
               </div>
             </div>

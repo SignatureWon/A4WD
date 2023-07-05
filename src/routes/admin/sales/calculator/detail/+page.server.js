@@ -67,8 +67,17 @@ export async function load({ url, params, locals }) {
     options[opt.name] = opt.options;
   });
 
+  const { data: dataSupplier, error: errorSupplier } = await supabase
+      .from("suppliers")
+      .select()
+      .eq("id", addTerms[0].supplier_id)
+      .single();
+
+  // console.log("dataSupplier", dataSupplier);
+
   return {
     detail: JSON.parse(JSON.stringify(addTerms[0])),
+    supplier: JSON.parse(JSON.stringify(dataSupplier)),
     search: JSON.parse(JSON.stringify(search)),
     options: JSON.parse(JSON.stringify(options)),
     countries: JSON.parse(JSON.stringify(countries)),

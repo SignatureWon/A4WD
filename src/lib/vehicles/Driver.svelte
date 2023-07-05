@@ -28,7 +28,7 @@
         </Select>
       </div>
       <div>
-        <TextInput labelText="Age" name="age" bind:value={quote.details.driver.age} required />
+        <TextInput labelText="Age" name="age" type="number" bind:value={quote.details.driver.age} required />
       </div>
     </div>
   </div>

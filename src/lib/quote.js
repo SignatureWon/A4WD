@@ -404,8 +404,8 @@ export const q = {
           agentFees.push({
             name: item.name,
             total: item.value,
-            nett: 0,
-            profit: item.value,
+            nett: item.value,
+            profit: 0,
           });
         }
         // totalSupplierAdjustments += item.value;

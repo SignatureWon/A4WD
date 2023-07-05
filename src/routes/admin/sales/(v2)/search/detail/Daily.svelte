@@ -2,7 +2,9 @@
   import { format } from "$lib/format.js";
   import { calculator } from "$lib/calculator.js";
   export let data;
+  // console.log(data);
   const list = calculator.group_rates(data);
+  // console.log("list", list);
 </script>
 
 <div class="bg-white rounded mb-4">

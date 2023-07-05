@@ -5,10 +5,9 @@
   export let quote;
   export let summary;
   export let count;
-  export let title = "Quote";
 
-  console.log(quote);
-  console.log(summary);
+  // console.log(quote);
+  // console.log(summary);
 </script>
 
 <div class="bg-brand-50 border border-brand-500 rounded mb-4">

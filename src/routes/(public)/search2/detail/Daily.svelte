@@ -15,9 +15,10 @@
         <div class="py-3">
           <div class="flex">
             <div class="flex-1">
-              {`Daily basic rental: ${item.flex ? `Week ${item.week}: Flex[${item.flex}]: ` : ``} $${format.currency(
+              {item.name}
+              <!-- {`Daily basic rental: ${item.flex ? `Week ${item.week}: Flex[${item.flex}]: ` : `${item.rates_name}`} $${format.currency(
                 item.daily.gross
-              )} x ${item.days} days`}
+              )} x ${item.days} days`} -->
             </div>
             <div class="text-right w-28">
               ${format.currency(item.total)}

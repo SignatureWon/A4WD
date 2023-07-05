@@ -10,6 +10,7 @@
   import Trip from "./Trip.svelte";
   import { q } from "$lib/quote.js";
   export let data;
+  console.log(data);
 
   let quote = {
     details: data.details,
@@ -43,5 +44,5 @@
   <Bonds bind:data={quote.details} search={data.search} {count} />
   <Fees data={quote.details} search={data.search} {count} />
   <Payments data={quote.details} search={data.search} />
-  <Action {quote} />
+  <Action {quote} search={data.search} options={data.options} />
 </section>

@@ -53,6 +53,10 @@ export const actions = {
     });
   },
   update: async ({ request, url, params, locals }) => {
+    // const formData = await request.formData();
+    // let newData = Object.fromEntries(formData.entries());
+    // console.log("newData", newData);
+    // console.log("request", await request.formData());
     await db.actions.update(request, url, locals, {
       id: params.id,
       table: "routes",

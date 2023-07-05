@@ -21,10 +21,10 @@
   } from "carbon-components-svelte";
 
   export let data;
-  // console.log(data);
+  // console.log("data", data.supplier);
   let paneHeight = 0;
   const d = data.detail;
-  console.log("d", d);
+  // console.log("d", d);
   let terms = {
     name: null,
     id: null,
@@ -133,6 +133,8 @@
     add_discount: 0,
     add_discount_remark: "",
   };
+
+
   let selected_bond = 0;
   let bond_fee = 0;
   if (d.bond_items.length) {
@@ -306,8 +308,16 @@
         }
       });
     } else {
+      let days = arr.length;
+      if (data.supplier.all_day) {
+        obj.gross -= obj.gross / arr.length;
+        obj.nett -= obj.nett / arr.length;
+        obj.profit -= obj.profit / arr.length;
+        days -= 1
+      }
+      // console.log(supplier.all_day);
       agentFees.push({
-        name: `Daily basic rental: $${format.currency(obj.gross / arr.length)} x ${arr.length} days`,
+        name: `Daily basic rental: $${format.currency(obj.gross / days)} x ${days} days`,
         total: obj.gross,
         nett: obj.nett,
         profit: obj.profit,

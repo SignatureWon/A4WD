@@ -45,13 +45,14 @@
 
 <div class="md:col-span-2">
   <Toggle
-    {name}
     labelText={label}
     labelA={a || `All ${label}`}
     labelB={b || `All ${label}`}
     bind:toggled={value}
     on:toggle={(e) => {}}
   />
+  <input type="hidden" {name} bind:value={value} />
+
   {#if !value}
     <div class="mb-4">
       <MultiSelect

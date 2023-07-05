@@ -5,7 +5,7 @@
   export let data;
   export let search;
   export let count;
-  console.log("data", data);
+  // console.log("data", data);
 
   const checkCap = (rate, cap) => {
     cap = cap || 0;

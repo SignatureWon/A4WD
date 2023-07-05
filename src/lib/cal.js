@@ -1,11 +1,11 @@
+import { supabase } from "$lib/supabaseClient";
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
 dayjs.extend(isBetween);
 
 const getSeasonalDaily = (days, tiers, route_min_days) => {
   let daily = 0;
-  let min_days =
-    route_min_days > tiers[0].from ? route_min_days : tiers[0].from;
+  let min_days = route_min_days > tiers[0].from ? route_min_days : tiers[0].from;
   tiers.forEach((t, i) => {
     if (i === 0) {
       if (min_days > days) {
@@ -19,16 +19,7 @@ const getSeasonalDaily = (days, tiers, route_min_days) => {
   return daily;
 };
 
-const countDiscountAmount = (
-  type,
-  factor,
-  value,
-  gross,
-  daily,
-  one_way,
-  list,
-  start_date
-) => {
+const countDiscountAmount = (type, factor, value, gross, daily, one_way, list, start_date) => {
   // console.log("list", list);
   let results = {
     total: 0,
@@ -106,10 +97,7 @@ export const cal = {
     }
 
     if (search.category !== "") {
-      query = query.contains(
-        "vehicles_categories",
-        JSON.stringify([{ id: search.category }])
-      );
+      query = query.contains("vehicles_categories", JSON.stringify([{ id: search.category }]));
     }
 
     if (search.pax > 0) {
@@ -132,20 +120,14 @@ export const cal = {
   getSeasonal: (supabase, search) => {
     const date_start = dayjs(search.date_start, "DD/MM/YYYY");
     const date_end = dayjs(search.date_end, "DD/MM/YYYY");
-    let query = supabase
-      .rpc("get_rates")
-      .eq("depot_id", search.pickup)
-      .eq("rates_type", "seasonal");
+    let query = supabase.rpc("get_rates").eq("depot_id", search.pickup).eq("rates_type", "seasonal");
 
     if (search.license !== "") {
       query = query.or(`license_id.eq.${search.license},license_id.is.null`);
     }
 
     if (search.category !== "") {
-      query = query.contains(
-        "vehicles_categories",
-        JSON.stringify([{ id: search.category }])
-      );
+      query = query.contains("vehicles_categories", JSON.stringify([{ id: search.category }]));
     }
 
     if (search.pax > 0) {
@@ -172,18 +154,13 @@ export const cal = {
     let query = supabase.rpc("get_rates").select();
 
     query = query.or(
-      `date_start.lte.${search.date_start.format(
-        "YYYY-MM-DD"
-      )},date_end.gte.${search.date_end.format("YYYY-MM-DD")}`
+      `date_start.lte.${search.date_start.format("YYYY-MM-DD")},date_end.gte.${search.date_end.format("YYYY-MM-DD")}`
     );
     query = query.lte("date_start", search.date_end);
     query = query.gte("date_end", search.date_start);
 
     if (search.category !== "") {
-      query = query.contains(
-        "vehicles_categories",
-        JSON.stringify([{ id: search.category }])
-      );
+      query = query.contains("vehicles_categories", JSON.stringify([{ id: search.category }]));
     }
     if (search.license !== "") {
       query = query.or(`license_id.eq.${search.license},license_id.is.null`);
@@ -218,9 +195,7 @@ export const cal = {
         fee
     `);
     query = query.or(
-      `date_start.lte.${search.date_start.format(
-        "YYYY-MM-DD"
-      )},date_end.gte.${search.date_end.format("YYYY-MM-DD")}`
+      `date_start.lte.${search.date_start.format("YYYY-MM-DD")},date_end.gte.${search.date_end.format("YYYY-MM-DD")}`
     );
     query = query.lte("date_start", search.date_end);
     query = query.gte("date_end", search.date_start);
@@ -239,9 +214,7 @@ export const cal = {
         id
     `);
     query = query.or(
-      `date_start.lte.${search.date_start.format(
-        "YYYY-MM-DD"
-      )},date_end.gte.${search.date_end.format("YYYY-MM-DD")}`
+      `date_start.lte.${search.date_start.format("YYYY-MM-DD")},date_end.gte.${search.date_end.format("YYYY-MM-DD")}`
     );
     query = query.lte("date_start", search.date_end);
     query = query.gte("date_end", search.date_start);
@@ -274,16 +247,14 @@ export const cal = {
         own2
     `);
     query = query.or(
-      `travel_start.lte.${search.date_start.format(
+      `travel_start.lte.${search.date_start.format("YYYY-MM-DD")},travel_end.gte.${search.date_end.format(
         "YYYY-MM-DD"
-      )},travel_end.gte.${search.date_end.format("YYYY-MM-DD")}`
+      )}`
     );
     query = query.lte("travel_start", search.date_end);
     query = query.gte("travel_end", search.date_start);
     query = query.or(
-      `booking_start.lte.${dayjs().format(
-        "YYYY-MM-DD"
-      )},booking_end.gte.${dayjs().format("YYYY-MM-DD")}`
+      `booking_start.lte.${dayjs().format("YYYY-MM-DD")},booking_end.gte.${dayjs().format("YYYY-MM-DD")}`
     );
     query = query.lte("booking_start", dayjs());
     query = query.gte("booking_end", dayjs());
@@ -308,9 +279,7 @@ export const cal = {
         inclusions
     `);
     query = query.or(
-      `date_start.lte.${search.date_start.format(
-        "YYYY-MM-DD"
-      )},date_end.gte.${search.date_end.format("YYYY-MM-DD")}`
+      `date_start.lte.${search.date_start.format("YYYY-MM-DD")},date_end.gte.${search.date_end.format("YYYY-MM-DD")}`
     );
     query = query.lte("date_start", search.date_end);
     query = query.gte("date_end", search.date_start);
@@ -332,9 +301,7 @@ export const cal = {
         addons
     `);
     query = query.or(
-      `date_start.lte.${search.date_start.format(
-        "YYYY-MM-DD"
-      )},date_end.gte.${search.date_end.format("YYYY-MM-DD")}`
+      `date_start.lte.${search.date_start.format("YYYY-MM-DD")},date_end.gte.${search.date_end.format("YYYY-MM-DD")}`
     );
     query = query.lte("date_start", search.date_end);
     query = query.gte("date_end", search.date_start);
@@ -369,16 +336,14 @@ export const cal = {
         pay_counter
     `);
     query = query.or(
-      `travel_start.lte.${search.date_start.format(
+      `travel_start.lte.${search.date_start.format("YYYY-MM-DD")},travel_end.gte.${search.date_end.format(
         "YYYY-MM-DD"
-      )},travel_end.gte.${search.date_end.format("YYYY-MM-DD")}`
+      )}`
     );
     query = query.lte("travel_start", search.date_end);
     query = query.gte("travel_end", search.date_start);
     query = query.or(
-      `booking_start.lte.${dayjs().format(
-        "YYYY-MM-DD"
-      )},booking_end.gte.${dayjs().format("YYYY-MM-DD")}`
+      `booking_start.lte.${dayjs().format("YYYY-MM-DD")},booking_end.gte.${dayjs().format("YYYY-MM-DD")}`
     );
     query = query.lte("booking_start", dayjs());
     query = query.gte("booking_end", dayjs());
@@ -390,11 +355,11 @@ export const cal = {
     let results = [];
     const duration = search.date_end.diff(search.date_start, "day") + 1;
 
+    console.log("rates", rates);
+
     rates.forEach((rate) => {
       const valid = rate.routes.filter((route) => {
-        return (
-          route.from.id === search.pickup && route.to.id === search.dropoff
-        );
+        return route.from.id === search.pickup && route.to.id === search.dropoff;
       });
       if (valid.length) {
         if (valid[0].active) {
@@ -418,6 +383,7 @@ export const cal = {
     return results;
   },
   arrangeRates: (rates, search) => {
+    // console.log("ratesratesrates", dataSupplier);
     let vehicles = {};
     rates.forEach((rate) => {
       if (!(rate.vehicle_id in vehicles)) {
@@ -434,7 +400,7 @@ export const cal = {
 
     for (const id in vehicles) {
       for (const rate in vehicles[id]) {
-        let rates = {
+        let thisrate = {
           ...vehicles[id][rate][0],
           list: [],
         };
@@ -446,27 +412,15 @@ export const cal = {
 
         // console.log(search.date_start, search.date_end);
         for (
-          var d = new Date(
-            search.date_start.$y,
-            search.date_start.$M,
-            search.date_start.$D
-          );
-          d <=
-          new Date(search.date_end.$y, search.date_end.$M, search.date_end.$D);
+          var d = new Date(search.date_start.$y, search.date_start.$M, search.date_start.$D);
+          d <= new Date(search.date_end.$y, search.date_end.$M, search.date_end.$D);
           d.setDate(d.getDate() + 1)
         ) {
           const day = dayjs(d);
           // 7-day blocked, so change rate only after every 7th day
           if (day.diff(search.date_start, "day") % 7 === 0) {
             vehicles[id][rate].forEach((r) => {
-              if (
-                day.isBetween(
-                  dayjs(r.date_start),
-                  dayjs(r.date_end),
-                  "day",
-                  "[)"
-                )
-              ) {
+              if (day.isBetween(dayjs(r.date_start), dayjs(r.date_end), "day", "[)")) {
                 isAdded = true;
                 let todayNett = r.rates_nett * r.daily;
                 let todayGross = r.rates_gross * r.daily;
@@ -490,7 +444,7 @@ export const cal = {
               }
             });
           }
-          rates.list.push(rateToday);
+          thisrate.list.push(rateToday);
           nett += rateToday.nett;
           gross += rateToday.gross;
           profit += rateToday.profit;
@@ -498,17 +452,19 @@ export const cal = {
           // console.log(day.format("DD/MM/YYYY"));
         }
         if (isAdded) {
-          rates.nett = nett;
-          rates.gross = gross;
-          rates.profit = profit;
-          results.push(rates);
+          thisrate.nett = nett;
+          thisrate.gross = gross;
+          thisrate.profit = profit;
+          results.push(thisrate);
         }
       }
     }
-    // console.log("arrange", results);
+    // console.log("arrange", results.length);
     return results;
   },
   filterBlockouts: (rates, blockouts) => {
+    // console.log("ratesrates", results);
+
     let results = {
       rates: [],
       blocked: [],
@@ -523,10 +479,7 @@ export const cal = {
 
         if (!blocked_depots) {
           blockout.blockouts_depots.forEach((bo) => {
-            if (
-              bo.depots.id === rate.depot_id ||
-              bo.depots.id === rate.dropoff_id
-            ) {
+            if (bo.depots.id === rate.depot_id || bo.depots.id === rate.dropoff_id) {
               blocked_depots = true;
             }
           });

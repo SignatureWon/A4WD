@@ -21,7 +21,7 @@ export async function load({ url, params, locals }) {
   let results = [];
   let blocked = [];
   let allRates = [];
-  let specials = []
+  let specials = [];
 
   url.searchParams.forEach((value, key) => {
     if (["date_start", "date_end"].includes(key)) {
@@ -29,7 +29,6 @@ export async function load({ url, params, locals }) {
     }
     search[key] = value;
   });
-
 
   if (search.pickup !== "" && search.dropoff !== "") {
     const { data: flexData } = await cal.getFlex(supabase, search);
@@ -43,22 +42,11 @@ export async function load({ url, params, locals }) {
     //   search
     // );
     // console.log(ratesData);
-    const { data: feesData, error: feesError } = await cal.getFees(
-      supabase,
-      search
-    );
-    const { data: blockoutsData, error: blockoutsError } =
-      await cal.getBlockouts(supabase, search);
+    const { data: feesData, error: feesError } = await cal.getFees(supabase, search);
+    const { data: blockoutsData, error: blockoutsError } = await cal.getBlockouts(supabase, search);
 
-    const { data: specialsData, error: specialsError } = await cal.getSpecials(
-      supabase,
-      search
-    );
-    const { data: bondsData, error: bondsError } = await cal.getBonds(
-      supabase,
-      search
-    );
-    // console.log(bondsData);
+    const { data: specialsData, error: specialsError } = await cal.getSpecials(supabase, search);
+    const { data: bondsData, error: bondsError } = await cal.getBonds(supabase, search);
 
     const filteredRoutes = cal.filterRoutes(allRates, search);
     const arrangedRates = cal.arrangeRates(filteredRoutes, search);
@@ -69,8 +57,8 @@ export async function load({ url, params, locals }) {
     //   console.log(addedBonds);
 
     results = [...addedBonds];
-    blocked = [...filteredBlockouts.blocked]
-    specials = [...addedSpecials]
+    blocked = [...filteredBlockouts.blocked];
+    specials = [...addedSpecials];
   }
 
   // console.log("search", results.length);
