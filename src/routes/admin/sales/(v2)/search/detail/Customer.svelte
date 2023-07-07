@@ -49,7 +49,7 @@
   const addCustomer = async () => {
     noCustomer = false;
     delete quote.users.id;
-    const { data: dataCustomer, error: errorData } = await supabase.from("users").insert(user).select().single();
+    const { data: dataCustomer, error: errorData } = await supabase.from("users").insert(quote.users).select().single();
 
     if (dataCustomer) {
       quote.users = dataCustomer;
