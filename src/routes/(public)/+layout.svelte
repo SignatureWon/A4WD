@@ -2,13 +2,7 @@
   import { page } from "$app/stores";
   let path = $page.url.pathname.split("/");
 
-  import {
-    Button,
-    OverflowMenu,
-    OverflowMenuItem,
-    TextArea,
-    TextInput,
-  } from "carbon-components-svelte";
+  import { Button, OverflowMenu, OverflowMenuItem, TextArea, TextInput } from "carbon-components-svelte";
   import { env } from "$env/dynamic/public";
   import Announcements from "$lib/components/public/Announcements.svelte";
   import { theme } from "$lib/theme.js";
@@ -36,18 +30,12 @@
   <title>{data.site.title}</title>
   <meta name="description" content={data.site.description} />
   <meta name="keywords" content={data.site.keywords} />
-  <link
-    rel="icon"
-    href={`${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/${data.site.icon}`}
-  />
+  <link rel="icon" href={`${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/${data.site.icon}`} />
 </svelte:head>
 <div
   style="--brand50: {c.brand50}; --brand100: {c.brand100}; --brand200: {c.brand200}; --brand300: {c.brand300}; --brand400: {c.brand400}; --brand-color: {c.brand500}; --brand600: {c.brand600}; --brand700: {c.brand700}; --brand-color-hover: {c.brand800}; --brand900: {c.brand900};"
 >
-  <section
-    id="topbar"
-    class="bg-gray-800 text-white p-2 text-sm lg:flex items-center" style="height: 45px;"
-  >
+  <section id="topbar" class="bg-gray-800 text-white p-2 text-sm lg:flex items-center" style="height: 45px;">
     <div class="flex-1 h-8 overflow-hidden hidden lg:block">
       <Announcements records={getContent("announcements")} />
       <!-- {#each getContent("announcements") as announcement}
@@ -65,8 +53,7 @@
     <div>
       <a href="/">
         <img
-          src="{env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/{data
-            .site.logo}"
+          src="{env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/{data.site.logo}"
           alt={data.site.title}
           class="w-36"
         />
@@ -86,16 +73,8 @@
     <div class="flex md:hidden">
       <OverflowMenu flipped>
         <div slot="menu">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            width="24"
-            height="24"
-            class="w-5 h-5"
-          >
-            <path fill="none" d="M0 0h24v24H0z" /><path
-              d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z"
-            />
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" class="w-5 h-5">
+            <path fill="none" d="M0 0h24v24H0z" /><path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" />
           </svg>
         </div>
         {#each getContent("pages") as page}
@@ -130,14 +109,10 @@
     <div class="bg-cover" style="background-image: url('/img/bg-contact.jpg');">
       <div class="bg-brand-700/90">
         <div class="container xl:max-w-7xl mx-auto px-4 py-16 lg:px-8 lg:py-32">
-          <div
-            class="flex flex-col lg:flex-row space-y-16 lg:space-y-0 lg:space-x-16"
-          >
+          <div class="flex flex-col lg:flex-row space-y-16 lg:space-y-0 lg:space-x-16">
             <!-- Heading with Company Info -->
             <div class="lg:w-2/5 text-white">
-              <div
-                class="text-sm uppercase font-bold tracking-wider mb-1 text-brand-400"
-              >
+              <div class="text-sm uppercase font-bold tracking-wider mb-1 text-brand-400">
                 {data.site.contact.name}
               </div>
               <h2 class="text-xl font-extrabold mb-4">
@@ -151,53 +126,23 @@
 
             <!-- Contact Form -->
             <div class="lg:w-3/5 p-2 bg-white bg-opacity-10 rounded-xl">
-              <form
-                method="post"
-                action="/api/email"
-                class="bg-white rounded-lg p-6 space-y-6"
-              >
+              <form method="post" action="/api/email" class="bg-white rounded-lg p-6 space-y-6">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div class="space-y-1">
-                    <TextInput
-                      name="first_name"
-                      labelText="First Name"
-                      bind:value={msg.first_name}
-                      required
-                    />
+                    <TextInput name="first_name" labelText="First Name" bind:value={msg.first_name} required />
                   </div>
                   <div class="space-y-1">
-                    <TextInput
-                      name="last_name"
-                      labelText="Last Name"
-                      bind:value={msg.last_name}
-                      required
-                    />
+                    <TextInput name="last_name" labelText="Last Name" bind:value={msg.last_name} required />
                   </div>
                 </div>
                 <div class="space-y-1">
-                  <TextInput
-                    name="email"
-                    labelText="Email"
-                    type="email"
-                    bind:value={msg.email}
-                    required
-                  />
+                  <TextInput name="email" labelText="Email" type="email" bind:value={msg.email} required />
                 </div>
                 <div class="space-y-1">
-                  <TextInput
-                    name="phone"
-                    labelText="Phone"
-                    bind:value={msg.phone}
-                    required
-                  />
+                  <TextInput name="phone" labelText="Phone" bind:value={msg.phone} required />
                 </div>
                 <div class="space-y-1">
-                  <TextArea
-                    name="message"
-                    labelText="Message"
-                    bind:value={msg.message}
-                    required
-                  />
+                  <TextArea name="message" labelText="Message" bind:value={msg.message} required />
                 </div>
                 <Button type="submit">Send Message</Button>
               </form>
@@ -212,19 +157,12 @@
       <div class="container xl:max-w-7xl mx-auto px-4 py-16">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
           <div class="space-y-6">
-            <h4
-              class="text-sm uppercase font-semibold tracking-wider text-gray-500"
-            >
-              Company
-            </h4>
+            <h4 class="text-sm uppercase font-semibold tracking-wider text-gray-500">Company</h4>
             <nav class="flex flex-col space-y-3">
               {#each getContent("pages") as page}
                 {#if page.categories}
                   {#if page.categories.name === "Company"}
-                    <a
-                      href="/{page.slug}"
-                      class="font-medium text-gray-300 hover:text-gray-400"
-                    >
+                    <a href="/{page.slug}" class="font-medium text-gray-300 hover:text-gray-400">
                       {page.name}
                     </a>
                   {/if}
@@ -245,19 +183,12 @@
             </nav>
           </div>
           <div class="space-y-6">
-            <h4
-              class="text-sm uppercase font-semibold tracking-wider text-gray-500"
-            >
-              Product
-            </h4>
+            <h4 class="text-sm uppercase font-semibold tracking-wider text-gray-500">Product</h4>
             <nav class="flex flex-col space-y-3">
               {#each getContent("pages") as page}
                 {#if page.categories}
                   {#if page.categories.name === "Product"}
-                    <a
-                      href="/{page.slug}"
-                      class="font-medium text-gray-300 hover:text-gray-400"
-                    >
+                    <a href="/{page.slug}" class="font-medium text-gray-300 hover:text-gray-400">
                       {page.name}
                     </a>
                   {/if}
@@ -278,17 +209,10 @@
             </nav>
           </div>
           <div class="space-y-6">
-            <h4
-              class="text-sm uppercase font-semibold tracking-wider text-gray-500"
-            >
-              Join Our Newsletter
-            </h4>
-            <form
-              onsubmit="return false;"
-              class="space-y-3 sm:space-y-0 sm:flex sm:items-center sm:space-x-2"
-            >
+            <h4 class="text-sm uppercase font-semibold tracking-wider text-gray-500">Join Our Newsletter</h4>
+            <form method="post" action="/api/newsletter" class="space-y-3 sm:space-y-0 sm:flex sm:items-center sm:space-x-2">
               <TextInput placeholder="Your email" />
-              <Button>Subscribe</Button>
+              <Button type="submit">Subscribe</Button>
             </form>
           </div>
         </div>
@@ -316,9 +240,7 @@
             </a>
           </nav>
           <div class="text-gray-400">
-            <span class="font-medium"
-              >&copy; {new Date().getFullYear()} {data.site.title}</span
-            >
+            <span class="font-medium">&copy; {new Date().getFullYear()} {data.site.title}</span>
           </div>
         </div>
       </div>

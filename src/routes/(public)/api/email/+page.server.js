@@ -8,26 +8,44 @@ export const actions = {
     const formData = await request.formData();
     let newData = Object.fromEntries(formData.entries());
 
-    const { data: emailData } = await supabase
-      .from("constants")
-      .select("name")
-      .eq("type", "email")
-      .single();
-    
+    const { data: emailData } = await supabase.from("constants").select("name").eq("type", "email").single();
+
     sgMail.setApiKey(env.PUBLIC_SENDGRID_API_KEY);
-    sgMail
+    await sgMail
       .send({
-        to: emailData.name,
-        from: "info@australia4wheeldriverentals.com.au",
+        personalizations: [
+          {
+            to: [
+              {
+                email: emailData.name,
+                // name: `${newData.first_name.trim()} ${newData.last_name.trim()}`,
+              },
+            ],
+            // bcc: bccList,
+          },
+        ],
+        from: {
+          email: "info@australia4wdrentals.com",
+          name: "Australia 4WD Rentals",
+        },
         subject: `Message from ${newData.first_name}`,
-        text: `First name: ${newData.first_name}, Last name: ${newData.last_name}, Email: ${newData.email}, Phone: ${newData.phone}, Message: ${newData.message}`,
-        html: `
-            First name: <strong>${newData.first_name}</strong><br>
-            Last name: <strong>${newData.last_name}</strong><br>
-            Email: <strong>${newData.email}</strong><br>
-            Phone: <strong>${newData.phone}</strong><br><br>
-            Message: <br>
-            ${newData.message}`,
+        content: [
+          {
+            type: "text/html",
+            value: `
+              First name: <strong>${newData.first_name}</strong><br>
+              Last name: <strong>${newData.last_name}</strong><br>
+              Email: <strong>${newData.email}</strong><br>
+              Phone: <strong>${newData.phone}</strong><br><br>
+              Message: <br>
+              ${newData.message}`,
+          },
+        ],
+        // mail_settings: {
+        //   sandbox_mode: {
+        //     enable: true,
+        //   },
+        // },
       })
       .then(() => {
         console.log("Email sent");
