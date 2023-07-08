@@ -11,7 +11,7 @@
       <div class="grid grid-cols-1 gap-4">
         <div>
           <div class="label">Name</div>
-          <div class="value">{user.first_name} {user.last_name}</div>
+          <div class="value">{user.first_name || ""} {user.last_name || ""}</div>
         </div>
         <div>
           <div class="label">Contact</div>

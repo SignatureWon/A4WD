@@ -51,6 +51,7 @@ export const q = {
     const totalSupplierFee = () => {
       let sum = 0;
       supplierFees.forEach((fee) => {
+        console.log("SUPP", fee);
         sum += fee.total;
       });
       return sum;
@@ -96,6 +97,8 @@ export const q = {
       terms = quote.details.terms;
     }
 
+    console.log("terms", terms);
+
     if (terms.pay_counter) {
       // console.log("quote.details", quote.details);
       let toAgent = terms.percentage ? (quote.details.daily.gross * terms.deposit) / 100 : terms.deposit;
@@ -129,7 +132,6 @@ export const q = {
         nett: 0,
         profit: 0,
       });
-
       supplierFees.push({
         name: `Balance of daily basic rental ($${format.currency(quote.details.daily.gross)} - $${format.currency(
           toAgent
