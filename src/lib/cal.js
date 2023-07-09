@@ -358,7 +358,7 @@ export const cal = {
     console.log("rates", rates);
 
     rates.forEach((rate) => {
-      const valid = rate.routes.filter((route) => {
+      const valid = (rate.routes || []).filter((route) => {
         return route.from.id === search.pickup && route.to.id === search.dropoff;
       });
       if (valid.length) {
