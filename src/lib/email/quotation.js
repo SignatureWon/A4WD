@@ -22,7 +22,7 @@ export const html = {
       .eq("type", "template_letterhead")
       .single();
     
-    let quote = quote_id
+    let quote = Number(quote_id)
 
     if (Number.isInteger(quote)) {
       const { data: data_quote } = await supabase.from("quotes").select("*, users (*)").eq("id", quote_id).single();
