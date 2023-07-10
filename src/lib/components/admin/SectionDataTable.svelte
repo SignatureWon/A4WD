@@ -5,6 +5,7 @@
 
   export let rows = [];
   export let path = "";
+  export let prefix = "";
   export let headers = [{ key: "name", value: "Name" }];
   export let modal = false;
 
@@ -88,9 +89,15 @@
       {:else}
         {cell.value}
       {/if}
-    {:else if ["date_start", "date_end", "date_deposit", "date_balance", "date_provisional", "travel_start", "travel_end", "created_at", "updated_at"].includes(cell.key)}
+    {:else if ["date_start", "date_end", "travel_start", "travel_end", "updated_at"].includes(cell.key)}
       {#if cell.value}
         {dayjs(cell.value).format("DD/MM/YYYY")}
+      {:else}
+        &mdash;
+      {/if}
+    {:else if ["date_deposit", "date_balance", "date_provisional", "created_at"].includes(cell.key)}
+      {#if cell.value}
+        {dayjs(cell.value).format("DD/MM/YYYY hh:mm:ssa")}
       {:else}
         &mdash;
       {/if}
@@ -99,7 +106,7 @@
     {:else if cell.key === "gross"}
       {formatCurrency(cell.value)}
     {:else if cell.key === "quote_id"}
-      Q{388000 + row.id}
+      {prefix}{388000 + row.id}
     {:else if cell.key === "quote_title"}
       {row.details.vehicle.name.trim()}: {row.details.pickup.name.trim()}, {dayjs(row.details.date_start).format(
         "DD MMM YYYY"

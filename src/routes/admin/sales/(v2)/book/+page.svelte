@@ -10,6 +10,7 @@
 <SectionDataTable
   rows={data.data}
   path={data.path}
+  prefix="B"
   headers={[
     {
       key: "date_deposit",

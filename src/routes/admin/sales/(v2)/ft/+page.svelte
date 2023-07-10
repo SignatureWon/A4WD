@@ -11,6 +11,7 @@
 <SectionDataTable
   rows={data.data}
   path={data.path}
+  prefix="FT"
   headers={[
     {
       key: "date_balance",

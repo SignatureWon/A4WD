@@ -10,6 +10,7 @@
 <SectionDataTable
   rows={data.data}
   path={data.path}
+  prefix="PT"
   headers={[
     {
       key: "date_provisional",
