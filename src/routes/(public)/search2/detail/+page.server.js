@@ -47,8 +47,6 @@ export const actions = {
       .select("id")
       .eq("email", fd.email)
       .single();
-    
-    
 
     console.log("fdfdfdfd", fd);
 

@@ -37,10 +37,10 @@
       </div>
       <div class="ml-4">
         <Button
-          class="rounded-full"
+          class="rounded-full flex px-3"
           on:click={() => {
             show = !show;
-          }}>{@html icon_search}</Button
+          }}>Edit</Button
         >
       </div>
     </div>

@@ -14,7 +14,7 @@
   headers={[
     {
       key: "created_at",
-      value: "Booking Date",
+      value: "Quote Date",
     },
     {
       key: "quote_id",

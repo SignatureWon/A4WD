@@ -1,6 +1,7 @@
 <script>
   import { format } from "$lib/format.js";
   import { q } from "$lib/quote.js";
+  import { Button } from "carbon-components-svelte";
   import { onMount } from "svelte";
   export let data;
   // export let search;
@@ -41,3 +42,7 @@
     </div>
   </div>
 </div>
+<div class="text-center p-2">
+  <Button>Get Instant Quote</Button>
+</div>
+
