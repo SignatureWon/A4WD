@@ -28,20 +28,31 @@ export async function load({ url, params, locals }) {
     }
   });
   let selected = JSON.parse(url.searchParams.get("selected"));
-
   let details = await calculator.details(selected, search);
-
-
-
-  //   console.log(bonds);
 
   return {
     options: options,
     search: JSON.parse(JSON.stringify(search)),
-    // all: all_rates,
-    // blocked: JSON.parse(JSON.stringify(blocked)),
-    // selected: selected,
     details: details,
-    // specials: JSON.parse(JSON.stringify(specials)),
   };
+}
+
+export const actions = {
+  default: async ({ request, url, locals }) => {
+    const formData = await request.formData();
+    let fd = Object.fromEntries(formData.entries());
+
+    const { data: dataUser } = await supabase
+      .from("users")
+      .select("id")
+      .eq("email", fd.email)
+      .single();
+    
+    
+
+    console.log("fdfdfdfd", fd);
+
+
+    // throw redirect(303, `/booking/success`);
+  },
 }

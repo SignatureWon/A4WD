@@ -9,18 +9,21 @@ export const actions = {
     let newData = Object.fromEntries(formData.entries());
 
     const { data: emailData } = await supabase.from("constants").select("name").eq("type", "email").single();
+    let to = emailData.name.split(",");
+    let toList = [];
+    to.forEach((email) => {
+      toList.push({
+        email: email.trim(),
+      });
+    });
+
 
     sgMail.setApiKey(env.PUBLIC_SENDGRID_API_KEY);
     await sgMail
       .send({
         personalizations: [
           {
-            to: [
-              {
-                email: emailData.name,
-                // name: `${newData.first_name.trim()} ${newData.last_name.trim()}`,
-              },
-            ],
+            to: toList,
             // bcc: bccList,
           },
         ],

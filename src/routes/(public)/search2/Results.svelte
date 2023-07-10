@@ -32,7 +32,7 @@
         <div>
           <div class="flex">
             {#if d.special_total > 0}
-              <div class="bg-red-500 text-white text-xs uppercase px-1 py-0.5 rounded-b mr-1">Promo</div>
+              <div class="bg-red-500 text-white text-xs uppercase px-1 py-0.5 rounded-b mr-1">Specials</div>
             {/if}
           </div>
         </div>

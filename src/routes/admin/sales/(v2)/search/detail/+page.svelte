@@ -24,7 +24,7 @@
   // console.log("data", data);
   let open = false;
   let emailPreview = "";
-  let error_message = []
+  let error_message = [];
 
   let quote = {
     id: 0,
@@ -69,30 +69,30 @@
   };
   const createQuote = async () => {
     // let valid = true
-      // console.log("quote", quote);
-    error_message = []
+    // console.log("quote", quote);
+    error_message = [];
     if (!quote.users.id) {
-      error_message.push("No selected user")
+      error_message.push("No selected user");
     }
     if (!quote.details.driver.license.length) {
-      error_message.push("No driver license")
+      error_message.push("No driver license");
     }
     if (!quote.details.driver.age || quote.details.driver.age === 0) {
-      error_message.push("No driver age")
+      error_message.push("No driver age");
     }
     if (!quote.details.passenger.adult === 0) {
-      error_message.push("No adult passenger")
+      error_message.push("No adult passenger");
     }
     if (error_message.length === 0) {
-      let newQuote = {...quote}
+      let newQuote = { ...quote };
       newQuote.users = quote.users.id;
-      delete newQuote.id
+      delete newQuote.id;
 
       const { data, error } = await supabase.from("quotes").insert(newQuote).select().single();
       setTimeout(() => {
         goto(`/admin/sales/quotes/${data.id}`);
       }, 500);
-  }
+    }
   };
 
   const count = () => {
@@ -146,10 +146,7 @@
         }}>Preview</Button
       >
 
-      <Button
-        class="w-full"
-        on:click={createQuote}>Create Quote</Button
-      >
+      <Button class="w-full" on:click={createQuote}>Create Quote</Button>
 
       <!-- <form action="?/update" method="POST">
         <Button type="submit" class="w-full">Update</Button>

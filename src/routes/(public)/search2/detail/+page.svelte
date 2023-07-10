@@ -10,11 +10,28 @@
   import Trip from "./Trip.svelte";
   import { q } from "$lib/quote.js";
   export let data;
-  console.log(data);
-
+  // console.log(data);
   let quote = {
-    details: data.details,
+    status: "Request",
+    details: {
+      ...data.details,
+      driver: {
+        age: null,
+        license: data.search.license,
+      },
+      passenger: {
+        adult: 1,
+        children: 0,
+      },
+    },
+    users: {
+      email: null,
+    },
   };
+
+  // let quote = {
+  //   details: data.details,
+  // };
   let summary = {
     agentItems: [],
     supplierItems: [],
