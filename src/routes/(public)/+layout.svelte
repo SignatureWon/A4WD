@@ -31,6 +31,9 @@
   <meta name="description" content={data.site.description} />
   <meta name="keywords" content={data.site.keywords} />
   <link rel="icon" href={`${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/${data.site.icon}`} />
+  <!-- Google tag (gtag.js) --> 
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NFTHV5X9NR"></script> 
+  <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-NFTHV5X9NR'); </script>
 </svelte:head>
 <div
   style="--brand50: {c.brand50}; --brand100: {c.brand100}; --brand200: {c.brand200}; --brand300: {c.brand300}; --brand400: {c.brand400}; --brand-color: {c.brand500}; --brand600: {c.brand600}; --brand700: {c.brand700}; --brand-color-hover: {c.brand800}; --brand900: {c.brand900};"

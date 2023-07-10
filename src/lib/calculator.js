@@ -299,7 +299,7 @@ const get_flex = async (search, routes) => {
   let sorted_rates = sort_rates_by_vehicle(available_rates);
   let results = convert_to_flex_rates(sorted_rates, search);
 
-  // console.log("sorted_rates", sorted_rates);
+  console.log("available_rates", available_rates);
   // console.log("results", results);
 
   return results;
