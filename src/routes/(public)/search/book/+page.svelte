@@ -55,7 +55,7 @@
           <div class="p-5 grid grid-cols-1 gap-4">
             <div class="grid grid-cols-1 sm:grid-cols-5 gap-4">
               <div>
-                <Select name="title" labelText="Title" bind:selected={user.title} required>
+                <Select name="title" labelText="Title" bind:selected={user.title}>
                   <SelectItem value="Mr." text="Mr." />
                   <SelectItem value="Ms." text="Ms." />
                   <SelectItem value="Mrs." text="Mrs." />
@@ -75,12 +75,12 @@
                 <TextInput name="email" labelText="Email" type="email" bind:value={user.email} required />
               </div>
               <div class="sm:col-span-2">
-                <TextInput name="phone" labelText="Phone" bind:value={user.phone} required />
+                <TextInput name="phone" labelText="Phone" bind:value={user.phone} />
               </div>
             </div>
             <div class="grid grid-cols-1 gap-2">
               <div>
-                <TextInput name="address_1" labelText="Street Address" bind:value={user.address_1} required />
+                <TextInput name="address_1" labelText="Street Address" bind:value={user.address_1} />
               </div>
               <!-- <div>
                 <TextInput name="address_2" bind:value={user.address_2} />
@@ -88,16 +88,16 @@
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <TextInput name="postcode" labelText="Postcode" bind:value={user.postcode} required />
+                <TextInput name="postcode" labelText="Postcode" bind:value={user.postcode} />
               </div>
               <div>
-                <TextInput name="city" labelText="City" bind:value={user.city} required />
+                <TextInput name="city" labelText="City" bind:value={user.city} />
               </div>
               <div>
                 <TextInput name="state" labelText="State" bind:value={user.state} />
               </div>
               <div>
-                <Select labelText="Country" name="country" bind:selected={user.country}>
+                <Select labelText="Country" name="country" bind:selected={user.country} required>
                   {#each data.options[4].options as country}
                     <SelectItem value={country.name} />
                   {/each}
