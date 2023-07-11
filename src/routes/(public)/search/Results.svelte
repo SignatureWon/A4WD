@@ -4,10 +4,10 @@
   import { Button } from "carbon-components-svelte";
   export let results;
   export let search;
-  export let url = "/search2/detail";
+  export let url = "/search/detail";
   let paramSearch = []
 
-  // console.log("results", results);
+  console.log("results", results);
 
   const icon = {
     pax: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-4 h-4" fill="currentColor"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>`,
@@ -146,9 +146,11 @@
                   </span>
                 </div>
               {/if}
+              <!-- href={`${url}?selected=${encodeURIComponent(JSON.stringify(d))}&${paramSearch.join("&")}`} -->
+
               <Button
                 class="rounded h-auto p-1.5 text-sm w-full inline-block uppercase tracking-wider"
-                href={`${url}?selected=${encodeURIComponent(JSON.stringify(d))}&${paramSearch.join("&")}`}
+                href={`${url}?rates=${d.rates_id}&type=${d.rates_type}&vehicle=${d.vehicle_id}&${paramSearch.join("&")}`}
               >
                 See Quote
               </Button>

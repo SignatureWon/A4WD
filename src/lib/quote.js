@@ -51,7 +51,7 @@ export const q = {
     const totalSupplierFee = () => {
       let sum = 0;
       supplierFees.forEach((fee) => {
-        console.log("SUPP", fee);
+        // console.log("SUPP", fee);
         sum += fee.total;
       });
       return sum;
@@ -97,7 +97,7 @@ export const q = {
       terms = quote.details.terms;
     }
 
-    console.log("terms", terms);
+    // console.log("terms", terms);
 
     if (terms.pay_counter) {
       // console.log("quote.details", quote.details);
@@ -479,7 +479,7 @@ export const q = {
         termsItems = [
           {
             name: `Full payment to agent on ${dayjs(date_quote).format("ddd, DD MMM YYYY")}`,
-            total: totalAgent,
+            total: totalAgent + totalSupplier,
           },
         ];
       } else {

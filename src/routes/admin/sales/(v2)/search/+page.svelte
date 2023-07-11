@@ -1,6 +1,6 @@
 <script>
-  import Search from '../../../../(public)/search2/Search.svelte';
-  import Results from '../../../../(public)/search2/Results.svelte';
+  import Search from '../../../../(public)/search/Search.svelte';
+  import Results from '../../../../(public)/search/Results.svelte';
 
     /** @type {import('./$types').PageData} */
     export let data;

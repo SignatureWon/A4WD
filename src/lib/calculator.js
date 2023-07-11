@@ -15,43 +15,46 @@ const get_available_routes = (data, search, routes) => {
           return item.suppliers.id === rate.supplier_id;
         });
         if (filter_suppliers.length) {
-          let depot = route.all_depots;
-          if (!depot) {
-            let valid = route.routes.filter((r) => {
-              return r.from.id === search.pickup && r.to.id === search.dropoff && r.active;
-            });
-            if (valid.length) {
-              valid[0] = {
-                ...valid[0],
-                waive: route.waive,
-                waive_days: route.waive_days,
-              };
-              rate.routes = valid[0];
-              rate.min_days = valid[0].days || 0;
-              rate.one_way = valid[0].fee || 0;
-              rate.dropoff_id = valid[0].to.id;
-              rate.dropoff_name = valid[0].to.label || valid[0].to.name;
-              rate.duration = search.duration;
+          // let depot = route.all_depots;
+          // console.log("route.routes", route.routes.filter((r) => {
+          //   return r.from.id === search.pickup && r.to.id === search.dropoff && r.active;
+          // }));
+          // if (!depot) {
+          let valid = route.routes.filter((r) => {
+            return r.from.id === search.pickup && r.to.id === search.dropoff && r.active;
+          });
+          if (valid.length) {
+            valid[0] = {
+              ...valid[0],
+              waive: route.waive,
+              waive_days: route.waive_days,
+            };
+            rate.routes = valid[0];
+            rate.min_days = valid[0].days || 0;
+            rate.one_way = valid[0].fee || 0;
+            rate.dropoff_id = valid[0].to.id;
+            rate.dropoff_name = valid[0].to.label || valid[0].to.name;
+            rate.duration = search.duration;
 
-              if (rate.rates_type === "seasonal") {
-                let daily = 0;
-                let min_days = rate.min_days > rate.tiers[0].from ? rate.min_days : rate.tiers[0].from;
-                rate.tiers.forEach((t, i) => {
-                  if (i === 0) {
-                    if (min_days > search.duration) {
-                      daily = (t.rate * min_days) / search.duration;
-                    }
+            if (rate.rates_type === "seasonal") {
+              let daily = 0;
+              let min_days = rate.min_days > rate.tiers[0].from ? rate.min_days : rate.tiers[0].from;
+              rate.tiers.forEach((t, i) => {
+                if (i === 0) {
+                  if (min_days > search.duration) {
+                    daily = (t.rate * min_days) / search.duration;
                   }
-                  if (search.duration >= t.from && search.duration <= t.to) {
-                    daily = t.rate;
-                  }
-                });
+                }
+                if (search.duration >= t.from && search.duration <= t.to) {
+                  daily = t.rate;
+                }
+              });
 
-                rate.daily = daily;
-              }
-              results.push(rate);
+              rate.daily = daily;
             }
+            results.push(rate);
           }
+          // }
         }
       });
     }
@@ -204,35 +207,35 @@ const convert_to_seasonal_rates = (data, search) => {
           };
         }
         if (!isAdded) {
-          let isCount = true
+          let isCount = true;
           if (r.supplier_all_day) {
-            isCount = day.isBefore(dayjs(search.date_end))
+            isCount = day.isBefore(dayjs(search.date_end));
           }
-            if (day.isBetween(dayjs(r.date_start), dayjs(r.date_end), "day", "[]") && isCount) {
-              isAdded = true;
-              let todayNett = r.rates_nett * r.daily;
-              let todayGross = r.rates_gross * r.daily;
-              let todayProfit = todayGross - todayNett;
+          if (day.isBetween(dayjs(r.date_start), dayjs(r.date_end), "day", "[]") && isCount) {
+            isAdded = true;
+            let todayNett = r.rates_nett * r.daily;
+            let todayGross = r.rates_gross * r.daily;
+            let todayProfit = todayGross - todayNett;
 
-              rateToday = {
-                day: day,
-                nett: todayNett,
-                gross: todayGross,
-                profit: todayProfit,
-                flex: r.flex,
-                name: r.rates_name,
-              };
-              rates.list.push(rateToday);
-              nett += rateToday.nett;
-              gross += rateToday.gross;
-              profit += rateToday.profit;
-            }
+            rateToday = {
+              day: day,
+              nett: todayNett,
+              gross: todayGross,
+              profit: todayProfit,
+              flex: r.flex,
+              name: r.rates_name,
+            };
+            rates.list.push(rateToday);
+            nett += rateToday.nett;
+            gross += rateToday.gross;
+            profit += rateToday.profit;
+          }
         }
       }
     }
     if (rates.supplier_all_day) {
-      rates.duration = search.duration - 1
-      console.log("rates", rates);
+      rates.duration = search.duration - 1;
+      // console.log("rates", rates);
     }
     rates.nett = nett;
     rates.gross = gross;
@@ -299,7 +302,7 @@ const get_flex = async (search, routes) => {
   let sorted_rates = sort_rates_by_vehicle(available_rates);
   let results = convert_to_flex_rates(sorted_rates, search);
 
-  console.log("available_rates", available_rates);
+  // console.log("available_rates", data);
   // console.log("results", results);
 
   return results;
@@ -526,11 +529,11 @@ const check_specials = async (rates, search) => {
   // console.log("specials", data);
   rates.forEach((rate) => {
     rate.special_total = 0;
-  // console.log("rate", rate);
+    // console.log("rate", rate);
 
     rate.special_items = [];
     data.forEach((item) => {
-    // console.log("item", item);
+      // console.log("item", item);
 
       let depots = item.all_depots;
       let dropoffs = item.all_dropoffs;
@@ -574,7 +577,7 @@ const check_specials = async (rates, search) => {
             item.discount_profit = 0;
             item.discount_list = [];
             item.active = false;
-            spec = {}
+            spec = {};
             // console.log("rate", item, rate);
 
             switch (item.type) {
@@ -601,7 +604,7 @@ const check_specials = async (rates, search) => {
                 if (rate.duration > item.days) {
                   item.active = true;
                   spec = check_every_x_day(rate, item);
-                  console.log(spec);
+                  // console.log(spec);
                   add_specials(rate, item, spec);
                 }
                 break;
@@ -639,10 +642,10 @@ const check_specials = async (rates, search) => {
                   break;
               }
             }
-            console.log({
-              rate: rate,
-              item: item
-            });
+            // console.log({
+            //   rate: rate,
+            //   item: item
+            // });
             rate.special_total += item.discount_amount;
             rate.special_items = [...rate.special_items, item];
           }
@@ -971,6 +974,102 @@ export const calculator = {
 
     return details;
   },
+  single: async (search) => {
+    search.duration = dayjs(search.date_end).diff(dayjs(search.date_start), "day") + 1;
+    const routes = await get_routes(search);
+    let this_rate = [];
+    if (search.type === "flex") {
+      this_rate = await get_flex(search, routes);
+    } else {
+      this_rate = await get_seasonal(search, routes);
+    }
+    const { rates, blocked } = await check_blockouts(this_rate, search);
+    const specials = await check_specials(rates, search);
+
+    const bonds = await check_bonds(specials[0], search);
+    const fees = await check_fees(bonds, search);
+    const addons = await check_addons(fees, search);
+    const d = await check_terms(fees, search);
+
+    const details = {
+      date_issue: dayjs().format("YYYY-MM-DD"),
+      date_book: dayjs().format("YYYY-MM-DD"),
+      date_start: search.date_start,
+      date_end: search.date_end,
+      pax: search.pax,
+      duration: d.duration,
+      min_days: d.min_days,
+      rates_type: d.rates_type,
+      rates_nett: d.rates_nett,
+      rates_gross: d.rates_gross,
+      rates: {
+        id: d.rates_id,
+        name: d.rates_name,
+        type: d.rates_type,
+        nett: d.rates_nett,
+        gross: d.rates_gross,
+      },
+      pickup: {
+        id: d.depot_id,
+        name: d.depot_name,
+      },
+      dropoff: {
+        id: d.dropoff_id,
+        name: d.dropoff_name,
+      },
+      vehicle: {
+        id: d.vehicle_id,
+        name: d.vehicle_name,
+        image: `${env.PUBLIC_SUPABASE_URL}/storage/v1/render/image/public/contents/${d.vehicle_image}?width=600&height=600&resize=contain`,
+        excerpt: d.vehicle_excerpt,
+        slug: d.vehicle_slug,
+        fuel: d.vehicle_fuel,
+        pax: d.vehicle_pax,
+        shower: d.vehicle_shower,
+        toilet: d.vehicle_toilet,
+        wheel: d.vehicle_wheel,
+        transmission: d.vehicle_transmission,
+      },
+      supplier: {
+        id: d.supplier_id,
+        name: d.supplier_name,
+        all_day: d.supplier_all_day,
+        start_time: d.supplier_start_time,
+        end_time: d.supplier_end_time,
+      },
+      age: {
+        id: d.age_id,
+        name: d.age_name,
+      },
+      license: {
+        id: d.license_id,
+        name: d.license_name,
+      },
+      daily: {
+        gross: d.gross,
+        nett: d.nett,
+        profit: d.profit,
+        items: d.list,
+      },
+      fees: {
+        total: d.fee_total,
+        items: d.fee_items,
+      },
+      one_way: d.one_way,
+      specials: {
+        total: d.special_total,
+        items: d.special_items,
+      },
+      bonds: {},
+      bond_items: d.bond_items,
+      addons: {},
+      addon_items: d.addon_items,
+      terms: d.terms,
+    };
+
+    return details;
+  },
+
   search: async (search) => {
     search.duration = dayjs(search.date_end).diff(dayjs(search.date_start), "day") + 1;
 
@@ -982,7 +1081,7 @@ export const calculator = {
 
     const { rates, blocked } = await check_blockouts(all_rates, search);
     const specials = await check_specials(rates, search);
-    console.log("rates", rates);
+    // console.log("rates", rates);
 
     // let s = specials[1].special_items[0];
     // console.log("discount_amount", s.discount_amount);

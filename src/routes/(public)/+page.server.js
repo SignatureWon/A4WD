@@ -15,6 +15,7 @@ export async function load() {
       "blog",
       "testimonials",
       "faqs",
+      "contact",
     ]);
 
   let site = {};

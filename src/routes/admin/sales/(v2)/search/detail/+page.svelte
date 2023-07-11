@@ -2,7 +2,7 @@
   import { supabase } from "$lib/supabaseClient";
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
-  import Search from "../../../../../(public)/search2/Search.svelte";
+  import Search from "../../../../../(public)/search/Search.svelte";
   import Action from "./Action.svelte";
   import Bonds from "./Bonds.svelte";
   import Daily from "./Daily.svelte";

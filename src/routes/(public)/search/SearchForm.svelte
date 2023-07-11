@@ -3,7 +3,7 @@
   import dayjs from "dayjs";
   export let options;
   export let search;
-  export let url = "/search2/redirect";
+  export let url = "/search/redirect";
 
   // console.log("search", search);
   let innerWidth = 0;

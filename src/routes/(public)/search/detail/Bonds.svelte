@@ -1,19 +1,16 @@
 <script>
   import { format } from "$lib/format.js";
-  import { Button } from "carbon-components-svelte";
-  import { createEventDispatcher } from 'svelte';
-  const dispatch = createEventDispatcher()
-  export let detail = {};
-  export let quote = {
-    bonds: {
-      gross: 0,
-      nett: 0,
-      items: [],
-    },
-  };
+  export let data;
+  export let search;
+  export let count;
+  let selected = 0;
+  let showBondDetail = false;
 
   const checkCap = (duration, cap) => {
-    return cap > duration ? duration : cap;
+    if (!cap) {
+      cap = 0;
+    }
+    return cap > duration || cap === 0 ? duration : cap;
   };
   const calculatePrice = (gross, duration, cap) => {
     gross = gross || 0;
@@ -23,79 +20,80 @@
 
     return gross * days;
   };
-
-  let selectedBond = 0;
-  let showBondDetail = false;
 </script>
 
-<div class="pt-10">
-  <div class="mb-2">
-    <div class="uppercase tracking-wider font-bold mb-1 flex justify-between">
-      Accident Liability
+{#if data.bond_items.length > 0}
+  <div class="bg-white rounded mb-4">
+    <div class="px-4 py-2 border-b border-gray-200">
+      <h2 class="h2">Accident Liability</h2>
+      <div class="text-gray-500">Select your level of liability from the options below</div>
     </div>
-    <div>Select your level of liability from the options below</div>
-  </div>
-  <div class="flex">
-    {#each detail.bond_items as b, i}
-      <div
-        class="border {selectedBond === i
-          ? 'border-brand-600 bg-brand-50'
-          : 'border-gray-200'} p-3 flex-1 flex flex-col m-2"
-      >
-        <div class="flex-1 pb-8">
-          <h4 class="font-bold text-brand-600">{b.display_name}</h4>
-          <div class="text-xl font-bold">
-            AUD ${format.currency(
-              calculatePrice(b.gross, detail.duration, b.cap)
-            )}
-          </div>
-          <div class="mb-4">
-            ${format.currency(b.gross || 0)} x {checkCap(
-              detail.duration,
-              b.cap
-            )} days
-          </div>
-          <div class="mb-4 font-bold">
-            ${format.currency(b.liability)} Excess<br />
-            ${format.currency(b.bond)} Bond
-          </div>
+    <div class="px-2">
+      <div class="md:flex">
+        {#each data.bond_items as item, index}
           <!-- svelte-ignore a11y-click-events-have-key-events -->
           <div
-            class="cursor-pointer text-brand-600 text-sm"
-            on:click={() => (showBondDetail = !showBondDetail)}
-          >
-            {showBondDetail ? "Hide " : "Show "}
-            Details
-          </div>
-          {#if showBondDetail}
-            {#if b.description}
-              <div class="mb-4 text-gray-500">
-                {b.description}
-              </div>
-            {/if}
-            {#if b.inclusions}
-              <div class="font-bold">Inclusions</div>
-              {b.inclusions}
-            {/if}
-          {/if}
-        </div>
-        {#if selectedBond === i}
-          <Button>Selected</Button>
-        {:else}
-          <Button
-            kind="tertiary"
+            class="group cursor-pointer flex-1 flex flex-col m-2 p-2 border hover:border-brand-600 hover:bg-brand-50 {selected ===
+            index
+              ? 'border-brand-600 bg-brand-50'
+              : 'border-gray-200'}"
             on:click={() => {
-              selectedBond = i;
-              quote.bonds = {
-                gross: calculatePrice(b.gross, detail.duration, b.cap),
-                nett: calculatePrice(b.nett, detail.duration, b.cap),
-                items: b,
-              };
-              dispatch('change', quote);
-            }}>Select</Button
+              selected = index;
+              data.bonds = item;
+              count();
+            }}
           >
-        {/if}
+            <div class="flex-1">
+              <h3 class="font-bold text-brand-600">{item.display_name}</h3>
+              <div class="text-lg font-bold">
+                ${format.currency(calculatePrice(item.gross, search.duration, item.cap))}
+              </div>
+              <div class="mb-4">
+                ${format.currency(item.gross || 0)} x {checkCap(search.duration, item.cap)} days
+              </div>
+              <!-- svelte-ignore a11y-click-events-have-key-events -->
+              <div
+                class="cursor-pointer text-brand-600 text-sm mb-4"
+                on:click={() => (showBondDetail = !showBondDetail)}
+              >
+                {showBondDetail ? "Hide " : "Show "}
+                Details
+              </div>
+              {#if showBondDetail}
+                {#if item.description}
+                  <div class="mb-4 text-gray-500">
+                    {item.description}
+                  </div>
+                {/if}
+                {#if item.inclusions}
+                  <div class="font-bold">Inclusions</div>
+                  <div class="mb-4 text-gray-500">
+                    {item.inclusions}
+                  </div>
+                {/if}
+              {/if}
+            </div>
+            <div>
+              <div class="mb-4 font-bold">
+                ${format.currency(item.liability, 0)} Excess<br />
+                ${format.currency(item.bond, 0)} Bond
+              </div>
+
+              {#if selected === index}
+                <div class="w-full border border-brand-500 py-1.5 text-center font-semibold text-white bg-brand-500">
+                  Selected
+                </div>
+              {:else}
+                <div
+                  class="w-full border border-brand-500 py-1.5 text-center font-semibold text-brand-500 group-hover:text-white group-hover:bg-brand-500"
+                >
+                  Select
+                </div>
+              {/if}
+            </div>
+          </div>
+        {/each}
       </div>
-    {/each}
+    </div>
   </div>
-</div>
+{/if}

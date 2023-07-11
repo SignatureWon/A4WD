@@ -1,78 +1,22 @@
 <script>
-  import {
-    Button,
-    Modal,
-    NumberInput,
-    Select,
-    SelectItem,
-    TextInput,
-  } from "carbon-components-svelte";
-  export let licenses = [];
-  export let quote = {};
-
-  let open = false;
+  import { format } from "$lib/format.js";
+  import { Button } from "carbon-components-svelte";
+  export let quote;
 </script>
 
-<section class="text-center mb-8">
-  <Button type="submit" class="px-10" on:click={() => (open = true)}
-    >Book Now</Button
-  >
-</section>
-
-<Modal
-  bind:open
-  modalHeading="Travel Information"
-  passiveModal
-  on:click:button--secondary={() => (open = false)}
+<div
+  class="bg-white fixed bottom-0 left-0 w-full p-4 border-t border-gray-200 z-50"
+  style="box-shadow: 0 0 20px rgba(0,0,0,.2);"
 >
-  <div class="max-w-md mx-auto mt-10 mb-5">
-    <form action="/search/book" method="post">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="col-span-2">
-          <TextInput
-            labelText="Email"
-            type="email"
-            name="email"
-            value=""
-            required
-          />
-        </div>
-        <div>
-          <Select
-            name="license"
-            labelText="Driver's License"
-            value={quote.license.id}
-          >
-            {#each licenses as license}
-              <SelectItem value={license.name} />
-            {/each}
-          </Select>
-        </div>
-        <div>
-          <NumberInput name="age" label="Driver's Age" allowEmpty required />
-        </div>
-        <div>
-          <NumberInput name="adult" label="No. of Adult" allowEmpty required />
-        </div>
-        <div>
-          <NumberInput
-            name="children"
-            label="No. of Children"
-            allowEmpty
-            required
-          />
-        </div>
-        <div class="col-span-2">
-          <Button type="submit" class="w-full">Proceed</Button>
-          <Button
-            kind="ghost"
-            type="button"
-            class="w-full"
-            on:click={() => (open = false)}>Cancel</Button
-          >
-        </div>
-      </div>
-      <input type="hidden" name="detail" value={JSON.stringify(quote)} />
-    </form>
+  <div class="flex items-center">
+    <div class="flex-1 font-bold text-lg">
+      Total: ${format.currency(quote.agent_fee + quote.supplier_fee)}
+    </div>
+    <div>
+      <form method="POST">
+        <Button type="submit">Get Instant Quote</Button>
+        <input type="hidden" name="quote" value={JSON.stringify(quote)} />
+      </form>
+    </div>
   </div>
-</Modal>
+</div>

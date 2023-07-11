@@ -7,6 +7,7 @@
   import Features from "$lib/components/public/Features.svelte";
   import PageHeader from "$lib/components/public/PageHeader.svelte";
   import SectionCarousel from "$lib/components/public/SectionCarousel.svelte";
+  import ContactForm from "$lib/components/public/ContactForm.svelte";
 
   export let data;
 
@@ -30,3 +31,4 @@
 <SectionCarousel records={getContent("articles")} title={data.site.blog} button="More Articles" content={true} />
 <Testimonials records={getContent("testimonials")} title={data.site.testimonials} />
 <Faqs records={getContent("faqs")} title={data.site.faqs} />
+<ContactForm content={data.site.contact} />

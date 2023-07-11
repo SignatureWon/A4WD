@@ -1,126 +1,119 @@
 <script>
   import { format } from "$lib/format.js";
-  import dayjs from "dayjs";
+  import { Checkbox } from "carbon-components-svelte";
+  import { onMount } from "svelte";
+  export let data;
+  export let search;
+  export let count;
 
-  //   export let search = {}
-  export let detail = {};
-
-  let showFeeDetails = false;
-
-  const showDiscountType = (type, days) => {
-    if (type === "Early bird") {
-      return `Early bird (${days} days)`;
-    } else if (type === "Long term") {
-      return `Long term (${item.days} days)`;
-    } else if (type === "Every X day") {
-      return `Every (${item.days} day)`;
+  const checkCap = (rate, cap) => {
+    cap = cap || 0;
+    let amount = rate;
+    if (cap > 0) {
+      amount = cap > rate ? rate : cap;
     }
+    return amount;
   };
-  const showDiscountFactor = (factor, value) => {
-    if (factor === "Percentage") {
-      return `Discount ${value}%`;
-    } else if (factor === "Price") {
-      return `Discount $${value}`;
-    } else if (factor === "Day") {
-      return `Discount ${item.value} ${item.value > 1 ? "days" : "day"}`;
-    } else if (factor === "No One Way Fee") {
-      return `No One Way Fee`;
-    }
+  const calculatePrice = (daily, rate, duration, cap) => {
+    rate = rate || 0;
+    cap = cap || 0;
+
+    let sum = daily ? rate * duration : rate;
+    let total = checkCap(sum, cap);
+
+    return total;
   };
+  // onMount(() => {
+  //   if (!"addons" in data) {
+  //     data.addons = {
+  //       gross: 0,
+  //       nett: 0,
+  //       items: {},
+  //     };
+  //   }
+  // });
 </script>
 
-<div class="divide-y divide-gray-200">
-  <div>
-    <div class="flex justify-between py-2">
-      <div>
-        Daily Rental ({detail.duration} days)
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <span
-          class="cursor-pointer text-brand-600 text-sm"
-          on:click={() => (showFeeDetails = !showFeeDetails)}>Details</span
-        >
+{#if data.fees.items.length > 0 || data.addon_items.length > 0}
+  <div class="bg-white rounded mb-4">
+    {#if data.fees.items.length > 0}
+      <div class="px-4 py-2 border-b border-gray-200">
+        <h2 class="h2">Fees</h2>
       </div>
-      <div class="whitespace-nowrap pl-4">${format.currency(detail.gross)}</div>
-    </div>
-    <div
-      class="col-span-2 text-sm text-gray-400 {showFeeDetails
-        ? 'block'
-        : 'hidden'}"
-    >
-      {#each detail.list as item, index}
-        <div class="flex justify-between mb-2">
-          <div>
-            Day {index + 1} ({item.flex}): {dayjs(item.day).format(
-              "DD/MM/YYYY"
-            )}
-          </div>
-          <div class="whitespace-nowrap pl-4">
-            ${format.currency(item.gross)}
+      <div class="px-4">
+        <div class="divide-y divide-gray-200">
+          {#each data.fees.items as item, index}
+            <div class="py-3">
+              <div class="flex">
+                <div class="flex-1">
+                  <div>{item.name}</div>
+                </div>
+                <div class="text-right w-28 whitespace-nowrap pt-5">
+                  <div>${format.currency(item.fee)}</div>
+                </div>
+              </div>
+            </div>
+          {/each}
+          <div class="py-3 font-bold">
+            <div class="flex">
+              <div class="flex-1">Total Fees</div>
+              <div class="text-right w-28">
+                ${format.currency(data.fee_total)}
+              </div>
+            </div>
           </div>
         </div>
-      {/each}
-    </div>
-    {#if detail.min_days > detail.duration}
-      <div
-        class="col-span-2 bg-amber-50 p-3 text-sm text-amber-600 rounded mb-3"
-      >
-        Price is based on minimum {detail.min_days} days, less days will average
-        out.
+      </div>
+    {/if}
+    {#if data.addon_items.length > 0}
+      <div class="px-4 py-2 border-b border-gray-200">
+        <h2 class="h2">Addons</h2>
+      </div>
+      <div class="px-4">
+        <div class="divide-y divide-gray-200">
+          {#each data.addon_items as item}
+            <div class="py-3">
+              <div class="flex">
+                <div>
+                  <Checkbox
+                    on:change={(e) => {
+                      if (e.target.checked) {
+                        data.addons[item.id] = item;
+                      } else {
+                        delete data.addons[item.id];
+                      }
+                      count();
+                    }}
+                  />
+                </div>
+                <div class="flex-1">
+                  <div>
+                    {item.name}
+                    {#if item.daily}
+                      <div class="text-gray-400 text-sm font-bold">
+                        (${format.currency(item.gross_rate)} x {search.duration} days{#if item.gross_cap > 0}; capped at
+                          ${format.currency(item.gross_cap)}{/if})
+                      </div>
+                    {/if}
+                  </div>
+                  <div class="text-gray-400 text-sm">{item.description}</div>
+                </div>
+                <div class="text-right w-28 whitespace-nowrap">
+                  ${format.currency(item.gross)}
+                </div>
+              </div>
+            </div>
+          {/each}
+          <!-- <div class="py-3 font-bold">
+            <div class="flex">
+              <div class="flex-1">Total Addons</div>
+              <div class="text-right w-28">
+                ${format.currency(data.addons ? data.addons.gross : 0)}
+              </div>
+            </div>
+          </div> -->
+        </div>
       </div>
     {/if}
   </div>
-  {#if detail.one_way > 0}
-    <div class="flex justify-between py-2">
-      <div>One-way Fee</div>
-      <div class="whitespace-nowrap pl-4">
-        ${format.currency(detail.one_way)}
-      </div>
-    </div>
-  {/if}
-  {#if detail.fee_total > 0}
-    {#each detail.fee_items as item}
-      <div class="flex justify-between py-2">
-        <div>{item.name}</div>
-        <div class="whitespace-nowrap pl-4">
-          ${format.currency(item.fee)}
-        </div>
-      </div>
-    {/each}
-  {/if}
-  {#if detail.special_total > 0}
-    {#each detail.special_items as item}
-      <div>
-        <div class="col-span-2 flex font-semibold tracking-wide pt-2">
-          Deduct: {item.name}
-        </div>
-        <div class="flex justify-between py-2">
-          <div>
-            <div>
-              {showDiscountType(item.type, item.days)}
-              {showDiscountFactor(item.factor, item.value)}
-            </div>
-            <div class="text-sm text-gray-400">
-              {item.description}
-            </div>
-          </div>
-          <div class="whitespace-nowrap pl-4">
-            - ${format.currency(item.discount_amount)}
-          </div>
-        </div>
-        {#if item.discount2}
-          <div class="flex justify-between py-2">
-            <div>
-              <div>
-                {showDiscountType(item.type2, item.days2)}
-                {showDiscountFactor(item.factor2, item.value2)}
-                </div>
-            </div>
-            <div class="whitespace-nowrap pl-4">
-              - ${format.currency(item.discount_amount2)}
-            </div>
-          </div>
-        {/if}
-      </div>
-    {/each}
-  {/if}
-</div>
+{/if}
