@@ -37,6 +37,9 @@ export const actions = {
       user.id = existing_user.id;
     } else {
       const { data: new_user, error: error_new_user } = await supabase.from("users").insert(user).select().single();
+      if (error_new_user) {
+        console.log("error_new_user", error_new_user);
+      }
       if (new_user) {
         user.id = new_user.id;
       }

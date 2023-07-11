@@ -19,7 +19,6 @@
   }
 
   const user = {
-    id: null,
     title: "Mr.",
     first_name: null,
     last_name: null,
