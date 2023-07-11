@@ -44,12 +44,15 @@ export async function load({ url, params, locals }) {
 }
 export const actions = {
   insert: async ({ request, url, locals }) => {
-    await db.actions.insertProfile(request, url, locals, {
+    await db.actions.insert(request, url, locals, {
       table: "users",
     });
+    // await db.actions.insertProfile(request, url, locals, {
+    //   table: "users",
+    // });
   },
   update: async ({ request, url, params, locals }) => {
-    console.log("UPDATE");
+    // console.log("UPDATE");
     await db.actions.update(request, url, locals, {
       id: params.id,
       table: "users",

@@ -60,6 +60,6 @@
   <Specials data={quote.details} />
   <Bonds bind:data={quote.details} search={data.search} {count} />
   <Fees data={quote.details} search={data.search} {count} />
-  <Payments {summary} />
+  <Payments {quote} {summary} />
   <Action {quote} />
 </section>
