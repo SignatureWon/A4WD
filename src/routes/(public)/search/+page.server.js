@@ -25,14 +25,14 @@ export async function load({ url, params, locals }) {
     pax: 2,
   };
   url.searchParams.forEach((value, key) => {
-    if (key === "date_start" || key === "date_end") {
-      if (value.indexOf("/")) {
-        value = dayjs(value, "DD/MM/YYYY").format("YYYY-MM-DD")
-      }
-    }
+    // if (key === "date_start" || key === "date_end") {
+    //   console.log(key, value);
+    //   if (value.indexOf("/")) {
+    //     value = dayjs(value, "DD/MM/YYYY").format("YYYY-MM-DD")
+    //   }
+    // }
     search[key] = value;
   });
-
   let results = await calculator.search(search);
 
   // console.log("search", search);

@@ -23,7 +23,7 @@
       {#each records as item}
         <li class="splide__slide">
           <div
-            class="h-[460px] bg-cover bg-center"
+            class="h-[395px] bg-cover bg-center"
             style="background-image: url('{env.PUBLIC_SUPABASE_URL}/storage/v1/render/image/public/contents/{item.image}?width=800&height=800&resize=contain');"
           >
             <div

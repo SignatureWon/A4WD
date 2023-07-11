@@ -73,7 +73,6 @@
       label="State"
       bind:value={data.data.state}
       half={true}
-      required={true}
     />
     <div>
       <Select labelText="Country" name="country" bind:selected={data.data.country} required={true}>

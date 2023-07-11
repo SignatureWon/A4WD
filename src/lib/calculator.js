@@ -7,7 +7,7 @@ import { env } from "$env/dynamic/public";
 
 const get_available_routes = (data, search, routes) => {
   let results = [];
-  routes.forEach((route) => {
+  (routes || []).forEach((route) => {
     let supplier = route.all_suppliers;
     if (!supplier) {
       data.forEach((rate) => {
@@ -266,6 +266,7 @@ const get_routes = async (search) => {
   return data;
 };
 const get_flex = async (search, routes) => {
+  // console.log("routes", routes);
   // console.log("date_start", dayjs(search.date_start));
   // console.log("date_end", dayjs(search.date_end));
   let query = supabase
@@ -1072,8 +1073,11 @@ export const calculator = {
 
   search: async (search) => {
     search.duration = dayjs(search.date_end).diff(dayjs(search.date_start), "day") + 1;
+    // console.log("search.duration", search);
 
     const routes = await get_routes(search);
+    // console.log("routesroutesroutesroutes", routes);
+
     const flex = await get_flex(search, routes);
     const seasonal = await get_seasonal(search, routes);
     const all_rates = [...flex, ...seasonal];
