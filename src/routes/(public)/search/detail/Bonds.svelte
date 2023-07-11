@@ -1,5 +1,6 @@
 <script>
   import { format } from "$lib/format.js";
+  import { onMount } from "svelte";
   export let data;
   export let search;
   export let count;
@@ -20,6 +21,11 @@
 
     return gross * days;
   };
+  onMount(() => {
+    if (Object.keys(data.bonds).length === 0) {
+      data.bonds = data.bond_items[0]
+    }
+  })
 </script>
 
 {#if data.bond_items.length > 0}
