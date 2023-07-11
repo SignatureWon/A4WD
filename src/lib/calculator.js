@@ -659,6 +659,7 @@ const check_specials = async (rates, search) => {
   return rates;
 };
 const check_bonds = async (selected, search) => {
+  // console.log("selected", selected);
   let query = supabase.from("packages").select(`
   packages_suppliers (suppliers(id, name)),
   packages_vehicles (vehicles(id, name)),
@@ -683,6 +684,10 @@ const check_bonds = async (selected, search) => {
   query = query.order("rank", { ascending: true });
 
   const { data, error } = await query;
+
+  if (!selected) {
+    selected = {}
+  }
 
   // rates.forEach((rate) => {
   // rate.fee_total = 0;
@@ -1157,7 +1162,7 @@ export const calculator = {
       let nett = null;
       let profit = null;
       // console.log("rate", rate);
-      daily.forEach((o, i) => {
+      (daily || []).forEach((o, i) => {
         // console.log("o", o.name);
         if (!gross) {
           rate_name = o.name;

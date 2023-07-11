@@ -19,19 +19,18 @@ export async function load({ url, params, locals }) {
     pax: 2,
   };
   url.searchParams.forEach((value, key) => {
-    if (key !== "selected") {
-      if (["duration", "pax"].includes(key)) {
-        search[key] = Number(value);
-      } else {
-        search[key] = value;
-      }
-    }
+    search[key] = value;
+    // if (key !== "selected") {
+    //   if (["duration", "pax"].includes(key)) {
+    //     search[key] = Number(value);
+    //   } else {
+    //     search[key] = value;
+    //   }
+    // }
   });
-  let selected = JSON.parse(url.searchParams.get("selected"));
-
-  let details = await calculator.details(selected, search);
-
-
+  // let selected = JSON.parse(url.searchParams.get("selected"));
+  // let details = await calculator.details(selected, search);
+  let details = await calculator.single(search);
 
   //   console.log(bonds);
 
@@ -41,7 +40,8 @@ export async function load({ url, params, locals }) {
     // all: all_rates,
     // blocked: JSON.parse(JSON.stringify(blocked)),
     // selected: selected,
-    details: details,
+    details: JSON.parse(JSON.stringify(details)),
+    // details: details,
     // specials: JSON.parse(JSON.stringify(specials)),
   };
 }
