@@ -17,6 +17,7 @@
   import { Button, Checkbox, Modal, TextArea, Toggle } from "carbon-components-svelte";
   import Receivables from "$lib/vehicles/Receivables.svelte";
   import Status from "$lib/vehicles/view/Status.svelte";
+  import Toast from "$lib/components/admin/Toast.svelte";
   export let data;
 
   let quote = data.quote;
@@ -53,6 +54,7 @@
 </script>
 
 <svelte:window bind:innerHeight={paneHeight} />
+<Toast />
 
 <div class="pr-80">
   <PageTitle title="{q.prefix[quote.status]}{388000 + quote.id}" path={data.path} id={data.id} />

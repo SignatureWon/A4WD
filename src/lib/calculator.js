@@ -11,6 +11,9 @@ const get_available_routes = (data, search, routes) => {
     let supplier = route.all_suppliers;
     if (!supplier) {
       data.forEach((rate) => {
+        // if (rate.supplier_id === '7e39ecef-91c4-442b-a996-57d71b8a036d') {
+        //   console.log("WAE", rate);
+        // }
         let filter_suppliers = route.routes_suppliers.filter((item) => {
           return item.suppliers.id === rate.supplier_id;
         });

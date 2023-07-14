@@ -213,6 +213,7 @@ export const q = {
     /**
      * Bonds
      */
+    // console.log("quote.details", quote.details);
     const bond = Object.keys(quote.details.bonds).length ? quote.details.bonds : quote.details.bond;
     if (bond) {
       pickupFees.push({

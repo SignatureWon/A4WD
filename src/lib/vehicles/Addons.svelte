@@ -6,65 +6,67 @@
   import { cal } from "$lib/cal.js";
   import { onMount } from "svelte";
   export let quote;
-  console.log(quote);
+  // console.log("addons quote", quote);
   export let count;
 
-  let addons = [];
+  let addons = quote.details.addon_items || [];
   let duration = 0;
 
   onMount(async () => {
-    duration = quote.details.duration;
+    if (!addons.length) {
+      duration = quote.details.duration;
 
-    const selected_bond = Object.keys(quote.details.bonds).length ? quote.details.bonds : quote.details.bond;
-    // console.log(selected_bond);
-    const { data: addonsData, error: addonsError } = await cal.getAddons(supabase, {
-      date_start: dayjs(quote.details.date_start),
-      date_end: dayjs(quote.details.date_end),
-    });
+      // const selected_bond = Object.keys(quote.details.bonds).length ? quote.details.bonds : quote.details.bond;
+      // console.log(selected_bond);
+      const { data: addonsData, error: addonsError } = await cal.getAddons(supabase, {
+        date_start: dayjs(quote.details.date_start),
+        date_end: dayjs(quote.details.date_end),
+      });
 
-    addonsData.forEach((addon, i1) => {
-      let suppliers = addon.all_suppliers;
-      let vehicles = addon.all_vehicles;
+      addonsData.forEach((addon, i1) => {
+        let suppliers = addon.all_suppliers;
+        let vehicles = addon.all_vehicles;
 
-      if (!suppliers) {
-        addon.addons_suppliers.forEach((obj) => {
-          if (obj.suppliers.id === quote.details.supplier.id) {
-            suppliers = true;
-          }
-        });
-      }
-      if (!vehicles) {
-        addon.addons_vehicles.forEach((obj) => {
-          if (obj.vehicles.id === quote.details.vehicle.id) {
-            vehicles = true;
-          }
-        });
-      }
-      if (suppliers) {
-        if (vehicles) {
-          addon.addons.forEach((obj, i2) => {
-            obj.id = `${i1}-${i2}`;
-            obj.selected = false;
-            for (const key in quote.details.addons) {
-              if (key === obj.id) {
-                obj.selected = true;
-              }
+        if (!suppliers) {
+          addon.addons_suppliers.forEach((obj) => {
+            if (obj.suppliers.id === quote.details.supplier.id) {
+              suppliers = true;
             }
-
-            obj.gross = obj.daily ? obj.gross_rate * duration : obj.gross_rate;
-            obj.nett = obj.daily ? obj.nett_rate * duration : obj.nett_rate;
-
-            if (obj.gross > obj.gross_cap && obj.gross_cap > 0) {
-              obj.gross = obj.gross_cap;
-            }
-            if (obj.nett > obj.nett_cap && obj.nett_cap > 0) {
-              obj.nett = obj.nett_cap;
-            }
-            addons = [...addons, obj];
           });
         }
-      }
-    });
+        if (!vehicles) {
+          addon.addons_vehicles.forEach((obj) => {
+            if (obj.vehicles.id === quote.details.vehicle.id) {
+              vehicles = true;
+            }
+          });
+        }
+        if (suppliers) {
+          if (vehicles) {
+            addon.addons.forEach((obj, i2) => {
+              obj.id = `${i1}-${i2}`;
+              obj.selected = false;
+              for (const key in quote.details.addons) {
+                if (key === obj.id) {
+                  obj.selected = true;
+                }
+              }
+
+              obj.gross = obj.daily ? obj.gross_rate * duration : obj.gross_rate;
+              obj.nett = obj.daily ? obj.nett_rate * duration : obj.nett_rate;
+
+              if (obj.gross > obj.gross_cap && obj.gross_cap > 0) {
+                obj.gross = obj.gross_cap;
+              }
+              if (obj.nett > obj.nett_cap && obj.nett_cap > 0) {
+                obj.nett = obj.nett_cap;
+              }
+              addons = [...addons, obj];
+            });
+          }
+        }
+      });
+    }
     // console.log(addons);
   });
 </script>

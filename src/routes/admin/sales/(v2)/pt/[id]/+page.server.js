@@ -49,7 +49,7 @@ export const actions = {
       .from("quotes")
       .update({
         status: "Provisional",
-        date_provisional: dayjs()
+        date_provisional: dayjs(),
       })
       .eq("id", params.id);
     if (err) {
@@ -64,7 +64,7 @@ export const actions = {
       .from("quotes")
       .update({
         status: "Final",
-        date_balance: dayjs()
+        date_balance: dayjs(),
       })
       .eq("id", params.id);
     if (err) {
@@ -235,15 +235,21 @@ export const actions = {
     let email_to = [
       {
         email: dataUser.email,
-        name: `${dataUser.first_name ? dataUser.first_name.trim() : "-"} ${dataUser.last_name ? dataUser.last_name.trim() : "-"}`,
+        name: `${dataUser.first_name ? dataUser.first_name.trim() : "-"} ${
+          dataUser.last_name ? dataUser.last_name.trim() : "-"
+        }`,
       },
-    ]
-    let email_bcc = bccList
+    ];
+    let email_bcc = bccList;
 
     if (fd.a4only) {
-      email_to = bccList
-      email_bcc = []
+      email_to = bccList;
+      email_bcc = [];
     }
+    let resp = {
+      status: "success",
+      message: "Email sent",
+    };
     sgMail.setApiKey(env.PUBLIC_SENDGRID_API_KEY);
     await sgMail
       .send({
@@ -296,12 +302,21 @@ export const actions = {
         // },
       })
       .then(() => {
-        console.log("Email sent");
+        resp = {
+          status: "success",
+          message: "Email sent",
+        };
+        // console.log("Email sent");
       })
       .catch((error) => {
-        console.error(error);
+        resp = {
+          status: "error",
+          message: error.response.body.errors[0].message,
+        };
+        // console.error(error.response.body.errors[0].message);
       });
+    throw redirect(303, `${url.pathname}?status=${resp.status}&message=${resp.message}`);
 
-    throw redirect(303, url.pathname);
+    // throw redirect(303, url.pathname);
   },
 };
