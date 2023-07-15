@@ -49,6 +49,7 @@
     quote.nett = summary.totalNett;
   };
   onMount(() => {
+    // console.log(quote);
     count();
   });
 </script>

@@ -12,20 +12,24 @@ const get_available_routes = (data, search, routes) => {
     if (!supplier) {
       data.forEach((rate) => {
         // if (rate.supplier_id === '7e39ecef-91c4-442b-a996-57d71b8a036d') {
-        //   console.log("WAE", rate);
+        //   console.log("ADV", rate);
         // }
         let filter_suppliers = route.routes_suppliers.filter((item) => {
           return item.suppliers.id === rate.supplier_id;
         });
+
         if (filter_suppliers.length) {
           // let depot = route.all_depots;
           // console.log("route.routes", route.routes.filter((r) => {
           //   return r.from.id === search.pickup && r.to.id === search.dropoff && r.active;
           // }));
           // if (!depot) {
+
           let valid = route.routes.filter((r) => {
             return r.from.id === search.pickup && r.to.id === search.dropoff && r.active;
           });
+        // console.log("valid", valid);
+
           if (valid.length) {
             valid[0] = {
               ...valid[0],
@@ -55,6 +59,7 @@ const get_available_routes = (data, search, routes) => {
 
               rate.daily = daily;
             }
+            // console.log("rate");
             results.push(rate);
           }
           // }
@@ -111,6 +116,8 @@ const get_available_routes = (data, search, routes) => {
 const sort_rates_by_vehicle = (data) => {
   let results = {};
   data.forEach((item) => {
+  // console.log("item", item);
+
     if (!(item.vehicle_id in results)) {
       results[item.vehicle_id] = {};
     }
@@ -214,6 +221,8 @@ const convert_to_seasonal_rates = (data, search) => {
           if (r.supplier_all_day) {
             isCount = day.isBefore(dayjs(search.date_end));
           }
+          // console.log("day", day.format("YYYY-MM-DD"), dayjs(r.date_start).format("YYYY-MM-DD"), dayjs(r.date_end).format("YYYY-MM-DD"));
+
           if (day.isBetween(dayjs(r.date_start), dayjs(r.date_end), "day", "[]") && isCount) {
             isAdded = true;
             let todayNett = r.rates_nett * r.daily;
@@ -228,6 +237,7 @@ const convert_to_seasonal_rates = (data, search) => {
               flex: r.flex,
               name: r.rates_name,
             };
+
             rates.list.push(rateToday);
             nett += rateToday.nett;
             gross += rateToday.gross;
@@ -322,9 +332,9 @@ const get_seasonal = async (search, routes) => {
   if (search.pax > 0) {
     query = query.gte("vehicle_pax", search.pax);
   }
-  if (search.rates) {
-    query = query.eq("rates_id", search.rates);
-  }
+  // if (search.rates) {
+  //   query = query.eq("rates_id", search.rates);
+  // }
   if (search.vehicle) {
     query = query.eq("vehicle_id", search.vehicle);
   }
@@ -338,6 +348,7 @@ const get_seasonal = async (search, routes) => {
   // console.log("seasonal", data);
 
   let available_rates = get_available_routes(data, search, routes);
+  // console.log("available_rates", available_rates);
   let sorted_rates = sort_rates_by_vehicle(available_rates);
 
   // console.log("sorted_rates", sorted_rates);
@@ -784,7 +795,7 @@ const check_fees = async (selected, search) => {
       if (suppliers) {
         if (vehicles) {
           selected.fee_total += fee.fee;
-          selected.gross += fee.fee;
+          // selected.gross += fee.fee;
           selected.fee_items.push(fee);
         }
       }
@@ -992,6 +1003,7 @@ export const calculator = {
     } else {
       this_rate = await get_seasonal(search, routes);
     }
+    // console.log("this_rate", this_rate);
     const { rates, blocked } = await check_blockouts(this_rate, search);
     const specials = await check_specials(rates, search);
 

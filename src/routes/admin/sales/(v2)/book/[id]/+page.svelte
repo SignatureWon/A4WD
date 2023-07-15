@@ -18,6 +18,7 @@
   import Receivables from "$lib/vehicles/Receivables.svelte";
   import Status from "$lib/vehicles/view/Status.svelte";
   import Toast from "$lib/components/admin/Toast.svelte";
+  import { calculator } from "$lib/calculator";
   export let data;
 
   let quote = data.quote;
@@ -44,6 +45,30 @@
     quote.profit = summary.totalCommission;
     // console.log("summary", summary);
     // console.log("quote", quote);
+  };
+
+  const regenerateQuote = async () => {
+    let details = await calculator.single({
+      rates: quote.details.rates.id,
+      type: quote.details.rates.type,
+      vehicle: quote.details.vehicle.id,
+      pickup: quote.details.pickup.id,
+      dropoff: quote.details.dropoff.id,
+      date_start: quote.details.date_start,
+      date_end: quote.details.date_end,
+      license: quote.details.license.id || "",
+      age: quote.details.age.id,
+      pax: Number(quote.details.pax),
+      duration: Number(quote.details.duration),
+    });
+
+    quote.details = { ...quote.details, ...details };
+
+    if (Object.keys(quote.details.bonds).length === 0) {
+      quote.details.bonds = quote.details.bond_items[0];
+    }
+
+    getSummary();
   };
 
   onMount(async () => {
@@ -81,7 +106,7 @@
     <Status bind:quote />
   </div>
 </div>
-<aside class="h-screen w-80 bg-brand-100 fixed top-0 right-0 pt-12 pb-72 overflow-y-auto">
+<aside class="h-screen w-80 bg-brand-100 fixed top-0 right-0 pt-12 pb-80 overflow-y-auto">
   <Summary bind:quote bind:summary count={getSummary} title="Booking" />
   <div class="fixed bottom-0 right-0 bg-brand-200 w-80 p-4">
     <form action="?/update" method="POST">
@@ -142,6 +167,9 @@
           <Button type="submit" kind="tertiary" class="p-0.5 h-6 w-full">Archive</Button>
         </form>
       </div>
+    </div>
+    <div class="mt-2" style="text-transform: capitalize;">
+      <Button kind="tertiary" class="p-0.5 h-6 w-full" on:click={regenerateQuote}>Regenerate Quote</Button>
     </div>
   </div>
 </aside>

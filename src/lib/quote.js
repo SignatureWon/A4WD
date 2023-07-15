@@ -480,7 +480,8 @@ export const q = {
         termsItems = [
           {
             name: `Full payment to agent on ${dayjs(date_quote).format("ddd, DD MMM YYYY")}`,
-            total: totalAgent + totalSupplier,
+            total: totalAgent,
+            // total: totalAgent + totalSupplier,
           },
         ];
       } else {

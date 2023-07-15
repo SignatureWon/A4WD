@@ -23,6 +23,9 @@
   onMount(async () => {
     summary = q.getPayments(quote);
   });
+  $: {
+    summary = q.getPayments(quote);
+  }
 </script>
 
 <div class="bg-white rounded mb-4">

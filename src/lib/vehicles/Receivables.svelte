@@ -89,6 +89,10 @@
     summary = q.getPayments(quote);
     totalPayment();
   });
+  $: {
+    summary = q.getPayments(quote);
+    totalPayment();
+  }
 </script>
 
 <div class="bg-white rounded mb-4">

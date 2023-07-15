@@ -2,9 +2,13 @@
   import { format } from "$lib/format.js";
   import { q } from "$lib/quote.js";
   import { Button, NumberInput, TextInput } from "carbon-components-svelte";
+  // import { calculator } from "$lib/calculator.js";
+
   import { onMount } from "svelte";
   export let quote;
   export let count;
+
+  // console.log(quote);
 
   let list = [];
   let editRow = [];
@@ -14,7 +18,7 @@
     quote.add_discount = 0;
   }
   if (!quote.add_discount_supplier) {
-    quote.add_discount_supplier = quote.add_discount
+    quote.add_discount_supplier = quote.add_discount;
   }
   const getDailyTotal = () => {
     quote.details.daily.gross = 0;
@@ -43,7 +47,14 @@
     list = q.getDailyRates(quote);
     getDailyTotal();
   });
+  // let grr
+  $: {
+    //   grr = calculator.group_rates(quote);
+    // console.log(grr);
 
+    list = q.getDailyRates(quote);
+    getDailyTotal();
+  }
 </script>
 
 <div class="bg-white rounded mb-4">
@@ -93,7 +104,7 @@
                 daily.items[i].profit = item.daily.profit;
               }
               console.log("daily", daily);
-              
+
               getDailyTotal();
               editRow[index] = false;
             }}
@@ -152,10 +163,24 @@
       <TextInput labelText="Discount name for daily basic rental" bind:value={quote.add_discount_remark} />
     </div>
     <div class="w-20 ml-2">
-      <NumberInput label="Gross" bind:value={quote.add_discount_supplier} step={0.01} hideSteppers on:keyup={getDailyTotal} class="text-right" />
+      <NumberInput
+        label="Gross"
+        bind:value={quote.add_discount_supplier}
+        step={0.01}
+        hideSteppers
+        on:keyup={getDailyTotal}
+        class="text-right"
+      />
     </div>
     <div class="w-20 ml-2">
-      <NumberInput label="Comm." bind:value={quote.add_discount} step={0.01} hideSteppers on:keyup={getDailyTotal} class="text-right" />
+      <NumberInput
+        label="Comm."
+        bind:value={quote.add_discount}
+        step={0.01}
+        hideSteppers
+        on:keyup={getDailyTotal}
+        class="text-right"
+      />
     </div>
   </div>
   <div class="p-4">
