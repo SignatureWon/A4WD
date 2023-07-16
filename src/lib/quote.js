@@ -221,7 +221,7 @@ export const q = {
         name: `Bond: $${format.currency(
           bond.bond,
           0
-        )} is taken from the hirer's credit or debit card ${quote.details.bonds.description ? `<div style="font-size: 13px; color: #999999">${quote.details.bonds.description}<div>` : ""}<div style="font-size: 13px; color: #999999">Refundable as per supplier's Summary of Terms<div>`,
+        )} is taken from the hirer's credit or debit card ${quote.details.bonds.description ? `<div style="font-size: 13px">${quote.details.bonds.description}<div>` : ""}<div style="font-size: 13px; color: #999999">Refundable as per supplier's Summary of Terms<div>`,
         total: bond.bond,
         nett: 0,
         profit: 0,

@@ -22,12 +22,13 @@ export const html = {
       .eq("type", "template_letterhead")
       .single();
     
-    let quote = Number(quote_id)
+    let quote = quote_id
 
-    if (Number.isInteger(quote)) {
-      const { data: data_quote } = await supabase.from("quotes").select("*, users (*)").eq("id", quote_id).single();
+    if (Number(quote)) {
+      const { data: data_quote } = await supabase.from("quotes").select("*, users (*)").eq("id", Number(quote_id)).single();
       quote = data_quote
     }
+    console.log("quote", quote);
     const { data: vehicle } = await supabase.from("vehicles").select().eq("id", quote.details.vehicle.id).single();
 
     let summary = q.getPayments(quote);
