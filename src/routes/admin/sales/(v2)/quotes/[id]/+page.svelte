@@ -63,6 +63,8 @@
     
     quote.details = {...quote.details, ...details};
 
+    console.log("quote", quote);
+
     if (Object.keys(quote.details.bonds).length === 0) {
       quote.details.bonds = quote.details.bond_items[0]
     }

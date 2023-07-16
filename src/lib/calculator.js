@@ -28,7 +28,7 @@ const get_available_routes = (data, search, routes) => {
           let valid = route.routes.filter((r) => {
             return r.from.id === search.pickup && r.to.id === search.dropoff && r.active;
           });
-        // console.log("valid", valid);
+          // console.log("valid", valid);
 
           if (valid.length) {
             valid[0] = {
@@ -116,7 +116,7 @@ const get_available_routes = (data, search, routes) => {
 const sort_rates_by_vehicle = (data) => {
   let results = {};
   data.forEach((item) => {
-  // console.log("item", item);
+    // console.log("item", item);
 
     if (!(item.vehicle_id in results)) {
       results[item.vehicle_id] = {};
@@ -700,7 +700,7 @@ const check_bonds = async (selected, search) => {
   const { data, error } = await query;
 
   if (!selected) {
-    selected = {}
+    selected = {};
   }
 
   // rates.forEach((rate) => {
@@ -901,6 +901,8 @@ const check_terms = async (selected, search) => {
 
   const { data, error } = await query;
 
+  // console.log("terms", data);
+
   data.forEach((term) => {
     if (selected.supplier_id === term.suppliers.id) {
       selected.terms = term;
@@ -1087,6 +1089,7 @@ export const calculator = {
       addon_items: d.addon_items,
       terms: d.terms,
     };
+    // console.log("details", details);
 
     return details;
   },
@@ -1105,7 +1108,10 @@ export const calculator = {
 
     const { rates, blocked } = await check_blockouts(all_rates, search);
     const specials = await check_specials(rates, search);
-    // console.log("rates", rates);
+
+    specials.sort((a, b) => {
+      return a.gross - b.gross;
+    });
 
     // let s = specials[1].special_items[0];
     // console.log("discount_amount", s.discount_amount);
