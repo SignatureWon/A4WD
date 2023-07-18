@@ -301,9 +301,9 @@ export const html = {
             <div>${dayjs(quote.details.date_end).format("ddd, DD MMM YYYY")}${supplier.all_day ? " (24hrs)" : `, ${supplier.end_time ? q.showtime(supplier.end_time) : "03:00PM"}`}</div>
             <br>
             <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Depot</div>
-            <div>${pickup.Address.replace(/(?:\r\n|\r|\n)/g, "<br>")}</div>
-            ${pickup["Contact (Australia)"] ? `<div>Australia: ${pickup["Contact (Australia)"]}</div>` : ""}
-            ${pickup["Contact (International)"] ? `<div>International: ${pickup["Contact (International)"]}</div>` : ""}
+            <div>${dropoff.Address.replace(/(?:\r\n|\r|\n)/g, "<br>")}</div>
+            ${dropoff["Contact (Australia)"] ? `<div>Australia: ${dropoff["Contact (Australia)"]}</div>` : ""}
+            ${dropoff["Contact (International)"] ? `<div>International: ${dropoff["Contact (International)"]}</div>` : ""}
           </td>
         </tr>
         <tr>
