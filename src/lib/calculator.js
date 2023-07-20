@@ -43,14 +43,18 @@ const get_available_routes = (data, search, routes) => {
             rate.dropoff_name = valid[0].to.label || valid[0].to.name;
             rate.duration = search.duration;
 
+            // console.log("rate", rate);
+
             if (rate.rates_type === "seasonal") {
               let daily = 0;
-              let min_days = rate.min_days > rate.tiers[0].from ? rate.min_days : rate.tiers[0].from;
+              // let min_days = rate.min_days > rate.tiers[0].from ? rate.min_days : rate.tiers[0].from;
               rate.tiers.forEach((t, i) => {
                 if (i === 0) {
-                  if (min_days > search.duration) {
-                    daily = (t.rate * min_days) / search.duration;
-                  }
+                  // set first index as default rate
+                  daily = t.rate;
+                  // if (min_days > search.duration) {
+                  //   daily = (t.rate * min_days) / search.duration;
+                  // }
                 }
                 if (search.duration >= t.from && search.duration <= t.to) {
                   daily = t.rate;
@@ -58,6 +62,8 @@ const get_available_routes = (data, search, routes) => {
               });
 
               rate.daily = daily;
+              // } else {
+              //   console.log(rate.min_days, search.duration);
             }
             // console.log("rate");
             results.push(rate);
@@ -184,6 +190,22 @@ const convert_to_flex_rates = (data, search) => {
         rates.nett = nett;
         rates.gross = gross;
         rates.profit = profit;
+
+        if (rates.list.length < rates.min_days) {
+          let min_nett = (rates.list[0].nett * rates.min_days) / rates.list.length;
+          let min_gross = (rates.list[0].gross * rates.min_days) / rates.list.length;
+          let min_profit = min_gross - min_nett;
+
+          rates.list.forEach((r) => {
+            r.nett = min_nett;
+            r.gross = min_gross;
+            r.profit = min_profit;
+          });
+
+          rates.nett = min_nett * rates.list.length;
+          rates.gross = min_gross * rates.list.length;
+          rates.profit = min_profit * rates.list.length;
+        }
         results.push(rates);
       }
     }
@@ -253,6 +275,23 @@ const convert_to_seasonal_rates = (data, search) => {
     rates.nett = nett;
     rates.gross = gross;
     rates.profit = profit;
+      // console.log("rates", rates);
+
+    if (rates.list.length < rates.min_days) {
+      let min_nett = (rates.list[0].nett * rates.min_days) / rates.list.length;
+      let min_gross = (rates.list[0].gross * rates.min_days) / rates.list.length;
+      let min_profit = min_gross - min_nett;
+
+      rates.list.forEach((r) => {
+        r.nett = min_nett;
+        r.gross = min_gross;
+        r.profit = min_profit;
+      });
+
+      rates.nett = min_nett * rates.list.length;
+      rates.gross = min_gross * rates.list.length;
+      rates.profit = min_profit * rates.list.length;
+    }
     results.push(rates);
   }
   // console.log("arrange", results);
