@@ -139,7 +139,7 @@
           <div class="text-sm text-gray-400">Contact</div>
           <div class="mb-5">
             {quote.users.email}<br />
-            {quote.users.phone}
+            {quote.users.phone || ""}
           </div>
         </div>
         <div>

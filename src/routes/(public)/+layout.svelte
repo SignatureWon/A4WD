@@ -169,7 +169,7 @@
             action="/api/newsletter"
             class="space-y-3 sm:space-y-0 sm:flex sm:items-center sm:space-x-2"
           >
-            <TextInput placeholder="Your email" />
+            <TextInput name="email" placeholder="Your email" />
             <Button type="submit">Subscribe</Button>
           </form>
         </div>
