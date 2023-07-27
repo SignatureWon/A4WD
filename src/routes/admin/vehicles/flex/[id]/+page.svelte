@@ -74,7 +74,7 @@
     />
     <InputToggle
       name="zero"
-      label="Matrix startd from zero"
+      label="Matrix start from zero"
       bind:value={data.data.zero}
     />
   </FormSection>

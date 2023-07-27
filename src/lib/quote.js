@@ -196,7 +196,7 @@ export const q = {
     /**
      * Discount
      */
-    if (quote.add_discount < 0) {
+    if (quote.add_discount < 0 || quote.add_discount_supplier < 0) {
       agentFees.push({
         name: `Discount: ${quote.add_discount_remark}`,
         total: quote.add_discount_supplier || quote.add_discount,

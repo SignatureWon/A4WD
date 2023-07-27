@@ -19,7 +19,8 @@ const keys = [
 
 const generateRates = async (ratesID, data) => {
   let az = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-  let zero = data.zero === "true" ? 0 : 1;
+  let zero = (data.zero || data.zero === "true") ? 0 : 1;
+  // console.log("zero", zero);
   let matrix = {};
   if (data.matrix) {
     data.matrix.split(/\r?\n/).forEach((row, rowIndex) => {
@@ -44,7 +45,6 @@ const generateRates = async (ratesID, data) => {
     });
   }
 
-  console.log(matrix);
   // console.log("matrix", matrix);
 
   let ratesValid = [];
@@ -97,6 +97,7 @@ const generateRates = async (ratesID, data) => {
             daily: matrix[col.flex],
             flex: col.flex,
           };
+          // console.log("v", v);
 
           if (!d) {
             valid = false;
@@ -138,7 +139,10 @@ export async function load({ url, params, locals }) {
     id: params.id,
     keys: keys,
   });
+
+  // console.log("flex", flex);
   let checkRates = await generateRates(params.id, flex);
+  // console.log("checkRates", checkRates);
   // console.log("checkRates", checkRates.invalid[0].invalidDepot);
 
   return {
@@ -204,6 +208,8 @@ export const actions = {
       key: "rates",
       value: params.id,
     });
+
+    console.log(rates.valid);
 
     await db.insert(locals, {
       table: "ratesCard",
