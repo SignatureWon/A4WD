@@ -5,7 +5,7 @@
 
   export let data;
 
-  console.log(data);
+  // console.log(data);
 </script>
 
 {#if data.results.available.length || data.results.blocked.length}
