@@ -138,6 +138,7 @@ const sort_rates_by_vehicle = (data) => {
 };
 const convert_to_flex_rates = (data, search) => {
   let results = [];
+  // console.log("data", data);
 
   for (const id in data) {
     for (const rate in data[id]) {
@@ -150,26 +151,36 @@ const convert_to_flex_rates = (data, search) => {
       let profit = 0;
       let isAdded = false;
       let rateToday = {};
+      let todayNett = 0;
+      let todayGross = 0;
+      let todayProfit = 0;
+      let todayFlex = "";
 
       // console.log(search.date_start, search.date_end);
       for (var d = new Date(search.date_start); d <= new Date(search.date_end); d.setDate(d.getDate() + 1)) {
         const day = dayjs(d);
         // 7-day blocked, so change rate only after every 7th day
         if (day.diff(search.date_start, "day") % 7 === 0) {
+          todayNett = 0;
+          todayGross = 0;
+          todayProfit = 0;
+          todayFlex = "";
+
           data[id][rate].forEach((r) => {
             if (day.isBetween(dayjs(r.date_start), dayjs(r.date_end), "day", "[)")) {
-              isAdded = true;
-              let todayNett = r.rates_nett * r.daily;
-              let todayGross = r.rates_gross * r.daily;
-              let todayProfit = todayGross - todayNett;
+              // isAdded = true;
+              todayNett = r.rates_nett * r.daily;
+              todayGross = r.rates_gross * r.daily;
+              todayProfit = todayGross - todayNett;
+              todayFlex = r.flex;
 
-              rateToday = {
-                day: day,
-                nett: todayNett,
-                gross: todayGross,
-                profit: todayProfit,
-                flex: r.flex,
-              };
+              // rateToday = {
+              //   day: day,
+              //   nett: todayNett,
+              //   gross: todayGross,
+              //   profit: todayProfit,
+              //   flex: r.flex,
+              // };
 
               // rates.list.push({
               //   day: day,
@@ -181,12 +192,23 @@ const convert_to_flex_rates = (data, search) => {
             }
           });
         }
-        rates.list.push(rateToday);
-        nett += rateToday.nett;
-        gross += rateToday.gross;
-        profit += rateToday.profit;
+        if (todayNett > 0) {
+          rateToday = {
+            day: day.format("DD/MM/YYYY"),
+            nett: todayNett,
+            gross: todayGross,
+            profit: todayProfit,
+            flex: todayFlex,
+          };
+          rates.list.push(rateToday);
+          nett += rateToday.nett;
+          gross += rateToday.gross;
+          profit += rateToday.profit;
+        }
       }
-      if (isAdded) {
+      // console.log("rates.list", rates.list.length, rates.duration);
+
+      if (rates.list.length === rates.duration) {
         rates.nett = nett;
         rates.gross = gross;
         rates.profit = profit;
@@ -275,9 +297,9 @@ const convert_to_seasonal_rates = (data, search) => {
     rates.nett = nett;
     rates.gross = gross;
     rates.profit = profit;
-    // console.log("rates", rates);
+    // console.log("duration", rates.duration, "length", rates.list.length);
 
-    if (rates.list.length) {
+    if (rates.list.length === rates.duration) {
       if (rates.list.length < rates.min_days) {
         let min_nett = (rates.list[0].nett * rates.min_days) / rates.list.length;
         let min_gross = (rates.list[0].gross * rates.min_days) / rates.list.length;
