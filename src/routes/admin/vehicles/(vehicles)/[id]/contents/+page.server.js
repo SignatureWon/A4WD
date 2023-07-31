@@ -5,6 +5,7 @@ const keys = [
   "name",
   "excerpt",
   "description",
+  "meta_title",
   "meta_description",
   "specs",
   "restrictions",

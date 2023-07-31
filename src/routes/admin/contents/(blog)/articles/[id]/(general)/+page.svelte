@@ -18,18 +18,22 @@
 <Tabs tabs={PageTabs(data.id)} />
 <Form id={data.id} path={data.path}>
   <FormSection title="">
+    <InputText name="name" label="Name" bind:value={data.data.name} required={true} />
+    <InputRichText name="content" label="Content" bind:value={data.data.content} />
+  </FormSection>
+  <FormSection title="SEO">
     <InputText
-      name="name"
-      label="Name"
-      bind:value={data.data.name}
-      required={true}
+      name="meta_title"
+      label="Title"
+      bind:value={data.data.meta_title}
+      helper={`${(data.data.meta_title || "").length} / 60 (maximum recommended limit)`}
     />
-    <InputRichText
-      name="content"
-      label="Content"
-      bind:value={data.data.content}
+    <InputTextArea
+      name="meta_description"
+      label="Meta Description"
+      bind:value={data.data.meta_description}
+      helper={`${(data.data.meta_description || "").length} / 160 (maximum recommended limit)`}
     />
-    <InputTextArea name="meta_description" label="SEO: Meta Description" bind:value={data.data.meta_description} />
   </FormSection>
   <FormSection title="Image">
     <InputImage
@@ -45,28 +49,12 @@
     <InputText name="caption" label="Caption" bind:value={data.data.caption} />
   </FormSection>
   <FormSection title="Navigation">
-    <InputSelect
-      name="categories"
-      label="Category"
-      bind:value={data.data.categories}
-      options={data.categories}
-    />
+    <InputSelect name="categories" label="Category" bind:value={data.data.categories} options={data.categories} />
   </FormSection>
 
   <FormSection title="Publish">
-    <InputToggle
-      name="status"
-      label="Status"
-      bind:value={data.data.status}
-      init="true"
-      half={true}
-    />
-    <InputNumber
-      name="rank"
-      label="Rank"
-      bind:value={data.data.rank}
-      half={true}
-    />
+    <InputToggle name="status" label="Status" bind:value={data.data.status} init="true" half={true} />
+    <InputNumber name="rank" label="Rank" bind:value={data.data.rank} half={true} />
   </FormSection>
-  <input type="hidden" name="type" value="articles">
+  <input type="hidden" name="type" value="articles" />
 </Form>

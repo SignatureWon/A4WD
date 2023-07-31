@@ -5,21 +5,33 @@
   import InputText from "$lib/components/admin/InputText.svelte";
   import InputToggle from "$lib/components/admin/InputToggle.svelte";
   import InputImage from "$lib/components/admin/InputImage.svelte";
-  import InputFile from "$lib/components/admin/InputFile.svelte";
   import InputNumber from "$lib/components/admin/InputNumber.svelte";
   import InputRichText from "$lib/components/admin/InputRichText.svelte";
-  import InputSelect from "$lib/components/admin/InputSelect.svelte";
-  import Tabs from "$lib/components/admin/Tabs.svelte";
-  import { PageTabs } from "../../tabs";
   import InputTextArea from "$lib/components/admin/InputTextArea.svelte";
+  import InputSelect from "$lib/components/admin/InputSelect.svelte";
   export let data;
 </script>
 
-<PageTitle title="Page" path={data.path} data={data.data} id={data.id} />
-<Tabs tabs={PageTabs(data.id)} />
+<PageTitle title="Route" path={data.path} data={data.data} id={data.id} />
 <Form id={data.id} path={data.path}>
   <FormSection title="">
     <InputText name="name" label="Name" bind:value={data.data.name} required={true} />
+    <InputSelect name="categories" label="Category" bind:value={data.data.categories} options={data.categories} />
+    <!-- <InputSelect
+      name="group"
+      label="State"
+      bind:value={data.data.group}
+      options={[
+        {id: "New South Wales",value: "New South Wales"},
+        {id: "Northern Territory",value: "Northern Territory"},
+        {id: "Queensland",value: "Queensland"},
+        {id: "South Australia",value: "South Australia"},
+        {id: "Tasmania",value: "Tasmania"},
+        {id: "Victoria",value: "Victoria"},
+        {id: "Western Australia",value: "Western Australia"},
+      ]}
+      half={true}
+    /> -->
     <InputRichText name="content" label="Content" bind:value={data.data.content} />
   </FormSection>
   <FormSection title="SEO">
@@ -49,32 +61,12 @@
     />
     <InputText name="caption" label="Caption" bind:value={data.data.caption} />
   </FormSection>
-  <FormSection title="Attachment">
-    <InputFile
-      name="attachment"
-      label="File"
-      bind:value={data.data.attachment}
-      bucket="terms"
-      fetch={{
-        table: "contents",
-        id: data.id,
-      }}
-    />
+  <FormSection title="Embed">
+    <InputTextArea name="description" label="Google Maps" bind:value={data.data.description} />
   </FormSection>
-  <FormSection title="Navigation">
-    <InputSelect
-      name="categories"
-      label="Category"
-      bind:value={data.data.categories}
-      options={data.categories}
-      half={true}
-    />
-    <InputToggle name="featured" label="Show on top navigation" bind:value={data.data.featured} half={true} />
-  </FormSection>
-
   <FormSection title="Publish">
     <InputToggle name="status" label="Status" bind:value={data.data.status} init="true" half={true} />
     <InputNumber name="rank" label="Rank" bind:value={data.data.rank} half={true} />
   </FormSection>
-  <input type="hidden" name="type" value="pages" />
+  <input type="hidden" name="type" value="routes" />
 </Form>

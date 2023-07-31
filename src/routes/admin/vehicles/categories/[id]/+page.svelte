@@ -22,7 +22,20 @@
       label="Description"
       bind:value={data.data.description}
     />
-    <InputTextArea name="meta_description" label="SEO: Meta Description" bind:value={data.data.meta_description} />
+  </FormSection>
+  <FormSection title="SEO">
+    <InputText
+      name="meta_title"
+      label="Title"
+      bind:value={data.data.meta_title}
+      helper={`${(data.data.meta_title || "").length} / 60 (maximum recommended limit)`}
+    />
+    <InputTextArea
+      name="meta_description"
+      label="Meta Description"
+      bind:value={data.data.meta_description}
+      helper={`${(data.data.meta_description || "").length} / 160 (maximum recommended limit)`}
+    />
   </FormSection>
   <FormSection title="Publish">
     <InputNumber

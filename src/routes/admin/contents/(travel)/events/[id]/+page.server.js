@@ -4,11 +4,12 @@ import { db } from "$lib/server/db";
 const keys = [
   "name",
   "content",
+  "categories",
   "image",
   "caption",
-  "categories",
   "status",
   "rank",
+  "description",
   "meta_title",
   "meta_description",
 ];
@@ -23,7 +24,7 @@ export async function load({ url, params, locals }) {
     categories: db.related({
       table: "categories",
       eq: [{
-        name: "type", value: "articles"
+        name: "type", value: "states"
       }]
     }),
     path: url.pathname,

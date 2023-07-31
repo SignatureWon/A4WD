@@ -11,7 +11,8 @@ const keys = [
   "featured",
   "status",
   "rank",
-  "meta_description"
+  "meta_title",
+  "meta_description",
 ];
 
 export async function load({ url, params, locals }) {

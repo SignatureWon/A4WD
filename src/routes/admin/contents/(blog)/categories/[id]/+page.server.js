@@ -6,6 +6,8 @@ const keys = [
   "description",
   "status",
   "rank",
+  "meta_title",
+  "meta_description",
 ];
 
 export async function load({ url, params, locals }) {
