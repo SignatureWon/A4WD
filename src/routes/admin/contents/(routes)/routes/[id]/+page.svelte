@@ -86,6 +86,12 @@
   <FormSection title="">
     <InputText name="name" label="Name" bind:value={data.data.name} required={true} />
     <InputSelect
+      name="categories"
+      label="Category"
+      bind:value={data.data.categories}
+      options={data.categories}
+    />
+    <!-- <InputSelect
       name="group"
       label="State"
       bind:value={data.data.group}
@@ -99,7 +105,7 @@
         {id: "Western Australia",value: "Western Australia"},
       ]}
       half={true}
-    />
+    /> -->
     <InputRichText name="content" label="Content" bind:value={data.data.content} />
     <InputTextArea name="meta_description" label="SEO: Meta Description" bind:value={data.data.meta_description} />
   </FormSection>

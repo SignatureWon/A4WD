@@ -3,20 +3,18 @@ import { db } from "$lib/server/db";
 
 const keys = [
   "name",
-  "content",
-  "group",
-  "image",
-  "caption",
+  "description",
+  "meta_description",
   "status",
   "rank",
-  "description",
-  "meta_description"
+  "image",
+  "caption",
 ];
 
 export async function load({ url, params, locals }) {
   return {
     data: db.one({
-      table: "contents",
+      table: "categories",
       id: params.id,
       keys: keys,
     }),
@@ -27,25 +25,25 @@ export async function load({ url, params, locals }) {
 export const actions = {
   insert: async ({ request, url, locals }) => {
     await db.actions.insert(request, url, locals, {
-      table: "contents",
+      table: "categories",
     });
   },
   update: async ({ request, url, params, locals }) => {
     await db.actions.update(request, url, locals, {
       id: params.id,
-      table: "contents",
+      table: "categories",
     });
   },
   delete: async ({ request, url, params, locals }) => {
     await db.actions.delete(request, url, locals, {
       id: params.id,
-      table: "contents",
+      table: "categories",
     });
   },
   duplicate: async ({ request, url, params, locals }) => {
     await db.actions.duplicate(request, url, locals, {
       id: params.id,
-      table: "contents",
+      table: "categories",
     });
   },
 };

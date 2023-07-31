@@ -1,78 +1,31 @@
 <script>
-  import { supabase } from "$lib/supabaseClient";
-  import { onMount } from "svelte";
-  import { goto } from "$app/navigation";
-  import Loading from "$lib/components/Loading.svelte";
-  import PageHeader from "$lib/components/public/PageHeader.svelte";
-  import ArchiveList from "$lib/components/public/ArchiveList.svelte";
-  import {
-    InlineNotification,
-    NotificationActionButton,
-  } from "carbon-components-svelte";
-  let archives = "attractions"
-  let records = [];
-  let errors = {};
-  let loading = false;
-  let info = {};
+  import PageHeader from "$lib/components/public/PageHeader-reverse.svelte";
+  import Grid from "$lib/components/public/archive/Grid.svelte";
+  import Title from "$lib/components/public/archive/Title.svelte";
+  import Filter from "$lib/components/public/archive/Filter.svelte";
+  import Attraction from "$lib/components/public/archive/card/Attraction.svelte";
 
-  onMount(async () => {
-    try {
-      loading = true;
-      const { data: dataConstants, error: errorConstants } = await supabase
-        .from("constants")
-        .select()
-        .eq("type", "attractions")
-        .single();
-
-      if (errorConstants) throw error;
-
-      if (dataConstants) {
-        info = dataConstants;
-      }
-
-      const { data: dataContents, error: errorContents } =
-        await supabase.from("contents").select().eq("type", "attractions");
-
-      if (errorContents) throw error;
-
-      if (dataContents) {
-        records = dataContents;
-      }
-    } catch (error) {
-      errors = error;
-    } finally {
-      loading = false;
-    }
-  });
+  export let data;
 </script>
 
-<Loading {loading} />
-{#if errors.code}
-  <InlineNotification
-    hideCloseButton
-    lowContrast
-    kind="error"
-    title="Error:"
-    subtitle={errors.message}
-  >
-    <svelte:fragment slot="actions">
-      <NotificationActionButton on:click={() => goto("/")}>
-        Back to home
-      </NotificationActionButton>
-    </svelte:fragment>
-  </InlineNotification>
-{:else}
-  <PageHeader>
-    <div class="h-96 bg-cover bg-center">
-      <div
-        class="w-full h-full bg-black/20 flex flex-col items-center justify-center text-center p-10"
-      >
-        <h1 class="text-4xl font-bold text-white mb-4">{info.name}</h1>
-        <div class="text-brand-200 text-2xl mb-4">
-          {info.subtitle}
-        </div>
-      </div>
-    </div>
-  </PageHeader>
-  <ArchiveList {records} {archives} />
-{/if}
+<svelte:head>
+  <title>Attractions - Australia 4 Wheel Drive Rentals</title>
+  <meta name="description" content={`${data.pageTitle.name}. ${data.pageTitle.subtitle}`} />
+</svelte:head>
+
+<PageHeader>
+  <Title pageTitle={data.pageTitle} />
+</PageHeader>
+
+<Filter title="Attractions" keyword={data.keyword} url="/attractions" />
+<Grid
+  page={data.pageCurrent}
+  total={data.pageTotal}
+  keyword={data.keyword}
+  records={data.attractions}
+  url="/attractions"
+>
+  {#each data.attractions as record}
+    <Attraction {record} />
+  {/each}
+</Grid>
