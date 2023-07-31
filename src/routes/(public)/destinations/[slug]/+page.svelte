@@ -2,8 +2,29 @@
   import { env } from "$env/dynamic/public";
   import PageHeader from "$lib/components/public/PageHeader-reverse.svelte";
   import { Button } from "carbon-components-svelte";
+  import { onMount } from "svelte";
   export let data;
+
+  function convertToPlain(html) {
+    var tempDivElement = document.createElement("div");
+    tempDivElement.innerHTML = html;
+    let result = tempDivElement.textContent || tempDivElement.innerText || ""
+    if (result.length > 155) {
+      result = result.substring(0, 155) + "..."
+    }
+    return result;
+  }
+
+  let plainDesc = ""
+  onMount(() => {
+    plainDesc = convertToPlain(data.data.content)
+  })
 </script>
+
+<svelte:head>
+  <title>{data.data.name} - Destination - Australia 4 Wheel Drive Rentals</title>
+  <meta name="description" content={data.data.meta_description || plainDesc} />
+</svelte:head>
 
 {#if !data.data}
   <div class="px-5 py-10 container xl:max-w-7xl mx-auto bg-white rounded text-center my-8">
