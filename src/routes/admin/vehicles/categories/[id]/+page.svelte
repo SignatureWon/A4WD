@@ -22,6 +22,7 @@
       label="Description"
       bind:value={data.data.description}
     />
+    <InputTextArea name="meta_description" label="SEO: Meta Description" bind:value={data.data.meta_description} />
   </FormSection>
   <FormSection title="Publish">
     <InputNumber

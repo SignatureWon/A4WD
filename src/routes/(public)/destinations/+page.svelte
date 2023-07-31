@@ -1,28 +1,31 @@
 <script>
-  import PageHeader from "$lib/components/public/PageHeader.svelte";
-  import List from "$lib/components/public/archive/List.svelte";
-  import ListTitle from "$lib/components/public/archive/ListTitle.svelte";
-  import ListFilter from "$lib/components/public/archive/ListFilter.svelte";
+  import PageHeader from "$lib/components/public/PageHeader-reverse.svelte";
+  import Grid from "$lib/components/public/archive/Grid.svelte";
+  import Title from "$lib/components/public/archive/Title.svelte";
+  import Filter from "$lib/components/public/archive/Filter.svelte";
   import Destination from "$lib/components/public/archive/card/Destination.svelte";
 
-  let records = [];
+  export let data;
 </script>
 
+<svelte:head>
+  <title>Destinations - Australia 4 Wheel Drive Rentals</title>
+  <meta name="description" content={`${data.pageTitle.name}. ${data.pageTitle.subtitle}`} />
+</svelte:head>
+
 <PageHeader>
-  <ListTitle type="destinations" />
+  <Title pageTitle={data.pageTitle} />
 </PageHeader>
-<ListFilter />
-<List
-  bind:records
-  fetch={{
-    from: "contents",
-    select: "id, image, caption, name, slug",
-    eq: [{name: "type", value: "destinations"}],
-  }}
+
+<Filter title="Destinations" keyword={data.keyword} url="/destinations" />
+<Grid
+  page={data.pageCurrent}
+  total={data.pageTotal}
+  keyword={data.keyword}
+  records={data.destinations}
+  url="/destinations"
 >
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-    {#each records as record}
-      <Destination {record} />
-    {/each}
-  </div>
-</List>
+  {#each data.destinations as record}
+    <Destination {record} />
+  {/each}
+</Grid>

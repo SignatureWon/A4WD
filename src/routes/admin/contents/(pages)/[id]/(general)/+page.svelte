@@ -11,6 +11,7 @@
   import InputSelect from "$lib/components/admin/InputSelect.svelte";
   import Tabs from "$lib/components/admin/Tabs.svelte";
   import { PageTabs } from "../../tabs";
+  import InputTextArea from "$lib/components/admin/InputTextArea.svelte";
   export let data;
 </script>
 
@@ -18,17 +19,9 @@
 <Tabs tabs={PageTabs(data.id)} />
 <Form id={data.id} path={data.path}>
   <FormSection title="">
-    <InputText
-      name="name"
-      label="Name"
-      bind:value={data.data.name}
-      required={true}
-    />
-    <InputRichText
-      name="content"
-      label="Content"
-      bind:value={data.data.content}
-    />
+    <InputText name="name" label="Name" bind:value={data.data.name} required={true} />
+    <InputRichText name="content" label="Content" bind:value={data.data.content} />
+    <InputTextArea name="meta_description" label="SEO: Meta Description" bind:value={data.data.meta_description} />
   </FormSection>
   <FormSection title="Image">
     <InputImage
@@ -63,28 +56,12 @@
       options={data.categories}
       half={true}
     />
-    <InputToggle
-      name="featured"
-      label="Show on top navigation"
-      bind:value={data.data.featured}
-      half={true}
-    />
+    <InputToggle name="featured" label="Show on top navigation" bind:value={data.data.featured} half={true} />
   </FormSection>
 
   <FormSection title="Publish">
-    <InputToggle
-      name="status"
-      label="Status"
-      bind:value={data.data.status}
-      init="true"
-      half={true}
-    />
-    <InputNumber
-      name="rank"
-      label="Rank"
-      bind:value={data.data.rank}
-      half={true}
-    />
+    <InputToggle name="status" label="Status" bind:value={data.data.status} init="true" half={true} />
+    <InputNumber name="rank" label="Rank" bind:value={data.data.rank} half={true} />
   </FormSection>
-  <input type="hidden" name="type" value="pages">
+  <input type="hidden" name="type" value="pages" />
 </Form>

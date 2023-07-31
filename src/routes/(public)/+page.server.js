@@ -18,10 +18,10 @@ export async function load() {
       "contact",
     ]);
 
-  let site = {};
+  let sections = {};
   constants.forEach((item) => {
-    site[item.type] = item;
+    sections[item.type] = item;
   });
 
-  return { contents, site };
+  return { contents, sections };
 }

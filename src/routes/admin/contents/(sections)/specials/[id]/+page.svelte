@@ -11,7 +11,7 @@
   export let data;
 </script>
 
-<PageTitle title="Attraction" path={data.path} data={data.data} id={data.id} />
+<PageTitle title="Event" path={data.path} data={data.data} id={data.id} />
 <Form id={data.id} path={data.path}>
   <FormSection title="">
     <InputText name="name" label="Name" bind:value={data.data.name} required={true} />
@@ -31,12 +31,12 @@
     />
     <InputText name="caption" label="Caption" bind:value={data.data.caption} />
   </FormSection>
-  <FormSection title="Embed">
+  <!-- <FormSection title="Embed">
     <InputTextArea name="description" label="Google Maps" bind:value={data.data.description} />
-  </FormSection>
+  </FormSection> -->
   <FormSection title="Publish">
     <InputToggle name="status" label="Status" bind:value={data.data.status} init="true" half={true} />
     <InputNumber name="rank" label="Rank" bind:value={data.data.rank} half={true} />
   </FormSection>
-  <input type="hidden" name="type" value="attractions" />
+  <input type="hidden" name="type" value="specials" />
 </Form>

@@ -158,6 +158,9 @@
           updateRecord("email", record.email);
           updateRecord("email_quote", record.email_quote);
           updateRecord("color", record.color);
+          updateRecord("facebook", record.facebook);
+          updateRecord("instagram", record.instagram);
+          updateRecord("twitter", record.twitter);
         }}
       >
         <div

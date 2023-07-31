@@ -77,7 +77,7 @@
     const { data, error } = await supabase.rpc("search_options").select();
     if (data) {
       options = data;
-      console.log(options);
+      // console.log(options);
     }
 
     // data.forEach((opt) => {

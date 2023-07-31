@@ -4,6 +4,7 @@
   import FormSection from "$lib/components/admin/FormSection.svelte";
   import InputText from "$lib/components/admin/InputText.svelte";
   import InputRichText from "$lib/components/admin/InputRichText.svelte";
+  import InputTextArea from "$lib/components/admin/InputTextArea.svelte";
   import Tabs from "$lib/components/admin/Tabs.svelte";
   import {PageTabs} from "../../tabs"
   export let data;
@@ -23,6 +24,7 @@
       label="Description"
       bind:value={data.data.description}
     />
+    <InputTextArea name="meta_description" label="SEO: Meta Description" bind:value={data.data.meta_description} />
     <InputRichText
       name="specs"
       label="Specs (Show in quotation)"

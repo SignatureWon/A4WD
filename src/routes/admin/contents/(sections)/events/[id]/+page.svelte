@@ -11,7 +11,7 @@
   export let data;
 </script>
 
-<PageTitle title="Attraction" path={data.path} data={data.data} id={data.id} />
+<PageTitle title="Event" path={data.path} data={data.data} id={data.id} />
 <Form id={data.id} path={data.path}>
   <FormSection title="">
     <InputText name="name" label="Name" bind:value={data.data.name} required={true} />
@@ -38,5 +38,5 @@
     <InputToggle name="status" label="Status" bind:value={data.data.status} init="true" half={true} />
     <InputNumber name="rank" label="Rank" bind:value={data.data.rank} half={true} />
   </FormSection>
-  <input type="hidden" name="type" value="attractions" />
+  <input type="hidden" name="type" value="events" />
 </Form>

@@ -4,6 +4,7 @@ import { db } from "$lib/server/db";
 const keys = [
   "name",
   "description",
+  "meta_description",
   "rank",
 ];
 

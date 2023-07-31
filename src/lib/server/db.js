@@ -44,6 +44,7 @@ const convertToJson = (data) => {
     "routes",
     "depots",
     "fees",
+    "daily_time"
   ].forEach((key) => {
     if (key in data) {
       data[key] = JSON.parse(data[key]);

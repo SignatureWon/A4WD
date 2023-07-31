@@ -10,6 +10,7 @@
     subtitle: "",
     description: "",
   };
+  let show = [false, false, false, false, false];
 
   onMount(() => {
     new Splide(".carousel-testimonials", {
@@ -33,9 +34,7 @@
 <div class="bg-brand-50">
   <div class="space-y-8 container xl:max-w-7xl mx-auto px-4 py-16">
     <div class="text-center">
-      <div
-        class="text-sm uppercase font-bold tracking-wider mb-1 text-brand-600"
-      >
+      <div class="text-sm uppercase font-bold tracking-wider mb-1 text-brand-600">
         {title.name}
       </div>
       <h2 class="text-xl font-extrabold mb-4 flex items-center justify-center">
@@ -65,14 +64,8 @@
           {#each records as item, itemIndex}
             {#if itemIndex < 10}
               <li class="splide__slide">
-                <div
-                  class="group flex flex-col p-5 relative bg-white rounded-xl mx-4"
-                >
-                  <div
-                    class="absolute top-0 right-0 text-7xl mt-3 mr-4 text-gray-200 opacity-75 font-serif"
-                  >
-                    “
-                  </div>
+                <div class="group flex flex-col p-5 relative bg-white rounded-xl mx-4">
+                  <div class="absolute top-0 right-0 text-7xl mt-3 mr-4 text-gray-200 opacity-75 font-serif">“</div>
                   <blockquote class="grow flex flex-col relative">
                     <div class="mb-6">
                       <div
@@ -125,15 +118,22 @@
                         >
                       </div>
                     </div>
-                    <p
-                      class="grow text-sm text-gray-700 font-medium leading-relaxed mb-5 h-56 overflow-hidden"
+                    <div
+                      class="grow text-sm text-gray-700 font-medium leading-relaxed overflow-hidden {show[
+                        itemIndex
+                      ]
+                        ? ''
+                        : 'h-24'}"
                     >
                       {item.content}
-                    </p>
+                    </div>
+                    <div class="mb-5">
+                      <a class="text-sm text-gray-400 cursor-pointer" on:click={() => {
+                        show[itemIndex] = !show[itemIndex]
+                      }}>{show[itemIndex] ? "Read less" : "Read more"}</a>
+                    </div>
                     <footer>
-                      <div
-                        class="font-semibold text-brand-600 hover:text-brand-400"
-                      >
+                      <div class="font-semibold text-brand-600 hover:text-brand-400">
                         {item.name}
                       </div>
                       <div class="text-gray-400 text-sm">

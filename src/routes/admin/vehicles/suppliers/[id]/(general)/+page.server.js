@@ -10,6 +10,8 @@ const keys = [
   "all_day",
   "start_time",
   "end_time",
+  "daily",
+  "daily_time"
 ];
 
 export async function load({ url, params, locals }) {

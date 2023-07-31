@@ -10,7 +10,6 @@
   import ContactForm from "$lib/components/public/ContactForm.svelte";
 
   export let data;
-  // console.log(data);
 
   const getContent = (contentType) => {
     let resp = data.contents.filter(function (item) {
@@ -19,17 +18,21 @@
     return resp;
   };
 </script>
+<svelte:head>
+  <title>{data.site.title}</title>
+  <meta name="description" content={data.site.description} />
+</svelte:head>
 
 <PageHeader>
   <Banners records={getContent("banners")} />
 </PageHeader>
-<SectionCarousel records={getContent("destinations")} title={data.site.destinations} button="More Destinations" />
-<Vehicles record4={getContent("4WD")} record2={getContent("2WD")} title={data.site.vehicles} />
-<SectionCarousel records={getContent("routes")} title={data.site.routes} button="More Routes" />
-<SectionCarousel records={getContent("attractions")} title={data.site.attractions} button="More Attractions" />
-<About title={data.site.about} />
-<Features records={getContent("features")} title={data.site.features} />
-<SectionCarousel records={getContent("articles")} title={data.site.blog} button="More Articles" content={true} />
-<Testimonials records={getContent("testimonials")} title={data.site.testimonials} />
-<Faqs records={getContent("faqs")} title={data.site.faqs} />
-<ContactForm content={data.site.contact} />
+<SectionCarousel records={getContent("destinations")} title={data.sections.destinations} button="More Destinations" />
+<Vehicles record4={getContent("4WD")} record2={getContent("2WD")} title={data.sections.vehicles} />
+<SectionCarousel records={getContent("routes")} title={data.sections.routes} button="More Routes" />
+<SectionCarousel records={getContent("attractions")} title={data.sections.attractions} button="More Attractions" />
+<About title={data.sections.about} />
+<Features records={getContent("features")} title={data.sections.features} />
+<SectionCarousel records={getContent("articles")} title={data.sections.blog} button="More Articles" content={true} />
+<Testimonials records={getContent("testimonials")} title={data.sections.testimonials} />
+<Faqs records={getContent("faqs")} title={data.sections.faqs} />
+<ContactForm content={data.sections.contact} />
