@@ -8,6 +8,7 @@
   import InputNumber from "$lib/components/admin/InputNumber.svelte";
   import InputRichText from "$lib/components/admin/InputRichText.svelte";
   import InputSelect from "$lib/components/admin/InputSelect.svelte";
+  import InputTextArea from "$lib/components/admin/InputTextArea.svelte";
   import Tabs from "$lib/components/admin/Tabs.svelte";
   import { PageTabs } from "../../tabs";
   export let data;
@@ -28,6 +29,7 @@
       label="Content"
       bind:value={data.data.content}
     />
+    <InputTextArea name="meta_description" label="SEO: Meta Description" bind:value={data.data.meta_description} />
   </FormSection>
   <FormSection title="Image">
     <InputImage

@@ -9,6 +9,7 @@ const keys = [
   "categories",
   "status",
   "rank",
+  "meta_description"
 ];
 
 export async function load({ url, params, locals }) {
