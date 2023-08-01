@@ -8,7 +8,9 @@
   import InputNumber from "$lib/components/admin/InputNumber.svelte";
   import InputHidden from "$lib/components/admin/InputHidden.svelte";
   import InputToggle from "$lib/components/admin/InputToggle.svelte";
+  import { Checkbox } from "carbon-components-svelte";
   export let data;
+  console.log(data);
 </script>
 
 <PageTitle title="Flex" path={data.path} data={data.data} id={data.id} />
@@ -72,6 +74,7 @@
       bind:value={data.data.data}
       required={true}
     />
+    <!-- <Checkbox name="zero" bind:checked={data.data.zero} labelText="Matrix start from zero" /> -->
     <InputToggle
       name="zero"
       label="Matrix start from zero"

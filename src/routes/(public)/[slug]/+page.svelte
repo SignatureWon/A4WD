@@ -1,105 +1,56 @@
 <script>
-  import { supabase } from "$lib/supabaseClient";
-  import { onMount } from "svelte";
   import { env } from "$env/dynamic/public";
-  import { page } from "$app/stores";
-  import { goto } from "$app/navigation";
-  import Loading from "$lib/components/Loading.svelte";
-  import PageHeader from "$lib/components/public/PageHeader.svelte";
-  import { f } from "$lib/file";
-  import {
-    InlineNotification,
-    NotificationActionButton,
-  } from "carbon-components-svelte";
-  let slug = $page.params.slug;
-  let record = {};
-  let errors = {};
-  let loading = false;
-  let filePreview = false;
+  import PageHeader from "$lib/components/public/PageHeader-reverse.svelte";
+  import { Button } from "carbon-components-svelte";
+  import { onMount } from "svelte";
+  export let data;
+  console.log(data);
 
-  onMount(async () => {
-    try {
-      loading = true;
-      const { data, error } = await supabase
-        .from("contents")
-        .select()
-        .eq("slug", slug)
-        .single();
-
-      record = data;
-      // console.log(record);
-
-      if (error) throw error;
-
-      if (data) {
-        record = data;
-
-        if (record.attachment) {
-          filePreview = f.extension(record.attachment);
-        }
-      }
-    } catch (error) {
-      errors = error;
-    } finally {
-      loading = false;
+  function convertToPlain(html) {
+    var tempDivElement = document.createElement("div");
+    tempDivElement.innerHTML = html;
+    let result = tempDivElement.textContent || tempDivElement.innerText || "";
+    if (result.length > 155) {
+      result = result.substring(0, 155) + "...";
     }
+    return result;
+  }
+
+  let plainDesc = "";
+  onMount(() => {
+    plainDesc = convertToPlain(data.data.content);
   });
 </script>
 
-<Loading {loading} />
-{#if errors.code}
-  <InlineNotification
-    hideCloseButton
-    lowContrast
-    kind="error"
-    title="Error:"
-    subtitle={errors.message}
-  >
-    <svelte:fragment slot="actions">
-      <NotificationActionButton on:click={() => goto("/")}>
-        Back to home
-      </NotificationActionButton>
-    </svelte:fragment>
-  </InlineNotification>
+<svelte:head>
+  <title>{data.data.meta_title || `${data.data.name} - Australia 4 Wheel Drive Rentals`}</title>
+  <meta name="description" content={data.data.meta_description || plainDesc} />
+</svelte:head>
+
+{#if !data.data}
+  <div class="px-5 py-10 container xl:max-w-7xl mx-auto bg-white rounded text-center my-8">
+    <div class="h1 mb-4">No pages found</div>
+    <div><Button href="/" class="inline-block">Back to home</Button></div>
+  </div>
 {:else}
   <PageHeader>
     <div
-      class="h-96 bg-cover bg-center"
-      style="background-image: url('{env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/{record.image}');"
+      class="h-full bg-cover bg-center"
+      style={data.data.image
+        ? `background-image: url('${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/${data.data.image}');`
+        : ""}
     >
-      <!-- <div
-        class="w-full h-full bg-black/20 flex flex-col items-center justify-center text-center p-10"
-      >
-        <h1 class="text-4xl font-bold text-white">{record.name}</h1>
-      </div> -->
+      <div class="w-full h-full bg-black/50 flex flex-col items-center justify-center text-center p-10">
+        <h1 class="text-4xl font-bold text-white">{data.data.name}</h1>
+      </div>
     </div>
   </PageHeader>
-  <div class="bg-white">
-    <div class="max-w-5xl py-10 px-5 mx-auto">
-      <h1 class="text-4xl font-bold mb-5">{record.name}</h1>
-      {@html record.content}
-      {#if filePreview}
-      <div class="h-screen">
-        <iframe
-          src="https://drive.google.com/viewerng/viewer?embedded=true&url=https://api.australia4wdrentals.com/storage/v1/object/public/terms/{record.attachment}#toolbar=0&scrollbar=0"
-          frameBorder="0"
-          scrolling="auto"
-          height="100%"
-          width="100%"
-          title={record.name}
-        />
-      </div>
-              <!-- <div class="pt-5 mt-5 border-t border-gray-200">
-          <div class="font-bold mb-4">Attachment</div>
-          <a
-            href="{env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/terms/{record.attachment}"
-            target="_blank"
-            rel="noreferrer"
-            class="file-icon file-icon-xl"
-            data-type={filePreview}
-          />
-        </div> -->
-      {/if}
+  <div class="p-5 container xl:max-w-7xl mx-auto bg-white rounded my-8">
+    <div class="content mb-8">
+      {@html data.data.content}
     </div>
+    {#if data.data.attachment}
+      <embed src={`${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/terms/${data.data.attachment}`} type="application/pdf" width="100%" height="1200" />
+    {/if}
   </div>
 {/if}

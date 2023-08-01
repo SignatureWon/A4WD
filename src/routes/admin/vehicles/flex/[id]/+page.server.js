@@ -19,8 +19,15 @@ const keys = [
 
 const generateRates = async (ratesID, data) => {
   let az = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-  let zero = (data.zero || data.zero === "true") ? 0 : 1;
-  // console.log("zero", zero);
+  if (typeof data.zero === 'string') {
+    if (data.zero === 'false') {
+      data.zero = false
+    } else {
+      data.zero = true
+    }
+  }
+  let zero = (data.zero) ? 0 : 1;
+  console.log("zero", data.zero, zero);
   let matrix = {};
   if (data.matrix) {
     data.matrix.split(/\r?\n/).forEach((row, rowIndex) => {
@@ -45,7 +52,7 @@ const generateRates = async (ratesID, data) => {
     });
   }
 
-  // console.log("matrix", matrix);
+  console.log("matrix", matrix['F5']);
 
   let ratesValid = [];
   let ratesInvalid = [];
@@ -116,6 +123,9 @@ const generateRates = async (ratesID, data) => {
           // console.log("obj", rowIndex, obj);
 
           if (valid) {
+            // if (obj.vehicles === '4ed8a3f0-e5bf-4342-a987-1270fff491c9' && obj.flex === 'F5') {
+            //   console.log(obj);
+            // }
             ratesValid.push(obj);
           } else {
             ratesInvalid.push(obj);
@@ -209,7 +219,7 @@ export const actions = {
       value: params.id,
     });
 
-    console.log(rates.valid);
+    // console.log(rates.valid);
 
     await db.insert(locals, {
       table: "ratesCard",
