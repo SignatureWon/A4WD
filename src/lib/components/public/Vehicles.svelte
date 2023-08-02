@@ -67,7 +67,7 @@
   });
 </script>
 
-<section class="pt-5 pb-10 bg-gray-100">
+<section class="pt-5 pb-10 bg-white">
   <div class="container xl:max-w-7xl mx-auto p-5">
     <div class="md:flex items-end">
       <div class="flex-1">

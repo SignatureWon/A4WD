@@ -91,7 +91,7 @@
                         <!-- {#await preload(`${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/${item.image}`) then base64} -->
                         <!-- style="background-image: url('{env.PUBLIC_SUPABASE_URL}/storage/v1/render/image/public/contents/{item.image}?width=300&height=300&resize=contain');" -->
                         <div
-                          class="bg-cover bg-center blur-md absolute w-full h-full scale-110 -z-10 bg-gray-200"
+                          class="bg-cover bg-center blur-md absolute w-full h-full scale-110 -z-10"
                         />
                         <img
                           src="{env.PUBLIC_SUPABASE_URL}/storage/v1/render/image/public/contents/{item.image}?width=300&height=300&resize=contain"
