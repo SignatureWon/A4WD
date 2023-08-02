@@ -28,7 +28,7 @@
 
 {#if !data.data}
   <div class="px-5 py-10 container xl:max-w-7xl mx-auto bg-white rounded text-center my-8">
-    <div class="h1 mb-4">No destinations found</div>
+    <div class="h1 mb-4">No events found</div>
     <div><Button href="/" class="inline-block">Back to home</Button></div>
   </div>
 {:else}

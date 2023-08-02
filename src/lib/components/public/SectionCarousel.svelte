@@ -15,6 +15,12 @@
   export let button = "button";
   export let content = false;
 
+  const perPage = {
+    desktop: records.length > 4 ? 4 : records.length,
+    tablet: records.length > 3 ? 3 : records.length,
+    mobile: records.length > 2 ? 2 : records.length,
+  }
+
   // const preload = async (src) => {
   //   const resp = await fetch(src);
   //   const blob = await resp.blob();
@@ -41,13 +47,13 @@
       autoplay: true,
       interval: 5000,
       pagination: false,
-      perPage: 4,
+      perPage: perPage.desktop,
       breakpoints: {
         640: {
-          perPage: 2,
+          perPage: perPage.mobile,
         },
         1024: {
-          perPage: 3,
+          perPage: perPage.tablet,
         },
       },
     }).mount();
@@ -80,14 +86,12 @@
               <li class="splide__slide">
                 <div class="px-2 group">
                   <a href="/{title.type}/{item.slug}">
-                    <div
-                      class="h-44 overflow-hidden rounded relative flex items-center"
-                    >
+                    <div class="h-44 overflow-hidden rounded relative flex items-center">
                       {#if item.image}
                         <!-- {#await preload(`${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/${item.image}`) then base64} -->
+                        <!-- style="background-image: url('{env.PUBLIC_SUPABASE_URL}/storage/v1/render/image/public/contents/{item.image}?width=300&height=300&resize=contain');" -->
                         <div
                           class="bg-cover bg-center blur-md absolute w-full h-full scale-110 -z-10 bg-gray-200"
-                          style="background-image: url('{env.PUBLIC_SUPABASE_URL}/storage/v1/render/image/public/contents/{item.image}?width=300&height=300&resize=contain');"
                         />
                         <img
                           src="{env.PUBLIC_SUPABASE_URL}/storage/v1/render/image/public/contents/{item.image}?width=300&height=300&resize=contain"
@@ -101,9 +105,7 @@
                         <div class="absolute w-full h-full bg-gray-200" />
                       {/if}
                     </div>
-                    <div
-                      class="text-lg font-medium py-2 bg-white truncate h-10"
-                    >
+                    <div class="text-lg font-medium py-2 bg-white truncate h-10">
                       {item.name}
                     </div>
                     {#if content}

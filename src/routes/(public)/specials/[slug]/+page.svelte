@@ -5,6 +5,8 @@
   import { onMount } from "svelte";
   export let data;
 
+  console.log(data);
+
   function convertToPlain(html) {
     var tempDivElement = document.createElement("div");
     tempDivElement.innerHTML = html;
@@ -28,7 +30,7 @@
 
 {#if !data.data}
   <div class="px-5 py-10 container xl:max-w-7xl mx-auto bg-white rounded text-center my-8">
-    <div class="h1 mb-4">No destinations found</div>
+    <div class="h1 mb-4">No specials found</div>
     <div><Button href="/" class="inline-block">Back to home</Button></div>
   </div>
 {:else}
@@ -45,9 +47,6 @@
   <div class="p-5 container xl:max-w-7xl mx-auto bg-white rounded my-8">
     <div class="content">
       {@html data.data.content}
-    </div>
-    <div class="mt-6 [&>iframe]:w-full">
-      {@html data.data.description}
     </div>
   </div>
 {/if}

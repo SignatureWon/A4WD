@@ -11,6 +11,7 @@ export async function load() {
       "attractions",
       "routes",
       "specials",
+      "events",
       "features",
       "blog",
       "testimonials",
