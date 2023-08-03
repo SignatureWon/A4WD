@@ -4,7 +4,7 @@ export async function load({ params, url }) {
   const keyword = url.searchParams.get("keyword") || "";
 
   const pageCurrent = Number(url.searchParams.get("page")) || 1;
-  const pageSize = 10;
+  const pageSize = 21;
   const rangeFrom = (pageCurrent - 1) * pageSize;
   const rangeTo = rangeFrom + pageSize - 1;
 
