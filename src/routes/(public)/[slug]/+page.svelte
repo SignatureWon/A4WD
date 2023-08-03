@@ -10,8 +10,8 @@
     var tempDivElement = document.createElement("div");
     tempDivElement.innerHTML = html;
     let result = tempDivElement.textContent || tempDivElement.innerText || "";
-    if (result.length > 155) {
-      result = result.substring(0, 155) + "...";
+    if (result.length > 160) {
+      result = result.substring(0, 160) + "...";
     }
     return result;
   }

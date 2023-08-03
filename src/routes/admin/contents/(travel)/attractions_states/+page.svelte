@@ -5,7 +5,7 @@
   export let data;
 </script>
 
-<PageTitle title="States" path={data.path} />
+<PageTitle title="States - Attractions" path={data.path} />
 
 <SectionDataTable
   rows={data.data}

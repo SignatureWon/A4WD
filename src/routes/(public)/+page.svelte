@@ -7,6 +7,7 @@
   import Features from "$lib/components/public/Features.svelte";
   import PageHeader from "$lib/components/public/PageHeader.svelte";
   import SectionCarousel from "$lib/components/public/SectionCarousel.svelte";
+  import CategoryCarousel from "$lib/components/public/CategoryCarousel.svelte";
   import ContactForm from "$lib/components/public/ContactForm.svelte";
 
   export let data;
@@ -30,9 +31,11 @@
 <SectionCarousel records={getContent("destinations")} title={data.sections.destinations} button="More Destinations" />
 <Vehicles record4={getContent("4WD")} record2={getContent("2WD")} title={data.sections.vehicles} />
 <SectionCarousel records={getContent("specials")} title={data.sections.specials} button="More Specials" />
-<SectionCarousel records={getContent("routes")} categories={data.states} title={data.sections.routes} button="More Routes" />
-<SectionCarousel records={getContent("attractions")} categories={data.states} title={data.sections.attractions} button="More Attractions" />
-<SectionCarousel records={getContent("events")} categories={data.states} title={data.sections.events} button="More Events" />
+<CategoryCarousel records={data.states[1]} title={data.sections.routes} button="More Routes" />
+<CategoryCarousel records={data.states[0]} title={data.sections.attractions} button="More Attractions" />
+<CategoryCarousel records={data.states[2]} title={data.sections.events} button="More Events" />
+<!-- <SectionCarousel records={getContent("attractions")} categories={data.states} title={data.sections.attractions} button="More Attractions" />
+<SectionCarousel records={getContent("events")} categories={data.states} title={data.sections.events} button="More Events" /> -->
 <About title={data.sections.about} />
 <Features records={getContent("features")} title={data.sections.features} />
 <SectionCarousel records={getContent("articles")} title={data.sections.blog} button="More Articles" content={true} />

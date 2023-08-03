@@ -24,7 +24,10 @@ export async function load({ url, params, locals }) {
     categories: db.related({
       table: "categories",
       eq: [{
-        name: "type", value: "states"
+        name: "type", value: "attractions"
+      }],
+      order: [{
+        name: "rank", ascend: true
       }]
     }),
     path: url.pathname,

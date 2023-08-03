@@ -7,6 +7,10 @@
       value: "Name",
     },
     {
+      key: "categories.name",
+      value: "State",
+    },
+    {
       key: "status",
       value: "Status",
     },
@@ -21,6 +25,7 @@
 <Table
   table="contents"
   filters={[{ type: "eq", column: "type", value: "attractions" }]}
+  fields="id, name, status, rank, categories (name)"
   orders={[
     {
       column: "rank",

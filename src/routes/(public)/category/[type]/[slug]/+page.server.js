@@ -4,13 +4,14 @@ export async function load({ url, params, locals }) {
   const table = type === "vehicles" ? "vehicles" : "contents";
   const { data: category } = await supabase
     .from("categories")
-    .select("id, name, slug, type, meta_title, meta_description, description")
+    .select("id, name, slug, type, image, meta_title, meta_description, description")
     .eq("slug", params.slug)
+    .eq("type", type)
     .single();
 
   const keyword = url.searchParams.get("keyword") || "";
   const pageCurrent = Number(url.searchParams.get("page")) || 1;
-  const pageSize = 10;
+  const pageSize = 18;
   const rangeFrom = (pageCurrent - 1) * pageSize;
   const rangeTo = rangeFrom + pageSize - 1;
 

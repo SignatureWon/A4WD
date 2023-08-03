@@ -1,7 +1,8 @@
 import { supabase } from "$lib/supabaseClient";
 export async function load() {
-  const { data: contents, error } = await supabase.rpc("home_data");
-  const { data: states } = await supabase.from("categories").select("name, slug").eq("type", "states");
+  const { data: contents } = await supabase.rpc("home_data");
+  const { data: states } = await supabase.rpc("travel_states");
+  // const { data: states } = await supabase.from("categories").select("name, slug").in("type", "states");
   const { data: constants } = await supabase
     .from("constants")
     .select("type, name, subtitle, description")
