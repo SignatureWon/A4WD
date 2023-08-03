@@ -1,6 +1,7 @@
 import { supabase } from "$lib/supabaseClient";
 export async function load() {
-  const { data: contents , error } = await supabase.rpc('home_data')
+  const { data: contents, error } = await supabase.rpc("home_data");
+  const { data: states } = await supabase.from("categories").select("name, slug").eq("type", "states");
   const { data: constants } = await supabase
     .from("constants")
     .select("type, name, subtitle, description")
@@ -24,5 +25,9 @@ export async function load() {
     sections[item.type] = item;
   });
 
-  return { contents, sections };
+  return {
+    contents,
+    sections,
+    states,
+  };
 }

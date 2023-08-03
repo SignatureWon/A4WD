@@ -52,7 +52,7 @@ const convertToJson = (data) => {
   });
 };
 const slugifyName = (fetch, data) => {
-  if (["contents", "vehicles"].includes(fetch.table)) {
+  if (["contents", "vehicles", "categories"].includes(fetch.table)) {
     if ("name" in data) {
       data.slug = data.name
         .toLowerCase()

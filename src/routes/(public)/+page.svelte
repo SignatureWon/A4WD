@@ -30,9 +30,9 @@
 <SectionCarousel records={getContent("destinations")} title={data.sections.destinations} button="More Destinations" />
 <Vehicles record4={getContent("4WD")} record2={getContent("2WD")} title={data.sections.vehicles} />
 <SectionCarousel records={getContent("specials")} title={data.sections.specials} button="More Specials" />
-<SectionCarousel records={getContent("routes")} title={data.sections.routes} button="More Routes" />
-<SectionCarousel records={getContent("attractions")} title={data.sections.attractions} button="More Attractions" />
-<SectionCarousel records={getContent("events")} title={data.sections.events} button="More Events" />
+<SectionCarousel records={getContent("routes")} categories={data.states} title={data.sections.routes} button="More Routes" />
+<SectionCarousel records={getContent("attractions")} categories={data.states} title={data.sections.attractions} button="More Attractions" />
+<SectionCarousel records={getContent("events")} categories={data.states} title={data.sections.events} button="More Events" />
 <About title={data.sections.about} />
 <Features records={getContent("features")} title={data.sections.features} />
 <SectionCarousel records={getContent("articles")} title={data.sections.blog} button="More Articles" content={true} />
