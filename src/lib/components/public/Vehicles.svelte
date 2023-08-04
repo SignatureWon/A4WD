@@ -90,7 +90,7 @@
         <span class="font-bold">4WD Vehicles</span>
         <Button
           kind="tertiary"
-          href="/vehicles?wheel=4WD"
+          href="/vehicles?category=4wd-campers"
           class="text-xs px-2 py-0.5 ml-2">View more</Button
         >
       </div>
@@ -139,7 +139,7 @@
         <span class="font-bold">2WD Vehicles</span>
         <Button
           kind="tertiary"
-          href="/vehicles?wheel=2WD"
+          href="/vehicles?category=2wd-campers"
           class="text-xs px-2 py-0.5 ml-2">View more</Button
         >
       </div>

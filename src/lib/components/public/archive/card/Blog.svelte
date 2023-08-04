@@ -4,10 +4,10 @@
   // console.log(record);
 </script>
 
-<a href="/events/{record.slug}">
+<a href="/blog/{record.slug}">
   <div class="bg-white rounded overflow-hidden group">
     <div class="bg-white rounded overflow-hidden group">
-      <a href="/events/{record.slug}">
+      <a href="/blog/{record.slug}">
         <div class="h-60 sm:h-48 overflow-hidden">
           <div
             class="h-60 sm:h-48 bg-cover bg-center transition-all group-hover:scale-125"

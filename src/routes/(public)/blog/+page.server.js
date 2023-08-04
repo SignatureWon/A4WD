@@ -9,13 +9,13 @@ export async function load({ params, url }) {
   const rangeTo = rangeFrom + pageSize - 1;
 
   const {
-    data: destinations,
+    data: articles,
     count,
-    error: error_destinations,
+    error: error_articles,
   } = await supabase
     .from("contents")
     .select("name, image, slug", { count: "exact" })
-    .eq("type", "destinations")
+    .eq("type", "articles")
     .ilike("name", `%${keyword}%`)
     .order("rank", { ascending: true })
     .range(rangeFrom, rangeTo);
@@ -25,9 +25,9 @@ export async function load({ params, url }) {
   const { data: pageTitle, error: error_pageTitle } = await supabase
     .from("constants")
     .select()
-    .eq("type", "destinations")
+    .eq("type", "blog")
     .single();
 
 
-  return { destinations, pageCurrent, pageTotal, pageTitle, keyword };
+  return { articles, pageCurrent, pageTotal, pageTitle, keyword };
 }

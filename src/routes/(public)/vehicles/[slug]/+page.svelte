@@ -1,4 +1,5 @@
 <script>
+  import { env } from "$env/dynamic/public";
   import PageHeader from "$lib/components/public/PageHeader.svelte";
   import PageNotFound from "$lib/components/public/PageNotFound.svelte";
   import FeaturedImage from "$lib/components/public/FeaturedImage.svelte";
@@ -7,26 +8,56 @@
   import ImageGallery from "$lib/components/public/single/ImageGallery.svelte";
   import VehicleSpecs from "../../../../lib/components/public/single/VehicleSpecs.svelte";
   import { Tab, TabContent, Tabs } from "carbon-components-svelte";
+  import { onMount } from "svelte";
 
   export let data;
+  console.log(data);
 
   const record = data.data;
+
+  function convertToPlain(html) {
+    var tempDivElement = document.createElement("div");
+    tempDivElement.innerHTML = html;
+    let result = tempDivElement.textContent || tempDivElement.innerText || "";
+    if (result.length > 160) {
+      result = result.substring(0, 160) + "...";
+    }
+    return result;
+  }
+
+  let plainDesc = "";
+  onMount(() => {
+    plainDesc = convertToPlain(data.data.content);
+  });
 </script>
+
+<svelte:head>
+  <title>{data.data.meta_title || `${data.data.name} - Australia 4 Wheel Drive Rentals`}</title>
+  <meta name="description" content={data.data.meta_description || plainDesc} />
+</svelte:head>
 
 {#if !record}
   <PageNotFound />
 {:else}
   <PageHeader>
-    <FeaturedImage {record} />
+    <div
+      class="h-full bg-contain bg-center bg-no-repeat bg-brand-900"
+      style="background-image: url('{env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/{data.data.image}');"
+    >
+      <!-- <div class="w-full h-full bg-black/50 flex flex-col items-center justify-center text-center p-10">
+        <h1 class="text-4xl font-bold text-white">{data.data.name}</h1>
+      </div> -->
+    </div>
   </PageHeader>
-  <div
-    class="container xl:max-w-7xl mx-auto bg-white my-8 divide-y divide-gray-200"
-  >
+  <div class="container xl:max-w-7xl mx-auto bg-white my-8 divide-y divide-gray-200">
     <section class="p-5 mb-5">
-      <PageTitle {record} parent={{
-        name: "Vehicles",
-        url: "/vehicles"
-      }} />
+      <PageTitle
+        {record}
+        parent={{
+          name: "Vehicles",
+          url: "/vehicles",
+        }}
+      />
       <VehicleFeatures {record} />
     </section>
     <ImageGallery images={record.images} />
@@ -80,123 +111,3 @@
     </section>
   </div>
 {/if}
-
-<!-- <script>
-  import { supabase } from "$lib/supabaseClient";
-  // import { browser } from "$app/environment";
-  // import "@splidejs/splide/css";
-  // import Splide from "@splidejs/splide";
-  import Splide from "@splidejs/splide";
-  import { onMount } from "svelte";
-  import { env } from "$env/dynamic/public";
-  import { page } from "$app/stores";
-  import { goto } from "$app/navigation";
-  import Loading from "$lib/components/Loading.svelte";
-  import PageHeader from "$lib/components/public/PageHeader.svelte";
-  import FeaturedImage from "$lib/components/public/FeaturedImage.svelte";
-  import Gallery from "$lib/components/public/Gallery.svelte";
-  import { Button, Tab, TabContent, Tabs } from "carbon-components-svelte";
-  import {
-    InlineNotification,
-    NotificationActionButton,
-  } from "carbon-components-svelte";
-  import VehicleFeatures from "$lib/components/public/single/VehicleFeatures.svelte";
-  let slug = $page.params.slug;
-  let record = {
-    specifications: [],
-    images: [],
-    faqs: [],
-  };
-  let errors = {};
-  let loading = false;
-
-  onMount(async () => {
-    try {
-      loading = true;
-      const { data, error } = await supabase
-        .from("vehicles")
-        .select()
-        .eq("slug", slug)
-        .single();
-
-      record = data;
-      if (error) throw error;
-
-      if (data) {
-        record = data;
-      }
-    } catch (error) {
-      errors = error;
-    } finally {
-      loading = false;
-    }
-  });
-</script>
-
-<Loading {loading} />
-{#if errors.code}
-  <InlineNotification
-    hideCloseButton
-    lowContrast
-    kind="error"
-    title="Error:"
-    subtitle={errors.message}
-  >
-    <svelte:fragment slot="actions">
-      <NotificationActionButton on:click={() => goto("/")}>
-        Back to home
-      </NotificationActionButton>
-    </svelte:fragment>
-  </InlineNotification>
-{:else}
-  <PageHeader>
-    <FeaturedImage {record} />
-  </PageHeader>
-{/if}
-<section class="bg-white px-4 mb-8">
-  <div class="py-10 max-w-3xl mx-auto">
-    <VehicleFeatures {record} />
-  </div>
-</section>
-<Gallery records={record.images} />
-<section class="container xl:max-w-6xl mx-auto bg-white p-4">
-  <h3 class="text-lg font-bold mb-4">Specifications</h3>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-4">
-    {#each record.specifications as spec}
-      <div class="grid grid-cols-2 gap-2 py-2 border-b border-gray-200">
-        <div class="font-bold">{spec.Title}</div>
-        <div class="">{spec.Description}</div>
-      </div>
-    {/each}
-  </div>
-</section>
-<section class="p-4 container xl:max-w-7xl mx-auto bg-white my-8">
-  <Tabs>
-    <Tab label="Description" />
-    <Tab label="Restrictions" />
-    <Tab label="Notes" />
-    <Tab label="FAQs" />
-    <svelte:fragment slot="content">
-      <TabContent class="p-4">
-        {@html record.description}
-      </TabContent>
-      <TabContent class="p-4">
-        {@html record.restrictions}
-      </TabContent>
-      <TabContent class="p-4">
-        {@html record.notes}
-      </TabContent>
-      <TabContent class="px-4">
-        <div class="divide-y divide-gray-200">
-          {#each record.faqs as faq}
-            <div class="py-4">
-              <div>{faq.Title}</div>
-              <div>{faq.Question}</div>
-              <div>{faq.Answer}</div>
-            </div>
-          {/each}
-        </div>
-      </TabContent>
-    </svelte:fragment>
-  </Tabs>
-</section> -->

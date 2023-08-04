@@ -11,7 +11,7 @@
   import ContactForm from "$lib/components/public/ContactForm.svelte";
 
   export let data;
-  console.log(data);
+  // console.log(data);
 
   const getContent = (contentType) => {
     let resp = data.contents.filter(function (item) {

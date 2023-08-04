@@ -22,7 +22,7 @@
 </script>
 
 <svelte:head>
-  <title>{data.data.name} - Destination - Australia 4 Wheel Drive Rentals</title>
+  <title>{data.data.meta_title || `${data.data.name} - Australia 4 Wheel Drive Rentals`}</title>
   <meta name="description" content={data.data.meta_description || plainDesc} />
 </svelte:head>
 
