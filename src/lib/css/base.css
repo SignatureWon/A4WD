@@ -27,6 +27,9 @@ body {
 .content a {
   @apply text-brand-600 hover:underline;
 }
+.content p {
+  @apply mb-6;
+}
 .label {
   @apply uppercase tracking-wider font-medium mb-0.5 text-xs text-gray-400;
 }
