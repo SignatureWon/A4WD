@@ -1,7 +1,6 @@
 <script>
   export let module = "home";
   export let active = "";
-  console.log("active", active);
 
   const navs = {
     home: [

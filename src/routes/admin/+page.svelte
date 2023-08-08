@@ -1,5 +1,8 @@
 <script>
-    import Stat from "$lib/components/Stat.svelte";
+    import StatCard from "$lib/components/StatCard.svelte";
+    export let data
+    console.log(data);
+
     const stats = [
         {
             label: "Bookings",
@@ -24,15 +27,22 @@
         },
     ];
 </script>
-
-<div class="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-8">
-    {#each stats as stat}
-        <Stat
-            label={stat.label}
-            value={stat.value}
-            link={stat.link}
-            icon={stat.icon}
-            note={stat.note}
-        />
-    {/each}
+<div class="container max-w-3xl">
+<h2 class="h2 mb-2">Sales</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <StatCard stat={data.stat[4]} />
+    <StatCard stat={data.stat[5]} />
+    <StatCard stat={data.stat[6]} />
+    <StatCard stat={data.stat[7]} />
+</div>
+<h2 class="h2 mb-2 mt-8">Vehicles</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <StatCard stat={data.stat[0]} />
+    <StatCard stat={data.stat[1]} />
+</div>
+<h2 class="h2 mb-2 mt-8">Users</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <StatCard stat={data.stat[2]} />
+    <StatCard stat={data.stat[3]} />
+</div>
 </div>

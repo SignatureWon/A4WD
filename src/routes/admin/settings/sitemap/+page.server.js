@@ -1,4 +1,5 @@
-/** @type {import('./$types').PageServerLoad} */
-export async function load() {
-    return {};
-};
+import { supabase } from "$lib/supabaseClient";
+export async function load({ url }) {
+  const { data: sitemap } = await supabase.rpc("sitemaps");
+  return { sitemap, path: url.pathname };
+}
