@@ -15,6 +15,7 @@ const keys = [
   "data",
   "zero",
   "type",
+  "rank",
 ];
 
 const generateRates = async (ratesID, data) => {

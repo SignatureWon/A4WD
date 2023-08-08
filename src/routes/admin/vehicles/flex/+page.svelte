@@ -19,5 +19,9 @@
       key: "suppliers.name",
       value: "Suppliers",
     },
+    {
+      key: "rank",
+      value: "Rank",
+    },
   ]}
 />

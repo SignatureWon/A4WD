@@ -16,18 +16,9 @@
 <PageTitle title="Flex" path={data.path} data={data.data} id={data.id} />
 <Form id={data.id} path={data.path}>
   <FormSection title="Info">
-    <InputText
-      name="name"
-      label="Name"
-      bind:value={data.data.name}
-      required={true}
-    />
-    <InputSelect
-      name="suppliers"
-      label="Supplier"
-      bind:value={data.data.suppliers}
-      options={data.suppliers}
-    />
+    <InputText name="name" label="Name" bind:value={data.data.name} required={true} />
+    <InputSelect name="suppliers" label="Supplier" bind:value={data.data.suppliers} options={data.suppliers} />
+    <InputNumber name="rank" label="Rank" bind:value={data.data.rank} half={true} />
   </FormSection>
   <FormSection title="Driver">
     <InputSelect
@@ -37,9 +28,9 @@
       options={[
         {
           id: "",
-          name: "Any license"
+          name: "Any license",
         },
-        ...data.licenses
+        ...data.licenses,
       ]}
     />
   </FormSection>
@@ -62,24 +53,10 @@
     />
   </FormSection>
   <FormSection title="Rates">
-    <InputTextArea
-      name="matrix"
-      label="Matrix"
-      bind:value={data.data.matrix}
-      required={true}
-    />
-    <InputTextArea
-      name="data"
-      label="Flex"
-      bind:value={data.data.data}
-      required={true}
-    />
+    <InputTextArea name="matrix" label="Matrix" bind:value={data.data.matrix} required={true} />
+    <InputTextArea name="data" label="Flex" bind:value={data.data.data} required={true} />
     <!-- <Checkbox name="zero" bind:checked={data.data.zero} labelText="Matrix start from zero" /> -->
-    <InputToggle
-      name="zero"
-      label="Matrix start from zero"
-      bind:value={data.data.zero}
-    />
+    <InputToggle name="zero" label="Matrix start from zero" bind:value={data.data.zero} />
   </FormSection>
   {#if data.rates.invalid.length}
     <FormSection title="Invalid Rates">
