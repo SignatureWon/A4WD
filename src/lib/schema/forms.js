@@ -45,6 +45,24 @@ export const forms = {
     ],
     half: false,
   },
+  bond: {
+    label: "Bond",
+    placeholder: "",
+    type: "select",
+    default: null,
+    required: true,
+    related: false,
+    options: [
+      {
+        id: "Standard",
+        name: "Standard",
+      },
+      {
+        id: "Bond Reduced",
+        name: "Bond Reduced",
+      },
+    ],
+  },
   first_name: {
     label: "First Name",
     placeholder: "",

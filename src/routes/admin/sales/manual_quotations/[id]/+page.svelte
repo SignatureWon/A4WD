@@ -55,6 +55,10 @@ structure={{
       fields: ["suppliers", "categories", "vehicles"],
     },
     {
+      name: "Bond Reduced",
+      fields: ["bond"],
+    },
+    {
       name: "Driver Information",
       fields: ["licenses", "ages"],
     },
