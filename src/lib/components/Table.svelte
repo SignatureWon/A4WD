@@ -124,8 +124,10 @@
           /></svg
         >
       {/if}
-    {:else if ["date_start", "date_end", "travel_start", "travel_end", "created_at", "updated_at"].includes(cell.key)}
+    {:else if ["date_start", "date_end", "travel_start", "travel_end"].includes(cell.key)}
       {dayjs(cell.value).format("DD/MM/YYYY")}
+    {:else if ["created_at", "updated_at"].includes(cell.key)}
+      {dayjs(cell.value).format("DD/MM/YYYY hh:mm:ssa")}
     {:else if cell.value === null}
       &mdash;
     {:else}

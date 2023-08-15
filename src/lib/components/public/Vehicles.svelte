@@ -87,7 +87,7 @@
     </div>
     <div class="rounded bg-white p-4">
       <div class="mb-4">
-        <span class="font-bold">4WD Vehicles</span>
+        <span class="font-bold">4WD Car and 4WD Camper Hire</span>
         <Button
           kind="tertiary"
           href="/vehicles?category=4wd-campers"
@@ -136,7 +136,7 @@
     </div>
     <div class="rounded bg-white p-4">
       <div class="mb-4">
-        <span class="font-bold">2WD Vehicles</span>
+        <span class="font-bold">2WD Camper RV Hire</span>
         <Button
           kind="tertiary"
           href="/vehicles?category=2wd-campers"

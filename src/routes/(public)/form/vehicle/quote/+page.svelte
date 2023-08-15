@@ -182,6 +182,28 @@
     </section>
     <section class="grid md:grid-cols-3 gap-10 p-5 py-8 border-b border-gray-200">
       <div>
+        <h3 class="font-bold mb-4">Bond Reduced</h3>
+      </div>
+      <div class="md:col-span-2">
+        <div class="max-w-md">
+          <div class="flex-1 grid grid-cols-1 gap-6">
+            <div>
+              <Select
+                labelText="Bond"
+                name="bond"
+              >
+                <SelectItem value="" text="Select a bond" />
+                <SelectItem value="Standard" text="Standard" />
+                <SelectItem value="Bond Reduced" text="Bond Reduced" />
+              </Select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid md:grid-cols-3 gap-10 p-5 py-8 border-b border-gray-200">
+      <div>
         <h3 class="font-bold mb-4">Driver Information</h3>
       </div>
       <div class="md:col-span-2">
