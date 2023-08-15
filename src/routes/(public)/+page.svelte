@@ -20,6 +20,7 @@
     return resp;
   };
 </script>
+
 <svelte:head>
   <title>{data.site.title}</title>
   <meta name="description" content={data.site.description} />
@@ -28,6 +29,13 @@
 <PageHeader>
   <Banners records={getContent("banners")} />
 </PageHeader>
+{#if data.site.h1}
+<div class="bg-white">
+  <div class="pt-8 px-4 container xl:max-w-7xl mx-auto">
+    <h1 class="h1">{data.site.h1}</h1>
+  </div>
+</div>
+{/if}
 <SectionCarousel records={getContent("destinations")} title={data.sections.destinations} button="More Destinations" />
 <Vehicles record4={getContent("4WD")} record2={getContent("2WD")} title={data.sections.vehicles} />
 <SectionCarousel records={getContent("specials")} title={data.sections.specials} button="More Specials" />

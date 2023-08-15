@@ -18,6 +18,8 @@ export const load = async (event) => {
       "facebook",
       "instagram",
       "twitter",
+      "h1",
+      "image",
     ]);
 
   let site = {};

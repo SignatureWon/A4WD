@@ -30,6 +30,18 @@ body {
 .content p {
   @apply mb-6;
 }
+.content table {
+  @apply w-full
+}
+.content table td, .content table th {
+  @apply border border-gray-200 py-1 px-2;
+}
+.content table th {
+  @apply text-left bg-gray-100;
+}
+.content table p {
+  @apply mb-0;
+}
 .label {
   @apply uppercase tracking-wider font-medium mb-0.5 text-xs text-gray-400;
 }

@@ -42,6 +42,8 @@
     "blog",
     "testimonials",
     "faqs",
+    "h1",
+    "image",
   ];
   const sections = [
     "about",
@@ -121,6 +123,9 @@
   const updateIcon = () => {
     updateRecord("icon", record.icon);
   };
+  const updateImage = () => {
+    updateRecord("image", record.image);
+  };
 
   const updateRecordObj = async (key) => {
     try {
@@ -154,6 +159,7 @@
         class="bg-white"
         on:submit={() => {
           updateRecord("title", record.title);
+          updateRecord("h1", record.h1);
           updateRecord("description", record.description);
           updateRecord("keywords", record.keywords);
           updateRecord("hotline", record.hotline);
@@ -177,6 +183,13 @@
                 labelText="Site Title"
                 name="title"
                 bind:value={record.title}
+              />
+            </div>
+            <div class="mb-4">
+              <TextInput
+                labelText="Heading 1"
+                name="h1"
+                bind:value={record.h1}
               />
             </div>
             <div class="mb-4">
@@ -262,6 +275,17 @@
                 }}
                 bind:record
                 updateRecord={updateIcon}
+              />
+            </div>
+            <div class="mb-4">
+              <InputImage
+                field={{
+                  name: "image",
+                  label: "Image",
+                  bucket: "contents",
+                }}
+                bind:record
+                updateRecord={updateImage}
               />
             </div>
           </div>
