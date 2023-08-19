@@ -1,6 +1,8 @@
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
 dayjs.extend(isBetween);
+import customParseFormat from "dayjs/plugin/customParseFormat";
+dayjs.extend(customParseFormat);
 import { supabase } from "$lib/supabaseClient";
 import { format } from "$lib/format";
 import { env } from "$env/dynamic/public";
@@ -513,7 +515,7 @@ const check_every_x_day = (rate, special, pos = "") => {
     9: "th",
   };
   let result = {
-    name: `Every ${item.days}${suffix[item.days.toString().slice(-1)]} day free`,
+    name: `Every ${item.days}${suffix[item.days.toString().slice(-1)]} day free<br>`,
     calculation: "",
     discount_amount: 0,
     discount_nett: 0,
@@ -526,7 +528,7 @@ const check_every_x_day = (rate, special, pos = "") => {
       result.discount_amount += r.gross;
       result.discount_nett += r.nett;
       result.discount_profit += r.profit;
-      freeDay.push(`Day ${i + 1}: ${dayjs(r.day).format("DD MMM YYYY")} (-$${format.currency(r.gross)})`);
+      freeDay.push(`Day ${i + 1}: ${dayjs(r.day, "DD/MM/YYYY").format("DD MMM YYYY")} (-$${format.currency(r.gross)})`);
     }
   });
   result.calculation = freeDay.join("<br>");

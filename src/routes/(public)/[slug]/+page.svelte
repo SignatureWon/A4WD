@@ -4,7 +4,6 @@
   import { Button } from "carbon-components-svelte";
   import { onMount } from "svelte";
   export let data;
-  console.log(data);
 
   function convertToPlain(html) {
     var tempDivElement = document.createElement("div");
@@ -50,7 +49,19 @@
       {@html data.data.content}
     </div>
     {#if data.data.attachment}
-      <embed src={`${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/terms/${data.data.attachment}`} type="application/pdf" width="100%" height="1200" />
+      <embed
+        src={`${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/terms/${data.data.attachment}`}
+        type="application/pdf"
+        width="100%"
+        height="1200"
+      />
+    {/if}
+    {#if data.data.images}
+      <div class="columns-1 sm:columns-2 lg:columns-3 gap-4">
+        {#each data.data.images as img}
+          <img src={img.thumb} alt={img.caption} class="w-full rounded mb-4" />
+        {/each}
+      </div>
     {/if}
   </div>
 {/if}

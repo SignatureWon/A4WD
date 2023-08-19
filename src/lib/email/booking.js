@@ -311,10 +311,10 @@ export const html = {
           <td class="col" width="276" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
             <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Customer</div>
             <div><b><span style="text-transform:uppercase">${
-              quote.users.first_name
-            }</span> <span style="text-transform:capitalize">${quote.users.last_name}</span></b></div>
+              quote.users.first_name || ""
+            }</span> <span style="text-transform:capitalize">${quote.users.last_name || ""}</span></b></div>
             <div>${quote.users.email}</div>
-            <div>${quote.users.phone}</div>
+            <div>${quote.users.phone || ""}</div>
             <br>
             <div>${(quote.users.address_1 || "").trim() !== "" ? `${(quote.users.address_1 || "").trim()},` : ""}</div>
             <div>${(quote.users.address_2 || "").trim() !== "" ? `${(quote.users.address_2 || "").trim()},` : ""}</div>

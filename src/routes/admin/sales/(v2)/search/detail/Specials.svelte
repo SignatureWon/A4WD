@@ -16,7 +16,7 @@
               <div class="flex-1">
                 <div class="font-bold text-xs tracking-wider uppercase">{item.name}</div>
                 {#each item.discount_list as dis}
-                  <div>{dis.name} {dis.calculation}</div>
+                  <div>{@html dis.name} {@html dis.calculation}</div>
                 {/each}
               </div>
               <div class="text-right w-28 whitespace-nowrap pt-5 text-red-700">

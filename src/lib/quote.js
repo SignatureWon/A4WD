@@ -338,17 +338,23 @@ export const q = {
     let special = quote.details.specials;
     if (special.total > 0) {
       special.items.forEach((item) => {
+        let special_name = item.name
+        item.discount_list.forEach(list => {
+          special_name += `<br>${list.calculation}`
+        })
         // console.log("specials", item);
         // console.log(item);
         if (item.discount_amount > 0) {
           agentFees.push({
-            name: item.name,
+            // name: item.name,
+            name: special_name,
             total: -item.discount_amount,
             nett: -item.discount_amount,
             profit: 0,
           });
           summaryFees.push({
-            name: item.name,
+            // name: item.name,
+            name: special_name,
             total: -item.discount_amount,
             nett: 0,
             profit: 0,

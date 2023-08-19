@@ -28,7 +28,7 @@
       .from("users")
       .select()
       // .or(`email.eq.${searchCustomer},last_name.eq.${searchCustomer}`)
-      .eq("email", quote.users.email)
+      .eq("email", quote.users.email.trim())
       .single();
 
     // console.log(dataCustomer);
