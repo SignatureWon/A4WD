@@ -43,7 +43,14 @@
     });
 
     duration = quote.details.duration;
-    const selected_bond = Object.keys(quote.details.bonds).length ? quote.details.bonds : quote.details.bond;
+    let selected_bond = {}
+    if ('bonds' in quote.details) {
+      selected_bond = quote.details.bonds
+    } else if ('bond' in quote.details) {
+      selected_bond = quote.details.bond
+    }
+
+    // const selected_bond = Object.keys(quote.details.bonds).length ? quote.details.bonds : quote.details.bond;
     if (Object.keys(selected_bond).length) {
       bonds.forEach((item, index) => {
         if (item.id === selected_bond.id) {

@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import { format } from "$lib/format";
 export const q = {
   getPayments: (quote) => {
+    // console.log(quote);
     const duration = quote.details.duration;
     const date_quote = dayjs(quote.created_at).format("DD MMM YYYY");
     const date_start = dayjs(quote.details.date_start).format("ddd, DD MMM YYYY");
@@ -215,7 +216,14 @@ export const q = {
      * Bonds
      */
     // console.log("quote.details", quote.details);
-    const bond = Object.keys(quote.details.bonds).length ? quote.details.bonds : quote.details.bond;
+    let bond = null
+    if ('bonds' in quote.details) {
+      bond = quote.details.bonds
+    } else if ('bond' in quote.details) {
+      bond = quote.details.bond
+    }
+
+    // const bond = Object.keys(quote.details.bonds).length ? quote.details.bonds : quote.details.bond;
     if (bond) {
       pickupFees.push({
         name: `Bond: $${format.currency(
