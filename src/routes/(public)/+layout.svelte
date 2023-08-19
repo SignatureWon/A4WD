@@ -1,12 +1,10 @@
 <script>
-  import { page } from "$app/stores";
-
-  // let path = $page.url.pathname.split("/");
+  // import { page } from "$app/stores";
 
   import { Button, OverflowMenu, OverflowMenuItem, TextArea, TextInput } from "carbon-components-svelte";
-  import { env } from "$env/dynamic/public";
+  // import { env } from "$env/dynamic/public";
   import Announcements from "$lib/components/public/Announcements.svelte";
-  import { theme } from "$lib/theme.js";
+  // import { theme } from "$lib/theme.js";
 
   export let data;
 
@@ -25,22 +23,6 @@
 </script>
 
 <svelte:head>
-  <!-- <title>{data.site.title}</title>
-  <meta name="description" content={data.site.description} />
-  <meta name="keywords" content={data.site.keywords} />
-  <link rel="icon" href={`${data.baseUrl}/storage/v1/object/public/contents/${data.site.icon}`} /> -->
-  <!-- <title>{data.site.title}</title>
-  <meta name="description" content={data.site.description} />
-  <meta name="keywords" content={data.site.keywords} />
-  <link rel="icon" href={`${data.baseUrl}/storage/v1/object/public/contents/${data.site.icon}`} /> -->
-  <!-- <title>{data.site.title}</title>
-  <meta name="description" content={data.site.description} />
-  <meta name="keywords" content={data.site.keywords} />
-  <link rel="icon" href={`${data.baseUrl}/storage/v1/object/public/contents/${data.site.icon}`} /> -->
-  <!-- <title>{data.site.title}</title>
-  <meta name="description" content={data.site.description} />
-  <meta name="keywords" content={data.site.keywords} />
-  <link rel="icon" href={`${data.baseUrl}/storage/v1/object/public/contents/${data.site.icon}`} /> -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-NFTHV5X9NR"></script>
   <script>
     window.dataLayer = window.dataLayer || [];

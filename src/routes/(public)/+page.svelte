@@ -24,17 +24,37 @@
 <svelte:head>
   <title>{data.site.title}</title>
   <meta name="description" content={data.site.description} />
+  <meta property="og:title" content={data.site.title} />
+  <meta property="og:description" content={data.site.description} />
+  <meta property="og:image" content={data.site.image} />
+  <link rel="canonical" href="https://australia4wdrentals.com" />
+  {@html `<script type="application/ld+json" class="schemantra">
+  {
+    "@context": "https://schema.org",
+    "@type": "TravelAgency",
+    "@id": "TravelAgency",
+    "url": "https://australia4wdrentals.com",
+    "telephone": "1800107371",
+    "tourBookingPage": "https://australia4wdrentals.com/search",
+    "description": "${data.site.description}",
+    "email": "info@australia4wdrentals.com",
+    "image": "${data.site.image}",
+    "location": "Australia",
+    "logo": "https://api.australia4wdrentals.com/storage/v1/render/image/public/contents/${data.site.logo}",
+    "name": "${data.site.title}"
+  }
+  </script>`}
 </svelte:head>
 
 <PageHeader>
   <Banners records={getContent("banners")} />
 </PageHeader>
 {#if data.site.h1}
-<div class="bg-white">
-  <div class="pt-8 px-4 container xl:max-w-7xl mx-auto">
-    <h1 class="h1">{data.site.h1}</h1>
+  <div class="bg-white">
+    <div class="pt-8 px-4 container xl:max-w-7xl mx-auto">
+      <h1 class="h1">{data.site.h1}</h1>
+    </div>
   </div>
-</div>
 {/if}
 <SectionCarousel records={getContent("destinations")} title={data.sections.destinations} button="More Destinations" />
 <Vehicles record4={getContent("4WD")} record2={getContent("2WD")} title={data.sections.vehicles} />
