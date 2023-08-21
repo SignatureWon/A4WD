@@ -8,9 +8,10 @@
   import InputNumber from "$lib/components/admin/InputNumber.svelte";
   import InputHidden from "$lib/components/admin/InputHidden.svelte";
   import InputToggle from "$lib/components/admin/InputToggle.svelte";
+  import InputDateRange from "$lib/components/admin/InputDateRange.svelte";
   import { Checkbox } from "carbon-components-svelte";
   export let data;
-  console.log(data);
+  // console.log(data);
 </script>
 
 <PageTitle title="Flex" path={data.path} data={data.data} id={data.id} />
@@ -52,8 +53,29 @@
       required={true}
     />
   </FormSection>
-  <FormSection title="Rates">
+  <FormSection title="Matrix">
     <InputTextArea name="matrix" label="Matrix" bind:value={data.data.matrix} required={true} />
+    <InputDateRange
+      nameFrom="matrix_start"
+      nameTo="matrix_end"
+      labelFrom="Start Date"
+      labelTo="End Date"
+      bind:valueFrom={data.data.matrix_start}
+      bind:valueTo={data.data.matrix_end}
+    />
+  </FormSection>
+  <FormSection title="Matrix Next Year">
+    <InputTextArea name="matrix2" label="Matrix" bind:value={data.data.matrix2} />
+    <InputDateRange
+      nameFrom="matrix2_start"
+      nameTo="matrix2_end"
+      labelFrom="Start Date"
+      labelTo="End Date"
+      bind:valueFrom={data.data.matrix2_start}
+      bind:valueTo={data.data.matrix2_end}
+    />
+  </FormSection>
+  <FormSection title="Rates">
     <InputTextArea name="data" label="Flex" bind:value={data.data.data} required={true} />
     <!-- <Checkbox name="zero" bind:checked={data.data.zero} labelText="Matrix start from zero" /> -->
     <InputToggle name="zero" label="Matrix start from zero" bind:value={data.data.zero} />

@@ -583,12 +583,15 @@ const add_specials = (rate, item, spec) => {
     item.discount_profit += item.discount_amount; // deduct from commission
   } else {
     if (rate.rates_gross === 1) {
-      item.discount_profit += item.discount_amount;
-      item.discount_nett += item.discount_amount;
+      // item.discount_profit += item.discount_amount;
+      // item.discount_nett += item.discount_amount;
+      item.discount_profit += spec.discount_profit;
+      item.discount_nett += spec.discount_nett;
     } else if (rate.rates_nett === 1) {
-      item.discount_nett += item.discount_amount;
+      item.discount_nett += spec.discount_nett;
     }
   }
+  console.log("item", item);
 };
 const check_specials = async (rates, search) => {
   let query = supabase.from("specials").select(`

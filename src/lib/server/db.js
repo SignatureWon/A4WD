@@ -28,10 +28,22 @@ const setNull = (data) => {
 const convertToDate = (data) => {
   ["date_start", "date_end", "travel_start", "travel_end", "booking_start", "booking_end"].forEach((key) => {
     if (key in data) {
-      data[key] = dayjs(data[key], "DD/MM/YYYY").format("MM/DD/YYYY");
+      if (data[key]) {
+        data[key] = dayjs(data[key], "DD/MM/YYYY").format("MM/DD/YYYY");
+      }
     }
   });
 };
+const convertToMatrixDate = (data) => {
+  ["matrix_start", "matrix_end", "matrix2_start", "matrix2_end"].forEach((key) => {
+    if (key in data) {
+      if (data[key]) {
+        data[key] = dayjs(data[key], "DD/MM/YYYY").format("YYYY-MM-DD");
+      }
+    }
+  });
+};
+
 const convertToJson = (data) => {
   [
     "tiers",
@@ -44,7 +56,7 @@ const convertToJson = (data) => {
     "routes",
     "depots",
     "fees",
-    "daily_time"
+    "daily_time",
   ].forEach((key) => {
     if (key in data) {
       data[key] = JSON.parse(data[key]);
@@ -192,6 +204,7 @@ export const db = {
     // slugifyName(fetch, fetch.data);
 
     // console.log("fetch.data", fetch.data);
+    convertToMatrixDate(fetch.data);
 
     const { data, error: err } = await locals.sb.from(fetch.table).insert(fetch.data).select();
     // .single()
@@ -206,6 +219,7 @@ export const db = {
   },
   update: async (locals, fetch) => {
     setNull(fetch.data);
+    convertToMatrixDate(fetch.data);
 
     // console.log("fetch.data", fetch.data);
     // convertToDate(fetch.data);

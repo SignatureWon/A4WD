@@ -24,6 +24,7 @@ export const q = {
     const totalAgentFee = () => {
       let sum = 0;
       agentFees.forEach((fee) => {
+        console.log("fee", fee);
         sum += fee.total;
       });
       return sum;
@@ -42,9 +43,9 @@ export const q = {
       agentFees.forEach((fee) => {
         sum += fee.nett;
       });
-      supplierFees.forEach((fee) => {
-        sum += fee.nett;
-      });
+      // supplierFees.forEach((fee) => {
+      //   sum += fee.nett;
+      // });
 
       // sum += quote.add_discount;
       return sum;
@@ -349,8 +350,8 @@ export const q = {
             // name: item.name,
             name: special_name,
             total: -item.discount_amount,
-            nett: -item.discount_amount,
-            profit: 0,
+            nett: -item.discount_nett,
+            profit: -item.discount_profit,
           });
           summaryFees.push({
             // name: item.name,

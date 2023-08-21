@@ -33,7 +33,10 @@
 
     // must be a negative value for deduction
     if (quote.add_discount > 0) {
-      quote.add_discount = 0;
+      quote.add_discount = quote.add_discount * -1;
+    }
+    if (quote.add_discount_supplier > 0) {
+      quote.add_discount_supplier = quote.add_discount_supplier * -1;
     }
 
     quote.details.daily.gross += quote.add_discount_supplier;

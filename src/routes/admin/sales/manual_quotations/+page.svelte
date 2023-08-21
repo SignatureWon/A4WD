@@ -30,6 +30,10 @@
         column: "type",
         value: "quotations"
     }]}
+    orders={[{
+      column: "created_at",
+      ascend: false
+    }]}
     {headers}
   />
   

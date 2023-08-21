@@ -10,6 +10,14 @@
   let link = "";
   let id = $page.params.id;
 
+  let pageTitle = title
+  if (data.name) {
+    pageTitle = data.name
+  }
+  if (data.reference) {
+    pageTitle = data.reference
+  }
+
   $: {
     id = $page.params.id;
     path = $page.url.pathname.split("/");
@@ -54,7 +62,7 @@
       {#if id === "add"}
         Add {title}
       {:else}
-        {data.name || data.reference}
+        {pageTitle}
       {/if}
   </h2>
 </div>

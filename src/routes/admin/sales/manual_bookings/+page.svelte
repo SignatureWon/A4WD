@@ -30,6 +30,10 @@
         column: "type",
         value: "bookings"
     }]}
+    orders={[{
+      column: "created_at",
+      ascend: false
+    }]}
     {headers}
   />
   

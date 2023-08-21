@@ -4,6 +4,8 @@ import { redirect } from "@sveltejs/kit";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
+import isBetween from "dayjs/plugin/isBetween";
+dayjs.extend(isBetween);
 
 const keys = [
   "name",
@@ -12,48 +14,84 @@ const keys = [
   "nett",
   "gross",
   "matrix",
+  "matrix_start",
+  "matrix_end",
+  "matrix2",
+  "matrix2_start",
+  "matrix2_end",
   "data",
   "zero",
   "type",
   "rank",
 ];
-
-const generateRates = async (ratesID, data) => {
+const generateMatrix = (data, zero) => {
   let az = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-  if (typeof data.zero === 'string') {
-    if (data.zero === 'false') {
-      data.zero = false
-    } else {
-      data.zero = true
-    }
-  }
-  let zero = (data.zero) ? 0 : 1;
-  console.log("zero", data.zero, zero);
-  let matrix = {};
-  if (data.matrix) {
-    data.matrix.split(/\r?\n/).forEach((row, rowIndex) => {
-      let thisRow = row.trim()
+  let results = {};
+
+  if (data) {
+    data.split(/\r?\n/).forEach((row, rowIndex) => {
+      let thisRow = row.trim();
       if (thisRow !== "") {
         if (thisRow.indexOf(",") > 0) {
           row
             .trim()
             .split(",")
             .forEach((col, colIndex) => {
-              matrix[`${az[rowIndex]}${colIndex + zero}`] = Number(col);
+              results[`${az[rowIndex]}${colIndex + zero}`] = Number(col);
             });
         } else {
           row
             .trim()
             .split(" ")
             .forEach((col, colIndex) => {
-              matrix[`${az[rowIndex]}${colIndex + zero}`] = Number(col);
+              results[`${az[rowIndex]}${colIndex + zero}`] = Number(col);
             });
         }
       }
     });
   }
+  return results;
+};
 
-  console.log("matrix", matrix['F5']);
+const generateRates = async (ratesID, data) => {
+  let az = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+  if (typeof data.zero === "string") {
+    if (data.zero === "false") {
+      data.zero = false;
+    } else {
+      data.zero = true;
+    }
+  }
+  let zero = data.zero ? 0 : 1;
+  // console.log("zero", data.zero, zero);
+  let matrix = generateMatrix(data.matrix, zero);
+  let matrix2 = generateMatrix(data.matrix2, zero);
+
+  // let matrix = {};
+  // if (data.matrix) {
+  //   data.matrix.split(/\r?\n/).forEach((row, rowIndex) => {
+  //     let thisRow = row.trim();
+  //     if (thisRow !== "") {
+  //       if (thisRow.indexOf(",") > 0) {
+  //         row
+  //           .trim()
+  //           .split(",")
+  //           .forEach((col, colIndex) => {
+  //             matrix[`${az[rowIndex]}${colIndex + zero}`] = Number(col);
+  //           });
+  //       } else {
+  //         row
+  //           .trim()
+  //           .split(" ")
+  //           .forEach((col, colIndex) => {
+  //             matrix[`${az[rowIndex]}${colIndex + zero}`] = Number(col);
+  //           });
+  //       }
+  //     }
+  //   });
+  // }
+
+  // console.log("generateMatrix", generateMatrix(data.matrix, zero));
 
   let ratesValid = [];
   let ratesInvalid = [];
@@ -96,13 +134,19 @@ const generateRates = async (ratesID, data) => {
           let valid = true;
           let d = depots[col.depot] || null;
           let v = vehicles[col.vehicle] || null;
+          let matrixUsed = matrix;
+          if (Object.keys(matrix2).length) {
+            if (col.start.isBetween(dayjs(data.matrix2_start), dayjs(data.matrix2_end), "day", "[)")) {
+              matrixUsed = matrix2;
+            }
+          }
           let obj = {
             rates: ratesID,
             depots: d,
             vehicles: v,
             date_start: col.start.format("MM/DD/YYYY"),
             date_end: col.end.format("MM/DD/YYYY"),
-            daily: matrix[col.flex],
+            daily: matrixUsed[col.flex],
             flex: col.flex,
           };
           // console.log("v", v);
@@ -203,7 +247,7 @@ export const actions = {
     const formData = await request.formData();
     let newData = Object.fromEntries(formData.entries());
     // if (!newData.license) {
-      // newData.license = null;
+    // newData.license = null;
     // }
 
     await db.update(locals, {
