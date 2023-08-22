@@ -64,13 +64,13 @@
       bind:valueTo={data.data.matrix_end}
     /> -->
   </FormSection>
-  <FormSection title="Matrix Next Year">
+  <FormSection title="Second Matrix">
     <InputTextArea name="matrix2" label="Matrix" bind:value={data.data.matrix2} />
     <InputDateRange
       nameFrom="matrix2_start"
       nameTo="matrix2_end"
-      labelFrom="Start Date"
-      labelTo="End Date"
+      labelFrom="Start Date for Second Matrix"
+      labelTo="End Date for Second Matrix"
       bind:valueFrom={data.data.matrix2_start}
       bind:valueTo={data.data.matrix2_end}
     />
