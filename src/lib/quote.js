@@ -24,7 +24,7 @@ export const q = {
     const totalAgentFee = () => {
       let sum = 0;
       agentFees.forEach((fee) => {
-        console.log("fee", fee);
+        // console.log("fee", fee);
         sum += fee.total;
       });
       return sum;

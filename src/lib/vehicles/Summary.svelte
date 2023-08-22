@@ -8,7 +8,7 @@
   export let title = "Quote"
 
   // console.log(quote);
-  console.log(summary);
+  // console.log(summary);
 </script>
 
 <div class="p-5 text-sm">
