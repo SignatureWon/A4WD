@@ -652,7 +652,7 @@ const check_specials = async (rates, search) => {
           }
         });
       }
-      if (depots || dropoffs) {
+      if (depots && dropoffs) {
         if (suppliers) {
           if (vehicles) {
             item.discount_amount = 0;
