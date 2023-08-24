@@ -161,7 +161,7 @@ export const actions = {
     let getBond = Object.keys(dataQuote.details.bonds).length ? dataQuote.details.bonds : dataQuote.details.bond;
     const { data: dataUser } = await supabase.from("users").select().eq("id", dataQuote.users).single();
 
-    emailBody = `<div style="font-size: 16px; margin-bottom: 50px">${fd.message}</div>` + emailBody;
+    emailBody = `<div style="font-size: 16px; margin-bottom: 50px">${fd.message.replace(/(?:\r\n|\r|\n)/g, "<br>")}</div>` + emailBody;
 
     let bcc = emailData.name.split(",");
     let bccList = [];

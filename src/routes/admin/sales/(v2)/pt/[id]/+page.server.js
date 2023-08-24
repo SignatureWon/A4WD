@@ -223,7 +223,7 @@ export const actions = {
       }
     }
 
-    emailBody = `<div style="font-size: 16px; margin-bottom: 50px">${fd.message}</div>` + emailBody;
+    emailBody = `<div style="font-size: 16px; margin-bottom: 50px">${fd.message.replace(/(?:\r\n|\r|\n)/g, "<br>")}</div>` + emailBody;
 
     let bcc = emailData.name.split(",");
     let bccList = [];

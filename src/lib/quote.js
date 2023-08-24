@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import { format } from "$lib/format";
 export const q = {
   getPayments: (quote) => {
-    // console.log(quote);
+    console.log(quote);
     const duration = quote.details.duration;
     const date_quote = dayjs(quote.created_at).format("DD MMM YYYY");
     const date_start = dayjs(quote.details.date_start).format("ddd, DD MMM YYYY");
@@ -129,12 +129,39 @@ export const q = {
           profit: toAgent,
         });
       }
+      // to show the summary
+      let s_fee = 0;
+      let s_count = 1;
+      daily.items.forEach((item) => {
+        console.log(item.gross, s_fee, s_count);
+        if (item.gross === s_fee) {
+          s_count++;
+        } else {
+          if (s_fee > 0) {
+            summaryFees.push({
+              name: `Daily basic rental ($${format.currency(s_fee)} x ${s_count} days)`,
+              total: s_fee * s_count,
+              nett: 0,
+              profit: 0,
+            });
+          }
+          s_fee = item.gross;
+          s_count = 1;
+        }
+      });
+      // push the remaining
       summaryFees.push({
-        name: `Daily basic rental ($${format.currency(quote.details.daily.items[0].gross)} x ${duration} days)`,
-        total: quote.details.daily.gross,
+        name: `Daily basic rental ($${format.currency(s_fee)} x ${s_count} days)`,
+        total: s_fee * s_count,
         nett: 0,
         profit: 0,
       });
+      // summaryFees.push({
+      //   name: `Daily basic rental ($${format.currency(quote.details.daily.items[0].gross)} x ${duration} days)`,
+      //   total: quote.details.daily.gross,
+      //   nett: 0,
+      //   profit: 0,
+      // });
       supplierFees.push({
         name: `Balance of daily basic rental ($${format.currency(quote.details.daily.gross)} - $${format.currency(
           toAgent
@@ -217,20 +244,19 @@ export const q = {
      * Bonds
      */
     // console.log("quote.details", quote.details);
-    let bond = null
-    if ('bonds' in quote.details) {
-      bond = quote.details.bonds
-    } else if ('bond' in quote.details) {
-      bond = quote.details.bond
+    let bond = null;
+    if ("bonds" in quote.details) {
+      bond = quote.details.bonds;
+    } else if ("bond" in quote.details) {
+      bond = quote.details.bond;
     }
 
     // const bond = Object.keys(quote.details.bonds).length ? quote.details.bonds : quote.details.bond;
     if (bond) {
       pickupFees.push({
-        name: `Bond: $${format.currency(
-          bond.bond,
-          0
-        )} is taken from the hirer's credit or debit card ${quote.details.bonds.description ? `<div style="font-size: 13px">${quote.details.bonds.description}<div>` : ""}<div style="font-size: 13px; color: #999999">Refundable as per supplier's Summary of Terms<div>`,
+        name: `Bond: $${format.currency(bond.bond, 0)} is taken from the hirer's credit or debit card ${
+          quote.details.bonds.description ? `<div style="font-size: 13px">${quote.details.bonds.description}<div>` : ""
+        }<div style="font-size: 13px; color: #999999">Refundable as per supplier's Summary of Terms<div>`,
         total: bond.bond,
         nett: 0,
         profit: 0,
@@ -339,10 +365,10 @@ export const q = {
     let special = quote.details.specials;
     if (special.total > 0) {
       special.items.forEach((item) => {
-        let special_name = item.name
-        item.discount_list.forEach(list => {
-          special_name += `<br>${list.calculation}`
-        })
+        let special_name = item.name;
+        item.discount_list.forEach((list) => {
+          special_name += `<br>${list.calculation}`;
+        });
         // console.log("specials", item);
         // console.log(item);
         if (item.discount_amount > 0) {
