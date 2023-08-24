@@ -101,6 +101,38 @@ export const q = {
     }
 
     // console.log("terms", terms);
+    let s_items = []
+    let s_fee = 0;
+    let s_count = 1;
+    daily.items.forEach((item) => {
+      if (item.gross === s_fee) {
+        s_count++;
+      } else {
+        if (s_fee > 0) {
+          s_items.push({
+            name: `Daily basic rental ($${format.currency(s_fee)} x ${s_count} days)`,
+            total: s_fee * s_count,
+            nett: 0,
+            profit: 0,
+          });
+        }
+        s_fee = item.gross;
+        s_count = 1;
+      }
+    });
+    // push the remaining
+    s_items.push({
+      name: `Daily basic rental ($${format.currency(s_fee)} x ${s_count} days)`,
+      total: s_fee * s_count,
+      nett: 0,
+      profit: 0,
+    });
+
+    let breakdown = ""
+    s_items.forEach(item => {
+      breakdown += `${item.name}: $${item.total}<br>`
+    });
+
 
     if (terms.pay_counter) {
       // console.log("quote.details", quote.details);
@@ -121,41 +153,44 @@ export const q = {
         agentFees.push({
           name: `${terms.percentage ? `${terms.deposit}%` : `$${terms.deposit}`} deposit of daily basic rental ${
             terms.percentage ? `($${format.currency(quote.details.daily.gross)} x ${terms.deposit}%)` : ""
-          }<br><span style="color: #999999">Daily basic rental: $${format.currency(
-            quote.details.daily.items[0].gross
-          )} x ${duration} days = $${format.currency(quote.details.daily.gross)}</span>`,
+          }<br><span style="color: #999999">${breakdown}</span>`,
+          // name: `${terms.percentage ? `${terms.deposit}%` : `$${terms.deposit}`} deposit of daily basic rental ${
+          //   terms.percentage ? `($${format.currency(quote.details.daily.gross)} x ${terms.deposit}%)` : ""
+          // }<br><span style="color: #999999">Daily basic rental: $${format.currency(
+          //   quote.details.daily.items[0].gross
+          // )} x ${duration} days = $${format.currency(quote.details.daily.gross)}</span>`,
           total: toAgent,
           nett: 0,
           profit: toAgent,
         });
       }
       // to show the summary
-      let s_fee = 0;
-      let s_count = 1;
-      daily.items.forEach((item) => {
-        console.log(item.gross, s_fee, s_count);
-        if (item.gross === s_fee) {
-          s_count++;
-        } else {
-          if (s_fee > 0) {
-            summaryFees.push({
-              name: `Daily basic rental ($${format.currency(s_fee)} x ${s_count} days)`,
-              total: s_fee * s_count,
-              nett: 0,
-              profit: 0,
-            });
-          }
-          s_fee = item.gross;
-          s_count = 1;
-        }
-      });
-      // push the remaining
-      summaryFees.push({
-        name: `Daily basic rental ($${format.currency(s_fee)} x ${s_count} days)`,
-        total: s_fee * s_count,
-        nett: 0,
-        profit: 0,
-      });
+      summaryFees = s_items
+      // let s_fee = 0;
+      // let s_count = 1;
+      // daily.items.forEach((item) => {
+      //   if (item.gross === s_fee) {
+      //     s_count++;
+      //   } else {
+      //     if (s_fee > 0) {
+      //       summaryFees.push({
+      //         name: `Daily basic rental ($${format.currency(s_fee)} x ${s_count} days)`,
+      //         total: s_fee * s_count,
+      //         nett: 0,
+      //         profit: 0,
+      //       });
+      //     }
+      //     s_fee = item.gross;
+      //     s_count = 1;
+      //   }
+      // });
+      // // push the remaining
+      // summaryFees.push({
+      //   name: `Daily basic rental ($${format.currency(s_fee)} x ${s_count} days)`,
+      //   total: s_fee * s_count,
+      //   nett: 0,
+      //   profit: 0,
+      // });
       // summaryFees.push({
       //   name: `Daily basic rental ($${format.currency(quote.details.daily.items[0].gross)} x ${duration} days)`,
       //   total: quote.details.daily.gross,
@@ -165,9 +200,12 @@ export const q = {
       supplierFees.push({
         name: `Balance of daily basic rental ($${format.currency(quote.details.daily.gross)} - $${format.currency(
           toAgent
-        )})<br><span style="color: #999999">Daily basic rental: $${format.currency(
-          quote.details.daily.items[0].gross
-        )} x ${duration} days = $${format.currency(quote.details.daily.gross)}</span>`,
+        )})<br><span style="color: #999999">${breakdown}</span>`,
+        // name: `Balance of daily basic rental ($${format.currency(quote.details.daily.gross)} - $${format.currency(
+        //   toAgent
+        // )})<br><span style="color: #999999">Daily basic rental: $${format.currency(
+        //   quote.details.daily.items[0].gross
+        // )} x ${duration} days = $${format.currency(quote.details.daily.gross)}</span>`,
         total: quote.details.daily.gross - toAgent,
         nett: 0,
         profit: 0,
@@ -175,9 +213,12 @@ export const q = {
       pickupFees.push({
         name: `Balance of daily basic rental ($${format.currency(quote.details.daily.gross)} - $${format.currency(
           toAgent
-        )})<br><span style="color: #999999">Daily basic rental: $${format.currency(
-          quote.details.daily.items[0].gross
-        )} x ${duration} days = $${format.currency(quote.details.daily.gross)}</span>`,
+        )})<br><span style="color: #999999">${breakdown}</span>`,
+        // name: `Balance of daily basic rental ($${format.currency(quote.details.daily.gross)} - $${format.currency(
+        //   toAgent
+        // )})<br><span style="color: #999999">Daily basic rental: $${format.currency(
+        //   quote.details.daily.items[0].gross
+        // )} x ${duration} days = $${format.currency(quote.details.daily.gross)}</span>`,
         total: quote.details.daily.gross - toAgent,
         nett: 0,
         profit: 0,
