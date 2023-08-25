@@ -11,6 +11,15 @@
   rows={data.data}
   path={data.path}
   prefix="Q"
+  keys={[
+    "id",
+    "details.vehicle.name",
+    "details.pickup.name",
+    "details.dropoff.name",
+    "users.first_name",
+    "users.last_name",
+    "status",
+  ]}
   headers={[
     {
       key: "created_at",

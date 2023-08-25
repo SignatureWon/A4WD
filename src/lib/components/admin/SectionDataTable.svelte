@@ -8,6 +8,7 @@
   export let prefix = "";
   export let headers = [{ key: "name", value: "Name" }];
   export let modal = false;
+  export let keys = [];
 
   // console.log(rows);
 
@@ -54,7 +55,46 @@
 >
   <Toolbar class="mb-4">
     <ToolbarContent>
-      <ToolbarSearch size="lg" persistent value="" shouldFilterRows bind:filteredRowIds />
+      <ToolbarSearch
+        size="lg"
+        persistent
+        value=""
+        shouldFilterRows={(row, value) => {
+          let show = false;
+          
+          if (keys.length > 0) {
+            keys.forEach((key) => {
+              let col = "";
+              if (key.indexOf(".") > 0) {
+                let levels = key.split(".");
+                
+                levels.forEach((lvl, idx) => {
+                  if (idx === 0) {
+                    col = row[lvl];
+                  } else {
+                    col = col[lvl];
+                  }
+                });
+              } else {
+                col = row[key];
+                console.log("col", key, col);
+                
+              }
+              if (String(col).toLowerCase().includes(value.toLowerCase())) {
+                show = true;
+              }
+            });
+          } else {
+            for (const key in row) {
+              if (String(row[key]).toLowerCase().includes(value.toLowerCase())) {
+                show = true;
+              }
+            }
+          }
+          return show;
+        }}
+        bind:filteredRowIds
+      />
       <Button on:click={() => goto(`${path}/add`)}>+ New</Button>
     </ToolbarContent>
   </Toolbar>
