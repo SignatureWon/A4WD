@@ -10,7 +10,7 @@
   import InputToggle from "$lib/components/admin/InputToggle.svelte";
   // import InputSeasonalTiers from "$lib/components/admin/InputSeasonalTiers.svelte";
   import Tabs from "$lib/components/admin/Tabs.svelte";
-  import {PageTabs} from "../../tabs"
+  import { PageTabs } from "../../tabs";
   export let data;
 </script>
 
@@ -18,18 +18,8 @@
 <Tabs tabs={PageTabs(data.id)} />
 <Form id={data.id} path={data.path}>
   <FormSection title="Info">
-    <InputText
-      name="name"
-      label="Name"
-      bind:value={data.data.name}
-      required={true}
-    />
-    <InputSelect
-      name="suppliers"
-      label="Supplier"
-      bind:value={data.data.suppliers}
-      options={data.suppliers}
-    />
+    <InputText name="name" label="Name" bind:value={data.data.name} required={true} />
+    <InputSelect name="suppliers" label="Supplier" bind:value={data.data.suppliers} options={data.suppliers} />
     <InputDateRange
       nameFrom="date_start"
       nameTo="date_end"
@@ -38,11 +28,8 @@
       bind:valueFrom={data.data.date_start}
       bind:valueTo={data.data.date_end}
     />
-    <InputToggle
-      name="calendar"
-      label="Calendar Day"
-      bind:value={data.data.calendar}
-    />
+    <InputToggle name="calendar" label="Calendar Day" bind:value={data.data.calendar} />
+    <InputNumber name="rank" label="Rank" bind:value={data.data.rank} half={true} />
   </FormSection>
   <FormSection title="Driver">
     <InputSelect
@@ -52,9 +39,9 @@
       options={[
         {
           id: "",
-          name: "Any license"
+          name: "Any license",
         },
-        ...data.licenses
+        ...data.licenses,
       ]}
     />
   </FormSection>

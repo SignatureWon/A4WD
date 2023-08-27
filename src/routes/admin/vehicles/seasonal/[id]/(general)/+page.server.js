@@ -13,6 +13,7 @@ const keys = [
   "type",
   "date_start",
   "date_end",
+  "rank",
 ];
 export async function load({ url, params, locals }) {
   return {

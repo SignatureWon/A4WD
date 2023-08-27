@@ -27,5 +27,9 @@
       key: "date_end",
       value: "End Date",
     },
+    {
+      key: "rank",
+      value: "Rank",
+    },
   ]}
 />
