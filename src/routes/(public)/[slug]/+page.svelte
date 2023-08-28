@@ -24,6 +24,26 @@
 <svelte:head>
   <title>{data.data.meta_title || `${data.data.name} - Australia 4 Wheel Drive Rentals`}</title>
   <meta name="description" content={data.data.meta_description || plainDesc} />
+  <meta property="og:title" content={data.data.meta_title || `${data.data.name} - Australia 4 Wheel Drive Rentals`} />
+  <meta property="og:description" content={data.data.meta_description || plainDesc} />
+  <meta property="og:image" content={`${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/${data.data.image}`} />
+  <link rel="canonical" href="https://australia4wdrentals.com/{data.data.slug}" />
+  {@html `<script type="application/ld+json" class="schemantra">
+  {
+    "@context": "https://schema.org",
+    "@type": "TravelAgency",
+    "@id": "TravelAgency",
+    "url": "https://australia4wdrentals.com",
+    "telephone": "1800107371",
+    "tourBookingPage": "https://australia4wdrentals.com/search",
+    "description": "${data.data.meta_description || plainDesc}",
+    "email": "info@australia4wdrentals.com",
+    "image": "${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/${data.data.image}",
+    "location": "Australia",
+    "logo": "https://api.australia4wdrentals.com/storage/v1/render/image/public/contents/${data.site.logo}",
+    "name": "${data.data.meta_title || `${data.data.name} - Australia 4 Wheel Drive Rentals`}"
+  }
+  </script>`}
 </svelte:head>
 
 {#if !data.data}
