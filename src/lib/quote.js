@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import { format } from "$lib/format";
 export const q = {
   getPayments: (quote) => {
-    console.log(quote);
+    // console.log(quote);
     const duration = quote.details.duration;
     const date_quote = dayjs(quote.created_at).format("DD MMM YYYY");
     const date_start = dayjs(quote.details.date_start).format("ddd, DD MMM YYYY");

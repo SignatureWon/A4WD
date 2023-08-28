@@ -6,7 +6,7 @@
   import PageTitle from "$lib/components/public/single/PageTitle.svelte";
   import VehicleFeatures from "$lib/components/public/single/VehicleFeatures.svelte";
   import ImageGallery from "$lib/components/public/single/ImageGallery.svelte";
-  import VehicleSpecs from "../../../../lib/components/public/single/VehicleSpecs.svelte";
+  import VehicleSpecs from "$lib/components/public/single/VehicleSpecs.svelte";
   import { Tab, TabContent, Tabs } from "carbon-components-svelte";
   import { onMount } from "svelte";
 
@@ -100,7 +100,7 @@
                   <div class="py-4">
                     <div class="font-bold mb-4">{faq.Title}</div>
                     <div class="mb-2">{faq.Question}</div>
-                    <div class="text-gray-500">{faq.Answer}</div>
+                    <div class="text-gray-500">{@html faq.Answer.replace(/(?:\r\n|\r|\n)/g, "<br>")}</div>
                   </div>
                 {/each}
               </div>

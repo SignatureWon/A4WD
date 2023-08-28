@@ -47,8 +47,8 @@
   };
 
   const regenerateQuote = async () => {
-    let details = await calculator.single({
-      rates: quote.details.rates.id,
+    let search = {
+      // rates: quote.details.rates.id,
       type: quote.details.rates.type,
       vehicle: quote.details.vehicle.id,
       pickup: quote.details.pickup.id,
@@ -59,11 +59,13 @@
       age: quote.details.age.id,
       pax: Number(quote.details.pax),
       duration: Number(quote.details.duration),
-    });
+    }
+    console.log("search", search);
+    let details = await calculator.single(search);
     
     quote.details = {...quote.details, ...details};
 
-    console.log("quote", quote);
+    // console.log("quote", quote);
 
     if (Object.keys(quote.details.bonds).length === 0) {
       quote.details.bonds = quote.details.bond_items[0]

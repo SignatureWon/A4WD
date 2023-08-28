@@ -168,9 +168,10 @@ const generateRates = async (ratesID, data) => {
           // console.log("obj", rowIndex, obj);
 
           if (valid) {
-            // if (obj.vehicles === '4ed8a3f0-e5bf-4342-a987-1270fff491c9' && obj.flex === 'F5') {
-            //   console.log(obj);
-            // }
+            // if (obj.vehicles === '2eae491a-17f2-414e-bfb6-1e09dd3fc970' && obj.flex === 'F7') {
+            if (obj.vehicles === '2eae491a-17f2-414e-bfb6-1e09dd3fc970' && obj.date_start === '09/25/2023') {
+              console.log("matrixUsed", matrixUsed);
+            }
             ratesValid.push(obj);
           } else {
             ratesInvalid.push(obj);

@@ -20,7 +20,19 @@
   <div class="p-4 grid grid-cols-1 gap-5">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
       <div>
-        <Select labelText="License" name="license" bind:selected={quote.details.driver.license} required>
+        <Select
+          labelText="License"
+          name="license"
+          bind:selected={quote.details.driver.license}
+          required
+          on:change={(e) => {
+            const selected = licenses.options.filter((item) => {
+              return item.name === e.target.value;
+            })[0]
+            quote.details.license.name = selected.name
+            quote.details.license.id = selected.id
+          }}
+        >
           <SelectItem value="" text="Select license" />
           {#each licenses.options as license}
             <SelectItem value={license.name} />

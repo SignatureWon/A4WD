@@ -67,7 +67,7 @@ const get_available_routes = (data, search, routes) => {
               // } else {
               //   console.log(rate.min_days, search.duration);
             }
-            // console.log("rate");
+            // console.log("rate", rate);
             results.push(rate);
           }
           // }
@@ -294,7 +294,7 @@ const convert_to_seasonal_rates = (data, search) => {
     }
     if (rates.supplier_all_day) {
       rates.duration = search.duration - 1;
-      // console.log("rates", rates);
+      console.log("rates", rates);
     }
     rates.nett = nett;
     rates.gross = gross;
@@ -355,6 +355,7 @@ const get_flex = async (search, routes) => {
     .eq("rates_type", "flex");
 
   if (search.license !== "") {
+    console.log("search.license", search.license);
     query = query.or(`license_id.eq.${search.license},license_id.is.null`);
   }
   if (search.category !== "") {
@@ -381,8 +382,8 @@ const get_flex = async (search, routes) => {
   let sorted_rates = sort_rates_by_vehicle(available_rates);
   let results = convert_to_flex_rates(sorted_rates, search);
 
-  // console.log("available_rates", data);
-  // console.log("results", results);
+  console.log("available_rates", data);
+  console.log("results", results);
 
   return results;
 };
