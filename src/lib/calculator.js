@@ -48,6 +48,9 @@ const get_available_routes = (data, search, routes) => {
             // console.log("rate", rate);
 
             if (rate.rates_type === "seasonal") {
+              if (rate.supplier_all_day) {
+                rate.duration -= 1
+              }
               let daily = 0;
               // let min_days = rate.min_days > rate.tiers[0].from ? rate.min_days : rate.tiers[0].from;
               rate.tiers.forEach((t, i) => {
@@ -58,7 +61,8 @@ const get_available_routes = (data, search, routes) => {
                   //   daily = (t.rate * min_days) / search.duration;
                   // }
                 }
-                if (search.duration >= t.from && search.duration <= t.to) {
+                // console.log(rate.duration, t.from, t.to);
+                if (rate.duration >= t.from && rate.duration <= t.to) {
                   daily = t.rate;
                 }
               });
@@ -294,7 +298,7 @@ const convert_to_seasonal_rates = (data, search) => {
     }
     if (rates.supplier_all_day) {
       rates.duration = search.duration - 1;
-      console.log("rates", rates);
+      // console.log("rates", rates);
     }
     rates.nett = nett;
     rates.gross = gross;

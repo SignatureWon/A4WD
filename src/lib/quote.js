@@ -130,7 +130,7 @@ export const q = {
 
     let breakdown = ""
     s_items.forEach(item => {
-      breakdown += `${item.name}: $${item.total}<br>`
+      breakdown += `${item.name}: $${format.currency(item.total)}<br>`
     });
 
 
