@@ -65,12 +65,16 @@ export const html = {
       terms = quote.details.terms;
     }
     const totalOutstanding = () => {
-      let total = summary.totalAgent;
       let payments = quote.payments || [];
+      let paid = 0;
       payments.forEach((obj) => {
-        total -= obj.amount;
+        paid += obj.amount;
       });
-      return total;
+      let total = summary.totalAgent;
+      if (paid > summary.totalAgent) {
+        total = summary.totalAgent + summary.totalSupplier;
+      }
+      return total - paid;
     };
 
     let email = `

@@ -108,17 +108,37 @@
     {/each}
     <div class="bg-green-50 p-4 border border-green-300">
       <h3 class="h3">Payment Summary</h3>
-      <div class="py-3 flex border-b border-green-300">
-        <div class="flex-1">Total payable to agent</div>
-        <div class="w-20 text-right">${format.currency(summary.totalAgent)}</div>
+      <div class="py-2 border-b border-green-300">
+        <div class="py-1 flex">
+          <div class="flex-1">Total payable to agent</div>
+          <div class="w-20 text-right">${format.currency(summary.totalAgent)}</div>
+        </div>
+        {#if totalPaid > summary.totalAgent}
+          <div class="py-1 flex">
+            <div class="flex-1">Total payable to supplier</div>
+            <div class="w-20 text-right">${format.currency(summary.totalSupplier)}</div>
+          </div>
+        {/if}
       </div>
-      <div class="py-3 flex border-b border-green-300">
-        <div class="flex-1">Total amount paid</div>
-        <div class="w-20 text-right">${format.currency(totalPaid)}</div>
+      <div class="py-2 border-b border-green-300">
+        {#if totalPaid > summary.totalAgent}
+          <div class="py-1 flex">
+            <div class="flex-1">Total payable</div>
+            <div class="w-20 text-right">${format.currency(summary.totalAgent + summary.totalSupplier)}</div>
+          </div>
+        {/if}
+        <div class="py-1 flex">
+          <div class="flex-1">Total amount paid</div>
+          <div class="w-20 text-right">${format.currency(totalPaid)}</div>
+        </div>
       </div>
       <div class="pt-3 flex font-bold">
-        <div class="flex-1">Balance</div>
-        <div class="w-20 text-right">${format.currency(summary.totalAgent - totalPaid)}</div>
+        <div class="flex-1">Total outstanding</div>
+        {#if totalPaid > summary.totalAgent}
+          <div class="w-20 text-right">${format.currency(summary.totalAgent + summary.totalSupplier - totalPaid)}</div>
+        {:else}
+          <div class="w-20 text-right">${format.currency(summary.totalAgent - totalPaid)}</div>
+        {/if}
       </div>
     </div>
   </div>
@@ -176,10 +196,10 @@
       </div>
       <div class="flex">
         <div class="flex-1">
-        <TextInput labelText="Remark" class="md:col-span-2" bind:value={newPayment.remark} />
+          <TextInput labelText="Remark" class="md:col-span-2" bind:value={newPayment.remark} />
         </div>
         <div class="pt-6 ml-4">
-            <Button on:click={addPayment}>Add</Button>
+          <Button on:click={addPayment}>Add</Button>
         </div>
       </div>
     </div>
@@ -237,12 +257,7 @@
     </div>
   </div>
 </div>
-<Modal
-  passiveModal
-  bind:open
-  modalHeading="Clear credit card detail"
-  size="sm"
->
+<Modal passiveModal bind:open modalHeading="Clear credit card detail" size="sm">
   <p class="mb-8">This is a permanent action and cannot be undone.</p>
   <form action="?/clearcard" method="POST">
     <div class="flex justify-center">

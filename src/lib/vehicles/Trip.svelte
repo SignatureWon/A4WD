@@ -1,8 +1,10 @@
 <script>
-  import { TextInput } from "carbon-components-svelte";
-import dayjs from "dayjs";
+  import { Button, TextInput } from "carbon-components-svelte";
+  import dayjs from "dayjs";
   export let quote;
   const iconRight = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" class="w-4 h-4" fill="currentColor" ><path fill="none" d="M0 0h24v24H0z" /><path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z" /></svg>`;
+  let editPickup = false;
+  let editDropoff = false;
 </script>
 
 <div class="bg-white rounded mb-4">
@@ -23,7 +25,20 @@ import dayjs from "dayjs";
           <div class="flex-1">
             <div class="label">Pick-up</div>
             <div class="value">{quote.details.pickup.name}</div>
-            <div>{dayjs(quote.details.date_start).format("DD/MM/YYYY (ddd)")}</div>
+            {#if editPickup}
+              <TextInput type="date" bind:value={quote.details.date_start} class="w-40" />
+            {:else}
+              <div>{dayjs(quote.details.date_start).format("DD/MM/YYYY (ddd)")}</div>
+            {/if}
+            <Button
+              kind="tertiary"
+              class="py-0 px-4 h-6 mt-2 text-sm leading-6"
+              on:click={() => {
+                editPickup = !editPickup;
+              }}
+            >
+              Edit
+            </Button>
           </div>
           <div class="w-8">
             {@html iconRight}
@@ -31,7 +46,20 @@ import dayjs from "dayjs";
           <div class="flex-1">
             <div class="label">Drop-off</div>
             <div class="value">{quote.details.dropoff.name}</div>
-            <div>{dayjs(quote.details.date_end).format("DD/MM/YYYY (ddd)")}</div>
+            {#if editDropoff}
+              <TextInput type="date" bind:value={quote.details.date_end} class="w-40" />
+            {:else}
+              <div>{dayjs(quote.details.date_end).format("DD/MM/YYYY (ddd)")}</div>
+            {/if}
+            <Button
+              kind="tertiary"
+              class="py-0 px-4 h-6 mt-2 text-sm leading-6"
+              on:click={() => {
+                editDropoff = !editDropoff;
+              }}
+            >
+              Edit
+            </Button>
           </div>
         </div>
         <div class="p-3 mt-4 bg-gray-100">

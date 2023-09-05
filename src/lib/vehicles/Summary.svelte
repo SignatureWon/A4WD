@@ -5,7 +5,7 @@
   export let quote;
   export let summary;
   export let count;
-  export let title = "Quote"
+  export let title = "Quote";
 
   // console.log(quote);
   // console.log(summary);
@@ -13,6 +13,20 @@
 
 <div class="p-5 text-sm">
   <h2 class="text-xl font-bold mb-2">{title} Summary</h2>
+  <div class="text-xs font-bold tracking-wider text-brand-400 mt-4">SUMMARY</div>
+  {#each summary.summaryItems as item}
+    <div class="flex py-2 border-b border-gray-200">
+      <div class="flex-1">
+        {@html item.name}
+      </div>
+      <div class="text-right ml-4">{format.currency(item.total)}</div>
+    </div>
+  {/each}
+  <div class="flex py-2 border-b border-gray-200 font-bold bg-brand-200">
+    <div class="flex-1">Total</div>
+    <div class="text-right ml-4">{format.currency(summary.totalSummary)}</div>
+  </div>
+  <div class="text-xs font-bold tracking-wider text-brand-400 mt-4">PAYABLE TO AGENT</div>
   {#each summary.agentItems as item}
     {#if item.name === "Credit card surcharge (2%)"}
       <div class="flex py-2 border-b border-gray-200">
@@ -53,11 +67,11 @@
       </div>
     {/if}
   {/each}
-
   <div class="flex py-2 border-b border-gray-200 font-bold bg-brand-200">
     <div class="flex-1">Total payable to agent</div>
     <div class="text-right ml-4">{format.currency(summary.totalAgent)}</div>
   </div>
+  <div class="text-xs font-bold tracking-wider text-brand-400 mt-4">PAYABLE TO SUPPLIER</div>
   {#each summary.supplierItems as item}
     <div class="flex py-2 border-b border-gray-200">
       <div class="flex-1">

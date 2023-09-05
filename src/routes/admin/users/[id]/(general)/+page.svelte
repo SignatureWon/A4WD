@@ -43,7 +43,7 @@
   </FormSection>
   <FormSection title="Contacts">
     <InputText name="email" label="Email" bind:value={data.data.email} required={true} />
-    <InputText name="phone" label="Phone" bind:value={data.data.phone} required={true} />
+    <InputText name="phone" label="Phone" bind:value={data.data.phone} />
   </FormSection>
   <FormSection title="Address">
     <InputText

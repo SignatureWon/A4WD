@@ -14,11 +14,13 @@
   import Addons from "$lib/vehicles/Addons.svelte";
   import Summary from "$lib/vehicles/Summary.svelte";
   import { onMount } from "svelte";
-  import { Button, Modal, TextArea, Toggle } from "carbon-components-svelte";
+  import { Button, Loading, Modal, TextArea, ToastNotification, Toggle } from "carbon-components-svelte";
   import { calculator } from "$lib/calculator";
   import Toast from "$lib/components/admin/Toast.svelte";
   export let data;
 
+  let pageload = false;
+  let pageCompleted = 0;
   let quote = data.quote;
   let summary = {
     agentItems: [],
@@ -47,6 +49,7 @@
   };
 
   const regenerateQuote = async () => {
+    pageload = true;
     let search = {
       // rates: quote.details.rates.id,
       type: quote.details.rates.type,
@@ -59,20 +62,25 @@
       age: quote.details.age.id,
       pax: Number(quote.details.pax),
       duration: Number(quote.details.duration),
-    }
-    console.log("search", search);
+    };
+    // console.log("search", search);
     let details = await calculator.single(search);
-    
-    quote.details = {...quote.details, ...details};
+
+    quote.details = { ...quote.details, ...details };
 
     // console.log("quote", quote);
 
     if (Object.keys(quote.details.bonds).length === 0) {
-      quote.details.bonds = quote.details.bond_items[0]
+      quote.details.bonds = quote.details.bond_items[0];
     }
 
-    getSummary()
+    getSummary();
 
+    pageload = false;
+    pageCompleted = true;
+    setTimeout(() => {
+      pageCompleted = false;
+    }, 2000);
 
     // summary = q.getPayments(quote);
   };
@@ -87,6 +95,12 @@
 <svelte:window bind:innerHeight={paneHeight} />
 
 <Toast />
+{#if pageload}
+  <Loading />
+{/if}
+{#if pageCompleted}
+  <ToastNotification lowContrast kind="success" title="Quote regenerated" class="fixed top-1 right-1 z-[9999]" />
+{/if}
 
 <div class="pr-80">
   <PageTitle title="{q.prefix[quote.status]}{388000 + quote.id}" path={data.path} id={data.id} />
