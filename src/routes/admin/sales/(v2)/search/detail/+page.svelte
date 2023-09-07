@@ -57,6 +57,7 @@
   };
   // console.log(quote);
   let summary = {
+    summaryItems: [],
     agentItems: [],
     supplierItems: [],
     pickupItems: [],
