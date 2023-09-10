@@ -3,7 +3,7 @@
   import Splide from "@splidejs/splide";
   import { onMount } from "svelte";
   import { env } from "$env/dynamic/public";
-  import { Button } from "carbon-components-svelte";
+  import { Button, ImageLoader } from "carbon-components-svelte";
 
   export let title = {
     name: "",
@@ -88,10 +88,7 @@
     <div class="rounded bg-white p-4">
       <div class="mb-4">
         <span class="font-bold">4WD Car and 4WD Camper Hire</span>
-        <Button
-          kind="tertiary"
-          href="/vehicles?category=4wd-campers"
-          class="text-xs px-2 py-0.5 ml-2">View more</Button
+        <Button kind="tertiary" href="/vehicles?category=4wd-campers" class="text-xs px-2 py-0.5 ml-2">View more</Button
         >
       </div>
       <section class="splide carousel-4wd -mx-10">
@@ -102,21 +99,26 @@
                 <li class="splide__slide">
                   <div class="px-2 group">
                     <a href="/vehicles/{item.slug}">
-                      <div
-                        class="h-44 overflow-hidden rounded relative flex items-center"
-                      >
+                      <div class="h-44 overflow-hidden rounded relative flex items-center">
                         {#if item.image}
                           <!-- {#await preload(`${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/${item.image}`) then base64} -->
-                          <div
-                            class="absolute w-full h-full scale-110 -z-10 bg-white border border-gray-200"
-                          />
-                          <img
+                          <div class="absolute w-full h-full scale-110 -z-10 bg-white border border-gray-200" />
+                          <ImageLoader
                             src="{env.PUBLIC_SUPABASE_URL}/storage/v1/render/image/public/contents/{item.image}?width=300&height=300&resize=contain"
                             alt={item.name}
                             width="300"
                             height="300"
                             class="transition-all group-hover:scale-125"
-                          />
+                          >
+                            <!-- <svelte:fragment slot="error">An error occurred.</svelte:fragment> -->
+                          </ImageLoader>
+                          <!-- <img
+                            src="{env.PUBLIC_SUPABASE_URL}/storage/v1/render/image/public/contents/{item.image}?width=300&height=300&resize=contain"
+                            alt={item.name}
+                            width="300"
+                            height="300"
+                            class="transition-all group-hover:scale-125"
+                          /> -->
                           <!-- {/await} -->
                         {:else}
                           <div class="absolute w-full h-full bg-gray-200" />
@@ -137,10 +139,7 @@
     <div class="rounded bg-white p-4">
       <div class="mb-4">
         <span class="font-bold">2WD Camper RV Hire</span>
-        <Button
-          kind="tertiary"
-          href="/vehicles?category=2wd-campers"
-          class="text-xs px-2 py-0.5 ml-2">View more</Button
+        <Button kind="tertiary" href="/vehicles?category=2wd-campers" class="text-xs px-2 py-0.5 ml-2">View more</Button
         >
       </div>
       <section class="splide carousel-2wd -mx-10">
@@ -151,21 +150,26 @@
                 <li class="splide__slide">
                   <div class="px-2 group">
                     <a href="/vehicles/{item.slug}">
-                      <div
-                        class="h-44 overflow-hidden rounded relative flex items-center"
-                      >
+                      <div class="h-44 overflow-hidden rounded relative flex items-center">
                         {#if item.image}
                           <!-- {#await preload(`${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/${item.image}`) then base64} -->
-                          <div
-                            class="absolute w-full h-full scale-110 -z-10 bg-white border border-gray-200"
-                          />
-                          <img
+                          <div class="absolute w-full h-full scale-110 -z-10 bg-white border border-gray-200" />
+                          <ImageLoader
                             src="{env.PUBLIC_SUPABASE_URL}/storage/v1/render/image/public/contents/{item.image}?width=300&height=300&resize=contain"
                             alt={item.name}
                             width="300"
                             height="300"
                             class="transition-all group-hover:scale-125"
-                          />
+                          >
+                            <!-- <svelte:fragment slot="error">An error occurred.</svelte:fragment> -->
+                          </ImageLoader>
+                          <!-- <img
+                            src="{env.PUBLIC_SUPABASE_URL}/storage/v1/render/image/public/contents/{item.image}?width=300&height=300&resize=contain"
+                            alt={item.name}
+                            width="300"
+                            height="300"
+                            class="transition-all group-hover:scale-125"
+                          /> -->
                           <!-- {/await} -->
                         {:else}
                           <div class="absolute w-full h-full bg-gray-200" />

@@ -3,7 +3,7 @@
   import Splide from "@splidejs/splide";
   import { onMount } from "svelte";
   import { env } from "$env/dynamic/public";
-  import { Button } from "carbon-components-svelte";
+  import { Button, ImageLoader } from "carbon-components-svelte";
 
   export let title = {
     type: "",
@@ -82,7 +82,11 @@
     {#if (categories || []).length}
       <div class="space-x-1 mb-4">
         {#each categories as item}
-          <a href="/category/{title.type}/{item.slug}" class="inline-block rounded py-1 px-3 border border-brand-300 bg-brand-50 text-brand-500 hover:bg-brand-500 hover:text-white">{item.name}</a>
+          <a
+            href="/category/{title.type}/{item.slug}"
+            class="inline-block rounded py-1 px-3 border border-brand-300 bg-brand-50 text-brand-500 hover:bg-brand-500 hover:text-white"
+            >{item.name}</a
+          >
         {/each}
       </div>
     {/if}
@@ -99,13 +103,22 @@
                         <!-- {#await preload(`${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/${item.image}`) then base64} -->
                         <!-- style="background-image: url('{env.PUBLIC_SUPABASE_URL}/storage/v1/render/image/public/contents/{item.image}?width=300&height=300&resize=contain');" -->
                         <div class="bg-cover bg-center blur-md absolute w-full h-full scale-110 -z-10" />
-                        <img
+                        <ImageLoader
                           src="{env.PUBLIC_SUPABASE_URL}/storage/v1/render/image/public/contents/{item.image}?width=300&height=300&resize=contain"
                           alt={item.name}
                           width="300"
                           height="300"
                           class="transition-all group-hover:scale-125"
-                        />
+                        >
+                          <!-- <svelte:fragment slot="error">An error occurred.</svelte:fragment> -->
+                        </ImageLoader>
+                        <!-- <img
+                          src="{env.PUBLIC_SUPABASE_URL}/storage/v1/render/image/public/contents/{item.image}?width=300&height=300&resize=contain"
+                          alt={item.name}
+                          width="300"
+                          height="300"
+                          class="transition-all group-hover:scale-125"
+                        /> -->
                         <!-- {/await} -->
                       {:else}
                         <div class="absolute w-full h-full bg-gray-200" />
