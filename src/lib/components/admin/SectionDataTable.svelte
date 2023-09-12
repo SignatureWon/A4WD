@@ -61,13 +61,13 @@
         value=""
         shouldFilterRows={(row, value) => {
           let show = false;
-          
+
           if (keys.length > 0) {
             keys.forEach((key) => {
               let col = "";
               if (key.indexOf(".") > 0) {
                 let levels = key.split(".");
-                
+
                 levels.forEach((lvl, idx) => {
                   if (idx === 0) {
                     col = row[lvl];
@@ -78,7 +78,6 @@
               } else {
                 col = row[key];
                 console.log("col", key, col);
-                
               }
               if (String(col).toLowerCase().includes(value.toLowerCase())) {
                 show = true;
@@ -99,7 +98,7 @@
     </ToolbarContent>
   </Toolbar>
   <svelte:fragment slot="cell" let:row let:cell>
-    {#if cell.key === "status"}
+    {#if cell.key === "status" || cell.key === "all_day"}
       {#if typeof cell.value === "boolean"}
         {#if cell.value === true}
           <svg
@@ -126,8 +125,10 @@
             /></svg
           >
         {/if}
-      {:else}
+      {:else if cell.value}
         {cell.value}
+      {:else}
+        &mdash;
       {/if}
     {:else if ["date_start", "date_end", "travel_start", "travel_end", "updated_at"].includes(cell.key)}
       {#if cell.value}

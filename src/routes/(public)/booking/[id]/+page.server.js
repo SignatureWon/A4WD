@@ -72,7 +72,7 @@ export const actions = {
     }
 
     let user_name = `${user.first_name.trim()} ${user.last_name.trim()}`;
-    let user_email = user.email;
+    let user_email = user.email.trim();
     let vehicle_name = quote.details.vehicle.name;
     let pickup_name = quote.details.pickup.name;
     let dropoff_name = quote.details.dropoff.name;

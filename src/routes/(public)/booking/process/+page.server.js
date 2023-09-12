@@ -36,7 +36,7 @@ export const actions = {
 
     // console.log(dataQuote);
     let user_name = `${dataQuote.users.first_name.trim()} ${dataQuote.users.last_name.trim()}`;
-    let user_email = dataQuote.users.email;
+    let user_email = dataQuote.users.email.trim();
     let vehicle_name = dataQuote.details.vehicle.name;
     let pickup_name = dataQuote.details.pickup.name;
     let dropoff_name = dataQuote.details.dropoff.name;

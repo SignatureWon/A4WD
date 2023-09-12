@@ -16,6 +16,18 @@
       value: "Name",
     },
     {
+      key: "all_day",
+      value: "24Hrs",
+    },
+    {
+      key: "start_time",
+      value: "Start Time",
+    },
+    {
+      key: "end_time",
+      value: "End Time",
+    },
+    {
       key: "status",
       value: "Status",
     },

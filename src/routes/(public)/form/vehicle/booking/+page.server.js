@@ -299,7 +299,7 @@ export const actions = {
           {
             to: [
               {
-                email: user.email,
+                email: user.email.trim(),
                 name: `${user.first_name.trim()} ${user.last_name.trim()}`,
               },
             ],

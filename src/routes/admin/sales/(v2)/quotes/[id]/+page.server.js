@@ -172,7 +172,7 @@ export const actions = {
     });
     let email_to = [
       {
-        email: dataUser.email,
+        email: dataUser.email.trim(),
         name: `${dataUser.first_name ? dataUser.first_name.trim() : "-"} ${
           dataUser.last_name ? dataUser.last_name.trim() : "-"
         }`,
