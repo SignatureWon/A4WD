@@ -86,7 +86,7 @@
   <div class="overflow-y-auto" style="height: {paneHeight - 170}px">
     <div class="bg-white rounded mb-4">
       <Trip bind:quote />
-      <Customer user={quote.users} />
+      <Customer bind:quote />
       <div class="grid grid-cols-1 md:grid-cols-2">
         <Driver bind:quote />
         <Passenger bind:quote />

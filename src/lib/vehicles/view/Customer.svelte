@@ -1,5 +1,6 @@
 <script>
-  export let user;
+  export let quote;
+  let user = quote.users;
 </script>
 
 <div class="bg-white rounded mb-4">
@@ -32,6 +33,10 @@
           {@html user.country ? `${user.country}` : ""}
         </div>
       </div>
-    </div>
+      <div class="md:col-span-2">
+        <div class="label">Comment</div>
+        <div class="value">{quote.comment || "No comment"}</div>
+      </div>
+  </div>
   </div>
 </div>

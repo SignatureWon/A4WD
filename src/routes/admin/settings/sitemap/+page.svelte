@@ -109,8 +109,8 @@
           <div class="flex items-center">
             <Checkbox labelText={item.name} bind:checked={item.status} on:change={updateSitemap} />
             <div class="flex items-center">
-              <Button kind="ghost" class="px-2" href={item.url}>Link</Button>
-              <CopyButton text={item.url} />
+              <Button kind="ghost" class="px-2" href={item.url.replace("//", "/")}>Link</Button>
+              <CopyButton text={item.url.replace("//", "/")} />
             </div>
           </div>
         {/each}

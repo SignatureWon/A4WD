@@ -31,12 +31,17 @@
       quote.details.daily.profit += item.profit;
     });
 
-    // must be a negative value for deduction
-    if (quote.add_discount > 0) {
-      quote.add_discount = quote.add_discount * -1;
+    // if (quote.add_discount > 0) {
+    //   quote.add_discount = quote.add_discount * -1;
+    // }
+    // if (quote.add_discount_supplier > 0) {
+    //   quote.add_discount_supplier = quote.add_discount_supplier * -1;
+    // }
+    if (!quote.add_discount) {
+      quote.add_discount = 0;
     }
-    if (quote.add_discount_supplier > 0) {
-      quote.add_discount_supplier = quote.add_discount_supplier * -1;
+    if (!quote.add_discount_supplier) {
+      quote.add_discount_supplier = 0;
     }
 
     quote.details.daily.gross += quote.add_discount_supplier;
@@ -163,7 +168,7 @@
   </div>
   <div class="p-4 bg-red-50 border border-red-300 flex">
     <div class="flex-1">
-      <TextInput labelText="Discount name for daily basic rental" bind:value={quote.add_discount_remark} />
+      <TextInput labelText="Adjustment name for daily basic rental" bind:value={quote.add_discount_remark} />
     </div>
     <div class="w-20 ml-2">
       <NumberInput

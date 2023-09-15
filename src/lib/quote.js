@@ -62,7 +62,7 @@ export const q = {
     /**
      * Daily Rates
      */
-    const daily = quote.details.daily;
+    const daily = quote.details.daily || [];
     const rateType = quote.details.rates_type;
 
     let terms = {
@@ -266,15 +266,15 @@ export const q = {
     /**
      * Discount
      */
-    if (quote.add_discount < 0 || quote.add_discount_supplier < 0) {
+    if ((quote.add_discount || 0) !== 0 || (quote.add_discount_supplier || 0) !== 0) {
       agentFees.push({
-        name: `Discount: ${quote.add_discount_remark}`,
+        name: quote.add_discount_remark || "Daily basic rental adjustment",
         total: quote.add_discount_supplier || quote.add_discount,
         nett: quote.add_discount_supplier || 0,
         profit: quote.add_discount,
       });
       summaryFees.push({
-        name: `Discount: ${quote.add_discount_remark}`,
+        name: quote.add_discount_remark || "Daily basic rental adjustment",
         total: quote.add_discount_supplier || quote.add_discount,
         nett: 0,
         profit: 0,

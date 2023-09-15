@@ -77,7 +77,7 @@
                 });
               } else {
                 col = row[key];
-                console.log("col", key, col);
+                // console.log("col", key, col);
               }
               if (String(col).toLowerCase().includes(value.toLowerCase())) {
                 show = true;

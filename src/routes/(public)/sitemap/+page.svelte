@@ -1,58 +1,58 @@
-import { supabase } from "$lib/supabaseClient";
-import dayjs from "dayjs";
-export async function GET({ url }) {
-  const { data: sitemap } = await supabase.rpc("sitemaps");
-  const { data: status } = await supabase.from("constants").select("name").eq("type", "sitemap").single();
+<script>
+  import PageTitle from "$lib/components/admin/PageTitle.svelte";
+  import dayjs from "dayjs";
+  export let data;
+  let stat = JSON.parse(data.stat.name);
   let domain = "https://www.australia4wdrentals.com";
-  let stat = JSON.parse(status.name);
+
   let generated_sitemap = {
     archives: {
       blog: {
         name: "Blog",
         url: `${domain}/blog`,
-        updated: dayjs().format("YYYY-MM-DDThh:mm:ssZ"),
+        updated: dayjs(),
         status: "blog" in stat.archives ? stat.archives.blog.status : true,
       },
       routes: {
         name: "Routes",
         url: `${domain}/routes`,
-        updated: dayjs().format("YYYY-MM-DDThh:mm:ssZ"),
+        updated: dayjs(),
         status: "routes" in stat.archives ? stat.archives.routes.status : true,
       },
       attractions: {
         name: "Attractions",
         url: `${domain}/attractions`,
-        updated: dayjs().format("YYYY-MM-DDThh:mm:ssZ"),
+        updated: dayjs(),
         status: "attractions" in stat.archives ? stat.archives.attractions.status : true,
       },
       events: {
         name: "Events",
         url: `${domain}/events`,
-        updated: dayjs().format("YYYY-MM-DDThh:mm:ssZ"),
+        updated: dayjs(),
         status: "events" in stat.archives ? stat.archives.events.status : true,
       },
       destinations: {
         name: "Destinations",
         url: `${domain}/destinations`,
-        updated: dayjs().format("YYYY-MM-DDThh:mm:ssZ"),
+        updated: dayjs(),
         status: "destinations" in stat.archives ? stat.archives.destinations.status : true,
       },
       specials: {
         name: "Specials",
         url: `${domain}/specials`,
-        updated: dayjs().format("YYYY-MM-DDThh:mm:ssZ"),
+        updated: dayjs(),
         status: "specials" in stat.archives ? stat.archives.specials.status : true,
       },
       vehicles: {
         name: "Vehicles",
         url: `${domain}/vehicles`,
-        updated: dayjs().format("YYYY-MM-DDThh:mm:ssZ"),
+        updated: dayjs(),
         status: "vehicles" in stat.archives ? stat.archives.vehicles.status : true,
       },
     },
   };
   // generate latest sitemap
-  sitemap.forEach((group) => {
+  data.sitemap.forEach((group) => {
     generated_sitemap[group.type] = {};
     group.links.forEach((link) => {
       let slug = link.slug.replaceAll("-", "_");
@@ -85,27 +85,27 @@ export async function GET({ url }) {
       }
     }
   }
-  const body = generate_sitemap_xml(generated_sitemap);
-  const response = new Response(body);
-  response.headers.set("Cache-Control", "max-age=0, s-maxage=3600");
-  response.headers.set("Content-Type", "application/xml");
-  return response;
-}
-const generate_sitemap_xml = (data) => {
-  let xml = `<?xml version="1.0" encoding="UTF-8" ?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
-  for (const group in data) {
-    for (const key in data[group]) {
-      const link = data[group][key];
-      if (link.status) {
-        xml += `<url>
-          <loc>${link.url.replace("//", "/")}</loc>
-          <lastmod>${link.updated}</lastmod>
-          <changefreq>daily</changefreq>
-          <priority>0.7</priority>
-        </url>`;
-      }
-    }
-  }
-  xml += `</urlset>`;
-  return xml;
-};
+  // console.log("sitemap", generated_sitemap);
+  // console.log("data", data);
+  // console.log("stat", stat.pages);
+  let stringSitemap = JSON.stringify(generated_sitemap);
+  const updateSitemap = () => {
+    stringSitemap = JSON.stringify(generated_sitemap);
+  };
+</script>
+
+<div class="p-5 container xl:max-w-7xl mx-auto bg-white rounded my-8">
+  <PageTitle title="Sitemap" />
+  {#each Object.entries(generated_sitemap) as [group, child]}
+    <h2 class="h2 capitalize">{group}</h2>
+    <div class="mb-4">
+      <ul class="list-disc pl-4">
+        {#each Object.entries(child) as [key, item]}
+          {#if item.status}
+            <li><a href={item.url.replace("//", "/")}>{item.name}</a></li>
+          {/if}
+        {/each}
+      </ul>
+    </div>
+  {/each}
+</div>
