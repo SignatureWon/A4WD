@@ -298,13 +298,13 @@ export const html = {
         <tr>
           <td class="col" width="276" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
             <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Pick-up from</div>
-            <div><b>${quote.details.pickup.name} days</b></div>
-            <div>${dayjs(quote.details.date_start).format("ddd, DD MMM YYYY")} days</div>
+            <div><b>${quote.details.pickup.name}</b></div>
+            <div>${dayjs(quote.details.date_start).format("ddd, DD MMM YYYY")}</div>
           </td>
           <td class="col" width="276" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
             <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Drop-off to</div>
-            <div><b>${quote.details.dropoff.name} days</b></div>
-            <div>${dayjs(quote.details.date_end).format("ddd, DD MMM YYYY")} days</div>
+            <div><b>${quote.details.dropoff.name}</b></div>
+            <div>${dayjs(quote.details.date_end).format("ddd, DD MMM YYYY")}</div>
           </td>
         </tr>
         <tr>
