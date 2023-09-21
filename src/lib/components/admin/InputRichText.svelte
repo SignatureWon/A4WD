@@ -7,6 +7,9 @@
   import TableCell from "@tiptap/extension-table-cell";
   import TableHeader from "@tiptap/extension-table-header";
   import TableRow from "@tiptap/extension-table-row";
+  // import Image from "@tiptap/extension-image";
+  import TextStyle from "@tiptap/extension-text-style";
+  import FontSize from "tiptap-extension-font-size";
 
   export let name = "";
   export let label = "";
@@ -24,6 +27,8 @@
     ol: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-4 h-4" fill="currentColor"><path fill="none" d="M0 0h24v24H0z"/><path d="M8 4h13v2H8V4zM5 3v3h1v1H3V6h1V4H3V3h2zM3 14v-2.5h2V11H3v-1h3v2.5H4v.5h2v1H3zm2 5.5H3v-1h2V18H3v-1h3v4H3v-1h2v-.5zM8 11h13v2H8v-2zm0 7h13v2H8v-2z"/></svg>`,
     link: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-4 h-4" fill="currentColor"><path d="M17.6572 14.8282L16.2429 13.414L17.6572 11.9998C19.2193 10.4377 19.2193 7.90506 17.6572 6.34296C16.0951 4.78086 13.5624 4.78086 12.0003 6.34296L10.5861 7.75717L9.17188 6.34296L10.5861 4.92875C12.9292 2.5856 16.7282 2.5856 19.0714 4.92875C21.4145 7.27189 21.4145 11.0709 19.0714 13.414L17.6572 14.8282ZM14.8287 17.6567L13.4145 19.0709C11.0714 21.414 7.27238 21.414 4.92923 19.0709C2.58609 16.7277 2.58609 12.9287 4.92923 10.5856L6.34345 9.17139L7.75766 10.5856L6.34345 11.9998C4.78135 13.5619 4.78135 16.0946 6.34345 17.6567C7.90555 19.2188 10.4382 19.2188 12.0003 17.6567L13.4145 16.2425L14.8287 17.6567ZM14.8287 7.75717L16.2429 9.17139L9.17188 16.2425L7.75766 14.8282L14.8287 7.75717Z"></path></svg>`,
     unlink: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-4 h-4" fill="currentColor"><path d="M17.657 14.8286L16.2428 13.4143L17.657 12.0001C19.2191 10.438 19.2191 7.90538 17.657 6.34328C16.0949 4.78118 13.5622 4.78118 12.0001 6.34328L10.5859 7.75749L9.17171 6.34328L10.5859 4.92907C12.9291 2.58592 16.7281 2.58592 19.0712 4.92907C21.4143 7.27221 21.4143 11.0712 19.0712 13.4143L17.657 14.8286ZM14.8286 17.657L13.4143 19.0712C11.0712 21.4143 7.27221 21.4143 4.92907 19.0712C2.58592 16.7281 2.58592 12.9291 4.92907 10.5859L6.34328 9.17171L7.75749 10.5859L6.34328 12.0001C4.78118 13.5622 4.78118 16.0949 6.34328 17.657C7.90538 19.2191 10.438 19.2191 12.0001 17.657L13.4143 16.2428L14.8286 17.657ZM14.8286 7.75749L16.2428 9.17171L9.17171 16.2428L7.75749 14.8286L14.8286 7.75749ZM5.77539 2.29303L7.70724 1.77539L8.74252 5.63909L6.81067 6.15673L5.77539 2.29303ZM15.2578 18.3612L17.1896 17.8435L18.2249 21.7072L16.293 22.2249L15.2578 18.3612ZM2.29303 5.77539L6.15673 6.81067L5.63909 8.74252L1.77539 7.70724L2.29303 5.77539ZM18.3612 15.2578L22.2249 16.293L21.7072 18.2249L17.8435 17.1896L18.3612 15.2578Z"></path></svg>`,
+    image: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-4 h-4" fill="currentColor"><path d="M2.9918 21C2.44405 21 2 20.5551 2 20.0066V3.9934C2 3.44476 2.45531 3 2.9918 3H21.0082C21.556 3 22 3.44495 22 3.9934V20.0066C22 20.5552 21.5447 21 21.0082 21H2.9918ZM20 15V5H4V19L14 9L20 15ZM20 17.8284L14 11.8284L6.82843 19H20V17.8284ZM8 11C6.89543 11 6 10.1046 6 9C6 7.89543 6.89543 7 8 7C9.10457 7 10 7.89543 10 9C10 10.1046 9.10457 11 8 11Z"></path></svg>`,
+    fontSize: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-4 h-4" fill="currentColor"><path d="M11.2455 15H4.75368L2.75368 20H0.599609L6.99961 4H8.99961L15.3996 20H13.2455L11.2455 15ZM10.4455 13L7.99961 6.88516L5.55368 13H10.4455ZM20.9996 12.5351V12H22.9996V20H20.9996V19.4649C20.4113 19.8052 19.7282 20 18.9996 20C16.7905 20 14.9996 18.2091 14.9996 16C14.9996 13.7909 16.7905 12 18.9996 12C19.7282 12 20.4113 12.1948 20.9996 12.5351ZM18.9996 18C20.1042 18 20.9996 17.1046 20.9996 16C20.9996 14.8954 20.1042 14 18.9996 14C17.895 14 16.9996 14.8954 16.9996 16C16.9996 17.1046 17.895 18 18.9996 18Z"></path></svg>`,
     // table: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-4 h-4" fill="currentColor"><path d="M13 10V14H19V10H13ZM11 10H5V14H11V10ZM13 19H19V16H13V19ZM11 19V16H5V19H11ZM13 5V8H19V5H13ZM11 5H5V8H11V5ZM4 3H20C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V4C3 3.44772 3.44772 3 4 3Z"></path></svg>`,
     // col_before: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-4 h-4" fill="currentColor"><path d="M20 3C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H14C13.4477 21 13 20.5523 13 20V4C13 3.44772 13.4477 3 14 3H20ZM19 5H15V19H19V5ZM6 7C8.76142 7 11 9.23858 11 12C11 14.7614 8.76142 17 6 17C3.23858 17 1 14.7614 1 12C1 9.23858 3.23858 7 6 7ZM7 9H5V10.999L3 11V13L5 12.999V15H7V12.999L9 13V11L7 10.999V9Z"></path></svg>`,
     // col_after: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-4 h-4" fill="currentColor"><path d="M10 3C10.5523 3 11 3.44772 11 4V20C11 20.5523 10.5523 21 10 21H4C3.44772 21 3 20.5523 3 20V4C3 3.44772 3.44772 3 4 3H10ZM9 5H5V19H9V5ZM18 7C20.7614 7 23 9.23858 23 12C23 14.7614 20.7614 17 18 17C15.2386 17 13 14.7614 13 12C13 9.23858 15.2386 7 18 7ZM19 9H17V10.999L15 11V13L17 12.999V15H19V12.999L21 13V11L19 10.999V9Z"></path></svg>`,
@@ -56,6 +61,11 @@
       element: element,
       extensions: [
         StarterKit,
+        TextStyle,
+        FontSize,
+        // Image.configure({
+        //   allowBase64: true,
+        // }),
         Link.configure({
           openOnClick: false,
         }),
@@ -159,6 +169,24 @@
             title="Heading 2"
           >
             {@html icon.h2}
+          </button>
+          <button
+            type="button"
+            on:click={() => {
+              if (editor.isActive("textStyle", { fontSize: "2rem" })) {
+                editor.chain().focus().setFontSize("3rem").run(); // second click -> large
+              } else if (editor.isActive("textStyle", { fontSize: "3rem" })) {
+                editor.chain().focus().setFontSize("0.75rem").run(); // third click -> small
+              } else if (editor.isActive("textStyle", { fontSize: "0.75rem" })) {
+                editor.chain().focus().setFontSize("1rem").run(); // forth click -> back to normal
+              } else {
+                editor.chain().focus().setFontSize("2rem").run(); // first click -> medium
+              }
+            }}
+            class="p-2"
+            title="Heading 2"
+          >
+            {@html icon.fontSize}
           </button>
           <!-- <button
             type="button"
