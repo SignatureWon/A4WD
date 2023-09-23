@@ -77,9 +77,14 @@
       />
     {/if}
     {#if data.data.images}
-      <div class="columns-1 sm:columns-2 lg:columns-3 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+      <!-- <div class="columns-1 sm:columns-2 lg:columns-3 gap-4"> -->
         {#each data.data.images as img}
-          <img src={img.thumb} alt={img.caption} class="w-full rounded mb-4" />
+          <div>
+            <img src={img.thumb} alt={img.caption} class="w-full rounded mb-2" />
+            <div>{img.caption}</div>
+          </div>
         {/each}
       </div>
     {/if}

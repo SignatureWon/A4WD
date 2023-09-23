@@ -27,7 +27,7 @@
 </script>
 
 <section class="container xl:max-w-7xl mx-auto p-4">
-  {#if $page.url.searchParams.size > 0}
+  <!-- {#if $page.url.searchParams.size > 0} -->
     {#if results.available.length === 0 && results.blocked.length === 0}
       <div class="bg-white rounded px-4 py-16 text-center">
         <h2 class="h1">Sorry, we couldn't find any vehicles</h2>
@@ -260,5 +260,5 @@
       {/each}
     {/if}
     <!-- else content here -->
-  {/if}
+  <!-- {/if} -->
 </section>
