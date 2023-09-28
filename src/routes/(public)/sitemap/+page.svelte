@@ -3,7 +3,7 @@
   import dayjs from "dayjs";
   export let data;
   let stat = JSON.parse(data.stat.name);
-  let domain = "https://www.australia4wdrentals.com";
+  let domain = "";
 
   let generated_sitemap = {
     archives: {
