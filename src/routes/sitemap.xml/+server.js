@@ -98,7 +98,7 @@ const generate_sitemap_xml = (data) => {
       const link = data[group][key];
       if (link.status) {
         xml += `<url>
-          <loc>${link.url.replace("//", "/")}</loc>
+          <loc>${link.url.replace("com//", "com/")}</loc>
           <lastmod>${link.updated}</lastmod>
           <changefreq>daily</changefreq>
           <priority>0.7</priority>
