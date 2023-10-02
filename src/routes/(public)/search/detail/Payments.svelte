@@ -47,6 +47,25 @@
     </div>
   </div>
 </div>
+<div class="bg-white rounded mb-4">
+  <div class="px-4 py-2 border-b border-gray-200">
+    <h2 class="h2">Pay At Pick-Up</h2>
+  </div>
+  <div class="px-4">
+    <div class="divide-y divide-gray-200">
+      {#each summary.pickupItems as item}
+        <div class="py-3">
+          <div class="flex">
+            <div class="flex-1">{@html item.name}</div>
+            <div class="text-right w-28 whitespace-nowrap">
+              ${format.currency(item.total)}
+            </div>
+          </div>
+        </div>
+      {/each}
+    </div>
+  </div>
+</div>
 <div class="text-center p-2">
   <form method="POST">
     <Button type="submit">Get Instant Quote</Button>
