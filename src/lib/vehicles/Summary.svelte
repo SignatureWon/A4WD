@@ -7,14 +7,12 @@
   export let count;
   export let title = "Quote";
 
-  console.log(quote);
-
-  // console.log(summary);
+  // console.log(quote);
 </script>
 
 <div class="p-5 text-sm">
   <h2 class="text-xl font-bold mb-2">{title} Summary</h2>
-  {#if quote.details.terms.pay_counter}
+  {#if quote.details.terms?.pay_counter}
     <div class="text-xs font-bold tracking-wider text-brand-400 mt-4">SUMMARY</div>
     {#each summary.summaryItems as item}
       <div class="flex py-2 border-b border-gray-200">
