@@ -7,7 +7,7 @@ const config = {
   kit: {
     adapter: adapter({
       memory: 3008,
-      maxDuration: 60,
+      maxDuration: 180,
     }),
   },
   preprocess: vitePreprocess(),
