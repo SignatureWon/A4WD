@@ -83,7 +83,7 @@
       <div class="space-x-1 mb-4">
         {#each categories as item}
           <a
-            href="/category/{title.type}/{item.slug}"
+            href="/{title.type}/{item.slug}"
             class="inline-block rounded py-1 px-3 border border-brand-300 bg-brand-50 text-brand-500 hover:bg-brand-500 hover:text-white"
             >{item.name}</a
           >

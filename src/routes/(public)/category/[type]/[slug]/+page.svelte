@@ -8,34 +8,57 @@
   import { onMount } from "svelte";
 
   export let data;
+  console.log(data);
 
-  function convertToPlain(html) {
-    var tempDivElement = document.createElement("div");
-    tempDivElement.innerHTML = html;
-    let result = tempDivElement.textContent || tempDivElement.innerText || "";
-    if (result.length > 160) {
-      result = result.substring(0, 160) + "...";
-    }
-    return result;
-  }
+  // function convertToPlain(html) {
+  //   var tempDivElement = document.createElement("div");
+  //   tempDivElement.innerHTML = html;
+  //   let result = tempDivElement.textContent || tempDivElement.innerText || "";
+  //   if (result.length > 160) {
+  //     result = result.substring(0, 160) + "...";
+  //   }
+  //   return result;
+  // }
   let show = false;
   let pageTitle = {};
-  let plainDesc = "";
-  onMount(() => {
-    plainDesc = convertToPlain(data.category.description);
+  // let plainDesc = "";
+  // onMount(() => {
+  //   plainDesc = convertToPlain(data.category.description);
 
-    pageTitle = {
-      name: data.category.name,
-      subtitle: plainDesc,
-    };
-  });
+  //   pageTitle = {
+  //     name: data.category.name,
+  //     subtitle: plainDesc,
+  //   };
+  // });
 
-  console.log(data);
+  function getContentText(html) {
+    return html.replace(/(<([^>]+)>)/ig, "").substring(0, 155) + "...";
+  }
 </script>
 
 <svelte:head>
-  <title>{data.category.meta_title || `${data.category.name} - Australia 4 Wheel Drive Rentals`}</title>
-  <meta name="description" content={data.category.meta_description || `${data.category.name} - ${plainDesc}`} />
+  <title>{data.category?.meta_title || `${data.category.name} - Australia 4 Wheel Drive Rentals`}</title>
+  <meta name="description" content={data.category.meta_description || `${data.category.name} - ${getContentText(data.data.content)}`} />
+  <meta property="og:title" content={data.category?.meta_title || `${data.category.name} - Australia 4 Wheel Drive Rentals`} />
+  <meta property="og:description" content={data.category.meta_description || `${data.category.name} - ${getContentText(data.data.content)}`} />
+  <meta property="og:image" content={data.site.image} />
+  <link rel="canonical" href="https://australia4wdrentals.com/category/{data.type}/{data.category.slug}" />
+  {@html `<script type="application/ld+json" class="schemantra">
+  {
+    "@context": "https://schema.org",
+    "@type": "TravelAgency",
+    "@id": "TravelAgency",
+    "url": "https://australia4wdrentals.com/attractions",
+    "telephone": "1800107371",
+    "tourBookingPage": "https://australia4wdrentals.com/search",
+    "description": "${data.category.meta_description || `${data.category.name} - ${getContentText(data.data.content)}`}",
+    "email": "info@australia4wdrentals.com",
+    "image": "${data.site.image}",
+    "location": "Australia",
+    "logo": "https://api.australia4wdrentals.com/storage/v1/render/image/public/contents/${data.site.logo}",
+    "name": ${data.category?.meta_title || `${data.category.name} - Australia 4 Wheel Drive Rentals`}
+  }
+  </script>`}
 </svelte:head>
 
 <PageHeader>
@@ -49,7 +72,7 @@
   </div>
   <!-- <Title {pageTitle} /> -->
 </PageHeader>
-<Filter title={data.category.name} keyword={data.keyword} url="/category/{data.type}/{data.category.slug}" />
+<Filter title={data.category.name} keyword={data.keyword} url="/{data.type}/{data.category.slug}" />
 {#if data.category.description}
   <div class="p-5 container xl:max-w-7xl mx-auto bg-white rounded mt-5">
     <div class="content overflow-hidden {show ? '' : 'h-12'}">
@@ -71,7 +94,7 @@
   total={data.pageTotal}
   keyword={data.keyword}
   records={data.list}
-  url="/category/{data.type}/{data.category.slug}"
+  url="/{data.type}/{data.category.slug}"
 >
   {#each data.list as record}
     <Item {record} type={data.type} />

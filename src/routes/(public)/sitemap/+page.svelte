@@ -63,6 +63,9 @@
       if (dir === "attachments") {
         dir = "files";
       }
+      if (dir === "articles") {
+        dir = "blog";
+      }
       generated_sitemap[group.type][slug] = {
         name: link.name,
         url: `${domain}/${dir}/${link.slug}`,

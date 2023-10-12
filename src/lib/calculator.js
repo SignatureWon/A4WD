@@ -45,7 +45,7 @@ const get_available_routes = (data, search, routes) => {
             rate.dropoff_name = valid[0].to.label || valid[0].to.name;
             rate.duration = search.duration;
 
-            // console.log("rate", rate);
+            console.log("rate", rate);
 
             if (rate.rates_type === "seasonal") {
               if (rate.supplier_all_day) {

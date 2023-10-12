@@ -4,39 +4,44 @@
   import { Button } from "carbon-components-svelte";
   import { onMount } from "svelte";
   export let data;
-
-  function convertToPlain(html) {
-    var tempDivElement = document.createElement("div");
-    tempDivElement.innerHTML = html;
-    let result = tempDivElement.textContent || tempDivElement.innerText || "";
-    if (result.length > 160) {
-      result = result.substring(0, 160) + "...";
-    }
-    return result;
+  function getContentText(html) {
+    return html.replace(/(<([^>]+)>)/ig, "").substring(0, 155) + "...";
   }
+  // function convertToPlain(html) {
+  //   var tempDivElement = document.createElement("div");
+  //   tempDivElement.innerHTML = html;
+  //   let result = tempDivElement.textContent || tempDivElement.innerText || "";
+  //   if (result.length > 160) {
+  //     result = result.substring(0, 160) + "...";
+  //   }
+  //   return result;
+  // }
 
-  let plainDesc = "";
-  onMount(() => {
-    plainDesc = convertToPlain(data.data.content);
-  });
+  // let plainDesc = "";
+  // onMount(() => {
+  //   plainDesc = convertToPlain(data.data.content);
+  // });
 </script>
 
 <svelte:head>
   <title>{data.data.meta_title || `${data.data.name} - Australia 4 Wheel Drive Rentals`}</title>
-  <meta name="description" content={data.data.meta_description || plainDesc} />
+  <meta name="description" content={data.data.meta_description || getContentText(data.data.content)} />
   <meta property="og:title" content={data.data.meta_title || `${data.data.name} - Australia 4 Wheel Drive Rentals`} />
-  <meta property="og:description" content={data.data.meta_description || plainDesc} />
-  <meta property="og:image" content={`${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/${data.data.image}`} />
+  <meta property="og:description" content={data.data.meta_description || getContentText(data.data.content)} />
+  <meta
+    property="og:image"
+    content={`${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/${data.data.image}`}
+  />
   <link rel="canonical" href="https://australia4wdrentals.com/{data.data.slug}" />
   {@html `<script type="application/ld+json" class="schemantra">
   {
     "@context": "https://schema.org",
     "@type": "TravelAgency",
     "@id": "TravelAgency",
-    "url": "https://australia4wdrentals.com",
+    "url": "https://australia4wdrentals.com/${data.data.slug}",
     "telephone": "1800107371",
     "tourBookingPage": "https://australia4wdrentals.com/search",
-    "description": "${data.data.meta_description || plainDesc}",
+    "description": "${data.data.meta_description || getContentText(data.data.content)}",
     "email": "info@australia4wdrentals.com",
     "image": "${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/${data.data.image}",
     "location": "Australia",
@@ -78,8 +83,7 @@
     {/if}
     {#if data.data.images}
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-
-      <!-- <div class="columns-1 sm:columns-2 lg:columns-3 gap-4"> -->
+        <!-- <div class="columns-1 sm:columns-2 lg:columns-3 gap-4"> -->
         {#each data.data.images as img}
           <div>
             <img src={img.thumb} alt={img.caption} class="w-full rounded mb-2" />

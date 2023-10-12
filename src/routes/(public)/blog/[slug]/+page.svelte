@@ -1,29 +1,38 @@
 <script>
+  import { env } from "$env/dynamic/public";
   import PageHeader from "$lib/components/public/PageHeader-reverse.svelte";
   import { Button } from "carbon-components-svelte";
-  import { onMount } from "svelte";
   import TitleBackground from "$lib/components/public/archive/Title-background.svelte";
   export let data;
 
-  function convertToPlain(html) {
-    var tempDivElement = document.createElement("div");
-    tempDivElement.innerHTML = html;
-    let result = tempDivElement.textContent || tempDivElement.innerText || "";
-    if (result.length > 160) {
-      result = result.substring(0, 160) + "...";
-    }
-    return result;
+  function getContentText(html) {
+    return html.replace(/(<([^>]+)>)/ig, "").substring(0, 155) + "...";
   }
-
-  let plainDesc = "";
-  onMount(() => {
-    plainDesc = convertToPlain(data.data.content);
-  });
 </script>
 
 <svelte:head>
   <title>{data.data.meta_title || `${data.data.name} - Australia 4 Wheel Drive Rentals`}</title>
-  <meta name="description" content={data.data.meta_description || plainDesc} />
+  <meta name="description" content={data.data.meta_description || getContentText(data.data.content)} />
+  <meta property="og:title" content={data.data.meta_title || `${data.data.name} - Australia 4 Wheel Drive Rentals`} />
+  <meta property="og:description" content={data.data.meta_description || getContentText(data.data.content)} />
+  <meta property="og:image" content={`${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/${data.data.image}`} />
+  <link rel="canonical" href="https://australia4wdrentals.com/blog/{data.data.slug}" />
+  {@html `<script type="application/ld+json" class="schemantra">
+  {
+    "@context": "https://schema.org",
+    "@type": "TravelAgency",
+    "@id": "TravelAgency",
+    "url": "https://australia4wdrentals.com/blog/${data.data.slug}",
+    "telephone": "1800107371",
+    "tourBookingPage": "https://australia4wdrentals.com/search",
+    "description": "${data.data.meta_description || getContentText(data.data.content)}",
+    "email": "info@australia4wdrentals.com",
+    "image": "${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/${data.data.image}",
+    "location": "Australia",
+    "logo": "https://api.australia4wdrentals.com/storage/v1/render/image/public/contents/${data.site.logo}",
+    "name": "${data.data.meta_title || `${data.data.name} - Australia 4 Wheel Drive Rentals`}"
+  }
+  </script>`}
 </svelte:head>
 
 {#if !data.data}
