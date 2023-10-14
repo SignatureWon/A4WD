@@ -28,7 +28,7 @@ export const html = {
       const { data: data_quote } = await supabase.from("quotes").select("*, users (*)").eq("id", Number(quote_id)).single();
       quote = data_quote
     }
-    console.log("quote", quote);
+    // console.log("quote", quote);
     const { data: vehicle } = await supabase.from("vehicles").select().eq("id", quote.details.vehicle.id).single();
 
     let summary = q.getPayments(quote);

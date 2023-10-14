@@ -365,9 +365,11 @@ export const q = {
      * Add-ons
      */
     let addons = quote.details.addons;
+
     for (const key in addons) {
       const addon = addons[key];
-      let gross = addon.gross_rate;
+      let gross = addon.gross;
+
       if (addon.daily) {
         gross = gross * duration;
       }

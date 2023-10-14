@@ -23,7 +23,14 @@ export async function load({ url, params, locals }) {
     search[key] = value;
   });
 
-  let results = await calculator.search(search);
+  let results = {
+    available: [],
+    blocked: [],
+  };
+  if (search.pickup !== "" && search.dropoff !== "") {
+    results = await calculator.search(search);
+  }
+
   return {
     options: options,
     search: JSON.parse(JSON.stringify(search)),

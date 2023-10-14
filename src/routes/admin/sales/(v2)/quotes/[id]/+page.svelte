@@ -34,7 +34,7 @@
     totalSupplierAdjustments: 0,
   };
 
-  console.log("quote", quote);
+  // console.log("quote", quote);
 
   let open = false;
   let openEmail = false;
