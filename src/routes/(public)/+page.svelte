@@ -7,6 +7,7 @@
   import Features from "$lib/components/public/Features.svelte";
   import PageHeader from "$lib/components/public/PageHeader.svelte";
   import SectionCarousel from "$lib/components/public/SectionCarousel.svelte";
+  import SectionContent from "$lib/components/public/SectionContent.svelte";
   import CategoryCarousel from "$lib/components/public/CategoryCarousel.svelte";
   import ContactForm from "$lib/components/public/ContactForm.svelte";
 
@@ -56,6 +57,7 @@
     </div>
   </div>
 {/if}
+<SectionContent title={data.sections.intro} />
 <SectionCarousel records={getContent("destinations")} title={data.sections.destinations} button="More Destinations" />
 <Vehicles record4={getContent("4WD")} record2={getContent("2WD")} title={data.sections.vehicles} />
 <SectionCarousel records={getContent("specials")} title={data.sections.specials} button="More Specials" />
@@ -69,4 +71,5 @@
 <SectionCarousel records={getContent("articles")} title={data.sections.blog} button="More Articles" content={true} />
 <Testimonials records={getContent("testimonials")} title={data.sections.testimonials} />
 <Faqs records={getContent("faqs")} title={data.sections.faqs} />
+<SectionContent title={data.sections.summary} />
 <ContactForm content={data.sections.contact} />

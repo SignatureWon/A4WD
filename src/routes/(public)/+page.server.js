@@ -7,6 +7,7 @@ export async function load() {
     .from("constants")
     .select("type, name, subtitle, description")
     .in("type", [
+      "intro",
       "about",
       "destinations",
       "vehicles",
@@ -18,6 +19,7 @@ export async function load() {
       "blog",
       "testimonials",
       "faqs",
+      "summary",
       "contact",
     ]);
 

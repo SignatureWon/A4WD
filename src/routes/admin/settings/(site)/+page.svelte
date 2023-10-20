@@ -30,6 +30,7 @@
     "logo",
     "icon",
     "color",
+    "intro",
     "about",
     "contact",
     "destinations",
@@ -42,10 +43,12 @@
     "blog",
     "testimonials",
     "faqs",
+    "summary",
     "h1",
     "image",
   ];
   const sections = [
+    "intro",
     "about",
     "contact",
     "destinations",
@@ -58,6 +61,7 @@
     "blog",
     "testimonials",
     "faqs",
+    "summary",
   ];
   let record = {};
   let recordObj = {};

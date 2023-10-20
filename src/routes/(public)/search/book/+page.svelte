@@ -162,6 +162,7 @@
           </div>
         </div>
         <div class="text-center">
+          <p class="mb-4">Please check the below <b>Submit Quote Request</b> button to get an instant quote to your email</p>
           <Button type="submit" class="px-10">Submit Quote Request</Button>
           <input type="hidden" name="user" value={JSON.stringify(user)} />
           <input type="hidden" name="quote" value={JSON.stringify(quote)} />
