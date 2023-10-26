@@ -20,9 +20,9 @@
 
 <svelte:head>
   <title>{data.data.meta_title || `${data.data.name} - Australia 4 Wheel Drive Rentals`}</title>
-  <meta name="description" content={data.data.meta_description || getContentText(data.data.content)} />
+  <meta name="description" content={data.data.meta_description || getContentText(data.data.description)} />
   <meta property="og:title" content={data.data.meta_title || `${data.data.name} - Australia 4 Wheel Drive Rentals`} />
-  <meta property="og:description" content={data.data.meta_description || getContentText(data.data.content)} />
+  <meta property="og:description" content={data.data.meta_description || getContentText(data.data.description)} />
   <meta property="og:image" content={`${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/${data.data.image}`} />
   <link rel="canonical" href="https://australia4wdrentals.com/vehicles/{data.data.slug}" />
   {@html `<script type="application/ld+json" class="schemantra">
@@ -33,7 +33,7 @@
     "url": "https://australia4wdrentals.com/vehicles/${data.data.slug}",
     "telephone": "1800107371",
     "tourBookingPage": "https://australia4wdrentals.com/search",
-    "description": "${data.data.meta_description || getContentText(data.data.content)}",
+    "description": "${data.data.meta_description || getContentText(data.data.description)}",
     "email": "info@australia4wdrentals.com",
     "image": "${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/${data.data.image}",
     "location": "Australia",

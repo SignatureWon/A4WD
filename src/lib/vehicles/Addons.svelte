@@ -65,7 +65,6 @@
               if (!obj.user_qty) {
                 obj.user_qty = 1;
               }
-
               addons = [...addons, obj];
             });
           }
@@ -90,7 +89,7 @@
           if (days_cap > 0 && duration > days_cap) {
             days = days_cap;
           }
-          qty = days
+          qty = days;
         }
         if (!addon.user_qty) {
           addon.user_qty = qty;
@@ -116,7 +115,7 @@
     // } else if (obj.qty > 0) {
     //   result = obj.gross_rate * obj.user_qty
     // }
-    result = obj.gross_rate * obj.user_qty
+    result = obj.gross_rate * obj.user_qty;
 
     return `$${format.currency(result)}`;
   }
@@ -130,51 +129,58 @@
   </div>
   <div class="p-4">
     {#each addons as item}
-      <div class="flex py-2">
-        <div class="flex-1">
-          <!-- labelText={`${item.name} ${item.daily ? `($${format.currency(item.gross_rate)} x ${duration} days)` : ""}`} -->
-          <Checkbox
-            bind:checked={item.selected}
-            labelText={addonLabel(item)}
-            on:change={(e) => {
-              if (e.target.checked) {
-                quote.details.addons[item.id] = item;
-              } else {
-                delete quote.details.addons[item.id];
-              }
-              // console.log(quote.details.addons[item.id]);
-
-              // addons = quote.details.addons;
-              count();
-            }}
-          />
-        </div>
-        {#if item.selected && item.qty > 0 && !item.daily}
-          <div class="w-20">
-            <NumberInput
-              bind:value={item.user_qty}
-              max={item.qty}
-              min={1}
+      {#if item.name !== ""}
+        <div class="flex py-2">
+          <div class="flex-1">
+            <!-- labelText={`${item.name} ${item.daily ? `($${format.currency(item.gross_rate)} x ${duration} days)` : ""}`} -->
+            <Checkbox
+              checked={item.selected}
+              labelText={addonLabel(item)}
               on:change={(e) => {
-                quote.details.addons[item.id].user_qty = e.detail;
-                quote.details.addons[item.id].gross = e.detail * item.gross_rate;
-                quote.details.addons[item.id].nett = e.detail * item.nett_rate;
+                if (e.target.checked) {
+                  quote.details.addons[item.id] = item;
+                  item.selected = true;
+                } else {
+                  delete quote.details.addons[item.id];
+                  item.selected = false;
+                }
+
+                // console.log(item.selected);
 
                 // console.log(quote.details.addons[item.id]);
+
+                // addons = quote.details.addons;
                 count();
               }}
             />
           </div>
-        {/if}
-        <div class="w-20 text-right">
-          {addonPrice(item)}
-          <!-- {#if item.selected && item.qty > 0}
+          {#if item.selected && item.qty > 0 && !item.daily}
+            <div class="w-20">
+              <NumberInput
+                bind:value={item.user_qty}
+                max={item.qty}
+                min={1}
+                on:change={(e) => {
+                  quote.details.addons[item.id].user_qty = e.detail;
+                  quote.details.addons[item.id].gross = e.detail * item.gross_rate;
+                  quote.details.addons[item.id].nett = e.detail * item.nett_rate;
+
+                  // console.log(quote.details.addons[item.id]);
+                  count();
+                }}
+              />
+            </div>
+          {/if}
+          <div class="w-20 text-right">
+            {addonPrice(item)}
+            <!-- {#if item.selected && item.qty > 0}
             ${format.currency(item.gross_rate)}
           {:else}
             ${format.currency(item.gross_rate * item.user_qty)}
           {/if} -->
+          </div>
         </div>
-      </div>
+      {/if}
     {/each}
   </div>
 </div>

@@ -97,11 +97,13 @@ export const q = {
     // console.log("quote", quote);
 
     if ("terms" in quote.details) {
-      terms = quote.details.terms;
+      if (quote.details.terms) {
+        terms = quote.details.terms;
+      }
     }
 
     // console.log("terms", terms);
-    let s_items = []
+    let s_items = [];
     let s_fee = 0;
     let s_count = 1;
     daily.items.forEach((item) => {
@@ -128,11 +130,10 @@ export const q = {
       profit: 0,
     });
 
-    let breakdown = ""
-    s_items.forEach(item => {
-      breakdown += `${item.name}: $${format.currency(item.total)}<br>`
+    let breakdown = "";
+    s_items.forEach((item) => {
+      breakdown += `${item.name}: $${format.currency(item.total)}<br>`;
     });
-
 
     if (terms.pay_counter) {
       // console.log("quote.details", quote.details);
@@ -165,7 +166,7 @@ export const q = {
         });
       }
       // to show the summary
-      summaryFees = s_items
+      summaryFees = s_items;
       // let s_fee = 0;
       // let s_count = 1;
       // daily.items.forEach((item) => {
@@ -368,7 +369,7 @@ export const q = {
 
     for (const key in addons) {
       const addon = addons[key];
-      let gross = addon.gross;
+      let gross = addon.gross_rate;
 
       if (addon.daily) {
         gross = gross * duration;

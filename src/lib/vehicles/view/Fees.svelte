@@ -3,13 +3,13 @@
   import { format } from "$lib/format.js";
   import { onMount } from "svelte";
   export let quote;
-  console.log(quote);
+  // console.log(quote);
 
   let routes = quote.details.routes || false;
 
   const findRoute = (data, supplier_id) => {
     let result;
-    console.log("data", data);
+    // console.log("data", data);
     (data || []).forEach((route) => {
       let filter_suppliers = route.routes_suppliers.filter((item) => {
         return item.suppliers.id === supplier_id;
@@ -53,9 +53,9 @@
         result = true;
       }
     }
-    console.log(waive, waive_days, duration);
+    // console.log(waive, waive_days, duration);
 
-    console.log("hasOneWay", result);
+    // console.log("hasOneWay", result);
     return result;
   };
 
