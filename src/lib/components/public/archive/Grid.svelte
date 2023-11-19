@@ -1,6 +1,7 @@
 <script>
   import { PaginationNav } from "carbon-components-svelte";
   import { goto } from "$app/navigation";
+  import { page as pageStore } from "$app/stores";
 
   export let records = [];
   export let url;
@@ -25,7 +26,7 @@
     shown={5}
     {page}
     on:change={(e) => {
-      goto(`${url}?page=${e.detail.page}`);
+      goto(`${url}?${$pageStore.url.searchParams.get("category") ? `category=${$pageStore.url.searchParams.get("category")}&` : ""}page=${e.detail.page}`);
     }}
   />
 </div>
