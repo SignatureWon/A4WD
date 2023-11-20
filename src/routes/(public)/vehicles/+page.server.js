@@ -15,7 +15,7 @@ export async function load({ params, url }) {
   const rangeFrom = (pageCurrent - 1) * pageSize;
   const rangeTo = rangeFrom + pageSize - 1;
 
-  let query = supabase.from("vehicles").select("*, vehicles_categories!inner (categories)", { count: "exact" });
+  let query = supabase.from("vehicles").select("*, vehicles_categories!inner (categories)", { count: "exact" }).eq("status", true);
 
   if (category !== "") {
     query = query.filter("vehicles_categories.categories", 'eq', cat[category]);
