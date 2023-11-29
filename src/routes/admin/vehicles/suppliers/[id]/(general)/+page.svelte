@@ -32,8 +32,8 @@
   <FormSection title="Time">
     <InputToggle name="all_day" label="24-hour" bind:value={data.data.all_day} />
     <!-- {#if !data.data.daily} -->
-      <InputText name="start_time" label="Start Time" type="time" bind:value={data.data.start_time} half={true} />
-      <InputText name="end_time" label="End Time" type="time" bind:value={data.data.end_time} half={true} />
+      <InputText name="start_time" label="Default Start Time" type="time" bind:value={data.data.start_time} half={true} />
+      <InputText name="end_time" label="Default End Time" type="time" bind:value={data.data.end_time} half={true} />
     <!-- {/if} -->
     <InputToggle name="daily" label="Set daily hours" bind:value={data.data.daily} />
     {#if data.data.daily}
