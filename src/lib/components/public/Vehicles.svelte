@@ -82,13 +82,13 @@
         {/if}
       </div>
       <div class="text-center hidden md:block pl-8 pb-8">
-        <Button href="/vehicles" class="inline-block">More Vehicles</Button>
+        <Button href="/vehicles" class="inline-block">See All Vehicles</Button>
       </div>
     </div>
     <div class="rounded bg-white p-4">
       <div class="mb-4">
         <span class="font-bold">4WD Car and 4WD Camper Hire</span>
-        <Button kind="tertiary" href="/vehicles?category=4wd-campers" class="text-sm border-2 font-bold px-2 py-0.5 ml-2">View more</Button
+        <Button kind="tertiary" href="/vehicles?category=4wd-campers" class="text-sm border-2 font-bold px-2 py-1 ml-2">View All 4WD</Button
         >
       </div>
       <section class="splide carousel-4wd -mx-10">
@@ -139,7 +139,7 @@
     <div class="rounded bg-white p-4">
       <div class="mb-4">
         <span class="font-bold">2WD Camper RV Hire</span>
-        <Button kind="tertiary" href="/vehicles?category=2wd-campers" class="text-sm border-2 font-bold px-2 py-0.5 ml-2">View more</Button
+        <Button kind="tertiary" href="/vehicles?category=2wd-campers" class="text-sm border-2 font-bold px-2 py-1 ml-2">View All 2WD</Button
         >
       </div>
       <section class="splide carousel-2wd -mx-10">
