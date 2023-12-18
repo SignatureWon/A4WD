@@ -148,7 +148,7 @@ export const q = {
           name: `Deposit of daily basic rental to agent`,
           total: toAgent,
           nett: 0,
-          profit: toAgent,
+          profit: quote.details.daily.profit,
         });
       } else {
         agentFees.push({
@@ -162,7 +162,7 @@ export const q = {
           // )} x ${duration} days = $${format.currency(quote.details.daily.gross)}</span>`,
           total: toAgent,
           nett: 0,
-          profit: toAgent,
+          profit: quote.details.daily.profit,
         });
       }
       // to show the summary
