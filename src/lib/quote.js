@@ -369,7 +369,8 @@ export const q = {
 
     for (const key in addons) {
       const addon = addons[key];
-      let gross = addon.gross_rate;
+      console.log("addons", addon);
+      let gross = addon.gross_rate * addon.user_qty;
 
       if (addon.daily) {
         gross = gross * duration;
@@ -379,7 +380,7 @@ export const q = {
           gross = addon.gross_cap;
         }
       }
-      let nett = addon.nett_rate;
+      let nett = addon.nett_rate * addon.user_qty;
       if (addon.daily) {
         nett = nett * duration;
       }
