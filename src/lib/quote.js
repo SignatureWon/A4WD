@@ -369,24 +369,29 @@ export const q = {
 
     for (const key in addons) {
       const addon = addons[key];
-      console.log("addons", addon);
+      // addon.qty = max qty
+      // addon.user_qty = user selected qty
+      let qty = 1;
+      if ("user_qty" in addon) {
+        qty = addon.user_qty;
+      }
       let gross = addon.gross_rate;
-
       if (addon.daily) {
         gross = gross * duration;
       } else {
-        gross = gross * addon.user_qty;
+        gross = gross * qty;
       }
+
       if (addon.gross_cap > 0) {
         if (gross > addon.gross_cap) {
           gross = addon.gross_cap;
         }
       }
-      let nett = addon.nett_rate * addon.user_qty;
+      let nett = addon.nett_rate;
       if (addon.daily) {
         nett = nett * duration;
       } else {
-        nett = nett * addon.user_qty;
+        nett = nett * qty;
       }
       if (addon.nett_cap > 0) {
         if (nett > addon.nett_cap) {
