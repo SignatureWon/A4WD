@@ -45,11 +45,11 @@ const get_available_routes = (data, search, routes) => {
             rate.dropoff_name = valid[0].to.label || valid[0].to.name;
             rate.duration = search.duration;
 
-            console.log("rate", rate);
+            // console.log("rate", rate);
 
             if (rate.rates_type === "seasonal") {
               if (rate.supplier_all_day) {
-                rate.duration -= 1
+                rate.duration -= 1;
               }
               let daily = 0;
               // let min_days = rate.min_days > rate.tiers[0].from ? rate.min_days : rate.tiers[0].from;
@@ -359,7 +359,7 @@ const get_flex = async (search, routes) => {
     .eq("rates_type", "flex");
 
   if (search.license !== "") {
-    console.log("search.license", search.license);
+    // console.log("search.license", search.license);
     query = query.or(`license_id.eq.${search.license},license_id.is.null`);
   }
   if (search.category !== "") {
@@ -386,8 +386,8 @@ const get_flex = async (search, routes) => {
   let sorted_rates = sort_rates_by_vehicle(available_rates);
   let results = convert_to_flex_rates(sorted_rates, search);
 
-  console.log("available_rates", data);
-  console.log("results", results);
+  // console.log("available_rates", data);
+  // console.log("results", results);
 
   return results;
 };
@@ -596,7 +596,7 @@ const add_specials = (rate, item, spec) => {
       item.discount_nett += spec.discount_nett;
     }
   }
-  console.log("item", item);
+  // console.log("item", item);
 };
 const check_specials = async (rates, search) => {
   let query = supabase.from("specials").select(`
