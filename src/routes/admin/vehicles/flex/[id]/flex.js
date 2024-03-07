@@ -1,21 +1,19 @@
-// import { supabase } from "$lib/supabaseClient";
-import { db } from "$lib/server/db";
-import { redirect } from "@sveltejs/kit";
+import { supabase } from "$lib/supabaseClient";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
 import isBetween from "dayjs/plugin/isBetween";
 dayjs.extend(isBetween);
 
-const keys = [
+export const keys = [
   "name",
   "suppliers",
   "license",
   "nett",
   "gross",
   "matrix",
-  // "matrix_start",
-  // "matrix_end",
+  "matrix_start",
+  "matrix_end",
   "matrix2",
   "matrix2_start",
   "matrix2_end",
@@ -24,7 +22,7 @@ const keys = [
   "type",
   "rank",
 ];
-const generateMatrix = (data, zero) => {
+export const generateMatrix = (data, zero) => {
   let az = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
   let results = {};
 
@@ -53,7 +51,7 @@ const generateMatrix = (data, zero) => {
   return results;
 };
 
-const generateRates = async (ratesID, data) => {
+export const generateRates = async (ratesID, data) => {
   let az = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
   if (typeof data.zero === "string") {
     if (data.zero === "false") {
@@ -99,21 +97,25 @@ const generateRates = async (ratesID, data) => {
   if (data.data) {
     // console.log("YES DATA", data.data);
     let depots = {};
-    const dbDepots = await db.all({
-      table: "depots",
-      keys: ["id", "code"],
-    });
-    dbDepots.forEach((item) => {
+    // const dbDepots = await db.all({
+    //   table: "depots",
+    //   keys: ["id", "code"],
+    // });
+    const dbDepots = await supabase.from("depots").select("id, code");
+    // console.log("dbDepots", dbDepots);
+    dbDepots.data.forEach((item) => {
       depots[item.code] = item.id;
     });
     // console.log("depots", depots);
 
     let vehicles = {};
-    const dbVehicles = await db.all({
-      table: "vehicles",
-      keys: ["id", "code"],
-    });
-    dbVehicles.forEach((item) => {
+    // const dbVehicles = await db.all({
+    //   table: "vehicles",
+    //   keys: ["id", "code"],
+    // });
+    const dbVehicles = await supabase.from("vehicles").select("id, code");
+
+    dbVehicles.data.forEach((item) => {
       vehicles[item.code] = item.id;
     });
     // console.log("vehicles", vehicles);
@@ -188,108 +190,4 @@ const generateRates = async (ratesID, data) => {
     valid: ratesValid,
     invalid: ratesInvalid,
   };
-};
-export async function load({ url, params, locals }) {
-  let flex = await db.one({
-    table: "rates",
-    id: params.id,
-    keys: keys,
-  });
-
-  // console.log("flex", flex);
-  let checkRates = await generateRates(params.id, flex);
-  // console.log("checkRates", checkRates);
-  // console.log("checkRates", checkRates.invalid[0].invalidDepot);
-
-  return {
-    data: flex,
-    rates: checkRates,
-    suppliers: db.related({
-      table: "suppliers",
-    }),
-    licenses: db.related({
-      table: "constants",
-      eq: [{ name: "type", value: "licenses" }],
-    }),
-    path: url.pathname,
-    id: params.id,
-  };
-}
-export const actions = {
-  insert: async ({ request, url, locals }) => {
-    const formData = await request.formData();
-    let newData = Object.fromEntries(formData.entries());
-    if (!newData.license) {
-      delete newData.license;
-    }
-    let data = await db.insert(locals, {
-      table: "rates",
-      data: newData,
-    });
-
-    let rates = await generateRates(data[0].id, newData);
-
-    await db.insert(locals, {
-      table: "ratesCard",
-      data: rates.valid,
-    });
-
-    let path = url.pathname.split("/");
-    path.pop();
-    throw redirect(303, `${path.join("/")}/${data[0].id}`);
-
-    // throw redirect(303, `${url.pathname}?success=update`);
-
-    // await db.actions.insert(request, url, locals, {
-    //   table: "rates",
-    // });
-  },
-  update: async ({ request, url, params, locals }) => {
-    const formData = await request.formData();
-    let newData = Object.fromEntries(formData.entries());
-    // if (!newData.license) {
-    // newData.license = null;
-    // }
-
-    await db.update(locals, {
-      id: params.id,
-      table: "rates",
-      data: newData,
-    });
-
-    let rates = await generateRates(params.id, newData);
-
-    await db.delete(locals, {
-      table: "ratesCard",
-      key: "rates",
-      value: params.id,
-    });
-
-    // console.log(rates.valid);
-
-    await db.insert(locals, {
-      table: "ratesCard",
-      data: rates.valid,
-    });
-
-    throw redirect(303, `${url.pathname}?success=update`);
-  },
-  delete: async ({ request, url, params, locals }) => {
-    // await db.delete(locals, {
-    //   table: "ratesCard",
-    //   key: "rates",
-    //   value: params.id,
-    // });
-
-    await db.actions.delete(request, url, locals, {
-      id: params.id,
-      table: "rates",
-    });
-  },
-  duplicate: async ({ request, url, params, locals }) => {
-    await db.actions.duplicate(request, url, locals, {
-      id: params.id,
-      table: "rates",
-    });
-  },
 };
