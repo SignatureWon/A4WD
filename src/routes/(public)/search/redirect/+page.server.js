@@ -4,11 +4,8 @@ export async function load({ url }) {
   let search = [];
 
   url.searchParams.forEach((value, key) => {
-    search.push(`${key}=${value}`)
+    search.push(`${key}=${value}`);
   });
 
-  throw redirect(
-    301,
-    `/search?${search.join("&")}`
-  );
+  throw redirect(301, `/search?${search.join("&")}`);
 }

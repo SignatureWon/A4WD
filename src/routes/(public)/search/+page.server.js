@@ -33,13 +33,13 @@ export async function load({ url, params, locals }) {
     // }
     search[key] = value;
   });
-  let results = {
-    available: [],
-    blocked: [],
-  };
-  if (search.pickup !== "" && search.dropoff !== "") {
-    results = await calculator.search(search);
-  }
+  // let results = {
+  //   available: [],
+  //   blocked: [],
+  // };
+  // if (search.pickup !== "" && search.dropoff !== "") {
+  //   results = await calculator.search(search);
+  // }
 
   // let results = await calculator.search(search);
 
@@ -47,32 +47,32 @@ export async function load({ url, params, locals }) {
 
   // let all_rates = {}
   // if (search.pickup !== "" && search.dropoff !== "") {
-    // all_rates = calculator(search);
-    // const { data: flexData } = await cal.getFlex(supabase, search);
-    // const { data: seasonalData } = await cal.getSeasonal(supabase, search);
-    // allRates = [...flexData, ...seasonalData];
-    // const { data: feesData, error: feesError } = await cal.getFees(supabase, search);
-    // const { data: blockoutsData, error: blockoutsError } = await cal.getBlockouts(supabase, search);
-    // const { data: specialsData, error: specialsError } = await cal.getSpecials(supabase, search);
-    // const { data: bondsData, error: bondsError } = await cal.getBonds(supabase, search);
+  // all_rates = calculator(search);
+  // const { data: flexData } = await cal.getFlex(supabase, search);
+  // const { data: seasonalData } = await cal.getSeasonal(supabase, search);
+  // allRates = [...flexData, ...seasonalData];
+  // const { data: feesData, error: feesError } = await cal.getFees(supabase, search);
+  // const { data: blockoutsData, error: blockoutsError } = await cal.getBlockouts(supabase, search);
+  // const { data: specialsData, error: specialsError } = await cal.getSpecials(supabase, search);
+  // const { data: bondsData, error: bondsError } = await cal.getBonds(supabase, search);
 
-    // const filteredRoutes = cal.filterRoutes(allRates, search);
-    // const arrangedRates = cal.arrangeRates(filteredRoutes, search);
-    // const filteredBlockouts = cal.filterBlockouts(arrangedRates, blockoutsData);
-    // const addedFees = cal.addFees(filteredBlockouts.rates, feesData);
-    // const addedSpecials = cal.addSpecials(addedFees, specialsData, search);
-    // const addedBonds = cal.addBonds(addedSpecials, bondsData, search);
+  // const filteredRoutes = cal.filterRoutes(allRates, search);
+  // const arrangedRates = cal.arrangeRates(filteredRoutes, search);
+  // const filteredBlockouts = cal.filterBlockouts(arrangedRates, blockoutsData);
+  // const addedFees = cal.addFees(filteredBlockouts.rates, feesData);
+  // const addedSpecials = cal.addSpecials(addedFees, specialsData, search);
+  // const addedBonds = cal.addBonds(addedSpecials, bondsData, search);
 
-    // results = [...addedBonds];
-    // blocked = [...filteredBlockouts.blocked];
-    // specials = [...addedSpecials];
+  // results = [...addedBonds];
+  // blocked = [...filteredBlockouts.blocked];
+  // specials = [...addedSpecials];
   // }
   return {
     options: options,
     search: JSON.parse(JSON.stringify(search)),
     // all: all_rates,
     // blocked: JSON.parse(JSON.stringify(blocked)),
-    results: JSON.parse(JSON.stringify(results)),
+    // results: JSON.parse(JSON.stringify(results)),
     // specials: JSON.parse(JSON.stringify(specials)),
   };
 }

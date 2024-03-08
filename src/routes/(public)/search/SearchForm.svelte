@@ -4,6 +4,7 @@
   export let options;
   export let search;
   export let url = "/search/redirect";
+  // export let url = "/search";
 
   // console.log("search", search);
   let innerWidth = 0;
