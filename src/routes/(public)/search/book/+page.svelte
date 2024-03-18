@@ -4,7 +4,7 @@
 
   export let data;
   let quote = data.quote;
-  console.log("quote", data);
+  // console.log("quote", data);
   if (quote) {
     quote.status = "Request";
     quote.comment = null;
@@ -16,6 +16,8 @@
       adult: 1,
       children: 0,
     };
+    quote.code_promo = null;
+    quote.code_affiliate = null;
   }
 
   const user = {
@@ -161,8 +163,23 @@
             </div>
           </div>
         </div>
+        <div class="bg-white rounded mb-4">
+          <div class="p-5 grid grid-cols-1 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <TextInput labelText="Promo Code" name="code_promo" bind:value={quote.code_promo} />
+              </div>
+              <div>
+                <TextInput labelText="Affiliate Code" name="code_affiliate" bind:value={quote.code_affiliate} />
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="text-center">
-          <p class="mb-4">Please click the below <b>Submit Quote Request</b> button to get an instant quote to your email</p>
+          <p class="mb-4">
+            Please click the below <b>Submit Quote Request</b> button to get an instant quote to your email
+          </p>
           <Button type="submit" class="px-10">Submit Quote Request</Button>
           <input type="hidden" name="user" value={JSON.stringify(user)} />
           <input type="hidden" name="quote" value={JSON.stringify(quote)} />
@@ -171,6 +188,3 @@
     </div>
   </div>
 {/if}
-
-<!--   
-   -->

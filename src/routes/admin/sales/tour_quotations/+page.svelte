@@ -34,6 +34,11 @@
     {
       type: "eq",
       column: "tour",
+      value: true,
+    },
+    {
+      type: "eq",
+      column: "goholi",
       value: false,
     },
   ]}

@@ -34,7 +34,12 @@
     {
       type: "eq",
       column: "tour",
-      value: false,
+      value: true,
+    },
+    {
+      type: "eq",
+      column: "goholi",
+      value: true,
     },
   ]}
   orders={[

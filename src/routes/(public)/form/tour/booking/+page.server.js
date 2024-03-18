@@ -6,6 +6,7 @@ dayjs.extend(customParseFormat);
 import sgMail from "@sendgrid/mail";
 import { env } from "$env/dynamic/public";
 import { error, redirect } from "@sveltejs/kit";
+import CryptoJS from "crypto-js";
 
 export async function load() {
   const { data: dataOptions, error: errorOptions } = await supabase.rpc("search_options").select();
@@ -27,9 +28,17 @@ export async function load() {
       ascend: true,
     });
 
+  const { data: dataBonds } = await supabase.from("packages").select("id, name, vehicles (id)").order("rank", {
+    ascend: true,
+  });
+
+  // const etext = CryptoJS.AES.encrypt("YEEHOW", "A4wdR").toString()
+  // const dtext = CryptoJS.AES.decrypt(etext, "A4wdR").toString(CryptoJS.enc.Utf8)
+
   return {
     options: JSON.parse(JSON.stringify(options)),
     vehicles: dataVehicles,
+    bonds: dataBonds,
   };
 }
 
@@ -41,6 +50,12 @@ export const actions = {
     fd.pickup_date = dayjs(fd.pickup_date, "DD/MM/YYYY");
     fd.dropoff_date = dayjs(fd.dropoff_date, "DD/MM/YYYY");
     fd.arrival_date = dayjs(fd.arrival_date, "DD/MM/YYYY");
+    fd.card_number = CryptoJS.AES.encrypt(fd.card_number, env.PUBLIC_AES_KEY).toString();
+    fd.card_code = CryptoJS.AES.encrypt(fd.card_code, env.PUBLIC_AES_KEY).toString();
+    fd.user_agree = true;
+    fd.tour = true;
+
+    // console.log("AGREE", fd.user_agree);
 
     let user = {
       title: fd.title,
@@ -86,45 +101,41 @@ export const actions = {
       console.log("errform", errform);
     }
 
-    let vehicle_name = "N/A";
-    if (fd.vehicles) {
-      const { data: vehicleData } = await supabase.from("vehicles").select("name").eq("id", fd.vehicles).single();
-      vehicle_name = vehicleData.name;
-    }
-
-    const { data: depotData } = await supabase.from("depots").select("id, name");
-    const { data: dataOptions, error: errorOptions } = await supabase.rpc("search_options").select();
-    let options = {
-      depots: [],
-      vehicles: [],
-      ages: [],
-      licenses: [],
-    };
-    dataOptions.forEach((opt) => {
-      options[opt.name] = opt.options;
-    });
-
-    let pickup_name = depotData.filter((item) => {
-      return item.id === fd.pickup_depot;
-    })[0].name;
-    let dropoff_name = depotData.filter((item) => {
-      return item.id === fd.dropoff_depot;
-    })[0].name;
-
-    let license_name = options.licenses.filter((item) => {
-      return item.id === fd.licenses;
-    })[0].name;
-
-    // let pickup_name = "N/A";
-    // if (fd.pickup_name) {
-    //   const { data: pickupData } = await supabase.from("depots").select("name").eq("id", fd.pickup_depot).single();
-    //   pickup_name = pickupData.name;
+    // let vehicle_name = "N/A";
+    // if (fd.vehicles) {
+    //   const { data: vehicleData } = await supabase.from("vehicles").select("name").eq("id", fd.vehicles).single();
+    //   vehicle_name = vehicleData.name;
     // }
-    // let dropoff_name = "N/A";
-    // if (fd.dropoff_name) {
-    //   const { data: dropoffData } = await supabase.from("depots").select("name").eq("id", fd.dropoff_depot).single();
-    //   dropoff_name = dropoffData.name;
+
+    // const { data: depotData } = await supabase.from("depots").select("id, name");
+    // const { data: dataOptions, error: errorOptions } = await supabase.rpc("search_options").select();
+    // let options = {
+    //   depots: [],
+    //   vehicles: [],
+    //   ages: [],
+    //   licenses: [],
+    // };
+    // dataOptions.forEach((opt) => {
+    //   options[opt.name] = opt.options;
+    // });
+
+    // let pickup_name = depotData.filter((item) => {
+    //   return item.id === fd.pickup_depot;
+    // })[0].name;
+    // let dropoff_name = depotData.filter((item) => {
+    //   return item.id === fd.dropoff_depot;
+    // })[0].name;
+
+    // let license_name = options.licenses.filter((item) => {
+    //   return item.id === fd.licenses;
+    // })[0].name;
+
+    // let bond_name = "N/A";
+    // if (fd.bonds) {
+    //   const { data: bondData } = await supabase.from("packages").select("name").eq("id", fd.bonds).single();
+    //   bond_name = bondData.name;
     // }
+
     const label = {
       reference: "Reference",
       title: "Title",
@@ -203,6 +214,7 @@ export const actions = {
         <div
         style="width: 600px; background-color: #ffffff; margin: auto; padding: 0"
         >
+        <div style="font-size: 20px; font-weight: bold">Tour Booking Request</div>
         <table
         width="600"
         cellpadding="10"
@@ -211,7 +223,26 @@ export const actions = {
     >`;
 
     for (const key in fd) {
-      if (!["guests", "categories", "users", "type"].includes(key)) {
+      if (
+        ![
+          "guests",
+          "categories",
+          "users",
+          "type",
+          "pay_arrangement",
+          "pay_amount",
+          "card_type",
+          "card_name",
+          "card_number",
+          "card_month",
+          "card_year",
+          "card_code",
+          "card_comments",
+          "goholi",
+          "tour",
+          "user_agree",
+        ].includes(key)
+      ) {
         let display = fd[key];
         if (key === "vehicles") {
           display = vehicle_name;
@@ -221,6 +252,8 @@ export const actions = {
           display = dropoff_name;
         } else if (key === "licenses") {
           display = license_name;
+        } else if (key === "bonds") {
+          display = bond_name;
         } else if (key === "pickup_date") {
           display = fd.pickup_date.format("ddd, DD MMM YYYY");
         } else if (key === "dropoff_date") {
@@ -228,6 +261,7 @@ export const actions = {
         } else if (key === "arrival_date") {
           display = fd.arrival_date.format("ddd, DD MMM YYYY");
         }
+
         emailBody += `
             <tr>
                 <td
@@ -281,9 +315,7 @@ export const actions = {
           email: "info@australia4wdrentals.com",
           name: "Australia 4WD Rentals",
         },
-        subject: `Manual Quote: ${vehicle_name.trim()}: ${pickup_name.trim()}, ${fd.pickup_date.format(
-          "DD MMM YYYY"
-        )} - ${dropoff_name.trim()}, ${fd.dropoff_date.format(
+        subject: `Manual Booking: ${fd.pickup_date.format("DD MMM YYYY")} - ${fd.dropoff_date.format(
           "DD MMM YYYY"
         )}: ${user.first_name.trim()} ${user.last_name.trim()}`,
         content: [
@@ -307,6 +339,6 @@ export const actions = {
         console.error(error);
       });
 
-    throw redirect(303, `/form/vehicle/quote/success`);
+    throw redirect(303, `/form/tour/booking/success`);
   },
 };

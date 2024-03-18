@@ -41,6 +41,10 @@ export const actions = {
     fd.pickup_date = dayjs(fd.pickup_date, "DD/MM/YYYY");
     fd.dropoff_date = dayjs(fd.dropoff_date, "DD/MM/YYYY");
     fd.arrival_date = dayjs(fd.arrival_date, "DD/MM/YYYY");
+    fd.tour = true;
+    fd.goholi = true;
+
+    // console.log("fd", fd);
 
     let user = {
       title: fd.title,
@@ -86,34 +90,34 @@ export const actions = {
       console.log("errform", errform);
     }
 
-    let vehicle_name = "N/A";
-    if (fd.vehicles) {
-      const { data: vehicleData } = await supabase.from("vehicles").select("name").eq("id", fd.vehicles).single();
-      vehicle_name = vehicleData.name;
-    }
+    // let vehicle_name = "N/A";
+    // if (fd.vehicles) {
+    //   const { data: vehicleData } = await supabase.from("vehicles").select("name").eq("id", fd.vehicles).single();
+    //   vehicle_name = vehicleData.name;
+    // }
 
-    const { data: depotData } = await supabase.from("depots").select("id, name");
-    const { data: dataOptions, error: errorOptions } = await supabase.rpc("search_options").select();
-    let options = {
-      depots: [],
-      vehicles: [],
-      ages: [],
-      licenses: [],
-    };
-    dataOptions.forEach((opt) => {
-      options[opt.name] = opt.options;
-    });
+    // const { data: depotData } = await supabase.from("depots").select("id, name");
+    // const { data: dataOptions, error: errorOptions } = await supabase.rpc("search_options").select();
+    // let options = {
+    //   depots: [],
+    //   vehicles: [],
+    //   ages: [],
+    //   licenses: [],
+    // };
+    // dataOptions.forEach((opt) => {
+    //   options[opt.name] = opt.options;
+    // });
 
-    let pickup_name = depotData.filter((item) => {
-      return item.id === fd.pickup_depot;
-    })[0].name;
-    let dropoff_name = depotData.filter((item) => {
-      return item.id === fd.dropoff_depot;
-    })[0].name;
+    // let pickup_name = depotData.filter((item) => {
+    //   return item.id === fd.pickup_depot;
+    // })[0].name;
+    // let dropoff_name = depotData.filter((item) => {
+    //   return item.id === fd.dropoff_depot;
+    // })[0].name;
 
-    let license_name = options.licenses.filter((item) => {
-      return item.id === fd.licenses;
-    })[0].name;
+    // let license_name = options.licenses.filter((item) => {
+    //   return item.id === fd.licenses;
+    // })[0].name;
 
     // let pickup_name = "N/A";
     // if (fd.pickup_name) {
@@ -203,6 +207,7 @@ export const actions = {
         <div
         style="width: 600px; background-color: #ffffff; margin: auto; padding: 0"
         >
+        <div style="font-size: 20px; font-weight: bold">Tour Quotation Request (Goholi)</div>
         <table
         width="600"
         cellpadding="10"
@@ -211,7 +216,7 @@ export const actions = {
     >`;
 
     for (const key in fd) {
-      if (!["guests", "categories", "users", "type"].includes(key)) {
+      if (!["guests", "categories", "users", "type", "tour"].includes(key)) {
         let display = fd[key];
         if (key === "vehicles") {
           display = vehicle_name;
@@ -279,11 +284,9 @@ export const actions = {
         ],
         from: {
           email: "info@australia4wdrentals.com",
-          name: "Australia 4WD Rentals",
+          name: "Goholi Pty Ltd",
         },
-        subject: `Manual Quote: ${vehicle_name.trim()}: ${pickup_name.trim()}, ${fd.pickup_date.format(
-          "DD MMM YYYY"
-        )} - ${dropoff_name.trim()}, ${fd.dropoff_date.format(
+        subject: `Manual Tour Quote: ${fd.pickup_date.format("DD MMM YYYY")} - ${fd.dropoff_date.format(
           "DD MMM YYYY"
         )}: ${user.first_name.trim()} ${user.last_name.trim()}`,
         content: [
@@ -307,6 +310,6 @@ export const actions = {
         console.error(error);
       });
 
-    throw redirect(303, `/form/vehicle/quote/success`);
+    throw redirect(303, `/form/tour/goholi/quote/success`);
   },
 };

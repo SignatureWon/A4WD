@@ -21,20 +21,25 @@
   ];
 </script>
 
-<PageHeader name="Quotations" table="forms" />
+<PageHeader name="Bookings" table="forms" />
 <Table
   table="forms"
-  fields="id, created_at, reference, first_name, last_name"
+  fields="id, reference, created_at, first_name, last_name"
   filters={[
     {
       type: "eq",
       column: "type",
-      value: "quotations",
+      value: "bookings",
     },
     {
       type: "eq",
       column: "tour",
-      value: false,
+      value: true,
+    },
+    {
+      type: "eq",
+      column: "goholi",
+      value: true,
     },
   ]}
   orders={[

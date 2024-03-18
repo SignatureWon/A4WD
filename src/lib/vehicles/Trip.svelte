@@ -63,6 +63,17 @@
             </Button>
           </div>
         </div>
+        <div class="p-3 mt-4 bg-brand-100">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <TextInput labelText="Promo Code" name="code_promo" bind:value={quote.code_promo} />
+            </div>
+            <div>
+              <TextInput labelText="Affiliate Code" name="code_affiliate" bind:value={quote.code_affiliate} />
+            </div>
+          </div>
+        </div>
+
         <div class="p-3 mt-4 bg-gray-100">
           <TextInput labelText="Supplier Confirmation Code" bind:value={quote.supplier_reference} />
         </div>
