@@ -430,7 +430,7 @@
             <li>
               Suppliers / operators may require a deposit or full payment - please refer to your quote for details.
             </li>
-            <li>Please note your credit card statement will show billing as Australia 4 Wheel Drive Rentals.</li>
+            <li>Please note your credit card statement will show billing as Goholi Pty Ltd (Australia).</li>
           </ul>
         </div>
       </div>
@@ -524,8 +524,8 @@
           banking details.
         </li>
         <li>
-          I have read, understood and agreed to the cancellation policy, terms and agreement of Australia 4 Wheel Drive
-          Rentals and their suppliers. Click here to view our <a href="/conditions-australia-4-wheel-drive-rentals"
+          I have read, understood and agreed to the cancellation policy, terms and agreement of Goholi Pty Ltd
+          (Australia) and their suppliers. Click here to view our <a href="/conditions-australia-4-wheel-drive-rentals"
             >Terms and Agreement</a
           >
         </li>
@@ -535,7 +535,7 @@
       <div class="mb-4">
         <Checkbox
           name="user_agree"
-          labelText="I fully understand and accept the terms, conditions of the supplier of the rental vehicle and booking agent by Australia 4 Wheel Drive Rentals and the payment."
+          labelText="I fully understand and accept the terms, conditions of the supplier of the rental vehicle and booking agent by Goholi Pty Ltd (Australia) and the payment."
           required
         />
       </div>
