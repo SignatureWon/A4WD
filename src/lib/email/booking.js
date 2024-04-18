@@ -8,11 +8,7 @@ import { theme } from "$lib/theme.js";
 
 export const html = {
   create: async (quote_id) => {
-    const { data: color } = await supabase
-      .from("constants")
-      .select("name")
-      .eq("type", "color")
-      .single();
+    const { data: color } = await supabase.from("constants").select("name").eq("type", "color").single();
 
     const c = theme.brandcolor(color.name);
 
@@ -252,7 +248,9 @@ export const html = {
                     Your booking has been successfully submitted to us. We look forward to serving you.
                 </p>
                 <p style="padding-bottom: 10px">
-                    Our team will check for availability of your desired vehicle and your credit card will be charged <b>$${format.currency(summary.termsItems[0].total)}</b> upon confirmation of availability.
+                    Our team will check for availability of your desired vehicle and your credit card will be charged <b>$${format.currency(
+                      summary.termsItems[0].total
+                    )}</b> upon confirmation of availability.
                 </p>
                 <p style="padding-bottom: 10px">
                     If you have any queries please 
@@ -366,9 +364,9 @@ export const html = {
       </table>
     </td>
   </tr>
-  </table>`
-  if (terms.pay_counter) {
-    email += `
+  </table>`;
+    if (terms.pay_counter) {
+      email += `
   <br>
   <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
     <tr>
@@ -385,8 +383,8 @@ export const html = {
             <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Total (AUD)</div>
           </td>
         </tr>`;
-    summary.summaryItems.forEach((item) => {
-      email += `
+      summary.summaryItems.forEach((item) => {
+        email += `
         <tr>
           <td class="col" width="414" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
             <div>${item.name}</div>
@@ -395,13 +393,17 @@ export const html = {
             <div>${format.currency(item.total)}</div>
           </td>
         </tr>`;
-    });
-    email += `
+      });
+      email += `
         <tr>
-          <td class="col" width="414" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${c.brand100}">
+          <td class="col" width="414" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${
+            c.brand100
+          }">
             <div><b>Total</b></div>
           </td>
-          <td class="col" width="138" align="right" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${c.brand100}">
+          <td class="col" width="138" align="right" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${
+            c.brand100
+          }">
             <div><b>${format.currency(summary.totalSummary)}</b></div>
           </td>
         </tr>
@@ -411,9 +413,9 @@ export const html = {
         </table>
       </td>
     </tr>
-  </table>`
-  }
-  email += `
+  </table>`;
+    }
+    email += `
   <br>
 <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
   <tr>
@@ -440,10 +442,14 @@ export const html = {
     });
     email += `
         <tr>
-          <td class="col" width="414" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${c.brand100}">
+          <td class="col" width="414" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${
+            c.brand100
+          }">
             <div><b>Total payable to agent</b></div>
           </td>
-          <td class="col" width="138" align="right" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${c.brand100}">
+          <td class="col" width="138" align="right" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${
+            c.brand100
+          }">
             <div><b>${format.currency(summary.totalAgent)}</b></div>
           </td>
         </tr>
@@ -477,10 +483,14 @@ export const html = {
     });
     email += `
         <tr>
-          <td class="col" width="414" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${c.brand100}">
+          <td class="col" width="414" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${
+            c.brand100
+          }">
             <div><b>Total payable to supplier</b></div>
           </td>
-          <td class="col" width="138" align="right" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${c.brand100}">
+          <td class="col" width="138" align="right" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${
+            c.brand100
+          }">
             <div><b>${format.currency(summary.totalSupplier)}</b></div>
           </td>
         </tr>
@@ -493,10 +503,14 @@ export const html = {
     <td style="padding: 0 24px;">
       <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
         <tr>
-          <td class="col" width="414" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${c.brand500}; color: #FFFFFF">
+          <td class="col" width="414" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${
+            c.brand500
+          }; color: #FFFFFF">
             <div><b>Total amount</b></div>
           </td>
-          <td class="col" width="138" align="right" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${c.brand500}; color: #FFFFFF">
+          <td class="col" width="138" align="right" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${
+            c.brand500
+          }; color: #FFFFFF">
             <div><b>${format.currency(summary.totalAgent + summary.totalSupplier)}</b></div>
           </td>
         </tr>
@@ -643,18 +657,19 @@ export const html = {
         </p>`;
       }
     }
-                email += `
+    email += `
                 <br>
                 <p style="font-weight: bold; font-size: 11px">
                     Domestic Rates
                 </p>
                 <p style="font-size: 11px; padding-bottom: 10px">
-                    This rate is for Australian and New Zealand residents only. The hirer must
-                    be able to produce their Australian or New Zealand drivers licence upon
-                    vehicle collection. Should the hirer not be able to do so on the day of pick
-                    up, the hirer will be refused the rental at the rate nominated. The hirer
-                    will be charged the difference between the Domestic rate and the Standard
-                    rate.
+                    Are rates for Australian and New Zealand residents only. The hirer must be able to produce their Australian or New Zealand drivers licence upon vehicle collection. Should the hirer not be able to do so on the day of pick up, the hirer will be refused the rental at the rate nominated. The hirer will be charged the difference between the Domestic rate and the Standard rate.
+                </p>
+                <p style="font-weight: bold; font-size: 11px">
+                    International Rates
+                </p>
+                <p style="font-size: 11px; padding-bottom: 10px">
+                    Are rates for people with licenses from other international countries (Not Australia and New Zealand).
                 </p>
                 <p style="font-weight: bold; font-size: 11px">
                     The agent - Australia 4 Wheel Drive Rentals
@@ -675,7 +690,9 @@ export const html = {
                     months from date of cancellation to be used towards a future security
                     deposit for bookings made through the Agent and only with the same supplier.
                     This clause is subject to the sole discretion of the management of the
-                    Agent. Total Agent's Security Booking Deposit of $${format.currency(summary.totalCommission)} is fully included
+                    Agent. Total Agent's Security Booking Deposit of $${format.currency(
+                      summary.totalCommission
+                    )} is fully included
                     in the final payment.
                 </p>
                 <p style="font-weight: bold; font-size: 11px">
@@ -790,7 +807,9 @@ export const html = {
         <tr>
             <td class="col" width="100%" align="center" style="font-size: 11px">
                 <p>
-                    <a href="https://www.australia4wdrentals.com/conditions-australia-4-wheel-drive-rentals" style="color: ${c.brand500}">
+                    <a href="https://www.australia4wdrentals.com/conditions-australia-4-wheel-drive-rentals" style="color: ${
+                      c.brand500
+                    }">
                         Terms & Conditions of Australia 4 Wheel Drive Rentals
                     </a>
                 </p>

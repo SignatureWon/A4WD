@@ -105,15 +105,15 @@ export const html = {
           pdf: quote.details.terms.counter,
         },
       },
-    //   daily: getDailyRates(),
-    //   discount: getDiscount(),
-    //   bond: getBonds(),
-    //   oneway: getOneways(),
-    //   addon: getAddons(),
-    //   special: getSpecials(),
-    //   fee: getFees(),
-    //   cc: getCcs(),
-    //   term: getTerms(),
+      //   daily: getDailyRates(),
+      //   discount: getDiscount(),
+      //   bond: getBonds(),
+      //   oneway: getOneways(),
+      //   addon: getAddons(),
+      //   special: getSpecials(),
+      //   fee: getFees(),
+      //   cc: getCcs(),
+      //   term: getTerms(),
     };
     const encId = CryptoJS.AES.encrypt(info.quote.id.toString(), env.PUBLIC_AES_KEY).toString().replaceAll("/", "__");
 
@@ -205,7 +205,9 @@ table, td{
     Your booking has been successfully submitted to us. We look forward to serving you.
   </div>
   <div style="margin-bottom: 10px;">
-    Our team will check for availability of your desired vehicle and your credit card will be charged <b>$${format.currency(summary.termsItems[0].total)}</b> upon confirmation of availability.
+    Our team will check for availability of your desired vehicle and your credit card will be charged <b>$${format.currency(
+      summary.termsItems[0].total
+    )}</b> upon confirmation of availability.
   </div>
 
   <div style="margin-bottom: 10px;">
@@ -638,18 +640,17 @@ table, td{
       <br>`;
     }
     email += `
-  <div
-    style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 12px"
-  >
+  <div style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 12px">
     Domestic Rates
   </div>
   <div style="margin-bottom: 10px; font-size: 10px">
-    This rate is for Australian and New Zealand residents only. The hirer must
-    be able to produce their Australian or New Zealand drivers licence upon
-    vehicle collection. Should the hirer not be able to do so on the day of pick
-    up, the hirer will be refused the rental at the rate nominated. The hirer
-    will be charged the difference between the Domestic rate and the Standard
-    rate.
+    Are rates for Australian and New Zealand residents only. The hirer must be able to produce their Australian or New Zealand drivers licence upon vehicle collection. Should the hirer not be able to do so on the day of pick up, the hirer will be refused the rental at the rate nominated. The hirer will be charged the difference between the Domestic rate and the Standard rate.
+  </div>
+  <div style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 12px">
+    International Rates
+  </div>
+  <div style="margin-bottom: 10px; font-size: 10px">
+    Are rates for people with licenses from other international countries (Not Australia and New Zealand).
   </div>
   <div
     style="margin-top: 30px; margin-bottom: 10px; font-weight: bold; font-size: 12px"
