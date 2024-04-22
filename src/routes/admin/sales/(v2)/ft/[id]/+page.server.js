@@ -127,8 +127,10 @@ export const actions = {
     const context = await browser.newContext();
     const page = await context.newPage();
     const content = await html.create(params.id);
-    console.log("content", content);
-    await page.setContent(content);
+    await page.setContent(content, {
+      waitUntil: "domcontentloaded",
+      timeout: 300000,
+    });
     const buffer = await page.pdf({
       format: "A4",
       margin: {
