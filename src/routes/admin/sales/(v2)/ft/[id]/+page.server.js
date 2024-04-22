@@ -131,6 +131,7 @@ export const actions = {
       waitUntil: "domcontentloaded",
       timeout: 300000,
     });
+    await page.emulateMedia({ media: "screen" });
     const buffer = await page.pdf({
       format: "A4",
       margin: {
@@ -140,6 +141,8 @@ export const actions = {
         right: "1cm",
       },
     });
+
+    browser.close();
 
     let filePDF = new Blob([buffer], {
       type: "application/pdf",
