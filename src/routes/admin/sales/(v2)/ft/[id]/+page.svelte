@@ -93,14 +93,14 @@
       <div>PDF</div>
       <div>
         <form action="?/download" method="POST">
-          <Button kind="tertiary" class="p-0.5 h-6 w-full">Generate</Button>
+          <Button type="submit" kind="tertiary" class="p-0.5 h-6 w-full">Generate</Button>
         </form>
       </div>
       <div>
         <Button
           class="p-0.5 h-6 w-full inline-block"
-          href="https://api.australia4wdrentals.com/storage/v1/object/public/quotes/Final Ticket - FT{388000 + Number(quote.id)}.pdf"
-          >Download</Button
+          href="https://api.australia4wdrentals.com/storage/v1/object/public/quotes/Final Ticket - FT{388000 +
+            Number(quote.id)}.pdf">Download</Button
         >
       </div>
     </div>
