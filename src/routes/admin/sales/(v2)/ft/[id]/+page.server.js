@@ -129,7 +129,8 @@ export const actions = {
     const content = await html.create(params.id);
     console.log("content", content);
     await page.setContent(content, {
-      waitUntil: "load",
+      waitUntil: "domcontentloaded",
+      timeout: 60000,
     });
     const buffer = await page.pdf({
       format: "A4",
