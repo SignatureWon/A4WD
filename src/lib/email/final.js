@@ -10,6 +10,7 @@ import { theme } from "$lib/theme.js";
 
 export const html = {
   create: async (quote_id) => {
+    console.log(quote_id);
     const { data: color } = await supabase.from("constants").select("name").eq("type", "color").single();
 
     const c = theme.brandcolor(color.name);
@@ -337,9 +338,9 @@ export const html = {
             <div><a href="https://www.australia4wdrentals.com/vehicles/${
               quote.details.vehicle.slug
             }">View vehicle specs</a></div>
-            <br>
-            <div><img src="${quote.details.vehicle.image}" alt="${quote.details.vehicle.name}" width="200"></div>
-          </td>
+            <br>`;
+    // <div><img src="${quote.details.vehicle.image}" alt="${quote.details.vehicle.name}" width="200"></div>
+    email += `</td>
         </tr>
         <tr>
           <td class="col" width="276" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
