@@ -131,7 +131,7 @@ export const actions = {
       waitUntil: "domcontentloaded",
       timeout: 300000,
     });
-    await page.emulateMedia({ media: "screen" });
+    // await page.emulateMedia({ media: "screen" });
     const buffer = await page.pdf({
       format: "A4",
       margin: {
