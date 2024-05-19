@@ -142,7 +142,7 @@ export const actions = {
       },
     });
 
-    browser.close();
+    // browser.close();
 
     let filePDF = new Blob([buffer], {
       type: "application/pdf",
