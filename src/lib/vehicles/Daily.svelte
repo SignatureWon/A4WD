@@ -43,7 +43,6 @@
     if (!quote.add_discount_supplier) {
       quote.add_discount_supplier = 0;
     }
-
     quote.details.daily.gross += quote.add_discount_supplier;
     quote.details.daily.nett += quote.add_discount_supplier;
     quote.details.daily.profit += quote.add_discount;
@@ -54,6 +53,8 @@
   onMount(() => {
     list = q.getDailyRates(quote);
     getDailyTotal();
+
+    // console.log(list);
   });
   // let grr
   $: {
@@ -104,14 +105,18 @@
             class="text-sm py-0.5 h-6"
             on:click={() => {
               let daily = quote.details.daily;
-              let start = (item.week - 1) * 7;
+              let start = ((item.week || 1) - 1) * 7;
+              console.log("daily", daily);
+
               for (let i = start; i < start + item.days; i++) {
-                daily.items[i].flex = item.flex;
+                console.log("item", item);
+
+                daily.items[i].flex = item?.flex;
                 daily.items[i].gross = item.daily.gross;
                 daily.items[i].nett = item.daily.nett;
                 daily.items[i].profit = item.daily.profit;
               }
-              console.log("daily", daily);
+              console.log("newdaily", daily);
 
               getDailyTotal();
               editRow[index] = false;
