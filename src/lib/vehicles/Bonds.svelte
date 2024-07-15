@@ -43,11 +43,11 @@
     });
 
     duration = quote.details.duration;
-    let selected_bond = {}
-    if ('bonds' in quote.details) {
-      selected_bond = quote.details.bonds
-    } else if ('bond' in quote.details) {
-      selected_bond = quote.details.bond
+    let selected_bond = {};
+    if ("bonds" in quote.details) {
+      selected_bond = quote.details.bonds;
+    } else if ("bond" in quote.details) {
+      selected_bond = quote.details.bond;
     }
 
     // const selected_bond = Object.keys(quote.details.bonds).length ? quote.details.bonds : quote.details.bond;
@@ -73,9 +73,9 @@
             <div class="flex mb-2 justify-between w-full">
               <div class="flex-1 flex justify-start">
                 <RadioButton
-                  labelText={`${item.display_name} - ${item.liability.toLocaleString(
-                    "en-US"
-                  )} Excess, ${item.bond.toLocaleString("en-US")} Bond ($${format.currency(item.gross || 0)} x ${
+                  labelText={`${item.display_name} - ${
+                    item.liability ? item.liability.toLocaleString("en-US") : ""
+                  } Excess, ${item.bond ? item.bond.toLocaleString("en-US") : ""} Bond ($${format.currency(item.gross || 0)} x ${
                     item.cap ? (item.cap > duration ? duration : item.cap) : duration
                   } days)`}
                   value={index}
