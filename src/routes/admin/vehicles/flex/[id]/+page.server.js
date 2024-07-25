@@ -65,6 +65,9 @@ const generateRates = async (ratesID, data) => {
   let zero = data.zero ? 0 : 1;
   // console.log("zero", data.zero, zero);
   let matrix = generateMatrix(data.matrix, zero);
+  if (data.matrix2.trim.length === 0) {
+    data.matrix2 = data.matrix;
+  }
   let matrix2 = generateMatrix(data.matrix2, zero);
 
   // let matrix = {};
