@@ -10,6 +10,8 @@ dayjs.extend(isBetween);
 const keys = [
   "name",
   "suppliers",
+  "date_start",
+  "date_end",
   "license",
   "nett",
   "gross",
@@ -120,6 +122,8 @@ const generateRates = async (ratesID, data) => {
       vehicles[item.code] = item.id;
     });
     // console.log("vehicles", vehicles);
+    const flex_start = dayjs(data.date_start);
+    const flex_end = dayjs(data.date_end);
 
     data.data.split(/\r?\n/).forEach((row, rowIndex) => {
       if (row.trim() !== "") {
@@ -170,14 +174,16 @@ const generateRates = async (ratesID, data) => {
           }
           // console.log("obj", rowIndex, obj);
 
-          if (valid) {
-            // if (obj.vehicles === '2eae491a-17f2-414e-bfb6-1e09dd3fc970' && obj.flex === 'F7') {
-            if (obj.vehicles === "2eae491a-17f2-414e-bfb6-1e09dd3fc970" && obj.date_start === "09/25/2023") {
-              console.log("matrixUsed", matrixUsed);
+          if (col.start.isBetween(flex_start, flex_end, "day", "[]")) {
+            if (valid) {
+              // if (obj.vehicles === '2eae491a-17f2-414e-bfb6-1e09dd3fc970' && obj.flex === 'F7') {
+              if (obj.vehicles === "2eae491a-17f2-414e-bfb6-1e09dd3fc970" && obj.date_start === "09/25/2023") {
+                console.log("matrixUsed", matrixUsed);
+              }
+              ratesValid.push(obj);
+            } else {
+              ratesInvalid.push(obj);
             }
-            ratesValid.push(obj);
-          } else {
-            ratesInvalid.push(obj);
           }
         }
       }

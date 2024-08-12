@@ -123,6 +123,13 @@ export const generateRates = async (ratesID, data) => {
     });
     // console.log("vehicles", vehicles);
 
+    const flex_start = dayjs(data.date_start);
+    const flex_end = dayjs(data.date_end);
+
+    // console.log("flex_start", flex_start);
+    // console.log("flex_end", flex_end);
+    // let count_flex = 0;
+
     data.data.split(/\r?\n/).forEach((row, rowIndex) => {
       if (row.trim() !== "") {
         let arr = row.split(";");
@@ -171,19 +178,25 @@ export const generateRates = async (ratesID, data) => {
             };
           }
           // console.log("obj", rowIndex, obj);
+          // console.log("col.start", col.start);
 
-          if (valid) {
-            // if (obj.vehicles === '2eae491a-17f2-414e-bfb6-1e09dd3fc970' && obj.flex === 'F7') {
-            if (obj.vehicles === "2eae491a-17f2-414e-bfb6-1e09dd3fc970" && obj.date_start === "09/25/2023") {
-              console.log("matrixUsed", matrixUsed);
+          if (col.start.isBetween(flex_start, flex_end, "day", "[]")) {
+            // console.log("obj", rowIndex, obj.date_start);
+            // count_flex++;
+            if (valid) {
+              // if (obj.vehicles === '2eae491a-17f2-414e-bfb6-1e09dd3fc970' && obj.flex === 'F7') {
+              // if (obj.vehicles === "2eae491a-17f2-414e-bfb6-1e09dd3fc970" && obj.date_start === "09/25/2023") {
+              //   console.log("matrixUsed", matrixUsed);
+              // }
+              ratesValid.push(obj);
+            } else {
+              ratesInvalid.push(obj);
             }
-            ratesValid.push(obj);
-          } else {
-            ratesInvalid.push(obj);
           }
         }
       }
     });
+    // console.log("count_flex", count_flex);
   }
 
   // console.log("ratesValid", ratesValid);

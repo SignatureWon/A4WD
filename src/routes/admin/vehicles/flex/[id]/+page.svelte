@@ -32,7 +32,7 @@
       .select();
 
     let rates = await generateRates(data.id, data.data);
-
+    // console.log(rates);
     const { error: error_delete } = await supabase.from("ratesCard").delete().eq("rates", data.id);
     const { error: error_insert } = await supabase.from("ratesCard").insert(rates.valid);
 
@@ -51,6 +51,15 @@
   <FormSection title="Info">
     <InputText name="name" label="Name" bind:value={data.data.name} required={true} />
     <InputSelect name="suppliers" label="Supplier" bind:value={data.data.suppliers} options={data.suppliers} />
+    <InputDateRange
+      nameFrom="date_start"
+      nameTo="date_end"
+      labelFrom="Start Date"
+      labelTo="End Date"
+      bind:valueFrom={data.data.date_start}
+      bind:valueTo={data.data.date_end}
+    />
+
     <InputNumber name="rank" label="Rank" bind:value={data.data.rank} half={true} />
   </FormSection>
   <FormSection title="Driver">
