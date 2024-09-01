@@ -685,7 +685,7 @@
   </div>
 
   <div class="px-2 py-4 w-full">
-    <nav class="my-1">
+    <nav class="my-1 pb-10">
       {#each navs[module] as nav}
         {#if "group" in nav}
           <div class="px-2 pt-5 pb-2 text-xs font-medium uppercase tracking-wider text-gray-400">
