@@ -18,7 +18,7 @@ export const html = {
       .eq("type", "template_letterhead")
       .single();
 
-    let quote = quote_id;
+    // let quote = quote_id;
 
     if (Number(quote)) {
       const { data: data_quote } = await supabase
@@ -27,6 +27,8 @@ export const html = {
         .eq("id", Number(quote_id))
         .single();
       quote = data_quote;
+
+      console.log("quote", quote);
     }
     // console.log("quote", quote);
     const { data: vehicle } = await supabase.from("vehicles").select().eq("id", quote.details.vehicle.id).single();
@@ -354,6 +356,16 @@ export const html = {
             <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Driver</div>
             <div><b>Age: ${quote.details.driver.age}</b></div>
             <div><b>License: ${quote.details.driver.license}</b></div>
+          </td>
+        </tr>
+        <tr>
+          <td class="col" width="276" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
+            <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Promo Code</div>
+            <div><b>${quote.code_promo || "—"}</b></div>
+          </td>
+          <td class="col" width="276" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
+            <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Affiliate Code</div>
+            <div><b>${quote.code_affiliate || "—"}</b></div>
           </td>
         </tr>
       </table>

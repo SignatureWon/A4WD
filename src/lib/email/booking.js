@@ -347,6 +347,16 @@ export const html = {
             <div><b>License: ${quote.details.driver.license}</b></div>
           </td>
         </tr>
+        <tr>
+          <td class="col" width="276" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
+            <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Promo Code</div>
+            <div><b>${quote.code_promo || "—"}</b></div>
+          </td>
+          <td class="col" width="276" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
+            <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Affiliate Code</div>
+            <div><b>${quote.code_affiliate || "—"}</b></div>
+          </td>
+        </tr>
       </table>
     </td>
   </tr>

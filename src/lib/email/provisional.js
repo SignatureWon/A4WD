@@ -252,9 +252,7 @@ export const html = {
     <td style="padding: 0 24px;">
       <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
         <tr>
-            <td class="col" width="100%" style="padding: 10px; background-color: ${
-                c.brand100
-              }">
+            <td class="col" width="100%" style="padding: 10px; background-color: ${c.brand100}">
                 You booking has been confirmed. A final ticket will be issued once full payment has been made if not already.
             </td>
         </tr>
@@ -273,7 +271,9 @@ export const html = {
           </td>
           <td class="col" width="184" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
             <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Ticket Date</div>
-            <div><b>${quote.date_provisional ? dayjs(quote.date_provisional).format("DD MMM YYYY") : "&mdash;"}</b></div>
+            <div><b>${
+              quote.date_provisional ? dayjs(quote.date_provisional).format("DD MMM YYYY") : "&mdash;"
+            }</b></div>
           </td>
           <td class="col" width="184" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
             <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Duration</div>
@@ -292,7 +292,9 @@ export const html = {
           <td class="col" width="276" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
             <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Pick-up from</div>
             <div><b>${quote.details.pickup.name}</b></div>
-            <div>${dayjs(quote.details.date_start).format("ddd, DD MMM YYYY")}${supplier.all_day ? " (24hrs)" : `, ${supplier.start_time ? q.showtime(supplier.start_time) : "09:00AM"}`}</div>
+            <div>${dayjs(quote.details.date_start).format("ddd, DD MMM YYYY")}${
+      supplier.all_day ? " (24hrs)" : `, ${supplier.start_time ? q.showtime(supplier.start_time) : "09:00AM"}`
+    }</div>
             <br>
             <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Depot</div>
             <div>${pickup.Address.replace(/(?:\r\n|\r|\n)/g, "<br>")}</div>
@@ -302,12 +304,18 @@ export const html = {
           <td class="col" width="276" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
             <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Drop-off to</div>
             <div><b>${quote.details.dropoff.name}</b></div>
-            <div>${dayjs(quote.details.date_end).format("ddd, DD MMM YYYY")}${supplier.all_day ? " (24hrs)" : `, ${supplier.end_time ? q.showtime(supplier.end_time) : "03:00PM"}`}</div>
+            <div>${dayjs(quote.details.date_end).format("ddd, DD MMM YYYY")}${
+      supplier.all_day ? " (24hrs)" : `, ${supplier.end_time ? q.showtime(supplier.end_time) : "03:00PM"}`
+    }</div>
             <br>
             <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Depot</div>
             <div>${dropoff.Address.replace(/(?:\r\n|\r|\n)/g, "<br>")}</div>
             ${dropoff["Contact (Australia)"] ? `<div>Australia: ${dropoff["Contact (Australia)"]}</div>` : ""}
-            ${dropoff["Contact (International)"] ? `<div>International: ${dropoff["Contact (International)"]}</div>` : ""}
+            ${
+              dropoff["Contact (International)"]
+                ? `<div>International: ${dropoff["Contact (International)"]}</div>`
+                : ""
+            }
           </td>
         </tr>
         <tr>
@@ -318,7 +326,9 @@ export const html = {
             ${supplier.phone ? `<div>Customer Service: ${supplier.phone}</div>` : ""}
           </td>
           <td class="col" width="276" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
-            <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">${quote.details.supplier.name} Confirmation Code</div>
+            <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">${
+              quote.details.supplier.name
+            } Confirmation Code</div>
             <div><b>${quote.supplier_reference || "&mdash;"}</b></div>
           </td>
         </tr>
@@ -364,6 +374,16 @@ export const html = {
             <div><b>License: ${quote.details.driver.license}</b></div>
           </td>
         </tr>
+        <tr>
+          <td class="col" width="276" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
+            <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Promo Code</div>
+            <div><b>${quote.code_promo || "—"}</b></div>
+          </td>
+          <td class="col" width="276" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
+            <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Affiliate Code</div>
+            <div><b>${quote.code_affiliate || "—"}</b></div>
+          </td>
+        </tr>
       </table>
     </td>
   </tr>
@@ -381,9 +401,9 @@ export const html = {
       </table>
     </td>
   </tr>
-  </table>`
-  if (terms.pay_counter) {
-    email += `
+  </table>`;
+    if (terms.pay_counter) {
+      email += `
   <br>
   <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
     <tr>
@@ -400,8 +420,8 @@ export const html = {
             <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Total (AUD)</div>
           </td>
         </tr>`;
-    summary.summaryItems.forEach((item) => {
-      email += `
+      summary.summaryItems.forEach((item) => {
+        email += `
         <tr>
           <td class="col" width="414" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
             <div>${item.name}</div>
@@ -410,13 +430,17 @@ export const html = {
             <div>${format.currency(item.total)}</div>
           </td>
         </tr>`;
-    });
-    email += `
+      });
+      email += `
         <tr>
-          <td class="col" width="414" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${c.brand100}">
+          <td class="col" width="414" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${
+            c.brand100
+          }">
             <div><b>Total</b></div>
           </td>
-          <td class="col" width="138" align="right" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${c.brand100}">
+          <td class="col" width="138" align="right" style="padding: 10px; border-bottom: 1px solid #DDDDDD; background-color: ${
+            c.brand100
+          }">
             <div><b>${format.currency(summary.totalSummary)}</b></div>
           </td>
         </tr>
@@ -426,9 +450,9 @@ export const html = {
         </table>
       </td>
     </tr>
-  </table>`
-  }
-  email += `
+  </table>`;
+    }
+    email += `
   <br>
 <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
   <tr>
@@ -692,7 +716,9 @@ export const html = {
         <tr>
             <td class="col" width="100%">
                 <b>Cancellation fees</b> will apply on <b>AUD $${format.currency(summary.totalAgent)}</b>. 
-                The <b>Agent Nett Deposit Fee after discount of AUD $${format.currency(summary.totalCommission)} is non-refundable</b>. 
+                The <b>Agent Nett Deposit Fee after discount of AUD $${format.currency(
+                  summary.totalCommission
+                )} is non-refundable</b>. 
                 The Agent Deposit will be carried forward towards a future booking if cancellation is made more than 25 days prior to travel. 
                 An additional AUD $100.00 administration cancellation fee applies. Please read the cancellation policy found in the quote.
             </td>
@@ -700,9 +726,9 @@ export const html = {
       </table>
     </td>
   </tr>
-  </table>`
-  if (vehicle.specs !== "<p></p>" && vehicle.specs) {
-    email += `
+  </table>`;
+    if (vehicle.specs !== "<p></p>" && vehicle.specs) {
+      email += `
   <br>
   <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
     <tr>
@@ -717,9 +743,9 @@ export const html = {
         </table>
       </td>
     </tr>
-  </table>`
-  }
-  email += `
+  </table>`;
+    }
+    email += `
   <br>
   <table cellpadding="0" cellspacing="0" role="presentation" width="100%">
   <tr>
@@ -766,7 +792,7 @@ export const html = {
         </p>`;
       }
     }
-                email += `
+    email += `
             </td>
         </tr>
       </table>
