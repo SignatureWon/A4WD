@@ -18,7 +18,7 @@ export const html = {
       .eq("type", "template_letterhead")
       .single();
 
-    // let quote = quote_id;
+    let quote = quote_id;
 
     if (Number(quote)) {
       const { data: data_quote } = await supabase
@@ -28,7 +28,7 @@ export const html = {
         .single();
       quote = data_quote;
 
-      console.log("quote", quote);
+      // console.log("quote", quote);
     }
     // console.log("quote", quote);
     const { data: vehicle } = await supabase.from("vehicles").select().eq("id", quote.details.vehicle.id).single();
