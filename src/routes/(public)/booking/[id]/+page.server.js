@@ -11,16 +11,19 @@ export async function load({ url, params, locals }) {
     Number(CryptoJS.AES.decrypt(params.id.replaceAll("__", "/"), env.PUBLIC_AES_KEY).toString(CryptoJS.enc.Utf8)) -
     388000;
   // console.log("id", id);
-
-  if (id < 0) {
-    id = Number(CryptoJS.AES.decrypt(params.id.replaceAll("__", "/"), "A4WDr").toString(CryptoJS.enc.Utf8));
-  }
-  // console.log("oldid", id);
-
   if (id < 0) {
     id = Number(CryptoJS.AES.decrypt(params.id.replaceAll("__", "/"), env.PUBLIC_AES_KEY).toString(CryptoJS.enc.Utf8));
   }
-  // console.log("newid", id);
+  // console.log("id2", id);
+
+  if (id <= 0) {
+    id = Number(CryptoJS.AES.decrypt(params.id.replaceAll("__", "/"), "A4WDr").toString(CryptoJS.enc.Utf8)) - 388000;
+  }
+  // console.log("A4WDrid", id);
+  if (id < 0) {
+    id = Number(CryptoJS.AES.decrypt(params.id.replaceAll("__", "/"), "A4WDr").toString(CryptoJS.enc.Utf8));
+  }
+  // console.log("A4WDrid2", id);
 
   let quote = null;
   let user = null;
