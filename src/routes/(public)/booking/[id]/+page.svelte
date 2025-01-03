@@ -20,7 +20,7 @@
   import Step1 from "./Step1.svelte";
 
   export let data;
-  console.log(data.quote);
+  console.log(data);
 </script>
 
 {#if !data.quote}
