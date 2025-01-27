@@ -750,6 +750,7 @@ export const q = {
     Request: "Q",
     Provisional: "PT",
     Final: "FT",
+    Archive: "A",
   },
   showtime: (str) => {
     let time = str.split(":");

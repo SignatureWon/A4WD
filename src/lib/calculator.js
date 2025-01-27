@@ -8,13 +8,15 @@ import { format } from "$lib/format";
 import { env } from "$env/dynamic/public";
 
 const get_available_routes = (data, search, routes) => {
+  // console.log(data);
+
   let results = [];
   (routes || []).forEach((route) => {
     let supplier = route.all_suppliers;
     if (!supplier) {
       data.forEach((rate) => {
-        // if (rate.supplier_id === '7e39ecef-91c4-442b-a996-57d71b8a036d') {
-        //   console.log("ADV", rate);
+        // if (rate.supplier_id === "9dc23240-0c2e-4985-91d8-bd9a0b55bd2f") {
+        //   console.log("Britz", rate);
         // }
         let filter_suppliers = route.routes_suppliers.filter((item) => {
           return item.suppliers.id === rate.supplier_id;
@@ -500,12 +502,16 @@ const check_blockouts = async (rates, search) => {
   return results;
 };
 const check_every_x_day = (rate, special, pos = "") => {
+  // console.log("special", special);
+
   let item = {
     own: special[`own${pos}`],
     days: special[`days${pos}`],
     factor: special[`factor${pos}`],
     value: special[`value${pos}`] || 0,
     one_way: special[`one_way${pos}`] || 0,
+    travel_start: special[`travel_start${pos}`],
+    travel_end: special[`travel_end${pos}`],
   };
   const suffix = {
     0: "",
@@ -540,11 +546,16 @@ const check_every_x_day = (rate, special, pos = "") => {
   return result;
 };
 const check_percentage_price_oneway = (rate, special, pos = "") => {
+  // console.log("special", special);
+
   let item = {
     own: special[`own${pos}`],
+    nett: special[`nett${pos}`],
     factor: special[`factor${pos}`],
     value: special[`value${pos}`] || 0,
     one_way: special[`one_way${pos}`] || 0,
+    travel_start: special[`travel_start${pos}`],
+    travel_end: special[`travel_end${pos}`],
   };
   let result = {
     name: "",
@@ -553,12 +564,49 @@ const check_percentage_price_oneway = (rate, special, pos = "") => {
     discount_nett: 0,
     discount_profit: 0,
   };
+  // let original = rate.gross;
+  // if (item.nett) {
+  //   original = rate.nett;
+  // }
+  // console.log("original", original);
+  // console.log("rate", rate);
+  // console.log("rate.gross", rate.gross);
+  // console.log("item", item);
+
+  let eligible_amount = 0;
+  let eligible_date = [];
+  const travel_start = dayjs(item.travel_start);
+  const travel_end = dayjs(item.travel_end);
+  rate.list.forEach((d) => {
+    const today = dayjs(d.day, "DD/MM/YYYY");
+    // console.log("d", dayjs(d.day, "DD/MM/YYYY"), travel_start, travel_end);
+    if (today.isBetween(travel_start, travel_end, "day", "[]")) {
+      eligible_amount += item.nett ? d.nett : d.gross;
+      eligible_date.push(today);
+      console.log("eligible_amount", today.format("DD/MM/YYYY"), item.nett ? d.nett : d.gross, eligible_amount);
+    }
+  });
+
   if (item.factor === "Percentage") {
-    result.name = `${item.value}% discount off daily vehicle rate only`;
-    result.calculation = `($${format.currency(rate.gross)} x ${item.value}%)`;
-    result.discount_amount = (rate.gross * item.value) / 100;
+    result.name = `${item.value}% discount off daily vehicle rate only ${
+      eligible_date.length > 1
+        ? `(${eligible_date[0].format("DD/MM/YYYY")} to ${eligible_date[eligible_date.length - 1].format(
+            "DD/MM/YYYY"
+          )})`
+        : ""
+    }`;
+    // result.calculation = `($${format.currency(original)} x ${item.value}%)`;
+    // result.discount_amount = (original * item.value) / 100;
+    result.calculation = `($${format.currency(eligible_amount)} x ${item.value}%)`;
+    result.discount_amount = (eligible_amount * item.value) / 100;
   } else if (item.factor === "Price") {
-    result.name = `$${item.value} discount off daily vehicle rate only`;
+    result.name = `$${item.value} discount off daily vehicle rate only ${
+      eligible_date.length > 1
+        ? `(${eligible_date[0].format("DD/MM/YYYY")} to ${eligible_date[eligible_date.length - 1].format(
+            "DD/MM/YYYY"
+          )})`
+        : ""
+    }`;
     result.calculation = ``;
     result.discount_amount = item.value;
   } else if (item.factor === "No One Way Fee") {
@@ -579,6 +627,7 @@ const check_percentage_price_oneway = (rate, special, pos = "") => {
       //   item.discount_nett += rate.nett - ((rate.gross - item.discount_amount) * rate.rates_nett)
     }
   }
+  // console.log("result", result);
   return result;
 };
 const add_specials = (rate, item, spec) => {

@@ -28,9 +28,7 @@
       { id: "Price", name: "Price" },
       { id: "No One Way Fee", name: "No One Way Fee" },
     ],
-    "Every X day": [
-      { id: "Day", name: "Day" },
-    ],
+    "Every X day": [{ id: "Day", name: "Day" }],
   };
 </script>
 
@@ -132,12 +130,14 @@
     />
     <InputToggle name="own" label="A4 Specials" bind:value={data.data.own} half={true} />
     {#if data.data.type === "Early bird"}
-      <InputNumber name="days" label="X days before travel" bind:value={data.data.days} />
+      <InputNumber name="days" label="X days before travel" bind:value={data.data.days} half={true} />
     {:else if data.data.type === "Long term"}
-      <InputNumber name="days" label="Travel longer than X days" bind:value={data.data.days} />
+      <InputNumber name="days" label="Travel longer than X days" bind:value={data.data.days} half={true} />
     {:else if data.data.type === "Every X day"}
-      <InputNumber name="days" label="On every X day" bind:value={data.data.days} />
+      <InputNumber name="days" label="On every X day" bind:value={data.data.days} half={true} />
     {/if}
+    <InputToggle name="nett" label="Discount on Nett" bind:value={data.data.nett} half={true} />
+
     <InputSelect
       name="factor"
       label="Discount by"
@@ -197,11 +197,11 @@
           />
           <InputToggle name="own2" label="A4 Specials" bind:value={data.data.own2} half={true} />
           {#if data.data.type2 === "Early bird"}
-            <InputNumber name="days2" label="X days before travel" bind:value={data.data.days2} />
+            <InputNumber name="days2" label="X days before travel" bind:value={data.data.days2} half={true} />
           {:else if data.data.type2 === "Long term"}
-            <InputNumber name="days2" label="Travel longer than X days" bind:value={data.data.days2} />
+            <InputNumber name="days2" label="Travel longer than X days" bind:value={data.data.days2} half={true} />
           {:else if data.data.type2 === "Every X day"}
-            <InputNumber name="days2" label="On every X day" bind:value={data.data.days2} />
+            <InputNumber name="days2" label="On every X day" bind:value={data.data.days2} half={true} />
           {/if}
           <InputSelect
             name="factor2"
@@ -210,6 +210,7 @@
             options={discountOptions[data.data.type2] || []}
             half={true}
           />
+          <InputToggle name="nett2" label="Discount on Nett" bind:value={data.data.nett2} half={true} />
           {#if data.data.factor2 !== "No One Way Fee"}
             <InputNumber name="value2" label="Value" bind:value={data.data.value2} step={0.01} half={true} />
           {/if}

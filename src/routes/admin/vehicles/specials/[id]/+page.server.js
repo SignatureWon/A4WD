@@ -26,6 +26,8 @@ const keys = [
   "own2",
   "image",
   "caption",
+  "nett",
+  "nett2",
 ];
 export async function load({ url, params, locals }) {
   return {
