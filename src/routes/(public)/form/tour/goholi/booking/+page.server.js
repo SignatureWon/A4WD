@@ -7,6 +7,9 @@ import sgMail from "@sendgrid/mail";
 import { env } from "$env/dynamic/public";
 import { error, redirect } from "@sveltejs/kit";
 import CryptoJS from "crypto-js";
+import { default as FD } from "form-data";
+import Mailgun from "mailgun.js";
+import { MAILGUN_API_KEY } from "$env/static/private";
 
 export async function load() {
   const { data: dataOptions, error: errorOptions } = await supabase.rpc("search_options").select();
@@ -293,11 +296,31 @@ export const actions = {
     let bcc = emailData.name.split(",");
     let bccList = [];
     bcc.forEach((email) => {
-      bccList.push({
-        email: email.trim(),
-      });
+      bccList.push(email.trim());
+      // bccList.push({
+      //   email: email.trim(),
+      // });
     });
     let emailResponse = "";
+
+    let emailSubject = `Manual Booking: ${fd.pickup_date.format("DD MMM YYYY")} - ${fd.dropoff_date.format(
+      "DD MMM YYYY"
+    )}: ${user.first_name.trim()} ${user.last_name.trim()}`;
+
+    const mailgun = new Mailgun(FD);
+    const mg = mailgun.client({ username: "api", key: MAILGUN_API_KEY });
+    mg.messages
+      .create("mail.australia4wheeldriverentals.com", {
+        from: "Goholi Pty Ltd <info@australia4wheeldriverentals.com>",
+        to: [user.email.trim()],
+        bcc: bccList,
+        subject: emailSubject,
+        html: emailBody,
+      })
+      .then((msg) => console.log(msg)) // logs response data
+      .catch((err) => console.log(err)); // logs any error
+
+    /*
     sgMail.setApiKey(env.PUBLIC_SENDGRID_API_KEY);
     await sgMail
       .send({
@@ -339,7 +362,7 @@ export const actions = {
         emailResponse = error;
         console.error(error);
       });
-
+*/
     throw redirect(303, `/form/tour/goholi/booking/success`);
   },
 };

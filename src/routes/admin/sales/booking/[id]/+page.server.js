@@ -7,7 +7,7 @@ import { cal } from "$lib/cal";
 import { error, redirect } from "@sveltejs/kit";
 import { html } from "$lib/final.js";
 import { html as confirmation } from "$lib/confirmation.js";
-import playwright from 'playwright-aws-lambda';
+import playwright from "playwright-aws-lambda";
 import { env } from "$env/dynamic/public";
 import sgMail from "@sendgrid/mail";
 
@@ -119,37 +119,38 @@ export async function load({ url, params }) {
   console.log("terms", addTerms.length);
 
   if (!addTerms.length) {
-    addTerms = [{
-      name: null,
-      id: null,
-      confirmation: null,
-      confirmation_terms: null,
-      summary: null,
-      summary_terms: null,
-      counter: null,
-      counter_terms: null,
-      deposit: 0,
-      percentage: false,
-      balance: 0,
-      description: null,
-      payment2: false,
-      deposit2: null,
-      percentage2: null,
-      balance2: null,
-      description2: null,
-      payment3: null,
-      deposit3: null,
-      percentage3: null,
-      balance3: null,
-      description3: null,
-      pay_counter: false,
-      suppliers: {
-        id: null,
+    addTerms = [
+      {
         name: null,
+        id: null,
+        confirmation: null,
+        confirmation_terms: null,
+        summary: null,
+        summary_terms: null,
+        counter: null,
+        counter_terms: null,
+        deposit: 0,
+        percentage: false,
+        balance: 0,
+        description: null,
+        payment2: false,
+        deposit2: null,
+        percentage2: null,
+        balance2: null,
+        description2: null,
+        payment3: null,
+        deposit3: null,
+        percentage3: null,
+        balance3: null,
+        description3: null,
+        pay_counter: false,
+        suppliers: {
+          id: null,
+          name: null,
+        },
       },
-    }]
+    ];
   }
-
 
   //   const { data: vehicle } = await supabase
   //     .from("vehicles")
@@ -415,8 +416,8 @@ export const actions = {
     const updateData = {
       supplier_reference: fd.supplier_reference,
       status: "Provisional",
-      date_provisional: dayjs()
-    }
+      date_provisional: dayjs(),
+    };
     const { error: err } = await locals.sb.from("quotes").update(updateData).eq("id", params.id);
 
     if (err) {
@@ -434,8 +435,8 @@ export const actions = {
     const updateData = {
       supplier_reference: fd.supplier_reference,
       status: "Final",
-      date_provisional: dayjs()
-    }
+      date_provisional: dayjs(),
+    };
     const { error: err } = await locals.sb.from("quotes").update(updateData).eq("id", params.id);
 
     if (err) {

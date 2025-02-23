@@ -5,6 +5,9 @@ import { env } from "$env/dynamic/public";
 import sgMail from "@sendgrid/mail";
 import dayjs from "dayjs";
 import { error, redirect } from "@sveltejs/kit";
+import { default as FD } from "form-data";
+import Mailgun from "mailgun.js";
+import { MAILGUN_API_KEY } from "$env/static/private";
 
 export async function load({ url, params, locals }) {
   const id = url.searchParams.get("q");
@@ -56,17 +59,39 @@ export const actions = {
       let bcc = emailData.name.split(",");
       let bccList = [];
       bcc.forEach((email) => {
-        bccList.push({
-          email: email.trim(),
-        });
+        bccList.push(email.trim());
+        // bccList.push({
+        //   email: email.trim(),
+        // });
       });
-      let email_to = [
-        {
-          email: user.email.trim(),
-          name: `${user.first_name ? user.first_name.trim() : "-"} ${user.last_name ? user.last_name.trim() : "-"}`,
-        },
-      ];
+      let email_to = [user.email.trim()];
+      // let email_to = [
+      //   {
+      //     email: user.email.trim(),
+      //     name: `${user.first_name ? user.first_name.trim() : "-"} ${user.last_name ? user.last_name.trim() : "-"}`,
+      //   },
+      // ];
       let email_bcc = bccList;
+
+      let emailSubject = `Quote: ${quote.details.vehicle.name.trim()}: ${quote.details.pickup.name.trim()}, ${dayjs(
+        quote.details.date_start
+      ).format("DD MMM YYYY")} - ${quote.details.dropoff.name.trim()}, ${dayjs(quote.details.date_end).format(
+        "DD MMM YYYY"
+      )} (${quote.details.bonds.display_name.trim()}) ${user.first_name.trim()} ${user.last_name.trim()}`;
+
+      const mailgun = new Mailgun(FD);
+      const mg = mailgun.client({ username: "api", key: MAILGUN_API_KEY });
+      mg.messages
+        .create("mail.australia4wheeldriverentals.com", {
+          from: "Australia 4WD Rentals <info@australia4wheeldriverentals.com>",
+          to: email_to,
+          bcc: email_bcc,
+          subject: emailSubject,
+          html: emailBody,
+        })
+        .then((msg) => console.log(msg)) // logs response data
+        .catch((err) => console.log(err)); // logs any error
+      /*      
       sgMail.setApiKey(env.PUBLIC_SENDGRID_API_KEY);
       await sgMail
         .send({
@@ -110,9 +135,10 @@ export const actions = {
         .catch((error) => {
           console.error(error);
         });
+        */
     }
 
-    console.log(user);
+    // console.log(user);
 
     //   const { data, error } = await supabase
     //     .from("tempQuotes")

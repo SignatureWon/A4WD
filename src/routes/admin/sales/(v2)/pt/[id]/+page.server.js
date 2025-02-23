@@ -10,6 +10,9 @@ import { html as confirmation } from "$lib/email/confirmation.js";
 import playwright from "playwright-aws-lambda";
 import { env } from "$env/dynamic/public";
 import sgMail from "@sendgrid/mail";
+import { default as FD } from "form-data";
+import Mailgun from "mailgun.js";
+import { MAILGUN_API_KEY } from "$env/static/private";
 
 export async function load({ url, params }) {
   const { data: quote } = await supabase.from("quotes").select("*, users (*)").eq("id", params.id).single();
@@ -205,7 +208,6 @@ export const actions = {
     let filePDF = new Blob([buffer], {
       type: "application/pdf",
     });
-
     const { data: uploadData, error: uploadError } = await supabase.storage
       .from("quotes")
       .upload(`Provisional Ticket - PT${388000 + Number(params.id)}.pdf`, filePDF);
@@ -223,22 +225,26 @@ export const actions = {
       }
     }
 
-    emailBody = `<div style="font-size: 16px; margin-bottom: 50px">${fd.message.replace(/(?:\r\n|\r|\n)/g, "<br>")}</div>` + emailBody;
+    emailBody =
+      `<div style="font-size: 16px; margin-bottom: 50px">${fd.message.replace(/(?:\r\n|\r|\n)/g, "<br>")}</div>` +
+      emailBody;
 
     let bcc = emailData.name.split(",");
     let bccList = [];
     bcc.forEach((email) => {
-      bccList.push({
-        email: email.trim(),
-      });
+      bccList.push(email.trim());
+      // bccList.push({
+      //   email: email.trim(),
+      // });
     });
     let email_to = [
-      {
-        email: dataUser.email.trim(),
-        name: `${dataUser.first_name ? dataUser.first_name.trim() : "-"} ${
-          dataUser.last_name ? dataUser.last_name.trim() : "-"
-        }`,
-      },
+      dataUser.email.trim(),
+      // {
+      //   email: dataUser.email.trim(),
+      //   name: `${dataUser.first_name ? dataUser.first_name.trim() : "-"} ${
+      //     dataUser.last_name ? dataUser.last_name.trim() : "-"
+      //   }`,
+      // },
     ];
     let email_bcc = bccList;
 
@@ -250,6 +256,31 @@ export const actions = {
       status: "success",
       message: "Email sent",
     };
+
+    let emailSubject = `Provisional Ticket: ${dataQuote.details.vehicle.name.trim()}: ${dataQuote.details.pickup.name.trim()}, ${dayjs(
+      dataQuote.details.date_start
+    ).format("DD MMM YYYY")} - ${dataQuote.details.dropoff.name.trim()}, ${dayjs(dataQuote.details.date_end).format(
+      "DD MMM YYYY"
+    )} (${getBond.display_name.trim()}) ${dataUser.first_name.trim()} ${dataUser.last_name.trim()}`;
+
+    // console.log("email_to", email_to);
+    // console.log("email_bcc", email_bcc);
+    // console.log("emailSubject", emailSubject);
+
+    const mailgun = new Mailgun(FD);
+    const mg = mailgun.client({ username: "api", key: MAILGUN_API_KEY });
+    mg.messages
+      .create("mail.australia4wheeldriverentals.com", {
+        from: "Australia 4WD Rentals <info@australia4wheeldriverentals.com>",
+        // to: ["won@signature.studio"],
+        to: email_to,
+        bcc: email_bcc,
+        subject: emailSubject,
+        html: emailBody,
+      })
+      .then((msg) => console.log(msg)) // logs response data
+      .catch((err) => console.log(err)); // logs any error
+    /*    
     sgMail.setApiKey(env.PUBLIC_SENDGRID_API_KEY);
     await sgMail
       .send({
@@ -315,6 +346,7 @@ export const actions = {
         };
         // console.error(error.response.body.errors[0].message);
       });
+      */
     throw redirect(303, `${url.pathname}?status=${resp.status}&message=${resp.message}`);
 
     // throw redirect(303, url.pathname);

@@ -5,6 +5,9 @@ import dayjs from "dayjs";
 import sgMail from "@sendgrid/mail";
 import { redirect } from "@sveltejs/kit";
 import { html } from "$lib/booked.js";
+import { default as FD } from "form-data";
+import Mailgun from "mailgun.js";
+import { MAILGUN_API_KEY } from "$env/static/private";
 
 export async function load({ url, params, locals }) {
   let id =
@@ -106,10 +109,25 @@ export const actions = {
     let bcc = emailData.name.split(",");
     let bccList = [];
     bcc.forEach((email) => {
-      bccList.push({
-        email: email.trim(),
-      });
+      bccList.push(email.trim());
+      // bccList.push({
+      //   email: email.trim(),
+      // });
     });
+
+    const mailgun = new Mailgun(FD);
+    const mg = mailgun.client({ username: "api", key: MAILGUN_API_KEY });
+    mg.messages
+      .create("mail.australia4wheeldriverentals.com", {
+        from: "Australia 4WD Rentals <info@australia4wheeldriverentals.com>",
+        to: [user_email],
+        bcc: bccList,
+        subject: emailSubject,
+        html: emailBody,
+      })
+      .then((msg) => console.log(msg)) // logs response data
+      .catch((err) => console.log(err)); // logs any error
+    /*    
     sgMail.setApiKey(env.PUBLIC_SENDGRID_API_KEY);
     await sgMail
       .send({
@@ -147,7 +165,7 @@ export const actions = {
       .catch((error) => {
         console.error(error);
       });
-
+*/
     throw redirect(303, `/booking/success`);
   },
 };

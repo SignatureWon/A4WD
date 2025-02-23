@@ -7,6 +7,9 @@ import sgMail from "@sendgrid/mail";
 import { env } from "$env/dynamic/public";
 import { error, redirect } from "@sveltejs/kit";
 import CryptoJS from "crypto-js";
+import { default as FD } from "form-data";
+import Mailgun from "mailgun.js";
+import { MAILGUN_API_KEY } from "$env/static/private";
 
 export async function load() {
   const { data: dataOptions, error: errorOptions } = await supabase.rpc("search_options").select();
@@ -52,7 +55,7 @@ export const actions = {
     fd.arrival_date = dayjs(fd.arrival_date, "DD/MM/YYYY");
     fd.card_number = CryptoJS.AES.encrypt(fd.card_number, env.PUBLIC_AES_KEY).toString();
     fd.card_code = CryptoJS.AES.encrypt(fd.card_code, env.PUBLIC_AES_KEY).toString();
-    fd.user_agree = true
+    fd.user_agree = true;
 
     // console.log("AGREE", fd.user_agree);
 
@@ -164,7 +167,6 @@ export const actions = {
       arrival_date: "Arrival Date",
       arrival_flight: "Arrival Flight",
     };
-  
 
     let emailBody = `
         <!DOCTYPE htmlPUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -287,11 +289,34 @@ export const actions = {
     let bcc = emailData.name.split(",");
     let bccList = [];
     bcc.forEach((email) => {
-      bccList.push({
-        email: email.trim(),
-      });
+      bccList.push(email.trim());
+      // bccList.push({
+      //   email: email.trim(),
+      // });
     });
     let emailResponse = "";
+
+    let emailSubject = `Manual Booking: ${vehicle_name.trim()}: ${pickup_name.trim()}, ${fd.pickup_date.format(
+      "DD MMM YYYY"
+    )} - ${dropoff_name.trim()}, ${fd.dropoff_date.format(
+      "DD MMM YYYY"
+    )}: ${user.first_name.trim()} ${user.last_name.trim()}`;
+
+    const mailgun = new Mailgun(FD);
+    const mg = mailgun.client({ username: "api", key: MAILGUN_API_KEY });
+    mg.messages
+      .create("mail.australia4wheeldriverentals.com", {
+        from: "Australia 4WD Rentals <info@australia4wheeldriverentals.com>",
+        // to: ["won@signature.studio"],
+        to: [user.email.trim()],
+        bcc: bccList,
+        subject: emailSubject,
+        html: emailBody,
+      })
+      .then((msg) => console.log(msg)) // logs response data
+      .catch((err) => console.log(err)); // logs any error
+
+    /*
     sgMail.setApiKey(env.PUBLIC_SENDGRID_API_KEY);
     await sgMail
       .send({
@@ -335,7 +360,7 @@ export const actions = {
         emailResponse = error;
         console.error(error);
       });
-
+*/
     throw redirect(303, `/form/vehicle/booking/success`);
   },
 };

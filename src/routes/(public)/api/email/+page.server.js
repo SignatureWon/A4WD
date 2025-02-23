@@ -2,6 +2,9 @@ import { env } from "$env/dynamic/public";
 import sgMail from "@sendgrid/mail";
 // import { db } from "$lib/server/db";
 import { supabase } from "$lib/supabaseClient";
+import { default as FD } from "form-data";
+import Mailgun from "mailgun.js";
+import { MAILGUN_API_KEY } from "$env/static/private";
 
 export const actions = {
   default: async ({ request, url, locals }) => {
@@ -12,12 +15,30 @@ export const actions = {
     let to = emailData.name.split(",");
     let toList = [];
     to.forEach((email) => {
-      toList.push({
-        email: email.trim(),
-      });
+      toList.push(email.trim());
+      // toList.push({
+      //   email: email.trim(),
+      // });
     });
 
-
+    const mailgun = new Mailgun(FD);
+    const mg = mailgun.client({ username: "api", key: MAILGUN_API_KEY });
+    mg.messages
+      .create("mail.australia4wheeldriverentals.com", {
+        from: "Australia 4WD Rentals <info@australia4wheeldriverentals.com>",
+        to: toList,
+        subject: `Message from ${newData.first_name}`,
+        html: `
+              First name: <strong>${newData.first_name}</strong><br>
+              Last name: <strong>${newData.last_name}</strong><br>
+              Email: <strong>${newData.email}</strong><br>
+              Phone: <strong>${newData.phone}</strong><br><br>
+              Message: <br>
+              ${newData.message}`,
+      })
+      .then((msg) => console.log(msg)) // logs response data
+      .catch((err) => console.log(err)); // logs any error
+    /*
     sgMail.setApiKey(env.PUBLIC_SENDGRID_API_KEY);
     await sgMail
       .send({
@@ -56,5 +77,6 @@ export const actions = {
       .catch((error) => {
         console.error(error);
       });
+      */
   },
 };
