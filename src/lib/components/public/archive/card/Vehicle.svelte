@@ -13,7 +13,7 @@
             <div
               class="h-60 sm:h-48 bg-cover bg-center transition-all group-hover:scale-125"
               style={record.image
-                ? `background-image: url('${env.PUBLIC_DB_URL}/storage/v1/object/public/contents/${record.image}')`
+                ? `background-image: url('${env.PUBLIC_URL}/storage/v1/object/public/contents/${record.image}')`
                 : "background-color: #dee1e7"}
             />
           </div>

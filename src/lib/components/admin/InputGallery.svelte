@@ -126,8 +126,8 @@
           ...value,
           {
             name: filename,
-            url: `${env.PUBLIC_DB_URL}/storage/v1/render/image/public/gallery/${filename}?width=1200&height=1200&resize=contain`,
-            thumb: `${env.PUBLIC_DB_URL}/storage/v1/render/image/public/gallery/${filename}?width=400&height=400&resize=contain`,
+            url: `${env.PUBLIC_URL}/storage/v1/render/image/public/gallery/${filename}?width=1200&height=1200&resize=contain`,
+            thumb: `${env.PUBLIC_URL}/storage/v1/render/image/public/gallery/${filename}?width=400&height=400&resize=contain`,
             caption: "",
           },
         ];

@@ -100,11 +100,11 @@
                   <a href="/{title.type}/{item.slug}">
                     <div class="h-44 overflow-hidden rounded relative flex items-center">
                       {#if item.image}
-                        <!-- {#await preload(`${env.PUBLIC_DB_URL}/storage/v1/object/public/contents/${item.image}`) then base64} -->
-                        <!-- style="background-image: url('{env.PUBLIC_DB_URL}/storage/v1/render/image/public/contents/{item.image}?width=300&height=300&resize=contain');" -->
+                        <!-- {#await preload(`${env.PUBLIC_URL}/storage/v1/object/public/contents/${item.image}`) then base64} -->
+                        <!-- style="background-image: url('{env.PUBLIC_URL}/storage/v1/render/image/public/contents/{item.image}?width=300&height=300&resize=contain');" -->
                         <div class="bg-cover bg-center blur-md absolute w-full h-full scale-110 -z-10" />
                         <ImageLoader
-                          src="{env.PUBLIC_DB_URL}/storage/v1/render/image/public/contents/{item.image}?width=300&height=300&resize=contain"
+                          src="{env.PUBLIC_URL}/storage/v1/render/image/public/contents/{item.image}?width=300&height=300&resize=contain"
                           alt={item.name}
                           width="300"
                           height="300"
@@ -113,7 +113,7 @@
                           <!-- <svelte:fragment slot="error">An error occurred.</svelte:fragment> -->
                         </ImageLoader>
                         <!-- <img
-                          src="{env.PUBLIC_DB_URL}/storage/v1/render/image/public/contents/{item.image}?width=300&height=300&resize=contain"
+                          src="{env.PUBLIC_URL}/storage/v1/render/image/public/contents/{item.image}?width=300&height=300&resize=contain"
                           alt={item.name}
                           width="300"
                           height="300"

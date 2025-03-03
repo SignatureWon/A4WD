@@ -4,12 +4,12 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
 import sgMail from "@sendgrid/mail";
-import { env } from "$env/dynamic/public";
+// import { env } from "$env/dynamic/public";
 import { error, redirect } from "@sveltejs/kit";
 import CryptoJS from "crypto-js";
 import { default as FD } from "form-data";
 import Mailgun from "mailgun.js";
-import { MAIL_KEY } from "$env/static/private";
+import { MAIL_KEY, PUBLIC_KEY } from "$env/static/private";
 
 export async function load() {
   const { data: dataOptions, error: errorOptions } = await supabase.rpc("search_options").select();
@@ -53,8 +53,8 @@ export const actions = {
     fd.pickup_date = dayjs(fd.pickup_date, "DD/MM/YYYY");
     fd.dropoff_date = dayjs(fd.dropoff_date, "DD/MM/YYYY");
     fd.arrival_date = dayjs(fd.arrival_date, "DD/MM/YYYY");
-    fd.card_number = CryptoJS.AES.encrypt(fd.card_number, env.PUBLIC_AES_KEY).toString();
-    fd.card_code = CryptoJS.AES.encrypt(fd.card_code, env.PUBLIC_AES_KEY).toString();
+    fd.card_number = CryptoJS.AES.encrypt(fd.card_number, PUBLIC_KEY).toString();
+    fd.card_code = CryptoJS.AES.encrypt(fd.card_code, PUBLIC_KEY).toString();
     fd.user_agree = true;
     fd.tour = true;
 
@@ -319,7 +319,7 @@ export const actions = {
       .then((msg) => console.log(msg)) // logs response data
       .catch((err) => console.log(err)); // logs any error
     /*
-    sgMail.setApiKey(env.PUBLIC_MAIL_KEY);
+    sgMail.setApiKey(MAIL_KEY);
     await sgMail
       .send({
         personalizations: [

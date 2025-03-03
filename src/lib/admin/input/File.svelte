@@ -21,7 +21,7 @@
   <div class="mb-2">
     <!-- svelte-ignore a11y-missing-content -->
     <a
-      href={`${env.PUBLIC_DB_URL}/storage/v1/object/public/${field.bucket}/${data[key] || ""}`}
+      href={`${env.PUBLIC_URL}/storage/v1/object/public/${field.bucket}/${data[key] || ""}`}
       target="_blank"
       rel="noreferrer"
       class="file-icon file-icon-xl"

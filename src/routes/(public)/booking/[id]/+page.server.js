@@ -1,4 +1,4 @@
-import { env } from "$env/dynamic/public";
+// import { env } from "$env/dynamic/public";
 import CryptoJS from "crypto-js";
 import { supabase } from "$lib/supabaseClient";
 import dayjs from "dayjs";
@@ -7,15 +7,16 @@ import { redirect } from "@sveltejs/kit";
 import { html } from "$lib/booked.js";
 import { default as FD } from "form-data";
 import Mailgun from "mailgun.js";
-import { MAIL_KEY } from "$env/static/private";
+import { MAIL_KEY, PUBLIC_KEY } from "$env/static/private";
 
 export async function load({ url, params, locals }) {
+  // console.log("PUBLIC_KEY", PUBLIC_KEY);
+
   let id =
-    Number(CryptoJS.AES.decrypt(params.id.replaceAll("__", "/"), env.PUBLIC_AES_KEY).toString(CryptoJS.enc.Utf8)) -
-    388000;
+    Number(CryptoJS.AES.decrypt(params.id.replaceAll("__", "/"), PUBLIC_KEY).toString(CryptoJS.enc.Utf8)) - 388000;
   // console.log("id", id);
   if (id < 0) {
-    id = Number(CryptoJS.AES.decrypt(params.id.replaceAll("__", "/"), env.PUBLIC_AES_KEY).toString(CryptoJS.enc.Utf8));
+    id = Number(CryptoJS.AES.decrypt(params.id.replaceAll("__", "/"), PUBLIC_KEY).toString(CryptoJS.enc.Utf8));
   }
   // console.log("id2", id);
 
@@ -59,7 +60,7 @@ export const actions = {
     const formData = await request.formData();
     let fd = Object.fromEntries(formData.entries());
 
-    console.log(fd);
+    // console.log(fd);
 
     let user = JSON.parse(fd.user);
     const user_id = user.id;
@@ -74,8 +75,8 @@ export const actions = {
     delete quote.updated_at;
     quote.date_deposit = dayjs();
     quote.status = "Booking";
-    quote.cc_number = CryptoJS.AES.encrypt(quote.cc_number, env.PUBLIC_AES_KEY).toString();
-    quote.cc_cvv = CryptoJS.AES.encrypt(quote.cc_cvv, env.PUBLIC_AES_KEY).toString();
+    quote.cc_number = CryptoJS.AES.encrypt(quote.cc_number, PUBLIC_KEY).toString();
+    quote.cc_cvv = CryptoJS.AES.encrypt(quote.cc_cvv, PUBLIC_KEY).toString();
 
     const { error: userError } = await locals.sb.from("users").update(user).eq("id", user_id);
     if (userError) {
@@ -128,7 +129,7 @@ export const actions = {
       .then((msg) => console.log(msg)) // logs response data
       .catch((err) => console.log(err)); // logs any error
     /*    
-    sgMail.setApiKey(env.PUBLIC_MAIL_KEY);
+    sgMail.setApiKey(MAIL_KEY);
     await sgMail
       .send({
         personalizations: [

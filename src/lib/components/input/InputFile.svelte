@@ -20,7 +20,7 @@
   <div class="mb-2">
     <!-- svelte-ignore a11y-missing-content -->
     <a
-      href={`${env.PUBLIC_DB_URL}/storage/v1/object/public/${field.bucket}/${record[field.name] || ""}`}
+      href={`${env.PUBLIC_URL}/storage/v1/object/public/${field.bucket}/${record[field.name] || ""}`}
       target="_blank"
       rel="noreferrer"
       class="file-icon file-icon-xl"

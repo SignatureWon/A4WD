@@ -14,7 +14,7 @@
   <meta name="description" content={data.data.meta_description || getContentText(data.data.content)} />
   <meta property="og:title" content={data.data.meta_title || `${data.data.name} - Australia 4 Wheel Drive Rentals`} />
   <meta property="og:description" content={data.data.meta_description || getContentText(data.data.content)} />
-  <meta property="og:image" content={`${env.PUBLIC_DB_URL}/storage/v1/object/public/contents/${data.data.image}`} />
+  <meta property="og:image" content={`${env.PUBLIC_URL}/storage/v1/object/public/contents/${data.data.image}`} />
   <link rel="canonical" href="https://australia4wdrentals.com/events/{data.data.slug}" />
   {@html `<script type="application/ld+json" class="schemantra">
   {
@@ -26,7 +26,7 @@
     "tourBookingPage": "https://australia4wdrentals.com/search",
     "description": "${data.data.meta_description || getContentText(data.data.content)}",
     "email": "info@australia4wdrentals.com",
-    "image": "${env.PUBLIC_DB_URL}/storage/v1/object/public/contents/${data.data.image}",
+    "image": "${env.PUBLIC_URL}/storage/v1/object/public/contents/${data.data.image}",
     "location": "Australia",
     "logo": "https://api.australia4wdrentals.com/storage/v1/render/image/public/contents/${data.site.logo}",
     "name": "${data.data.meta_title || `${data.data.name} - Australia 4 Wheel Drive Rentals`}"
@@ -43,7 +43,7 @@
   <PageHeader>
     <div
       class="h-full bg-cover bg-center"
-      style="background-image: url('{env.PUBLIC_DB_URL}/storage/v1/object/public/contents/{data.data.image}');"
+      style="background-image: url('{env.PUBLIC_URL}/storage/v1/object/public/contents/{data.data.image}');"
     >
       <div class="w-full h-full bg-black/50 flex flex-col items-center justify-center text-center p-10">
         <h1 class="text-4xl font-bold text-white">{data.data.name}</h1>

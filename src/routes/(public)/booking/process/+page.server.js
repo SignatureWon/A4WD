@@ -4,12 +4,12 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
 import sgMail from "@sendgrid/mail";
-import { env } from "$env/dynamic/public";
+// import { env } from "$env/dynamic/public";
 import { error, redirect } from "@sveltejs/kit";
 import CryptoJS from "crypto-js";
 import { default as FD } from "form-data";
 import Mailgun from "mailgun.js";
-import { MAIL_KEY } from "$env/static/private";
+import { MAIL_KEY, PUBLIC_KEY } from "$env/static/private";
 
 export async function load() {
   return {};
@@ -25,8 +25,8 @@ export const actions = {
 
     fd.date_deposit = dayjs();
     fd.status = "Booking";
-    fd.cc_number = CryptoJS.AES.encrypt(fd.cc_number, env.PUBLIC_AES_KEY).toString();
-    fd.cc_cvv = CryptoJS.AES.encrypt(fd.cc_cvv, env.PUBLIC_AES_KEY).toString();
+    fd.cc_number = CryptoJS.AES.encrypt(fd.cc_number, PUBLIC_KEY).toString();
+    fd.cc_cvv = CryptoJS.AES.encrypt(fd.cc_cvv, PUBLIC_KEY).toString();
 
     // console.log("fd", fd);
 
@@ -98,7 +98,7 @@ export const actions = {
       .catch((err) => console.log(err)); // logs any error
 
     /*
-    sgMail.setApiKey(env.PUBLIC_MAIL_KEY);
+    sgMail.setApiKey(MAIL_KEY);
     await sgMail
       .send({
         personalizations: [

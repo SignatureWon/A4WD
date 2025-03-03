@@ -85,7 +85,7 @@
 {#if record[field.name]}
   <div class="mb-2">
     <img
-      src={`${env.PUBLIC_DB_URL}/storage/v1/object/public/${field.bucket}/${record[field.name] || ""}`}
+      src={`${env.PUBLIC_URL}/storage/v1/object/public/${field.bucket}/${record[field.name] || ""}`}
       alt=""
       class="w-auto h-16"
     />

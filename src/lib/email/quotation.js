@@ -67,7 +67,7 @@ export const html = {
     if ("terms" in quote.details) {
       terms = quote.details.terms;
     }
-    const encId = CryptoJS.AES.encrypt(quote.id.toString(), env.PUBLIC_AES_KEY).toString().replaceAll("/", "__");
+    const encId = CryptoJS.AES.encrypt(quote.id.toString(), env.PUBLIC_KEY).toString().replaceAll("/", "__");
 
     let email = `
 <!DOCTYPE html>

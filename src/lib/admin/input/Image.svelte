@@ -14,7 +14,7 @@
 {#if data[key]}
   <div class="mb-2">
     <img
-      src={`${env.PUBLIC_DB_URL}/storage/v1/object/public/${field.options}/${data[key] || ""}`}
+      src={`${env.PUBLIC_URL}/storage/v1/object/public/${field.options}/${data[key] || ""}`}
       alt=""
       class="w-auto h-24"
     />

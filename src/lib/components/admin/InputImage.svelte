@@ -38,9 +38,9 @@
 
   {#if filePreview}
     <div class="mb-2">
-      <a href="{env.PUBLIC_DB_URL}/storage/v1/object/public/{bucket}/{value}" target="_blank" rel="noreferrer"
+      <a href="{env.PUBLIC_URL}/storage/v1/object/public/{bucket}/{value}" target="_blank" rel="noreferrer"
         ><img
-          src="{env.PUBLIC_DB_URL}/storage/v1/render/image/public/{bucket}/{value}?width=150&height=150&resize=contain"
+          src="{env.PUBLIC_URL}/storage/v1/render/image/public/{bucket}/{value}?width=150&height=150&resize=contain"
           alt=""
         /></a
       >

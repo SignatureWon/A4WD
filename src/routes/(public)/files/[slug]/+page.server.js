@@ -12,5 +12,5 @@ export async function load({ params }) {
     .eq("type", "attachments")
     .single();
   // return {data};
-  throw redirect(303, `${env.PUBLIC_DB_URL}/storage/v1/object/public/terms/${data.attachment}`);
+  throw redirect(303, `${env.PUBLIC_URL}/storage/v1/object/public/terms/${data.attachment}`);
 }

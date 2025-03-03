@@ -102,10 +102,10 @@
                     <a href="/vehicles/{item.slug}">
                       <div class="h-44 overflow-hidden rounded relative flex items-center">
                         {#if item.image}
-                          <!-- {#await preload(`${env.PUBLIC_DB_URL}/storage/v1/object/public/contents/${item.image}`) then base64} -->
+                          <!-- {#await preload(`${env.PUBLIC_URL}/storage/v1/object/public/contents/${item.image}`) then base64} -->
                           <div class="absolute w-full h-full scale-110 -z-10 bg-white border border-gray-200" />
                           <ImageLoader
-                            src="{env.PUBLIC_DB_URL}/storage/v1/render/image/public/contents/{item.image}?width=300&height=300&resize=contain"
+                            src="{env.PUBLIC_URL}/storage/v1/render/image/public/contents/{item.image}?width=300&height=300&resize=contain"
                             alt={item.name}
                             width="300"
                             height="300"
@@ -114,7 +114,7 @@
                             <!-- <svelte:fragment slot="error">An error occurred.</svelte:fragment> -->
                           </ImageLoader>
                           <!-- <img
-                            src="{env.PUBLIC_DB_URL}/storage/v1/render/image/public/contents/{item.image}?width=300&height=300&resize=contain"
+                            src="{env.PUBLIC_URL}/storage/v1/render/image/public/contents/{item.image}?width=300&height=300&resize=contain"
                             alt={item.name}
                             width="300"
                             height="300"
@@ -154,10 +154,10 @@
                     <a href="/vehicles/{item.slug}">
                       <div class="h-44 overflow-hidden rounded relative flex items-center">
                         {#if item.image}
-                          <!-- {#await preload(`${env.PUBLIC_DB_URL}/storage/v1/object/public/contents/${item.image}`) then base64} -->
+                          <!-- {#await preload(`${env.PUBLIC_URL}/storage/v1/object/public/contents/${item.image}`) then base64} -->
                           <div class="absolute w-full h-full scale-110 -z-10 bg-white border border-gray-200" />
                           <ImageLoader
-                            src="{env.PUBLIC_DB_URL}/storage/v1/render/image/public/contents/{item.image}?width=300&height=300&resize=contain"
+                            src="{env.PUBLIC_URL}/storage/v1/render/image/public/contents/{item.image}?width=300&height=300&resize=contain"
                             alt={item.name}
                             width="300"
                             height="300"
@@ -166,7 +166,7 @@
                             <!-- <svelte:fragment slot="error">An error occurred.</svelte:fragment> -->
                           </ImageLoader>
                           <!-- <img
-                            src="{env.PUBLIC_DB_URL}/storage/v1/render/image/public/contents/{item.image}?width=300&height=300&resize=contain"
+                            src="{env.PUBLIC_URL}/storage/v1/render/image/public/contents/{item.image}?width=300&height=300&resize=contain"
                             alt={item.name}
                             width="300"
                             height="300"

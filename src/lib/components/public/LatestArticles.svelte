@@ -32,7 +32,7 @@
               <div class="{index === 0 ? 'md:w-2/3' : ''} overflow-hidden rounded m-4">
                 <div
                   class="h-80 bg-cover bg-center transition-all group-hover:scale-125"
-                  style="background-image: url('{env.PUBLIC_DB_URL}/storage/v1/object/public/contents/{item.image}');"
+                  style="background-image: url('{env.PUBLIC_URL}/storage/v1/object/public/contents/{item.image}');"
                 />
               </div>
               <div class="{index === 0 ? 'md:w-1/3 h-80' : 'h-64'} m-4 overflow-hidden">

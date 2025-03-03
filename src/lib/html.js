@@ -446,7 +446,7 @@ export const html = {
       // cc: getCcs(),
       // term: getTerms(),
     };
-    const encId = CryptoJS.AES.encrypt(info.quote.id.toString(), env.PUBLIC_AES_KEY).toString().replaceAll("/", "__");
+    const encId = CryptoJS.AES.encrypt(info.quote.id.toString(), env.PUBLIC_KEY).toString().replaceAll("/", "__");
 
     let email = `
 <!DOCTYPE htmlPUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

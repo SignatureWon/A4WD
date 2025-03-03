@@ -61,7 +61,7 @@
                     <div class="h-40 overflow-hidden rounded">
                       <div
                         class="h-40 bg-cover bg-center transition-all group-hover:scale-125"
-                        style="background-image: url('{env.PUBLIC_DB_URL}/storage/v1/object/public/contents/{item.image}');"
+                        style="background-image: url('{env.PUBLIC_URL}/storage/v1/object/public/contents/{item.image}');"
                       />
                     </div>
                     <div class="text-lg font-medium px-2 h-8 leading-8 -mt-8 bg-white inline-block absolute">

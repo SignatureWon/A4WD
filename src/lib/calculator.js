@@ -1069,7 +1069,7 @@ export const calculator = {
       vehicle: {
         id: d.vehicle_id,
         name: d.vehicle_name,
-        image: `${env.PUBLIC_DB_URL}/storage/v1/render/image/public/contents/${d.vehicle_image}?width=600&height=600&resize=contain`,
+        image: `${env.PUBLIC_URL}/storage/v1/render/image/public/contents/${d.vehicle_image}?width=600&height=600&resize=contain`,
         excerpt: d.vehicle_excerpt,
         slug: d.vehicle_slug,
         fuel: d.vehicle_fuel,
@@ -1165,7 +1165,7 @@ export const calculator = {
       vehicle: {
         id: d.vehicle_id,
         name: d.vehicle_name,
-        image: `${env.PUBLIC_DB_URL}/storage/v1/render/image/public/contents/${d.vehicle_image}?width=600&height=600&resize=contain`,
+        image: `${env.PUBLIC_URL}/storage/v1/render/image/public/contents/${d.vehicle_image}?width=600&height=600&resize=contain`,
         excerpt: d.vehicle_excerpt,
         slug: d.vehicle_slug,
         fuel: d.vehicle_fuel,

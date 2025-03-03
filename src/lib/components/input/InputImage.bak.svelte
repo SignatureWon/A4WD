@@ -13,7 +13,7 @@
   <label for={field.name} class="block mb-2 text-sm tracking-wider text-gray-600 font-semibold">{field.label}</label>
   {#if record[field.name] !== null || record[field.name] !== ""}
     <div class="mb-2">
-      <img src={`${env.PUBLIC_DB_URL}/storage/v1/object/public/${field.bucket}/${record[field.name] || ""}`} alt="" />
+      <img src={`${env.PUBLIC_URL}/storage/v1/object/public/${field.bucket}/${record[field.name] || ""}`} alt="" />
     </div>
   {/if}
   <div>

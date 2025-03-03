@@ -52,7 +52,7 @@
               <div class="p-2">
                 <div class="rounded overflow-hidden">
                   <img
-                    src="{env.PUBLIC_DB_URL}/storage/v1/render/image/public/contents/{d.vehicle_image}?width=400&height=400&resize=contain"
+                    src="{env.PUBLIC_URL}/storage/v1/render/image/public/contents/{d.vehicle_image}?width=400&height=400&resize=contain"
                     alt={d.vehicle_caption}
                     class="w-full"
                   />
@@ -180,7 +180,7 @@
               <div class="p-2 opacity-50">
                 <div class="rounded overflow-hidden">
                   <img
-                    src="{env.PUBLIC_DB_URL}/storage/v1/render/image/public/contents/{d.vehicle_image}?width=400&height=400&resize=contain"
+                    src="{env.PUBLIC_URL}/storage/v1/render/image/public/contents/{d.vehicle_image}?width=400&height=400&resize=contain"
                     alt={d.vehicle_caption}
                     class="w-full"
                   />

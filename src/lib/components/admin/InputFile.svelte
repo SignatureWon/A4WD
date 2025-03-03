@@ -36,7 +36,7 @@
     <div>
       <!-- svelte-ignore a11y-missing-content -->
       <a
-        href="{env.PUBLIC_DB_URL}/storage/v1/object/public/{bucket}/{value}"
+        href="{env.PUBLIC_URL}/storage/v1/object/public/{bucket}/{value}"
         target="_blank"
         rel="noreferrer"
         class="file-icon file-icon-xl"

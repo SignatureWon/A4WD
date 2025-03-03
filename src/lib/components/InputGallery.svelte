@@ -310,8 +310,8 @@
                   ...records,
                   {
                     name: filename,
-                    url: `${env.PUBLIC_DB_URL}/storage/v1/object/public/gallery/${filename}`,
-                    thumb: `${env.PUBLIC_DB_URL}/storage/v1/object/public/gallery/thumb-${filename}`,
+                    url: `${env.PUBLIC_URL}/storage/v1/object/public/gallery/${filename}`,
+                    thumb: `${env.PUBLIC_URL}/storage/v1/object/public/gallery/thumb-${filename}`,
                     caption: "",
                   },
                 ];

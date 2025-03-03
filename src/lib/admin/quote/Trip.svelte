@@ -9,7 +9,7 @@
 <div class="grid grid-cols-1 md:grid-cols-3 py-4 gap-4">
   <div class="text-center">
     <img
-      src="{env.PUBLIC_DB_URL}/storage/v1/render/image/public/contents/{info.vehicle
+      src="{env.PUBLIC_URL}/storage/v1/render/image/public/contents/{info.vehicle
         .image}?width=200&height=200&resize=contain"
       alt={info.vehicle.name}
     />

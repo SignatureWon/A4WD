@@ -49,7 +49,7 @@ export async function load({ url, params, locals }) {
     keys: keys,
   });
   if (data.summary) {
-    throw redirect(303, `${env.PUBLIC_DB_URL}/storage/v1/object/public/terms/${data.summary}`);
+    throw redirect(303, `${env.PUBLIC_URL}/storage/v1/object/public/terms/${data.summary}`);
   } else {
     return { data };
   }
