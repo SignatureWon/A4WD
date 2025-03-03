@@ -4,7 +4,7 @@ import sgMail from "@sendgrid/mail";
 import { supabase } from "$lib/supabaseClient";
 import { default as FD } from "form-data";
 import Mailgun from "mailgun.js";
-import { MAILGUN_API_KEY } from "$env/static/private";
+import { MAIL_KEY } from "$env/static/private";
 
 export const actions = {
   default: async ({ request, url, locals }) => {
@@ -22,7 +22,7 @@ export const actions = {
     });
 
     const mailgun = new Mailgun(FD);
-    const mg = mailgun.client({ username: "api", key: MAILGUN_API_KEY });
+    const mg = mailgun.client({ username: "api", key: MAIL_KEY });
     mg.messages
       .create("mail.australia4wheeldriverentals.com", {
         from: "Australia 4WD Rentals <info@australia4wheeldriverentals.com>",
@@ -39,7 +39,7 @@ export const actions = {
       .then((msg) => console.log(msg)) // logs response data
       .catch((err) => console.log(err)); // logs any error
     /*
-    sgMail.setApiKey(env.PUBLIC_SENDGRID_API_KEY);
+    sgMail.setApiKey(env.PUBLIC_MAIL_KEY);
     await sgMail
       .send({
         personalizations: [

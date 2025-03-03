@@ -349,7 +349,7 @@ export const actions = {
       });
     });
     let emailResponse = "";
-    sgMail.setApiKey(env.PUBLIC_SENDGRID_API_KEY);
+    sgMail.setApiKey(env.PUBLIC_MAIL_KEY);
     await sgMail
       .send({
         personalizations: [

@@ -6,7 +6,7 @@
   export let data;
 
   function getContentText(html) {
-    return html.replace(/(<([^>]+)>)/ig, "").substring(0, 155) + "...";
+    return html.replace(/(<([^>]+)>)/gi, "").substring(0, 155) + "...";
   }
 </script>
 
@@ -15,7 +15,7 @@
   <meta name="description" content={data.data.meta_description || getContentText(data.data.content)} />
   <meta property="og:title" content={data.data.meta_title || `${data.data.name} - Australia 4 Wheel Drive Rentals`} />
   <meta property="og:description" content={data.data.meta_description || getContentText(data.data.content)} />
-  <meta property="og:image" content={`${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/${data.data.image}`} />
+  <meta property="og:image" content={`${env.PUBLIC_DB_URL}/storage/v1/object/public/contents/${data.data.image}`} />
   <link rel="canonical" href="https://australia4wdrentals.com/blog/{data.data.slug}" />
   {@html `<script type="application/ld+json" class="schemantra">
   {
@@ -27,7 +27,7 @@
     "tourBookingPage": "https://australia4wdrentals.com/search",
     "description": "${data.data.meta_description || getContentText(data.data.content)}",
     "email": "info@australia4wdrentals.com",
-    "image": "${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/${data.data.image}",
+    "image": "${env.PUBLIC_DB_URL}/storage/v1/object/public/contents/${data.data.image}",
     "location": "Australia",
     "logo": "https://api.australia4wdrentals.com/storage/v1/render/image/public/contents/${data.site.logo}",
     "name": "${data.data.meta_title || `${data.data.name} - Australia 4 Wheel Drive Rentals`}"

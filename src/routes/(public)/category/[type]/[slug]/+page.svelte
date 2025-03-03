@@ -32,15 +32,24 @@
   // });
 
   function getContentText(html) {
-    return html.replace(/(<([^>]+)>)/ig, "").substring(0, 155) + "...";
+    return html.replace(/(<([^>]+)>)/gi, "").substring(0, 155) + "...";
   }
 </script>
 
 <svelte:head>
   <title>{data.category?.meta_title || `${data.category.name} - Australia 4 Wheel Drive Rentals`}</title>
-  <meta name="description" content={data.category.meta_description || `${data.category.name} - ${getContentText(data.data.content)}`} />
-  <meta property="og:title" content={data.category?.meta_title || `${data.category.name} - Australia 4 Wheel Drive Rentals`} />
-  <meta property="og:description" content={data.category.meta_description || `${data.category.name} - ${getContentText(data.data.content)}`} />
+  <meta
+    name="description"
+    content={data.category.meta_description || `${data.category.name} - ${getContentText(data.data.content)}`}
+  />
+  <meta
+    property="og:title"
+    content={data.category?.meta_title || `${data.category.name} - Australia 4 Wheel Drive Rentals`}
+  />
+  <meta
+    property="og:description"
+    content={data.category.meta_description || `${data.category.name} - ${getContentText(data.data.content)}`}
+  />
   <meta property="og:image" content={data.site.image} />
   <link rel="canonical" href="https://australia4wdrentals.com/category/{data.type}/{data.category.slug}" />
   {@html `<script type="application/ld+json" class="schemantra">
@@ -64,7 +73,7 @@
 <PageHeader>
   <div
     class="h-full bg-cover bg-center"
-    style="background-image: url('{env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/{data.category.image}');"
+    style="background-image: url('{env.PUBLIC_DB_URL}/storage/v1/object/public/contents/{data.category.image}');"
   >
     <div class="w-full h-full bg-black/50 flex flex-col items-center justify-center text-center p-10">
       <h1 class="text-4xl font-bold text-white mb-4">{data.category.name}</h1>

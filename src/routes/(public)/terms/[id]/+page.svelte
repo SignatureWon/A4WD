@@ -33,7 +33,7 @@
                 <h3 class="text-lg font-bold mt-8">Attachment</h3>
                 <!-- svelte-ignore a11y-missing-content -->
                 <a
-                  href="{env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/terms/{t.summary}"
+                  href="{env.PUBLIC_DB_URL}/storage/v1/object/public/terms/{t.summary}"
                   target="_blank"
                   rel="noreferrer"
                   class="file-icon file-icon-xl"
@@ -54,7 +54,7 @@
                 <h3 class="text-lg font-bold mt-8">Attachment</h3>
                 <!-- svelte-ignore a11y-missing-content -->
                 <a
-                  href="{env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/terms/{t.confirmation}"
+                  href="{env.PUBLIC_DB_URL}/storage/v1/object/public/terms/{t.confirmation}"
                   target="_blank"
                   rel="noreferrer"
                   class="file-icon file-icon-xl"
@@ -75,7 +75,7 @@
                 <h3 class="text-lg font-bold mt-8">Attachment</h3>
                 <!-- svelte-ignore a11y-missing-content -->
                 <a
-                  href="{env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/terms/{t.counter}"
+                  href="{env.PUBLIC_DB_URL}/storage/v1/object/public/terms/{t.counter}"
                   target="_blank"
                   rel="noreferrer"
                   class="file-icon file-icon-xl"

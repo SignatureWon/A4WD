@@ -32,11 +32,11 @@
         },
       },
       classes: {
-		arrows: 'splide__arrows your-class-arrows',
-		arrow : 'splide__arrow your-class-arrow',
-		prev  : 'splide__arrow--prev your-class-prev',
-		next  : 'splide__arrow--next your-class-next',
-  },
+        arrows: "splide__arrows your-class-arrows",
+        arrow: "splide__arrow your-class-arrow",
+        prev: "splide__arrow--prev your-class-prev",
+        next: "splide__arrow--next your-class-next",
+      },
     }).mount();
   });
 </script>
@@ -71,15 +71,13 @@
               <li class="splide__slide">
                 <div class="px-2 group">
                   <a href="/blog/{item.slug}">
-                    <div
-                      class="h-44 overflow-hidden rounded relative flex items-center"
-                    >
+                    <div class="h-44 overflow-hidden rounded relative flex items-center">
                       <div
                         class="bg-cover bg-center blur-md absolute w-full h-full scale-110 -z-10"
-                        style="background-image: url('{env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/{item.image}');"
+                        style="background-image: url('{env.PUBLIC_DB_URL}/storage/v1/object/public/contents/{item.image}');"
                       />
                       <img
-                        src="{env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/{item.image}"
+                        src="{env.PUBLIC_DB_URL}/storage/v1/object/public/contents/{item.image}"
                         alt={item.name}
                         class="z-10"
                       />

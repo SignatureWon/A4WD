@@ -28,237 +28,237 @@
 
 <section class="container xl:max-w-7xl mx-auto p-4">
   <!-- {#if $page.url.searchParams.size > 0} -->
-    {#if results.available.length === 0 && results.blocked.length === 0}
-      <div class="bg-white rounded px-4 py-16 text-center">
-        <h2 class="h1">Sorry, we couldn't find any vehicles</h2>
-        <div class="text-gray-500">Please try to search again</div>
-      </div>
-    {:else}
-      {#each results.available as d}
-        <div class="bg-white rounded overflow-hidden mb-3 relative">
-          <div class="flex absolute w-full top-0 left-0">
-            <div class="flex-1" />
-            <div>
-              <div class="flex">
-                {#if d.special_total > 0}
-                  <div class="bg-red-500 text-white text-xs uppercase px-1 py-0.5 rounded-b mr-1">Specials</div>
-                {/if}
-              </div>
+  {#if results.available.length === 0 && results.blocked.length === 0}
+    <div class="bg-white rounded px-4 py-16 text-center">
+      <h2 class="h1">Sorry, we couldn't find any vehicles</h2>
+      <div class="text-gray-500">Please try to search again</div>
+    </div>
+  {:else}
+    {#each results.available as d}
+      <div class="bg-white rounded overflow-hidden mb-3 relative">
+        <div class="flex absolute w-full top-0 left-0">
+          <div class="flex-1" />
+          <div>
+            <div class="flex">
+              {#if d.special_total > 0}
+                <div class="bg-red-500 text-white text-xs uppercase px-1 py-0.5 rounded-b mr-1">Specials</div>
+              {/if}
             </div>
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
-            <div class="md:col-span-3">
-              <div class="grid grid-cols-1 md:grid-cols-3 h-full">
-                <div class="p-2">
-                  <div class="rounded overflow-hidden">
-                    <img
-                      src="{env.PUBLIC_SUPABASE_URL}/storage/v1/render/image/public/contents/{d.vehicle_image}?width=400&height=400&resize=contain"
-                      alt={d.vehicle_caption}
-                      class="w-full"
-                    />
-                  </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
+          <div class="md:col-span-3">
+            <div class="grid grid-cols-1 md:grid-cols-3 h-full">
+              <div class="p-2">
+                <div class="rounded overflow-hidden">
+                  <img
+                    src="{env.PUBLIC_DB_URL}/storage/v1/render/image/public/contents/{d.vehicle_image}?width=400&height=400&resize=contain"
+                    alt={d.vehicle_caption}
+                    class="w-full"
+                  />
                 </div>
-                <div class="md:col-span-2 p-2 h-full">
-                  <div class="flex flex-col h-full">
-                    <div class="flex-1">
-                      <h2 class="h2 font-bold">
-                        {d.vehicle_name}
-                      </h2>
-                      <div>
-                        <Button class="rounded p-0 text-sm" kind="ghost" href="/vehicles/{d.vehicle_slug}"
-                          >View Specs</Button
-                        >
+              </div>
+              <div class="md:col-span-2 p-2 h-full">
+                <div class="flex flex-col h-full">
+                  <div class="flex-1">
+                    <h2 class="h2 font-bold">
+                      {d.vehicle_name}
+                    </h2>
+                    <div>
+                      <Button class="rounded p-0 text-sm" kind="ghost" href="/vehicles/{d.vehicle_slug}"
+                        >View Specs</Button
+                      >
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-1 text-sm max-w-xs mb-2">
+                      <div class="flex">
+                        <div class="text-gray-300">{@html icon.pax}</div>
+                        <div class="flex-1 ml-1 whitespace-nowrap">{d.vehicle_pax} Pax</div>
                       </div>
-                      <div class="grid grid-cols-2 md:grid-cols-3 gap-1 text-sm max-w-xs mb-2">
-                        <div class="flex">
-                          <div class="text-gray-300">{@html icon.pax}</div>
-                          <div class="flex-1 ml-1 whitespace-nowrap">{d.vehicle_pax} Pax</div>
-                        </div>
-                        <div class="flex">
-                          <div class="text-gray-300">{@html icon.wheel}</div>
-                          <div class="flex-1 ml-1 whitespace-nowrap">{d.vehicle_wheel}</div>
-                        </div>
-                        <div class="flex">
-                          <div class="text-gray-300">{@html icon.transmission}</div>
-                          <div class="flex-1 ml-1 whitespace-nowrap">{d.vehicle_transmission}</div>
-                        </div>
-                        <div class="flex">
-                          <div class="text-gray-300">{@html icon.fuel}</div>
-                          <div class="flex-1 ml-1 whitespace-nowrap">{d.vehicle_fuel}</div>
-                        </div>
-                        <div class="flex">
-                          <div class="text-gray-300">{@html icon.toilet}</div>
-                          <div class="flex-1 ml-1 whitespace-nowrap">{d.vehicle_toilet ? "Toilet" : "N/A"}</div>
-                        </div>
-                        <div class="flex">
-                          <div class="text-gray-300">{@html icon.shower}</div>
-                          <div class="flex-1 ml-1 whitespace-nowrap">{d.vehicle_shower ? "Shower" : "N/A"}</div>
-                        </div>
+                      <div class="flex">
+                        <div class="text-gray-300">{@html icon.wheel}</div>
+                        <div class="flex-1 ml-1 whitespace-nowrap">{d.vehicle_wheel}</div>
+                      </div>
+                      <div class="flex">
+                        <div class="text-gray-300">{@html icon.transmission}</div>
+                        <div class="flex-1 ml-1 whitespace-nowrap">{d.vehicle_transmission}</div>
+                      </div>
+                      <div class="flex">
+                        <div class="text-gray-300">{@html icon.fuel}</div>
+                        <div class="flex-1 ml-1 whitespace-nowrap">{d.vehicle_fuel}</div>
+                      </div>
+                      <div class="flex">
+                        <div class="text-gray-300">{@html icon.toilet}</div>
+                        <div class="flex-1 ml-1 whitespace-nowrap">{d.vehicle_toilet ? "Toilet" : "N/A"}</div>
+                      </div>
+                      <div class="flex">
+                        <div class="text-gray-300">{@html icon.shower}</div>
+                        <div class="flex-1 ml-1 whitespace-nowrap">{d.vehicle_shower ? "Shower" : "N/A"}</div>
                       </div>
                     </div>
-                    <div class="flex">
-                      <div class="border border-gray-500 text-gray-500 text-xs uppercase px-2 py-0.5 rounded mr-1">
-                        {#if d.license_id}
-                          {d.license_name}
-                        {:else}
-                          Any license
-                        {/if}
-                      </div>
-                      <div class="border border-gray-500 text-gray-500 text-xs uppercase px-2 py-0.5 rounded-b mr-1">
-                        {d.age_name}
-                      </div>
-                      {#if d.special_total > 0}
-                        <div class="flex">
-                          {#each d.special_items as item}
-                            {#if item.active}
-                              <div class="border border-red-500 text-red-500 text-xs px-1 py-0.5 rounded mr-1">
-                                {item.name}
-                              </div>
-                            {/if}
-                          {/each}
-                        </div>
+                  </div>
+                  <div class="flex">
+                    <div class="border border-gray-500 text-gray-500 text-xs uppercase px-2 py-0.5 rounded mr-1">
+                      {#if d.license_id}
+                        {d.license_name}
+                      {:else}
+                        Any license
                       {/if}
                     </div>
+                    <div class="border border-gray-500 text-gray-500 text-xs uppercase px-2 py-0.5 rounded-b mr-1">
+                      {d.age_name}
+                    </div>
+                    {#if d.special_total > 0}
+                      <div class="flex">
+                        {#each d.special_items as item}
+                          {#if item.active}
+                            <div class="border border-red-500 text-red-500 text-xs px-1 py-0.5 rounded mr-1">
+                              {item.name}
+                            </div>
+                          {/if}
+                        {/each}
+                      </div>
+                    {/if}
                   </div>
                 </div>
               </div>
             </div>
-            <div class="bg-brand-50 p-2 border border-brand-500 rounded-r h-full">
-              <div class="flex flex-col h-full">
-                <div class="flex-1">
-                  {#if d.special_total > 0}
-                    <div class="text-sm pt-2 opacity-30 -mt-2">
-                      <s>${format.currency(d.gross)}</s>
-                      <!-- <s>${format.currency(d.gross + d.one_way + d.fee_total)}</s> -->
-                    </div>
-                  {/if}
-                  <div class="h2 font-bold">
-                    ${format.currency(d.gross - d.special_total)}
-                    <!-- ${format.currency(d.gross + d.one_way + d.fee_total - d.special_total)} -->
+          </div>
+          <div class="bg-brand-50 p-2 border border-brand-500 rounded-r h-full">
+            <div class="flex flex-col h-full">
+              <div class="flex-1">
+                {#if d.special_total > 0}
+                  <div class="text-sm pt-2 opacity-30 -mt-2">
+                    <s>${format.currency(d.gross)}</s>
+                    <!-- <s>${format.currency(d.gross + d.one_way + d.fee_total)}</s> -->
                   </div>
-                  {#if d.special_total > 0}
-                    <div class="text-sm text-red-500">
-                      <div>Save ${format.currency(d.special_total)}</div>
-                    </div>
-                  {/if}
-                  <div class="text-sm mb-1">
-                    Avg. ${format.currency((d.gross - d.special_total) / d.duration)} per day on daily basic rental
-                    <!-- Avg. per day ${format.currency((d.gross + d.one_way + d.fee_total - d.special_total) / d.duration)} -->
-                  </div>
+                {/if}
+                <div class="h2 font-bold">
+                  ${format.currency(d.gross - d.special_total)}
+                  <!-- ${format.currency(d.gross + d.one_way + d.fee_total - d.special_total)} -->
                 </div>
-                <div class="pt-2">
-                  {#if d.min_days > d.duration}
-                    <div class="bg-brand-200 px-2 py-1 mb-2 text-sm rounded">
-                      <span class="opacity-50">
-                        Price is based on minimum {d.min_days} days, less days will average out.
-                      </span>
-                    </div>
-                  {/if}
-                  <!-- href={`${url}?selected=${encodeURIComponent(JSON.stringify(d))}&${paramSearch.join("&")}`} -->
+                {#if d.special_total > 0}
+                  <div class="text-sm text-red-500">
+                    <div>Save ${format.currency(d.special_total)}</div>
+                  </div>
+                {/if}
+                <div class="text-sm mb-1">
+                  Avg. ${format.currency((d.gross - d.special_total) / d.duration)} per day on daily basic rental
+                  <!-- Avg. per day ${format.currency((d.gross + d.one_way + d.fee_total - d.special_total) / d.duration)} -->
+                </div>
+              </div>
+              <div class="pt-2">
+                {#if d.min_days > d.duration}
+                  <div class="bg-brand-200 px-2 py-1 mb-2 text-sm rounded">
+                    <span class="opacity-50">
+                      Price is based on minimum {d.min_days} days, less days will average out.
+                    </span>
+                  </div>
+                {/if}
+                <!-- href={`${url}?selected=${encodeURIComponent(JSON.stringify(d))}&${paramSearch.join("&")}`} -->
 
-                  <Button
-                    class="rounded h-auto p-1.5 text-sm w-full inline-block uppercase tracking-wider"
-                    href={`${url}?rates=${d.rates_id}&type=${d.rates_type}&vehicle=${d.vehicle_id}&${paramSearch.join(
-                      "&"
-                    )}`}
-                  >
-                    See Quote
-                  </Button>
-                </div>
+                <Button
+                  class="rounded h-auto p-1.5 text-sm w-full inline-block uppercase tracking-wider"
+                  href={`${url}?rates=${d.rates_id}&type=${d.rates_type}&vehicle=${d.vehicle_id}&${paramSearch.join(
+                    "&"
+                  )}`}
+                >
+                  See Quote
+                </Button>
               </div>
             </div>
           </div>
         </div>
-        <!-- {:else}
+      </div>
+      <!-- {:else}
     <div class="bg-white rounded px-4 py-10">Start your search</div> -->
-      {/each}
-      {#each results.blocked as d}
-        <div class="bg-white rounded overflow-hidden mb-3 relative">
-          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
-            <div class="md:col-span-3">
-              <div class="grid grid-cols-1 md:grid-cols-3 h-full">
-                <div class="p-2 opacity-50">
-                  <div class="rounded overflow-hidden">
-                    <img
-                      src="{env.PUBLIC_SUPABASE_URL}/storage/v1/render/image/public/contents/{d.vehicle_image}?width=400&height=400&resize=contain"
-                      alt={d.vehicle_caption}
-                      class="w-full"
-                    />
-                  </div>
+    {/each}
+    {#each results.blocked as d}
+      <div class="bg-white rounded overflow-hidden mb-3 relative">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
+          <div class="md:col-span-3">
+            <div class="grid grid-cols-1 md:grid-cols-3 h-full">
+              <div class="p-2 opacity-50">
+                <div class="rounded overflow-hidden">
+                  <img
+                    src="{env.PUBLIC_DB_URL}/storage/v1/render/image/public/contents/{d.vehicle_image}?width=400&height=400&resize=contain"
+                    alt={d.vehicle_caption}
+                    class="w-full"
+                  />
                 </div>
-                <div class="md:col-span-2 p-2 h-full opacity-50">
-                  <div class="flex flex-col h-full">
-                    <div class="flex-1">
-                      <h2 class="h2 font-bold">
-                        {d.vehicle_name}
-                      </h2>
-                      <div>
-                        <Button class="rounded p-0 text-sm" kind="ghost" href="/vehicles/{d.vehicle_slug}"
-                          >View Specs</Button
-                        >
+              </div>
+              <div class="md:col-span-2 p-2 h-full opacity-50">
+                <div class="flex flex-col h-full">
+                  <div class="flex-1">
+                    <h2 class="h2 font-bold">
+                      {d.vehicle_name}
+                    </h2>
+                    <div>
+                      <Button class="rounded p-0 text-sm" kind="ghost" href="/vehicles/{d.vehicle_slug}"
+                        >View Specs</Button
+                      >
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-1 text-sm max-w-xs mb-2">
+                      <div class="flex">
+                        <div class="text-gray-300">{@html icon.pax}</div>
+                        <div class="flex-1 ml-1 whitespace-nowrap">{d.vehicle_pax} Pax</div>
                       </div>
-                      <div class="grid grid-cols-2 md:grid-cols-3 gap-1 text-sm max-w-xs mb-2">
-                        <div class="flex">
-                          <div class="text-gray-300">{@html icon.pax}</div>
-                          <div class="flex-1 ml-1 whitespace-nowrap">{d.vehicle_pax} Pax</div>
-                        </div>
-                        <div class="flex">
-                          <div class="text-gray-300">{@html icon.wheel}</div>
-                          <div class="flex-1 ml-1 whitespace-nowrap">{d.vehicle_wheel}</div>
-                        </div>
-                        <div class="flex">
-                          <div class="text-gray-300">{@html icon.transmission}</div>
-                          <div class="flex-1 ml-1 whitespace-nowrap">{d.vehicle_transmission}</div>
-                        </div>
-                        <div class="flex">
-                          <div class="text-gray-300">{@html icon.fuel}</div>
-                          <div class="flex-1 ml-1 whitespace-nowrap">{d.vehicle_fuel}</div>
-                        </div>
-                        <div class="flex">
-                          <div class="text-gray-300">{@html icon.toilet}</div>
-                          <div class="flex-1 ml-1 whitespace-nowrap">{d.vehicle_toilet ? "Toilet" : "N/A"}</div>
-                        </div>
-                        <div class="flex">
-                          <div class="text-gray-300">{@html icon.shower}</div>
-                          <div class="flex-1 ml-1 whitespace-nowrap">{d.vehicle_shower ? "Shower" : "N/A"}</div>
-                        </div>
+                      <div class="flex">
+                        <div class="text-gray-300">{@html icon.wheel}</div>
+                        <div class="flex-1 ml-1 whitespace-nowrap">{d.vehicle_wheel}</div>
+                      </div>
+                      <div class="flex">
+                        <div class="text-gray-300">{@html icon.transmission}</div>
+                        <div class="flex-1 ml-1 whitespace-nowrap">{d.vehicle_transmission}</div>
+                      </div>
+                      <div class="flex">
+                        <div class="text-gray-300">{@html icon.fuel}</div>
+                        <div class="flex-1 ml-1 whitespace-nowrap">{d.vehicle_fuel}</div>
+                      </div>
+                      <div class="flex">
+                        <div class="text-gray-300">{@html icon.toilet}</div>
+                        <div class="flex-1 ml-1 whitespace-nowrap">{d.vehicle_toilet ? "Toilet" : "N/A"}</div>
+                      </div>
+                      <div class="flex">
+                        <div class="text-gray-300">{@html icon.shower}</div>
+                        <div class="flex-1 ml-1 whitespace-nowrap">{d.vehicle_shower ? "Shower" : "N/A"}</div>
                       </div>
                     </div>
-                    <div class="flex">
-                      <div class="border border-gray-500 text-gray-500 text-xs uppercase px-2 py-0.5 rounded mr-1">
-                        {#if d.license_id}
-                          {d.license_name}
-                        {:else}
-                          Any license
-                        {/if}
-                      </div>
-                      <div class="border border-gray-500 text-gray-500 text-xs uppercase px-2 py-0.5 rounded-b mr-1">
-                        {d.age_name}
-                      </div>
+                  </div>
+                  <div class="flex">
+                    <div class="border border-gray-500 text-gray-500 text-xs uppercase px-2 py-0.5 rounded mr-1">
+                      {#if d.license_id}
+                        {d.license_name}
+                      {:else}
+                        Any license
+                      {/if}
+                    </div>
+                    <div class="border border-gray-500 text-gray-500 text-xs uppercase px-2 py-0.5 rounded-b mr-1">
+                      {d.age_name}
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="bg-brand-50 p-2 rounded-r h-full">
-              <div class="bg-brand-200 px-2 py-1 mb-2 rounded">
-                <span class="h2">Not Available</span>
-              </div>
-              {#each d.block_items as b}
-                <div class="text-sm">
-                  <div class="font-bold">
-                    {b.name}
-                  </div>
-                  <div>
-                    {@html b.description}
-                  </div>
-                </div>
-              {/each}
             </div>
           </div>
+          <div class="bg-brand-50 p-2 rounded-r h-full">
+            <div class="bg-brand-200 px-2 py-1 mb-2 rounded">
+              <span class="h2">Not Available</span>
+            </div>
+            {#each d.block_items as b}
+              <div class="text-sm">
+                <div class="font-bold">
+                  {b.name}
+                </div>
+                <div>
+                  {@html b.description}
+                </div>
+              </div>
+            {/each}
+          </div>
         </div>
-      {/each}
-    {/if}
-    <!-- else content here -->
+      </div>
+    {/each}
+  {/if}
+  <!-- else content here -->
   <!-- {/if} -->
 </section>

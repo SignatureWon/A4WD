@@ -11,7 +11,9 @@
         <div class="h-60 sm:h-48 overflow-hidden">
           <div
             class="h-60 sm:h-48 bg-cover bg-center transition-all group-hover:scale-125 bg-gray-300"
-            style={record.image ? `background-image: url('${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/${record.image}')` : ""}
+            style={record.image
+              ? `background-image: url('${env.PUBLIC_DB_URL}/storage/v1/object/public/contents/${record.image}')`
+              : ""}
           />
         </div>
         <div class="p-4">

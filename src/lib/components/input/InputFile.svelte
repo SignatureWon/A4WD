@@ -15,19 +15,14 @@
   }
 </script>
 
-<label
-  for={field.name}
-  class="block mb-2 text-sm tracking-wider text-gray-600 font-semibold"
-  >{field.label}</label
->
+<label for={field.name} class="block mb-2 text-sm tracking-wider text-gray-600 font-semibold">{field.label}</label>
 {#if record[field.name]}
   <div class="mb-2">
     <!-- svelte-ignore a11y-missing-content -->
     <a
-      href={`${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/${
-        field.bucket
-      }/${record[field.name] || ""}`}
-      target="_blank" rel="noreferrer"
+      href={`${env.PUBLIC_DB_URL}/storage/v1/object/public/${field.bucket}/${record[field.name] || ""}`}
+      target="_blank"
+      rel="noreferrer"
       class="file-icon file-icon-xl"
       data-type={getExtension(record[field.name])}
     />
@@ -36,9 +31,7 @@
 <div>
   <FileUploader
     labelTitle=""
-    buttonLabel={record[field.name] === null || record[field.name] === ""
-      ? "Upload"
-      : "Change"}
+    buttonLabel={record[field.name] === null || record[field.name] === "" ? "Upload" : "Change"}
     labelDescription=""
     kind="secondary"
     status="complete"
@@ -56,9 +49,7 @@
           .from(field.bucket)
           .remove([record[field.name], `thumb-${record[field.name]}`]);
       }
-      const { data, error } = await supabase.storage
-        .from(field.bucket)
-        .upload(filename, files.detail[0]);
+      const { data, error } = await supabase.storage.from(field.bucket).upload(filename, files.detail[0]);
 
       record[field.name] = filename;
 

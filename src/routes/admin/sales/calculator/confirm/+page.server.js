@@ -26,11 +26,7 @@ export const actions = {
     };
 
     if (fd.user_id === "") {
-      const { data: dataUser, error: errUser } = await supabase
-        .from("users")
-        .insert(user)
-        .select()
-        .single();
+      const { data: dataUser, error: errUser } = await supabase.from("users").insert(user).select().single();
 
       if (errUser) {
         console.log("error", errUser);
@@ -38,10 +34,7 @@ export const actions = {
         user.id = dataUser.id;
       }
     } else {
-      const { error: errUser } = await supabase
-        .from("users")
-        .update(user)
-        .eq("id", fd.user_id);
+      const { error: errUser } = await supabase.from("users").update(user).eq("id", fd.user_id);
       user.id = fd.user_id;
     }
     let data = JSON.parse(fd.data);
@@ -79,11 +72,7 @@ export const actions = {
 
     // console.log("quote", quote);
 
-    const { data: dataQuote, error: errQuote } = await supabase
-      .from("quotes")
-      .insert(quote)
-      .select()
-      .single();
+    const { data: dataQuote, error: errQuote } = await supabase.from("quotes").insert(quote).select().single();
 
     if (errQuote) {
       console.log("errQuote", errQuote);
@@ -91,25 +80,18 @@ export const actions = {
 
     // console.log("dataQuote", dataQuote);
 
-    let filePDF = new Blob(
-      [await pdf.create(dataQuote.id, "template_quote")],
-      {
-        type: "application/pdf",
-      }
-    );
+    let filePDF = new Blob([await pdf.create(dataQuote.id, "template_quote")], {
+      type: "application/pdf",
+    });
     const { data: dataPdf, error: errPdf } = await supabase.storage
       .from("quotes")
       .upload(`Q${388000 + dataQuote.id}.pdf`, filePDF);
-    
-      if (errPdf) {
-        console.log("errPdf", errPdf);
-      }
 
-    const { data: contents } = await supabase
-      .from("contents")
-      .select("caption")
-      .eq("type", "template_quote")
-      .single();
+    if (errPdf) {
+      console.log("errPdf", errPdf);
+    }
+
+    const { data: contents } = await supabase.from("contents").select("caption").eq("type", "template_quote").single();
 
     const { data: terms } = await supabase
       .from("terms")
@@ -128,63 +110,38 @@ export const actions = {
       });
     };
 
-    let fee_deposit = terms.percentage
-      ? (dataQuote.gross * terms.deposit) / 100
-      : terms.deposit;
-    let fee_payment_1 =
-      (terms.percentage2
-        ? (dataQuote.gross * terms.deposit2) / 100
-        : terms.deposit2) || 0;
-    let fee_payment_2 =
-      (terms.percentage3
-        ? (dataQuote.gross * terms.deposit3) / 100
-        : terms.deposit3) || 0;
+    let fee_deposit = terms.percentage ? (dataQuote.gross * terms.deposit) / 100 : terms.deposit;
+    let fee_payment_1 = (terms.percentage2 ? (dataQuote.gross * terms.deposit2) / 100 : terms.deposit2) || 0;
+    let fee_payment_2 = (terms.percentage3 ? (dataQuote.gross * terms.deposit3) / 100 : terms.deposit3) || 0;
     let fee_balance = dataQuote.gross - fee_deposit - fee_payment_1 - fee_payment_2;
 
     let paymentTerms = "<div>• ";
     paymentTerms += `$${formatCurrency(fee_deposit)}`;
-    paymentTerms += ` on ${dayjs(dataQuote.details.daily.date_book).format(
-      "DD MMM YYYY (ddd)"
-    )}</div>`;
+    paymentTerms += ` on ${dayjs(dataQuote.details.daily.date_book).format("DD MMM YYYY (ddd)")}</div>`;
     if (terms.payment2) {
       paymentTerms += "<div>• ";
       paymentTerms += `$${formatCurrency(fee_payment_1)}`;
       let depositDay = dayjs(dataQuote.details.daily.date_book);
-      let payDay = dayjs(dataQuote.details.daily.date_start).subtract(
-        terms.balance2,
-        "day"
-      );
+      let payDay = dayjs(dataQuote.details.daily.date_start).subtract(terms.balance2, "day");
       paymentTerms += ` on ${
-        payDay.isBefore(depositDay)
-          ? depositDay.format("DD MMM YYYY (ddd)")
-          : payDay.format("DD MMM YYYY (ddd)")
+        payDay.isBefore(depositDay) ? depositDay.format("DD MMM YYYY (ddd)") : payDay.format("DD MMM YYYY (ddd)")
       }</div>`;
     }
     if (terms.payment3) {
       paymentTerms += "<div>• ";
       paymentTerms += `$${formatCurrency(fee_payment_2)}`;
       let depositDay = dayjs(dataQuote.details.daily.date_book);
-      let payDay = dayjs(dataQuote.details.daily.date_start).subtract(
-        terms.balance3,
-        "day"
-      );
+      let payDay = dayjs(dataQuote.details.daily.date_start).subtract(terms.balance3, "day");
       paymentTerms += ` on ${
-        payDay.isBefore(depositDay)
-          ? depositDay.format("DD MMM YYYY (ddd)")
-          : payDay.format("DD MMM YYYY (ddd)")
+        payDay.isBefore(depositDay) ? depositDay.format("DD MMM YYYY (ddd)") : payDay.format("DD MMM YYYY (ddd)")
       }</div>`;
     }
     paymentTerms += "<div>• ";
     paymentTerms += `$${formatCurrency(fee_balance)}`;
     let depositDay = dayjs(dataQuote.details.daily.date_book);
-    let payDay = dayjs(dataQuote.details.daily.date_start).subtract(
-      terms.balance,
-      "day"
-    );
+    let payDay = dayjs(dataQuote.details.daily.date_start).subtract(terms.balance, "day");
     paymentTerms += ` on ${
-      payDay.isBefore(depositDay)
-        ? depositDay.format("DD MMM YYYY (ddd)")
-        : payDay.format("DD MMM YYYY (ddd)")
+      payDay.isBefore(depositDay) ? depositDay.format("DD MMM YYYY (ddd)") : payDay.format("DD MMM YYYY (ddd)")
     }`;
 
     if (terms.pay_counter) {
@@ -195,15 +152,13 @@ export const actions = {
     emailBody = emailBody.replace("{payment_schedule}", paymentTerms);
     emailBody = emailBody.replace("{supplier_name}", dataQuote.details.supplier.name);
 
-    emailBody += `<div style="margin-top:20px"><a href="https://api.australia4wdrentals.com/storage/v1/object/public/quotes/Q${dataQuote.id + 388000}.pdf">Download Quotation</a></div>`
+    emailBody += `<div style="margin-top:20px"><a href="https://api.australia4wdrentals.com/storage/v1/object/public/quotes/Q${
+      dataQuote.id + 388000
+    }.pdf">Download Quotation</a></div>`;
 
-    const { data: emailData } = await supabase
-    .from("constants")
-    .select("name")
-    .eq("type", "email_quote")
-    .single();
+    const { data: emailData } = await supabase.from("constants").select("name").eq("type", "email_quote").single();
 
-    sgMail.setApiKey(env.PUBLIC_SENDGRID_API_KEY);
+    sgMail.setApiKey(env.PUBLIC_MAIL_KEY);
     await sgMail
       .send({
         to: user.email,

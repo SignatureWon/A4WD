@@ -88,7 +88,8 @@
     <div class="rounded bg-white p-4">
       <div class="mb-4">
         <span class="font-bold">4WD Car and 4WD Camper Hire</span>
-        <Button kind="tertiary" href="/vehicles?category=4wd-campers" class="text-sm border-2 font-bold px-2 py-1 ml-2">View All 4WD</Button
+        <Button kind="tertiary" href="/vehicles?category=4wd-campers" class="text-sm border-2 font-bold px-2 py-1 ml-2"
+          >View All 4WD</Button
         >
       </div>
       <section class="splide carousel-4wd -mx-10">
@@ -101,10 +102,10 @@
                     <a href="/vehicles/{item.slug}">
                       <div class="h-44 overflow-hidden rounded relative flex items-center">
                         {#if item.image}
-                          <!-- {#await preload(`${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/${item.image}`) then base64} -->
+                          <!-- {#await preload(`${env.PUBLIC_DB_URL}/storage/v1/object/public/contents/${item.image}`) then base64} -->
                           <div class="absolute w-full h-full scale-110 -z-10 bg-white border border-gray-200" />
                           <ImageLoader
-                            src="{env.PUBLIC_SUPABASE_URL}/storage/v1/render/image/public/contents/{item.image}?width=300&height=300&resize=contain"
+                            src="{env.PUBLIC_DB_URL}/storage/v1/render/image/public/contents/{item.image}?width=300&height=300&resize=contain"
                             alt={item.name}
                             width="300"
                             height="300"
@@ -113,7 +114,7 @@
                             <!-- <svelte:fragment slot="error">An error occurred.</svelte:fragment> -->
                           </ImageLoader>
                           <!-- <img
-                            src="{env.PUBLIC_SUPABASE_URL}/storage/v1/render/image/public/contents/{item.image}?width=300&height=300&resize=contain"
+                            src="{env.PUBLIC_DB_URL}/storage/v1/render/image/public/contents/{item.image}?width=300&height=300&resize=contain"
                             alt={item.name}
                             width="300"
                             height="300"
@@ -139,7 +140,8 @@
     <div class="rounded bg-white p-4">
       <div class="mb-4">
         <span class="font-bold">2WD Camper RV Hire</span>
-        <Button kind="tertiary" href="/vehicles?category=2wd-campers" class="text-sm border-2 font-bold px-2 py-1 ml-2">View All 2WD</Button
+        <Button kind="tertiary" href="/vehicles?category=2wd-campers" class="text-sm border-2 font-bold px-2 py-1 ml-2"
+          >View All 2WD</Button
         >
       </div>
       <section class="splide carousel-2wd -mx-10">
@@ -152,10 +154,10 @@
                     <a href="/vehicles/{item.slug}">
                       <div class="h-44 overflow-hidden rounded relative flex items-center">
                         {#if item.image}
-                          <!-- {#await preload(`${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/${item.image}`) then base64} -->
+                          <!-- {#await preload(`${env.PUBLIC_DB_URL}/storage/v1/object/public/contents/${item.image}`) then base64} -->
                           <div class="absolute w-full h-full scale-110 -z-10 bg-white border border-gray-200" />
                           <ImageLoader
-                            src="{env.PUBLIC_SUPABASE_URL}/storage/v1/render/image/public/contents/{item.image}?width=300&height=300&resize=contain"
+                            src="{env.PUBLIC_DB_URL}/storage/v1/render/image/public/contents/{item.image}?width=300&height=300&resize=contain"
                             alt={item.name}
                             width="300"
                             height="300"
@@ -164,7 +166,7 @@
                             <!-- <svelte:fragment slot="error">An error occurred.</svelte:fragment> -->
                           </ImageLoader>
                           <!-- <img
-                            src="{env.PUBLIC_SUPABASE_URL}/storage/v1/render/image/public/contents/{item.image}?width=300&height=300&resize=contain"
+                            src="{env.PUBLIC_DB_URL}/storage/v1/render/image/public/contents/{item.image}?width=300&height=300&resize=contain"
                             alt={item.name}
                             width="300"
                             height="300"

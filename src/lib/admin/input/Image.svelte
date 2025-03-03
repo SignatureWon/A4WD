@@ -10,17 +10,11 @@
   export let fetch = false;
 </script>
 
-<label
-  for={key}
-  class="block mb-2 text-sm tracking-wider text-gray-600 font-semibold"
-  >{field.label}</label
->
+<label for={key} class="block mb-2 text-sm tracking-wider text-gray-600 font-semibold">{field.label}</label>
 {#if data[key]}
   <div class="mb-2">
     <img
-      src={`${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/${
-        field.options
-      }/${data[key] || ""}`}
+      src={`${env.PUBLIC_DB_URL}/storage/v1/object/public/${field.options}/${data[key] || ""}`}
       alt=""
       class="w-auto h-24"
     />

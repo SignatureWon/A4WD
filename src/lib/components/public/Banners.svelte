@@ -24,11 +24,9 @@
         <li class="splide__slide">
           <div
             class="h-[395px] bg-cover bg-center"
-            style="background-image: url('{env.PUBLIC_SUPABASE_URL}/storage/v1/render/image/public/contents/{item.image}?width=800&height=800&resize=contain');"
+            style="background-image: url('{env.PUBLIC_DB_URL}/storage/v1/render/image/public/contents/{item.image}?width=800&height=800&resize=contain');"
           >
-            <div
-              class="w-full h-full bg-black/20 flex flex-col items-center justify-center text-center p-10"
-            >
+            <div class="w-full h-full bg-black/20 flex flex-col items-center justify-center text-center p-10">
               <div class="text-2xl font-bold text-white">{item.name}</div>
               <div class="text-brand-200 text-lg mb-4">
                 {item.description}

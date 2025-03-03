@@ -6,7 +6,7 @@
 <div class="h-96 bg-black/20">
   {#if record.image}
     <img
-      src="{env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/{record.image}"
+      src="{env.PUBLIC_DB_URL}/storage/v1/object/public/contents/{record.image}"
       alt={record.name}
       class="object-fill h-96"
     />

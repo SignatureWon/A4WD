@@ -31,9 +31,7 @@
     {#each data[key] as row, rowIndex}
       <div class="flex pb-4 mb-4 border-b border-gray-200">
         <div class="pr-4">
-          <div
-            class="w-8 h-8 leading-8 text-center rounded bg-brand-600 text-white"
-          >
+          <div class="w-8 h-8 leading-8 text-center rounded bg-brand-600 text-white">
             {rowIndex + 1}
           </div>
         </div>
@@ -140,15 +138,14 @@
 
         // console.log('img1', img1);
         // console.log('img2', img2);
-        
 
         setTimeout(async () => {
           data[key] = [
             ...data[key],
             {
               name: filename,
-              url: `${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/gallery/${filename}`,
-              thumb: `${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/gallery/thumb-${filename}`,
+              url: `${env.PUBLIC_DB_URL}/storage/v1/object/public/gallery/${filename}`,
+              thumb: `${env.PUBLIC_DB_URL}/storage/v1/object/public/gallery/thumb-${filename}`,
               caption: "",
             },
           ];

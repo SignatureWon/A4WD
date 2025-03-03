@@ -6,12 +6,7 @@
   import { page } from "$app/stores";
   import Loading from "$lib/components/Loading.svelte";
   import Toast from "$lib/components/Toast.svelte";
-  import {
-    Button,
-    FileUploader,
-    TextArea,
-    TextInput,
-  } from "carbon-components-svelte";
+  import { Button, FileUploader, TextArea, TextInput } from "carbon-components-svelte";
 
   export let table = "table";
   export let field = "field";
@@ -38,11 +33,7 @@
   const getRecord = async () => {
     try {
       loading = true;
-      const { data, error } = await supabase
-        .from(table)
-        .select(field)
-        .eq("id", id)
-        .single();
+      const { data, error } = await supabase.from(table).select(field).eq("id", id).single();
 
       if (error) throw error;
 
@@ -60,10 +51,7 @@
       let obj = {};
       obj[field] = records;
       loading = true;
-      const { data, error } = await supabase
-        .from(table)
-        .update(obj)
-        .eq("id", id);
+      const { data, error } = await supabase.from(table).update(obj).eq("id", id);
 
       if (error) throw error;
     } catch (error) {
@@ -155,9 +143,7 @@
         let resizedImage = new Blob([uInt8Array], {
           type: contentType,
         });
-        const { data, error } = await supabase.storage
-          .from("gallery")
-          .upload(fileName, resizedImage);
+        const { data, error } = await supabase.storage.from("gallery").upload(fileName, resizedImage);
 
         if (!error) {
           errors = error;
@@ -208,11 +194,9 @@
       {#each records as item, itemIndex}
         <div class="md:flex p-4 border-b border-gray-200">
           <div class="flex-1">
-            <div class="flex ">
+            <div class="flex">
               <div class="mr-1 mt-1">
-                <div
-                  class="w-8 h-8 leading-8 text-center rounded bg-brand-600 text-white"
-                >
+                <div class="w-8 h-8 leading-8 text-center rounded bg-brand-600 text-white">
                   {itemIndex + 1}
                 </div>
               </div>
@@ -326,8 +310,8 @@
                   ...records,
                   {
                     name: filename,
-                    url: `${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/gallery/${filename}`,
-                    thumb: `${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/gallery/thumb-${filename}`,
+                    url: `${env.PUBLIC_DB_URL}/storage/v1/object/public/gallery/${filename}`,
+                    thumb: `${env.PUBLIC_DB_URL}/storage/v1/object/public/gallery/thumb-${filename}`,
                     caption: "",
                   },
                 ];

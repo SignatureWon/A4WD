@@ -66,9 +66,7 @@
         let resizedImage = new Blob([uInt8Array], {
           type: contentType,
         });
-        const { data, error } = await supabase.storage
-          .from(field.bucket)
-          .upload(fileName, resizedImage);
+        const { data, error } = await supabase.storage.from(field.bucket).upload(fileName, resizedImage);
 
         if (!error) {
           errors = error;
@@ -83,17 +81,11 @@
   };
 </script>
 
-<label
-  for={field.name}
-  class="block mb-2 text-sm tracking-wider text-gray-600 font-semibold"
-  >{field.label}</label
->
+<label for={field.name} class="block mb-2 text-sm tracking-wider text-gray-600 font-semibold">{field.label}</label>
 {#if record[field.name]}
   <div class="mb-2">
     <img
-      src={`${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/${
-        field.bucket
-      }/${record[field.name] || ""}`}
+      src={`${env.PUBLIC_DB_URL}/storage/v1/object/public/${field.bucket}/${record[field.name] || ""}`}
       alt=""
       class="w-auto h-16"
     />
@@ -102,9 +94,7 @@
 <div>
   <FileUploader
     labelTitle=""
-    buttonLabel={record[field.name] === null || record[field.name] === ""
-      ? "Upload"
-      : "Change"}
+    buttonLabel={record[field.name] === null || record[field.name] === "" ? "Upload" : "Change"}
     labelDescription=""
     accept={["*.jpg", "*.png", "*.gif"]}
     kind="secondary"

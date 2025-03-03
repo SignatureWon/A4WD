@@ -49,8 +49,8 @@ export async function load({ url, params, locals }) {
     keys: keys,
   });
   if (data.counter) {
-    throw redirect(303, `${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/terms/${data.counter}`);
+    throw redirect(303, `${env.PUBLIC_DB_URL}/storage/v1/object/public/terms/${data.counter}`);
   } else {
-    return { data }
+    return { data };
   }
 }

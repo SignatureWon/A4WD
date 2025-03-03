@@ -11,7 +11,7 @@ import { html as confirmation } from "$lib/confirmation.js";
 // import puppeteer from "puppeteer-core";
 // import chromium from "@sparticuz/chromium-min";
 // import { chromium } from 'playwright';
-import playwright from 'playwright-aws-lambda';
+import playwright from "playwright-aws-lambda";
 import { env } from "$env/dynamic/public";
 import sgMail from "@sendgrid/mail";
 
@@ -126,7 +126,6 @@ export async function load({ url, params }) {
   });
 
   const { data: templates } = await supabase.from("contents").select("name, content").eq("type", "emails");
-
 
   return {
     quote: quote,
@@ -282,7 +281,7 @@ export const actions = {
       });
     });
     let emailResponse = "";
-    sgMail.setApiKey(env.PUBLIC_SENDGRID_API_KEY);
+    sgMail.setApiKey(env.PUBLIC_MAIL_KEY);
     await sgMail
       .send({
         personalizations: [

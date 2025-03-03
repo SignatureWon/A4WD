@@ -8,7 +8,7 @@ import { error, redirect } from "@sveltejs/kit";
 import { html } from "$lib/html.js";
 // import { chromium } from 'playwright';
 // import puppeteer from "puppeteer";
-import playwright from 'playwright-aws-lambda';
+import playwright from "playwright-aws-lambda";
 import { env } from "$env/dynamic/public";
 import sgMail from "@sendgrid/mail";
 
@@ -108,8 +108,7 @@ export async function load({ url, params }) {
   const addAddons = cal.addAddons(addedBonds, addonsData);
   const addTerms = cal.addTerms(addAddons, termsData);
 
-  let terms = addTerms.length ? addTerms[0] : addTerms
-
+  let terms = addTerms.length ? addTerms[0] : addTerms;
 
   // console.log(addTerms.length);
 
@@ -225,7 +224,7 @@ export const actions = {
     let getBond = Object.keys(dataQuote.details.bonds).length ? dataQuote.details.bonds : dataQuote.details.bond;
     const { data: dataUser } = await supabase.from("users").select().eq("id", dataQuote.users).single();
 
-    emailBody = `<div style="font-size: 24px; margin-bottom: 50px">${fd.message}</div>` + emailBody
+    emailBody = `<div style="font-size: 24px; margin-bottom: 50px">${fd.message}</div>` + emailBody;
     // console.log(emailBody);
     // console.log("send to", dataUser.email)
 
@@ -237,7 +236,7 @@ export const actions = {
       });
     });
     let emailResponse = "";
-    sgMail.setApiKey(env.PUBLIC_SENDGRID_API_KEY);
+    sgMail.setApiKey(env.PUBLIC_MAIL_KEY);
     await sgMail
       .send({
         personalizations: [
@@ -290,8 +289,8 @@ export const actions = {
     const updateData = {
       supplier_reference: fd.supplier_reference,
       status: "Provisional",
-      date_provisional: dayjs()
-    }
+      date_provisional: dayjs(),
+    };
     const { error: err } = await locals.sb.from("quotes").update(updateData).eq("id", params.id);
 
     if (err) {
@@ -309,8 +308,8 @@ export const actions = {
     const updateData = {
       supplier_reference: fd.supplier_reference,
       status: "Final",
-      date_provisional: dayjs()
-    }
+      date_provisional: dayjs(),
+    };
     const { error: err } = await locals.sb.from("quotes").update(updateData).eq("id", params.id);
 
     if (err) {

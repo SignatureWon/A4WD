@@ -90,7 +90,7 @@
     vehicle: {
       id: d.vehicle_id,
       name: d.vehicle_name,
-      image: `${env.PUBLIC_SUPABASE_URL}/storage/v1/render/image/public/contents/${d.vehicle_image}?width=600&height=600&resize=contain`,
+      image: `${env.PUBLIC_DB_URL}/storage/v1/render/image/public/contents/${d.vehicle_image}?width=600&height=600&resize=contain`,
       excerpt: d.vehicle_excerpt,
       slug: d.vehicle_slug,
       fuel: d.vehicle_fuel,
@@ -133,7 +133,6 @@
     add_discount: 0,
     add_discount_remark: "",
   };
-
 
   let selected_bond = 0;
   let bond_fee = 0;
@@ -313,7 +312,7 @@
         obj.gross -= obj.gross / arr.length;
         obj.nett -= obj.nett / arr.length;
         obj.profit -= obj.profit / arr.length;
-        days -= 1
+        days -= 1;
       }
       // console.log(supplier.all_day);
       agentFees.push({
@@ -641,7 +640,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 py-4 gap-4">
           <div class="text-center">
             <img
-              src="{env.PUBLIC_SUPABASE_URL}/storage/v1/render/image/public/contents/{info.vehicle
+              src="{env.PUBLIC_DB_URL}/storage/v1/render/image/public/contents/{info.vehicle
                 .image}?width=200&height=200&resize=contain"
               alt={info.vehicle.name}
             />

@@ -47,9 +47,7 @@
         {/if}
       </div>
       <div class="text-center hidden md:block pl-8 pb-8">
-        <Button href="/destinations" class="inline-block">
-          More Destinations
-        </Button>
+        <Button href="/destinations" class="inline-block">More Destinations</Button>
       </div>
     </div>
     <section class="splide carousel-destinations">
@@ -63,12 +61,10 @@
                     <div class="h-40 overflow-hidden rounded">
                       <div
                         class="h-40 bg-cover bg-center transition-all group-hover:scale-125"
-                        style="background-image: url('{env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/contents/{item.image}');"
+                        style="background-image: url('{env.PUBLIC_DB_URL}/storage/v1/object/public/contents/{item.image}');"
                       />
                     </div>
-                    <div
-                      class="text-lg font-medium px-2 h-8 leading-8 -mt-8 bg-white inline-block absolute"
-                    >
+                    <div class="text-lg font-medium px-2 h-8 leading-8 -mt-8 bg-white inline-block absolute">
                       {item.name}
                     </div>
                   </a>
@@ -80,9 +76,7 @@
       </div>
     </section>
     <div class="text-center md:hidden pt-8">
-      <Button href="/destinations" class="inline-block">
-        More Destinations
-      </Button>
+      <Button href="/destinations" class="inline-block">More Destinations</Button>
     </div>
-</div>
+  </div>
 </section>

@@ -16,19 +16,14 @@
   }
 </script>
 
-<label
-  for={field.name}
-  class="block mb-2 text-sm tracking-wider text-gray-600 font-semibold"
-  >{field.label}</label
->
+<label for={field.name} class="block mb-2 text-sm tracking-wider text-gray-600 font-semibold">{field.label}</label>
 {#if data[key]}
   <div class="mb-2">
     <!-- svelte-ignore a11y-missing-content -->
     <a
-      href={`${env.PUBLIC_SUPABASE_URL}/storage/v1/object/public/${
-        field.bucket
-      }/${data[key] || ""}`}
-      target="_blank" rel="noreferrer"
+      href={`${env.PUBLIC_DB_URL}/storage/v1/object/public/${field.bucket}/${data[key] || ""}`}
+      target="_blank"
+      rel="noreferrer"
       class="file-icon file-icon-xl"
       data-type={getExtension(data[key])}
     />
@@ -37,9 +32,7 @@
 <div>
   <FileUploader
     labelTitle=""
-    buttonLabel={data[key] === null || data[key] === ""
-      ? "Upload"
-      : "Change"}
+    buttonLabel={data[key] === null || data[key] === "" ? "Upload" : "Change"}
     labelDescription=""
     kind="secondary"
     status="complete"
@@ -53,13 +46,9 @@
       filename = `${uuidv4()}.${ext}`;
 
       if (data[key] !== null || data[key] !== "") {
-        const { data, error } = await supabase.storage
-          .from(field.bucket)
-          .remove([data[key], `thumb-${data[key]}`]);
+        const { data, error } = await supabase.storage.from(field.bucket).remove([data[key], `thumb-${data[key]}`]);
       }
-      const { data, error } = await supabase.storage
-        .from(field.bucket)
-        .upload(filename, files.detail[0]);
+      const { data, error } = await supabase.storage.from(field.bucket).upload(filename, files.detail[0]);
 
       data[key] = filename;
 

@@ -12,7 +12,7 @@ import { env } from "$env/dynamic/public";
 import sgMail from "@sendgrid/mail";
 import { default as FD } from "form-data";
 import Mailgun from "mailgun.js";
-import { MAILGUN_API_KEY } from "$env/static/private";
+import { MAIL_KEY } from "$env/static/private";
 
 export async function load({ url, params }) {
   const { data: quote } = await supabase.from("quotes").select("*, users (*)").eq("id", params.id).single();
@@ -268,7 +268,7 @@ export const actions = {
     // console.log("emailSubject", emailSubject);
 
     const mailgun = new Mailgun(FD);
-    const mg = mailgun.client({ username: "api", key: MAILGUN_API_KEY });
+    const mg = mailgun.client({ username: "api", key: MAIL_KEY });
     mg.messages
       .create("mail.australia4wheeldriverentals.com", {
         from: "Australia 4WD Rentals <info@australia4wheeldriverentals.com>",
@@ -281,7 +281,7 @@ export const actions = {
       .then((msg) => console.log(msg)) // logs response data
       .catch((err) => console.log(err)); // logs any error
     /*    
-    sgMail.setApiKey(env.PUBLIC_SENDGRID_API_KEY);
+    sgMail.setApiKey(env.PUBLIC_MAIL_KEY);
     await sgMail
       .send({
         personalizations: [

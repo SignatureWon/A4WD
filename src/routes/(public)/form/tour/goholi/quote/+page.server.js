@@ -8,7 +8,7 @@ import { env } from "$env/dynamic/public";
 import { error, redirect } from "@sveltejs/kit";
 import { default as FD } from "form-data";
 import Mailgun from "mailgun.js";
-import { MAILGUN_API_KEY } from "$env/static/private";
+import { MAIL_KEY } from "$env/static/private";
 
 export async function load() {
   const { data: dataOptions, error: errorOptions } = await supabase.rpc("search_options").select();
@@ -278,7 +278,7 @@ export const actions = {
     )}: ${user.first_name.trim()} ${user.last_name.trim()}`;
 
     const mailgun = new Mailgun(FD);
-    const mg = mailgun.client({ username: "api", key: MAILGUN_API_KEY });
+    const mg = mailgun.client({ username: "api", key: MAIL_KEY });
     mg.messages
       .create("mail.australia4wheeldriverentals.com", {
         from: "Goholi Pty Ltd <info@australia4wheeldriverentals.com>",
@@ -290,7 +290,7 @@ export const actions = {
       .then((msg) => console.log(msg)) // logs response data
       .catch((err) => console.log(err)); // logs any error
     /*
-    sgMail.setApiKey(env.PUBLIC_SENDGRID_API_KEY);
+    sgMail.setApiKey(env.PUBLIC_MAIL_KEY);
     await sgMail
       .send({
         personalizations: [

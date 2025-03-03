@@ -32,7 +32,7 @@ export const load = async (event) => {
   });
 
   const session = await getServerSession(event);
-  const baseUrl = env.PUBLIC_SUPABASE_URL;
+  const baseUrl = env.PUBLIC_DB_URL;
 
   return {
     session,

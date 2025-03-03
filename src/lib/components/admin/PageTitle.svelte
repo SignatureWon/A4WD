@@ -29,10 +29,7 @@
 <div class="pb-5">
   <Breadcrumb>
     {#each pages as page}
-      <BreadcrumbItem
-        href={page.link}
-        class="capitalize inline text-xs [&>a]:text-sm"
-      >
+      <BreadcrumbItem href={page.link} class="capitalize inline text-xs [&>a]:text-sm">
         {page.name.replace("_", " ")}
       </BreadcrumbItem>
     {/each}
@@ -42,7 +39,7 @@
       {#if id === "add"}
         Add {title}
       {:else}
-        {(data.name || data.reference) || data.first_name}
+        {data.name || data.reference || data.first_name}
       {/if}
     {:else}
       {title}
