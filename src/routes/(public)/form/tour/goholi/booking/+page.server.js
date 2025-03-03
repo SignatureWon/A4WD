@@ -9,7 +9,8 @@ import { error, redirect } from "@sveltejs/kit";
 import CryptoJS from "crypto-js";
 import { default as FD } from "form-data";
 import Mailgun from "mailgun.js";
-import { MAIL_KEY, PUBLIC_KEY } from "$env/static/private";
+import { MAIL_KEY } from "$env/static/private";
+import { PUBLIC_KEY } from "$env/static/public";
 
 export async function load() {
   const { data: dataOptions, error: errorOptions } = await supabase.rpc("search_options").select();

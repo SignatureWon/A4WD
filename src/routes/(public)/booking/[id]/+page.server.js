@@ -7,7 +7,8 @@ import { redirect } from "@sveltejs/kit";
 import { html } from "$lib/booked.js";
 import { default as FD } from "form-data";
 import Mailgun from "mailgun.js";
-import { MAIL_KEY, PUBLIC_KEY } from "$env/static/private";
+import { MAIL_KEY } from "$env/static/private";
+import { PUBLIC_KEY } from "$env/static/public";
 
 export async function load({ url, params, locals }) {
   // console.log("PUBLIC_KEY", PUBLIC_KEY);
