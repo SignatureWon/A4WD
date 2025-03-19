@@ -244,7 +244,7 @@ export const html = {
             <td class="col" width="100%">
                 <p style="font-size: 14px; padding-bottom: 10px; margin: 0"><b>CONFIRMATION PAGE</b></p>
                 <p style="padding-bottom: 10px; margin: 0; font-size: 11px">
-                    Please sign, scan and send via email attachment (this page only) to <b><a href="mailto:info@australia4wdrentals.com">info@australia4wdrentals.com</a></b>
+                    Please sign, scan and send via email attachment (this page only) to <b><a href="mailto:info@australia4wdrentals.com.au">info@australia4wdrentals.com.au</a></b>
                 </p>
             </td>
         </tr>
@@ -285,7 +285,9 @@ export const html = {
             Pick-up
           </td>
           <td class="col" width="414" style="padding: 5px; font-size: 11px; border-bottom: 1px solid #DDDDDD">
-            <b>${quote.details.pickup.name} - ${dayjs(quote.details.date_start).format("ddd, DD MMM YYYY")}${supplier.all_day ? " (24hrs)" : `, ${supplier.start_time ? q.showtime(supplier.start_time) : "09:00AM"}`}</b>
+            <b>${quote.details.pickup.name} - ${dayjs(quote.details.date_start).format("ddd, DD MMM YYYY")}${
+      supplier.all_day ? " (24hrs)" : `, ${supplier.start_time ? q.showtime(supplier.start_time) : "09:00AM"}`
+    }</b>
           </td>
         </tr>
         <tr>
@@ -293,7 +295,9 @@ export const html = {
             Drop-off
           </td>
           <td class="col" width="414" style="padding: 5px; font-size: 11px; border-bottom: 1px solid #DDDDDD">
-            <b>${quote.details.dropoff.name} - ${dayjs(quote.details.date_end).format("ddd, DD MMM YYYY")}${supplier.all_day ? " (24hrs)" : `, ${supplier.end_time ? q.showtime(supplier.end_time) : "03:00PM"}`}</b>
+            <b>${quote.details.dropoff.name} - ${dayjs(quote.details.date_end).format("ddd, DD MMM YYYY")}${
+      supplier.all_day ? " (24hrs)" : `, ${supplier.end_time ? q.showtime(supplier.end_time) : "03:00PM"}`
+    }</b>
           </td>
         </tr>
         <tr>
@@ -360,14 +364,16 @@ export const html = {
         >
       </p>`;
     }
-                email += `
+    email += `
             </div>
                 <p style="padding-bottom: 10px; margin: 0; font-size: 11px">
                     Please ensure that you pick-up and drop-off your rental vehicle during depot business hours to avoid any inconvenience or extra charges. Depot addresses and booking times can be found in this document.
                 </p>
                 <p style="padding-bottom: 10px; margin: 0; font-size: 11px">
                     <b>Cancellation fees</b> will apply on <b>AUD $${format.currency(summary.totalAgent)}</b>. 
-                    The <b>Agent Nett Deposit Fee after discount of AUD $${format.currency(summary.totalCommission)} is non-refundable</b>. 
+                    The <b>Agent Nett Deposit Fee after discount of AUD $${format.currency(
+                      summary.totalCommission
+                    )} is non-refundable</b>. 
                     The Agent Deposit will be carried forward towards a future booking if cancellation is made more than 25 days prior to travel. 
                     An additional AUD $100.00 administration cancellation fee applies. Please read the cancellation policy found in the quote.
                 </p>
@@ -416,7 +422,7 @@ export const html = {
         <tr>
             <td class="col" width="100%">
                 <p style="padding-bottom: 10px; margin: 0; font-size: 11px">
-                    Please sign, scan and send via email attachment (this page only) to <b><a href="mailto:info@australia4wdrentals.com">info@australia4wdrentals.com</a></b>
+                    Please sign, scan and send via email attachment (this page only) to <b><a href="mailto:info@australia4wdrentals.com.au">info@australia4wdrentals.com.au</a></b>
                 </p>
             </td>
         </tr>

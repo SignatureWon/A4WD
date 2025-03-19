@@ -305,7 +305,7 @@ export const actions = {
           },
         ],
         from: {
-          email: "info@australia4wdrentals.com",
+          email: "info@australia4wdrentals.com.au",
           name: "Goholi Pty Ltd",
         },
         subject: `Manual Tour Quote: ${fd.pickup_date.format("DD MMM YYYY")} - ${fd.dropoff_date.format(

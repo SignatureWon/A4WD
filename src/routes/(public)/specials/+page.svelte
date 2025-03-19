@@ -24,7 +24,7 @@
     "telephone": "1800107371",
     "tourBookingPage": "https://australia4wdrentals.com/search",
     "description": "${`${data.pageTitle.name}. ${data.pageTitle.subtitle}`}",
-    "email": "info@australia4wdrentals.com",
+    "email": "info@australia4wdrentals.com.au",
     "image": "${data.site.image}",
     "location": "Australia",
     "logo": "https://api.australia4wdrentals.com/storage/v1/render/image/public/contents/${data.site.logo}",
@@ -38,13 +38,7 @@
 </PageHeader>
 
 <Filter title="Specials" keyword={data.keyword} url="/specials" />
-<Grid
-  page={data.pageCurrent}
-  total={data.pageTotal}
-  keyword={data.keyword}
-  records={data.specials}
-  url="/specials"
->
+<Grid page={data.pageCurrent} total={data.pageTotal} keyword={data.keyword} records={data.specials} url="/specials">
   {#each data.specials as record}
     <Special {record} />
   {/each}

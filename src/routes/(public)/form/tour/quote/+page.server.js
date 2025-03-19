@@ -304,7 +304,7 @@ export const actions = {
           },
         ],
         from: {
-          email: "info@australia4wdrentals.com",
+          email: "info@australia4wdrentals.com.au",
           name: "Australia 4WD Rentals",
         },
         subject: `Manual Tour Quote: ${fd.pickup_date.format("DD MMM YYYY")} - ${fd.dropoff_date.format(

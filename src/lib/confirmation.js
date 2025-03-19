@@ -335,9 +335,9 @@ export const html = {
 
     // map data
     const info = {
-    //   doc: {
-    //     name: contents.name,
-    //   },
+      //   doc: {
+      //     name: contents.name,
+      //   },
       company: {
         name: letterhead.name,
         reg: letterhead.description,
@@ -484,7 +484,7 @@ table, td{
   <hr />
   <div style="margin-top: 30px; font-weight: bold; font-size: 18px; text-align: center">CONFIRMATION PAGE</div>
   <div style="margin-bottom: 30px; text-align: center">
-    Please sign, scan and send via email attachment (this page only) to <strong>info@australia4wdrentals.com</strong>
+    Please sign, scan and send via email attachment (this page only) to <strong>info@australia4wdrentals.com.au</strong>
   </div>
   <table
     width="600"
@@ -560,7 +560,11 @@ table, td{
     Depot addresses and booking times can be found in this document.
   </div>
   <div style="margin-bottom: 10px;">
-    <strong>Cancellation fees</strong> will apply on <strong>AUD $${format.currency(totalAgentFee())}</strong>. The <strong>Agent Nett Deposit Fee after discount of AUD $${format.currency(totalAgentCommission())} is non-refundable</strong>. The Agent Deposit will be carried forward towards a future booking if cancellation is made more than 25 days prior to travel. An additional AUD $100.00 administration cancellation fee applies. Please read the cancellation policy found in the quote.
+    <strong>Cancellation fees</strong> will apply on <strong>AUD $${format.currency(
+      totalAgentFee()
+    )}</strong>. The <strong>Agent Nett Deposit Fee after discount of AUD $${format.currency(
+      totalAgentCommission()
+    )} is non-refundable</strong>. The Agent Deposit will be carried forward towards a future booking if cancellation is made more than 25 days prior to travel. An additional AUD $100.00 administration cancellation fee applies. Please read the cancellation policy found in the quote.
   </div>
   <div style="font-style: italic;">
     I acknowledge that I have read, verified and understood the terms and conditions associated with this vehicle rental, and have authorised Australia 4 Wheel Drive Rentals to debit my credit card for the amounts nominated above.
@@ -581,7 +585,7 @@ table, td{
     </tr>
   </table>
   <div style="font-style: italic;">
-    Please sign, scan and send via email attachment (this page only) to <a href="mailto:info@australia4wdrentals.com">info@australia4wdrentals.com</a>
+    Please sign, scan and send via email attachment (this page only) to <a href="mailto:info@australia4wdrentals.com.au">info@australia4wdrentals.com.au</a>
   </div>
 </div>
 </body>

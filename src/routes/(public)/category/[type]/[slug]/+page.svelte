@@ -61,7 +61,7 @@
     "telephone": "1800107371",
     "tourBookingPage": "https://australia4wdrentals.com/search",
     "description": "${data.category.meta_description || `${data.category.name} - ${getContentText(data.data.content)}`}",
-    "email": "info@australia4wdrentals.com",
+    "email": "info@australia4wdrentals.com.au",
     "image": "${data.site.image}",
     "location": "Australia",
     "logo": "https://api.australia4wdrentals.com/storage/v1/render/image/public/contents/${data.site.logo}",
