@@ -311,7 +311,7 @@ export const actions = {
     const mailgun = new Mailgun(FD);
     const mg = mailgun.client({ username: "api", key: MAIL_KEY });
     mg.messages
-      .create("mail.australia4wheeldriverentals.com", {
+      .create("mg.australia4wdrentals.com.au", {
         from: "Goholi Pty Ltd <info@australia4wheeldriverentals.com>",
         to: [user.email.trim()],
         bcc: bccList,

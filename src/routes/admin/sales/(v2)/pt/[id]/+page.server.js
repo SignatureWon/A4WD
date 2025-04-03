@@ -270,8 +270,8 @@ export const actions = {
     const mailgun = new Mailgun(FD);
     const mg = mailgun.client({ username: "api", key: MAIL_KEY });
     mg.messages
-      .create("mail.australia4wheeldriverentals.com", {
-        from: "Australia 4WD Rentals <info@australia4wheeldriverentals.com>",
+      .create("mg.australia4wdrentals.com.au", {
+        from: "Australia 4WD Rentals <sales@australia4wdrentals.com.au>",
         // to: ["won@signature.studio"],
         to: email_to,
         bcc: email_bcc,
