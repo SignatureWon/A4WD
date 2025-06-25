@@ -1,5 +1,6 @@
 <script>
   import { Accordion, AccordionItem } from "carbon-components-svelte";
+  import { Button } from "carbon-components-svelte";
 
   export let records = [];
   export let title = {
@@ -7,6 +8,8 @@
     subtitle: "",
     description: "",
   };
+
+  // console.log(records);
 </script>
 
 <div class="bg-white">
@@ -36,6 +39,9 @@
           </AccordionItem>
         {/each}
       </Accordion>
+      <div class="py-4">
+        <Button href="/faqs" class="inline-block">More FAQs</Button>
+      </div>
     </div>
     <!-- END FAQ -->
   </div>
