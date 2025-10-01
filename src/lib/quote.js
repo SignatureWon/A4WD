@@ -308,32 +308,46 @@ export const q = {
       let nett = 0;
       let profit = 0;
 
-      let cap = duration < (bond.cap || 99999) ? duration : bond.cap;
-
-      if ("gross" in bond) {
-        gross = bond.gross * cap;
-        nett = bond.nett * cap;
-        profit = nett > 0 ? gross - nett : 0;
-      } else {
-        bond.gross = 0;
-        bond.nett = 0;
-        bond.bond = 0;
-      }
-
-      if (bond.gross > 0) {
+      if (duration <= bond.min_days) {
+        console.log("bond.min_days", bond.min_days);
         const row = {
-          name: `${bond.display_name}: $${bond.gross} x ${cap} days`,
-          total: gross,
-          nett: nett,
-          profit: profit,
+          name: `${bond.display_name}: $${bond.min_rate} (Minimum rate)`,
+          total: bond.min_rate,
+          nett: bond.min_rate,
+          profit: 0,
         };
-        if (bond.nett > 0 && bond.gross > bond.nett) {
-          agentFees.push(row);
-        } else {
-          supplierFees.push(row);
-          pickupFees.push(row);
-        }
+
+        supplierFees.push(row);
+        pickupFees.push(row);
         summaryFees.push(row);
+      } else {
+        let cap = duration < (bond.cap || 99999) ? duration : bond.cap;
+
+        if ("gross" in bond) {
+          gross = bond.gross * cap;
+          nett = bond.nett * cap;
+          profit = nett > 0 ? gross - nett : 0;
+        } else {
+          bond.gross = 0;
+          bond.nett = 0;
+          bond.bond = 0;
+        }
+
+        if (bond.gross > 0) {
+          const row = {
+            name: `${bond.display_name}: $${bond.gross} x ${cap} days`,
+            total: gross,
+            nett: nett,
+            profit: profit,
+          };
+          if (bond.nett > 0 && bond.gross > bond.nett) {
+            agentFees.push(row);
+          } else {
+            supplierFees.push(row);
+            pickupFees.push(row);
+          }
+          summaryFees.push(row);
+        }
       }
     }
 

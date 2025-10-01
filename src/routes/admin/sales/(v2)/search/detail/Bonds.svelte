@@ -13,19 +13,25 @@
     }
     return cap > duration || cap === 0 ? duration : cap;
   };
-  const calculatePrice = (gross, duration, cap) => {
-    gross = gross || 0;
-    cap = cap || 0;
+  const calculatePrice = (min_days, min_rate, gross, duration, cap) => {
+    // console.log(min_days, min_rate, gross, duration, cap);
 
-    let days = checkCap(duration, cap);
+    if (duration <= min_days) {
+      return min_rate;
+    } else {
+      gross = gross || 0;
+      cap = cap || 0;
 
-    return gross * days;
+      let days = checkCap(duration, cap);
+
+      return gross * days;
+    }
   };
   onMount(() => {
     if (Object.keys(data.bonds).length === 0) {
-      data.bonds = data.bond_items[0]
+      data.bonds = data.bond_items[0];
     }
-  })
+  });
 </script>
 
 {#if data.bond_items.length > 0}
@@ -46,24 +52,35 @@
             on:click={() => {
               selected = index;
               data.bonds = item;
+
+              console.log(item);
+
               count();
             }}
           >
             <div class="flex-1">
               <h3 class="font-bold text-brand-600">{item.display_name}</h3>
               <div class="text-lg font-bold">
-                ${format.currency(calculatePrice(item.gross, search.duration, item.cap))}
+                ${format.currency(calculatePrice(item.min_days, item.min_rate, item.gross, search.duration, item.cap))}
               </div>
               <div class="mb-4">
-                ${format.currency(item.gross || 0)} x {checkCap(search.duration, item.cap)} days
+                {#if search.duration <= item.min_days}
+                  <div class="text-gray-400 text-sm">Minimum rate</div>
+                {:else}
+                  ${format.currency(item.gross || 0)} x {checkCap(search.duration, item.cap)} days
+                {/if}
               </div>
               {#if item.gross > item.nett && item.nett > 0}
                 <div class="mb-4">
                   <div class="text-gray-400 text-sm">
-                    Nett: ${format.currency(item.nett)} x {checkCap(search.duration, item.cap)} = ${format.currency(calculatePrice(item.nett, search.duration, item.cap))}
+                    Nett: ${format.currency(item.nett)} x {checkCap(search.duration, item.cap)} = ${format.currency(
+                      calculatePrice(item.nett, search.duration, item.cap)
+                    )}
                   </div>
                   <div class="text-gray-400 text-sm">
-                    Comm: ${format.currency(item.gross - item.nett)} x {checkCap(search.duration, item.cap)} = ${format.currency(calculatePrice((item.gross - item.nett), search.duration, item.cap))}
+                    Comm: ${format.currency(item.gross - item.nett)} x {checkCap(search.duration, item.cap)} = ${format.currency(
+                      calculatePrice(item.gross - item.nett, search.duration, item.cap)
+                    )}
                   </div>
                 </div>
               {/if}

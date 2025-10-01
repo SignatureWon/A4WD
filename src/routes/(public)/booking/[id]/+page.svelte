@@ -64,6 +64,7 @@
       <Passenger bind:quote={data.quote} /> -->
         <Payment
           bind:quote={data.quote}
+          bind:user={data.user}
           title="Step 3: Enter Billing Information"
           description="Please update your contact details if required. This will help us to serve you better."
         />

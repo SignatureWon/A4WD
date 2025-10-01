@@ -557,6 +557,11 @@ export const html = {
                         </th>
                     </tr>
                 </table>
+                <br>
+                <i>If the button isn't working, copy this link to continue.</i><br>
+                <a href="https://australia4wdrentals.com/booking/${encId}"  style="color: ${
+      c.brand500
+    }">https://australia4wdrentals.com/booking/${encId}</a>
             </td>
         </tr>
       </table>

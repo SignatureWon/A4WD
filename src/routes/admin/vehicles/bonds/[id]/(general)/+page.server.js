@@ -20,6 +20,8 @@ const keys = [
   "inclusions",
   "status",
   "rank",
+  "min_days",
+  "min_rate",
 ];
 
 export async function load({ url, params, locals }) {

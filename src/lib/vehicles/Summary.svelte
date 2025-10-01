@@ -68,6 +68,13 @@
       </div>
     {/if}
   {/each}
+  <div class="flex py-2 border-b border-gray-200">
+    <div class="flex-1 relative">
+      <Toggle labelA="" labelB="" size="sm" bind:toggled={quote.bank_only} class="absolute -mt-1.5" />
+      <div class="pl-10">Accept bank transfer only</div>
+    </div>
+  </div>
+
   <div class="flex py-2 border-b border-gray-200 font-bold bg-brand-200">
     <div class="flex-1">Total payable to agent</div>
     <div class="text-right ml-4">{format.currency(summary.totalAgent)}</div>

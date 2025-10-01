@@ -17,18 +17,8 @@
 <Tabs tabs={PageTabs(data.id)} />
 <Form id={data.id} path={data.path}>
   <FormSection title="Info">
-    <InputText
-      name="name"
-      label="Name"
-      bind:value={data.data.name}
-      required={true}
-    />
-    <InputText
-      name="display_name"
-      label="Display Name"
-      bind:value={data.data.display_name}
-      required={true}
-    />
+    <InputText name="name" label="Name" bind:value={data.data.name} required={true} />
+    <InputText name="display_name" label="Display Name" bind:value={data.data.display_name} required={true} />
     <InputText name="code" label="Code" bind:value={data.data.code} />
     <InputDateRange
       nameFrom="date_start"
@@ -59,72 +49,26 @@
   </FormSection>
   <FormSection title="Rates">
     <InputNumber
-      name="nett"
-      label="Nett Daily Rate"
-      bind:value={data.data.nett}
-      step={0.01}
+      name="min_days"
+      label="Minimum Days (Set to 0 if not applicable)"
+      bind:value={data.data.min_days}
+      step={1}
       half={true}
     />
-    <InputNumber
-      name="gross"
-      label="Gross Daily Rate"
-      bind:value={data.data.gross}
-      step={0.01}
-      half={true}
-    />
-    <InputNumber
-      name="cap"
-      label="Rate Cap (Days)"
-      bind:value={data.data.cap}
-      half={true}
-    />
-    <InputNumber
-      name="deposit"
-      label="Security Deposit"
-      bind:value={data.data.deposit}
-      step={0.01}
-      half={true}
-    />
-    <InputNumber
-      name="liability"
-      label="Liability"
-      bind:value={data.data.liability}
-      step={0.01}
-      half={true}
-    />
-    <InputNumber
-      name="bond"
-      label="Bond"
-      bind:value={data.data.bond}
-      step={0.01}
-      half={true}
-    />
+    <InputNumber name="min_rate" label="Minimum Rate" bind:value={data.data.min_rate} step={0.01} half={true} />
+    <InputNumber name="nett" label="Nett Daily Rate" bind:value={data.data.nett} step={0.01} half={true} />
+    <InputNumber name="gross" label="Gross Daily Rate" bind:value={data.data.gross} step={0.01} half={true} />
+    <InputNumber name="cap" label="Rate Cap (Days)" bind:value={data.data.cap} half={true} />
+    <InputNumber name="deposit" label="Security Deposit" bind:value={data.data.deposit} step={0.01} half={true} />
+    <InputNumber name="liability" label="Liability" bind:value={data.data.liability} step={0.01} half={true} />
+    <InputNumber name="bond" label="Bond" bind:value={data.data.bond} step={0.01} half={true} />
   </FormSection>
   <FormSection title="Info">
-    <InputTextArea
-      name="description"
-      label="Description"
-      bind:value={data.data.description}
-    />
-    <InputTextArea
-      name="inclusions"
-      label="Inclusions"
-      bind:value={data.data.inclusions}
-    />
+    <InputTextArea name="description" label="Description" bind:value={data.data.description} />
+    <InputTextArea name="inclusions" label="Inclusions" bind:value={data.data.inclusions} />
   </FormSection>
   <FormSection title="Publish">
-    <InputToggle
-      name="status"
-      label="Status"
-      bind:value={data.data.status}
-      init="true"
-      half={true}
-    />
-    <InputNumber
-      name="rank"
-      label="Rank"
-      bind:value={data.data.rank}
-      half={true}
-    />
+    <InputToggle name="status" label="Status" bind:value={data.data.status} init="true" half={true} />
+    <InputNumber name="rank" label="Rank" bind:value={data.data.rank} half={true} />
   </FormSection>
 </Form>

@@ -811,7 +811,9 @@ const check_bonds = async (selected, search) => {
   bond,
   waive_one_way,
   description,
-  inclusions
+  inclusions,
+  min_days,
+  min_rate
 `);
   query = query.or(`date_start.lte.${search.date_start},date_end.gte.${search.date_end}`);
   query = query.lte("date_start", search.date_end);
