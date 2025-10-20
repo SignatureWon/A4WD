@@ -13,7 +13,8 @@
   let id = 1175;
 
   onMount(async () => {
-    let type = $page.url.searchParams.get("type") || "quote";
+    //change all to lowercase
+    let type = ($page.url.searchParams.get("type") || "quote").toLowerCase();
     let id = $page.url.searchParams.get("id") || "1175";
 
     if (type === "quote") {
