@@ -25,7 +25,7 @@ export const html = {
       .eq("id", quote_id)
       .single();
 
-      let summary = q.getPayments(quote);
+    let summary = q.getPayments(quote);
 
     const { data: vehicle } = await supabase
       .from("vehicles")
@@ -950,7 +950,7 @@ table, td{
     cellspacing="0"
     style="margin-bottom: 10px;"
   >`;
-  summary.termsItems.forEach((item) => {
+    summary.termsItems.forEach((item) => {
       email += `
     <tr>
       <td style="border: 1px solid #CCCCCC">${item.name}</td>
@@ -1002,7 +1002,9 @@ table, td{
       email += `
     <tr>
         <td style="border: 1px solid #CCCCCC; width: 20%">${dayjs(pay.date, "DD/MM/YYYY").format("DD/MM/YYYY")}</td>
-        <td style="border: 1px solid #CCCCCC">${pay.method}<br><span style="color:#999999">${pay.remark || ""}</span></td>
+        <td style="border: 1px solid #CCCCCC">${pay.method}<br><span style="color:#999999">${
+        pay.remark || ""
+      }</span></td>
         <td style="border: 1px solid #CCCCCC; text-align: right; width: 20%">${format.currency(pay.amount)}</td>
     </tr>`;
     });
@@ -1024,10 +1026,10 @@ style="margin-bottom: 30px"
 </table>
 <div style="margin-bottom: 10px;">
 <strong>Cancellation fees</strong> will apply on <strong>AUD $${format.currency(
-  summary.totalAgent
+      summary.totalAgent
     )}</strong>. The <strong>Agent Nett Deposit Fee after discount of AUD $${format.currency(
       summary.totalCommission
-    )} is non-refundable</strong>. The Agent Deposit will be carried forward towards a future booking if cancellation is made more than 25 days prior to travel. An additional AUD $100.00 administration cancellation fee applies. Please read the cancellation policy found in the quote.
+    )} is non-refundable</strong>. The Agent Deposit will be carried forward towards a future booking if cancellation is made more than 61 days prior to travel. An additional AUD $100.00 administration cancellation fee applies. Please read the cancellation policy found in the quote.
 </div>
 </div>
 </body>

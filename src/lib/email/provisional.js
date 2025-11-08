@@ -719,7 +719,7 @@ export const html = {
                 The <b>Agent Nett Deposit Fee after discount of AUD $${format.currency(
                   summary.totalCommission
                 )} is non-refundable</b>. 
-                The Agent Deposit will be carried forward towards a future booking if cancellation is made more than 25 days prior to travel. 
+                The Agent Deposit will be carried forward towards a future booking if cancellation is made more than 61 days prior to travel. 
                 An additional AUD $100.00 administration cancellation fee applies. Please read the cancellation policy found in the quote.
             </td>
         </tr>

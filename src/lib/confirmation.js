@@ -564,7 +564,7 @@ table, td{
       totalAgentFee()
     )}</strong>. The <strong>Agent Nett Deposit Fee after discount of AUD $${format.currency(
       totalAgentCommission()
-    )} is non-refundable</strong>. The Agent Deposit will be carried forward towards a future booking if cancellation is made more than 25 days prior to travel. An additional AUD $100.00 administration cancellation fee applies. Please read the cancellation policy found in the quote.
+    )} is non-refundable</strong>. The Agent Deposit will be carried forward towards a future booking if cancellation is made more than 61 days prior to travel. An additional AUD $100.00 administration cancellation fee applies. Please read the cancellation policy found in the quote.
   </div>
   <div style="font-style: italic;">
     I acknowledge that I have read, verified and understood the terms and conditions associated with this vehicle rental, and have authorised Australia 4 Wheel Drive Rentals to debit my credit card for the amounts nominated above.

@@ -27,7 +27,7 @@ export const html = {
       .eq("id", quote_id)
       .single();
 
-      let summary = q.getPayments(quote);
+    let summary = q.getPayments(quote);
 
     const { data: vehicle } = await supabase
       .from("vehicles")
@@ -40,8 +40,7 @@ export const html = {
       .select("depots")
       .eq("id", quote.details.supplier.id)
       .single();
-      // console.log("supplier", supplier);
-
+    // console.log("supplier", supplier);
 
     const duration = quote.details.duration;
     const date_quote = dayjs(quote.created_at).format("DD MMM YYYY");
@@ -388,16 +387,16 @@ export const html = {
         pickup: {
           name: quote.details.pickup.name,
           date: date_start,
-          details: supplier.depots.filter(item => {
-            return item.Depots.id === quote.details.pickup.id
-          })[0]
+          details: supplier.depots.filter((item) => {
+            return item.Depots.id === quote.details.pickup.id;
+          })[0],
         },
         dropoff: {
           name: quote.details.dropoff.name,
           date: date_end,
-          details: supplier.depots.filter(item => {
-            return item.Depots.id === quote.details.dropoff.id
-          })[0]
+          details: supplier.depots.filter((item) => {
+            return item.Depots.id === quote.details.dropoff.id;
+          })[0],
         },
       },
       comment: quote.comment,
@@ -961,7 +960,11 @@ style="margin-bottom: 30px"
     </tr>
 </table>
 <div style="margin-bottom: 10px;">
-<strong>Cancellation fees</strong> will apply on <strong>AUD $${format.currency(summary.totalAgent)}</strong>. The <strong>Agent Nett Deposit Fee after discount of AUD $${format.currency(summary.totalCommission)} is non-refundable</strong>. The Agent Deposit will be carried forward towards a future booking if cancellation is made more than 25 days prior to travel. An additional AUD $100.00 administration cancellation fee applies. Please read the cancellation policy found in the quote.
+<strong>Cancellation fees</strong> will apply on <strong>AUD $${format.currency(
+      summary.totalAgent
+    )}</strong>. The <strong>Agent Nett Deposit Fee after discount of AUD $${format.currency(
+      summary.totalCommission
+    )} is non-refundable</strong>. The Agent Deposit will be carried forward towards a future booking if cancellation is made more than 61 days prior to travel. An additional AUD $100.00 administration cancellation fee applies. Please read the cancellation policy found in the quote.
 </div>
 </div>
 </body>
