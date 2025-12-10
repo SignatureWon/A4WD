@@ -30,7 +30,7 @@
         <!-- END Heading with Company Info -->
 
         <!-- Contact Form -->
-        <div class="lg:w-3/5 p-2 bg-white bg-opacity-10 rounded-xl">
+        <!-- <div class="lg:w-3/5 p-2 bg-white bg-opacity-10 rounded-xl">
           <form method="post" action="/api/email" class="bg-white rounded-lg p-6 space-y-6">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div class="space-y-1">
@@ -51,7 +51,7 @@
             </div>
             <Button type="submit">Send Message</Button>
           </form>
-        </div>
+        </div> -->
         <!-- END Contact Form -->
       </div>
     </div>
