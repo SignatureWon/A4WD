@@ -10,6 +10,7 @@
   } from "carbon-components-svelte";
   import InputDateRange2 from "$lib/components/admin/InputDateRange2.svelte";
   import dayjs from "dayjs";
+  import Honeypot from "../../honeypot.svelte";
 
   export let data;
   //   console.log(data);
@@ -188,10 +189,7 @@
         <div class="max-w-md">
           <div class="flex-1 grid grid-cols-1 gap-6">
             <div>
-              <Select
-                labelText="Bond"
-                name="bond"
-              >
+              <Select labelText="Bond" name="bond">
                 <SelectItem value="" text="Select a bond" />
                 <SelectItem value="Standard" text="Standard" />
                 <SelectItem value="Bond Reduced" text="Bond Reduced" />
@@ -386,6 +384,7 @@
           </div>
         </div>
       </div>
+      <Honeypot />
     </section>
     <footer class="p-5 border-t border-gray-200">
       <input type="hidden" name="guests" value={JSON.stringify(guests)} />

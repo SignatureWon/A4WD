@@ -40,6 +40,12 @@ export const actions = {
   default: async ({ request, url, locals }) => {
     const formData = await request.formData();
     let fd = Object.fromEntries(formData.entries());
+    const honeypot = formData.get("website");
+    if (honeypot) {
+      console.warn("Bot detected via honeypot.");
+      return { success: true };
+    }
+
     fd.guests = JSON.parse(fd.guests);
     fd.pickup_date = dayjs(fd.pickup_date, "DD/MM/YYYY");
     fd.dropoff_date = dayjs(fd.dropoff_date, "DD/MM/YYYY");

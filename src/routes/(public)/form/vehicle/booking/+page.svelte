@@ -12,6 +12,7 @@
   } from "carbon-components-svelte";
   import InputDateRange2 from "$lib/components/admin/InputDateRange2.svelte";
   import dayjs from "dayjs";
+  import Honeypot from "../../honeypot.svelte";
 
   export let data;
   // console.log(data);
@@ -510,6 +511,7 @@
           >
         </li>
       </ol>
+      <Honeypot />
     </section>
     <footer class="p-5 border-t border-gray-200">
       <div class="mb-4">
