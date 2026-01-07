@@ -12,6 +12,49 @@
   let duration = 0;
   let selected = 0;
 
+  const checkCap = (duration, min_days, cap) => {
+    if (!cap) {
+      cap = 0;
+    }
+    if (!min_days) {
+      min_days = 0;
+    }
+
+    let days = duration;
+    if (duration <= min_days) {
+      days = min_days;
+    }
+    if (days > cap) {
+      days = cap;
+    }
+    return days;
+  };
+  const calculatePrice = (min_days, min_rate, gross, duration, cap) => {
+    if (duration <= min_days) {
+      return min_rate;
+    } else {
+      let days = checkCap(duration, min_days, cap || 0);
+      return (gross || 0) * days;
+    }
+  };
+  const calculateNettComm = (rate, duration, min_days, cap) => {
+    let days = checkCap(duration, min_days, cap);
+    return days * rate;
+  };
+
+  const getLabel = (item, duration) => {
+    let text = `${item.display_name} - `;
+    text += `${format.currency(item.liability, 0)} Excess, `;
+    text += `${format.currency(item.bond, 0)} Bond`;
+    if (duration <= item.min_days) {
+      text += ` (Minimum rate)`;
+    } else {
+      text += ` ($${format.currency(item.gross || 0)} x ${checkCap(duration, item.min_days, item.cap)} days)`;
+    }
+
+    return text;
+  };
+
   onMount(async () => {
     const { data: bondsData, error: bondsError } = await cal.getBonds(supabase, {
       date_start: dayjs(quote.details.date_start),
@@ -41,6 +84,8 @@
         }
       }
     });
+
+    // console.log("bonds", bonds);
 
     duration = quote.details.duration;
     let selected_bond = {};
@@ -73,6 +118,15 @@
             <div class="flex mb-2 justify-between w-full">
               <div class="flex-1 flex justify-start">
                 <RadioButton
+                  labelText={getLabel(item, duration)}
+                  value={index}
+                  on:change={() => {
+                    selected = index;
+                    quote.details.bonds = item;
+                    count();
+                  }}
+                />
+                <!-- <RadioButton
                   labelText={`${item.display_name} - ${
                     item.liability ? item.liability.toLocaleString("en-US") : ""
                   } Excess, ${item.bond ? item.bond.toLocaleString("en-US") : ""} Bond ($${format.currency(item.gross || 0)} x ${
@@ -84,33 +138,38 @@
                     quote.details.bonds = item;
                     count();
                   }}
-                />
+                /> -->
               </div>
               <div class="whitespace-nowrap pl-4">
-                ${format.currency(
+                ${format.currency(calculatePrice(item.min_days, item.min_rate, item.gross, duration, item.cap))}
+                <!-- ${format.currency(
                   (item.gross || 0) * (item.cap ? (item.cap > duration ? duration : item.cap) : duration)
-                )}
+                )} -->
               </div>
             </div>
             {#if item.gross > item.nett && item.nett > 0}
               <div class="flex w-full mb-2 justify-between text-sm text-gray-400">
                 <div class="pl-7">
-                  Nett: ${item.nett} x {duration} days
+                  Nett: ${format.currency(item.nett)} x {checkCap(duration, item.min_days, item.cap)}
+                  <!-- Nett: ${item.nett} x {duration} days -->
                 </div>
                 <div class="whitespace-nowrap pl-4">
-                  ${format.currency(
+                  ${format.currency(calculateNettComm(item.nett, duration, item.min_days, item.cap))}
+                  <!-- ${format.currency(
                     (item.nett || 0) * (item.cap ? (item.cap > duration ? duration : item.cap) : duration)
-                  )}
+                  )} -->
                 </div>
               </div>
               <div class="flex w-full mb-2 justify-between text-sm text-gray-400">
                 <div class="pl-7">
-                  Commission: ${format.currency(item.gross - item.nett)} x {duration} days
+                  Comm: ${format.currency(item.gross - item.nett)} x {checkCap(duration, item.min_days, item.cap)}
+                  <!-- Commission: ${format.currency(item.gross - item.nett)} x {duration} days -->
                 </div>
                 <div class="whitespace-nowrap pl-4">
-                  ${format.currency(
+                  ${format.currency(calculateNettComm(item.gross - item.nett, duration, item.min_days, item.cap))}
+                  <!-- ${format.currency(
                     (item.gross - item.nett || 0) * (item.cap ? (item.cap > duration ? duration : item.cap) : duration)
-                  )}
+                  )} -->
                 </div>
               </div>
             {/if}

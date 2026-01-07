@@ -92,6 +92,8 @@
   });
 
   let paneHeight = 0;
+
+  // console.log(quote);
 </script>
 
 <svelte:window bind:innerHeight={paneHeight} />

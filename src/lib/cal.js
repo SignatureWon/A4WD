@@ -274,6 +274,8 @@ export const cal = {
         deposit,
         liability,
         bond,
+        min_days,
+        min_rate,
         waive_one_way,
         description,
         inclusions
