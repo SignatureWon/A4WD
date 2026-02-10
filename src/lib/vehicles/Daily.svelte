@@ -106,17 +106,17 @@
             on:click={() => {
               let daily = quote.details.daily;
               let start = ((item.week || 1) - 1) * 7;
-              console.log("daily", daily);
+              // console.log("daily", daily);
 
               for (let i = start; i < start + item.days; i++) {
-                console.log("item", item);
+                // console.log("item", item);
 
                 daily.items[i].flex = item?.flex;
                 daily.items[i].gross = item.daily.gross;
                 daily.items[i].nett = item.daily.nett;
                 daily.items[i].profit = item.daily.profit;
               }
-              console.log("newdaily", daily);
+              // console.log("newdaily", daily);
 
               getDailyTotal();
               editRow[index] = false;
@@ -140,7 +140,7 @@
           <div class="flex">
             <div class="flex-1">
               {`Daily basic rental: ${item.flex ? `Week ${item.week}: Flex[${item.flex}]: ` : ``} $${format.currency(
-                item.daily.gross
+                item.daily.gross,
               )} x ${item.days} days`}
               <div class="text-gray-400 text-sm">
                 Nett: ${format.currency(item.daily.nett)} x {item.days} days<br />

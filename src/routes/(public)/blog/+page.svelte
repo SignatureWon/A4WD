@@ -6,7 +6,7 @@
   import Blog from "$lib/components/public/archive/card/Blog.svelte";
 
   export let data;
-  console.log(data);
+  // console.log(data);
 </script>
 
 <svelte:head>

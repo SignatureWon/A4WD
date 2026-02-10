@@ -24,7 +24,7 @@
     if (duration <= min_days) {
       days = min_days;
     }
-    if (days > cap) {
+    if (days > cap && cap > 0) {
       days = cap;
     }
     return days;

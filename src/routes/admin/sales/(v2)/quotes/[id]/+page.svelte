@@ -42,6 +42,9 @@
 
   const getSummary = () => {
     summary = q.getPayments(quote);
+
+    // console.log("summary", summary);
+
     quote.agent_fee = summary.totalAgent;
     quote.supplier_fee = summary.totalSupplier;
     quote.profit = summary.totalCommission;

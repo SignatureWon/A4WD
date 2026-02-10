@@ -357,7 +357,7 @@ export const cal = {
     let results = [];
     const duration = search.date_end.diff(search.date_start, "day") + 1;
 
-    console.log("rates", rates);
+    // console.log("rates", rates);
 
     rates.forEach((rate) => {
       const valid = (rate.routes || []).filter((route) => {

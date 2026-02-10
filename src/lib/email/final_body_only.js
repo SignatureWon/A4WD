@@ -21,7 +21,7 @@ async function getBase64(imageUrl) {
 // getBase64("http://approvaltests.com/images/logo.png");
 export const html = {
   create: async (quote_id) => {
-    console.log(quote_id);
+    // console.log(quote_id);
     const { data: color } = await supabase.from("constants").select("name").eq("type", "color").single();
 
     const c = theme.brandcolor(color.name);

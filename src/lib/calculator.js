@@ -149,11 +149,14 @@ const convert_to_flex_rates = (data, search) => {
   // console.log("data", data);
 
   for (const id in data) {
+    // console.log("id", id);
     for (const rate in data[id]) {
+      // console.log("rate", rate);
       let rates = {
         ...data[id][rate][0],
         list: [],
       };
+      // console.log("rates", rates);
       let nett = 0;
       let gross = 0;
       let profit = 0;
@@ -164,10 +167,17 @@ const convert_to_flex_rates = (data, search) => {
       let todayProfit = 0;
       let todayFlex = "";
 
+      let count = 0;
+
       // console.log(search.date_start, search.date_end);
       for (var d = new Date(search.date_start); d <= new Date(search.date_end); d.setDate(d.getDate() + 1)) {
+        count++;
         const day = dayjs(d);
+        // console.log("day", day.format("DD/MM/YYYY"));
+
         // 7-day blocked, so change rate only after every 7th day
+        // console.log(day.format("DD/MM/YYYY"), (day.diff(search.date_start, "day") % 7 === 0));
+        
         if (day.diff(search.date_start, "day") % 7 === 0) {
           todayNett = 0;
           todayGross = 0;
@@ -175,12 +185,17 @@ const convert_to_flex_rates = (data, search) => {
           todayFlex = "";
 
           data[id][rate].forEach((r) => {
-            if (day.isBetween(dayjs(r.date_start), dayjs(r.date_end), "day", "[)")) {
+            // console.log("r", dayjs(r.date_start).format("DD/MM/YYYY"));
+
+            if (day.isBetween(dayjs(r.date_start), dayjs(r.date_end), "day", "[]")) {
+              // console.log(dayjs(r.date_start).format("DD/MM/YYYY"), dayjs(r.date_end).format("DD/MM/YYYY"));
               // isAdded = true;
               todayNett = r.rates_nett * r.daily;
               todayGross = r.rates_gross * r.daily;
               todayProfit = todayGross - todayNett;
               todayFlex = r.flex;
+
+              // console.log(todayNett, todayGross, todayProfit, todayFlex);
 
               // rateToday = {
               //   day: day,
@@ -201,6 +216,8 @@ const convert_to_flex_rates = (data, search) => {
           });
         }
         if (todayNett > 0) {
+          // console.log(day.format("DD/MM/YYYY"));
+          
           rateToday = {
             day: day.format("DD/MM/YYYY"),
             nett: todayNett,
@@ -214,7 +231,7 @@ const convert_to_flex_rates = (data, search) => {
           profit += rateToday.profit;
         }
       }
-      // console.log("rates.list", rates.list.length, rates.duration);
+      // console.log("rates.list", rates.list.length, rates.duration, count);
 
       if (rates.list.length === rates.duration) {
         rates.nett = nett;
@@ -236,6 +253,8 @@ const convert_to_flex_rates = (data, search) => {
           rates.gross = min_gross * rates.list.length;
           rates.profit = min_profit * rates.list.length;
         }
+
+        // console.log("rates", rates);
         results.push(rates);
       }
     }
@@ -389,6 +408,7 @@ const get_flex = async (search, routes) => {
   let results = convert_to_flex_rates(sorted_rates, search);
 
   // console.log("available_rates", data);
+  // console.log("sorted_rates", sorted_rates);
   // console.log("results", results);
 
   return results;
@@ -583,7 +603,7 @@ const check_percentage_price_oneway = (rate, special, pos = "") => {
     if (today.isBetween(travel_start, travel_end, "day", "[]")) {
       eligible_amount += item.nett ? d.nett : d.gross;
       eligible_date.push(today);
-      console.log("eligible_amount", today.format("DD/MM/YYYY"), item.nett ? d.nett : d.gross, eligible_amount);
+      // console.log("eligible_amount", today.format("DD/MM/YYYY"), item.nett ? d.nett : d.gross, eligible_amount);
     }
   });
 
@@ -1223,7 +1243,7 @@ export const calculator = {
     // console.log("search.duration", search);
 
     const routes = await get_routes(search);
-    // console.log("routesroutesroutesroutes", routes);
+    // console.log("routes", routes);
 
     const flex = await get_flex(search, routes);
     const seasonal = await get_seasonal(search, routes);

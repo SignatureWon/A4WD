@@ -9,10 +9,10 @@
   export let count;
   export let bond;
 
-  console.log("bond", bond);
-  
+  // console.log("bond", bond);
+
   if (!list) {
-    list = []
+    list = [];
   }
 
   let poplist = [];
@@ -30,12 +30,12 @@
           nett = a.nett_cap;
         }
 
-        let id = `${i1}-${i2}`
-        let selected = false
+        let id = `${i1}-${i2}`;
+        let selected = false;
 
         for (const key in addons) {
           if (key === id) {
-            selected = true
+            selected = true;
           }
         }
 
@@ -55,7 +55,7 @@
           gross_rate: a.gross_rate,
           nett_cap: 0,
           gross_cap: 0,
-        }
+        };
 
         poplist.push(addon);
 
@@ -64,7 +64,7 @@
         }
       });
     });
-    
+
     count();
   };
   $: getAddons();
@@ -83,10 +83,10 @@
               } else {
                 delete fees[addon.id];
               }
-              addons = fees
+              addons = fees;
 
               // console.log(addons);
-              
+
               count();
             }}
           />

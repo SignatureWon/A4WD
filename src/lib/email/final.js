@@ -10,7 +10,7 @@ import { theme } from "$lib/theme.js";
 
 export const html = {
   create: async (quote_id) => {
-    console.log(quote_id);
+    // console.log(quote_id);
     const { data: color } = await supabase.from("constants").select("name").eq("type", "color").single();
 
     const c = theme.brandcolor(color.name);
