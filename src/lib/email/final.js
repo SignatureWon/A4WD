@@ -273,27 +273,27 @@ export const html = {
             <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Pick-up from</div>
             <div><b>${quote.details.pickup.name}</b></div>
             <div>${dayjs(quote.details.date_start).format("ddd, DD MMM YYYY")}${
-      supplier.all_day ? " (24hrs)" : `, ${supplier.start_time ? q.showtime(supplier.start_time) : "09:00AM"}`
-    }</div>
+              supplier.all_day ? " (24hrs)" : `, ${supplier.start_time ? q.showtime(supplier.start_time) : "09:00AM"}`
+            }</div>
             <br>
             <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Depot</div>
-            <div>${pickup.Address.replace(/(?:\r\n|\r|\n)/g, "<br>")}</div>
-            ${pickup["Contact (Australia)"] ? `<div>Australia: ${pickup["Contact (Australia)"]}</div>` : ""}
-            ${pickup["Contact (International)"] ? `<div>International: ${pickup["Contact (International)"]}</div>` : ""}
+            <div>${pickup?.Address.replace(/(?:\r\n|\r|\n)/g, "<br>")}</div>
+            ${pickup?.["Contact (Australia)"] ? `<div>Australia: ${pickup?.["Contact (Australia)"]}</div>` : ""}
+            ${pickup?.["Contact (International)"] ? `<div>International: ${pickup?.["Contact (International)"]}</div>` : ""}
           </td>
           <td class="col" width="276" style="padding: 10px; border-bottom: 1px solid #DDDDDD">
             <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Drop-off to</div>
             <div><b>${quote.details.dropoff.name}</b></div>
             <div>${dayjs(quote.details.date_end).format("ddd, DD MMM YYYY")}${
-      supplier.all_day ? " (24hrs)" : `, ${supplier.end_time ? q.showtime(supplier.end_time) : "03:00PM"}`
-    }</div>
+              supplier.all_day ? " (24hrs)" : `, ${supplier.end_time ? q.showtime(supplier.end_time) : "03:00PM"}`
+            }</div>
             <br>
             <div style="font-size: 9px; line-height: 13px; color: #999999; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Depot</div>
-            <div>${dropoff.Address.replace(/(?:\r\n|\r|\n)/g, "<br>")}</div>
-            ${dropoff["Contact (Australia)"] ? `<div>Australia: ${dropoff["Contact (Australia)"]}</div>` : ""}
+            <div>${dropoff?.Address.replace(/(?:\r\n|\r|\n)/g, "<br>")}</div>
+            ${dropoff?.["Contact (Australia)"] ? `<div>Australia: ${dropoff?.["Contact (Australia)"]}</div>` : ""}
             ${
-              dropoff["Contact (International)"]
-                ? `<div>International: ${dropoff["Contact (International)"]}</div>`
+              dropoff?.["Contact (International)"]
+                ? `<div>International: ${dropoff?.["Contact (International)"]}</div>`
                 : ""
             }
           </td>
@@ -697,7 +697,7 @@ export const html = {
             <td class="col" width="100%">
                 <b>Cancellation fees</b> will apply on <b>AUD $${format.currency(summary.totalAgent)}</b>. 
                 The <b>Agent Nett Deposit Fee after discount of AUD $${format.currency(
-                  summary.totalCommission
+                  summary.totalCommission,
                 )} is non-refundable</b>. 
                 The Agent Deposit will be carried forward towards a future booking if cancellation is made more than 61 days prior to travel. 
                 An additional AUD $100.00 administration cancellation fee applies. Please read the cancellation policy found in the quote.
