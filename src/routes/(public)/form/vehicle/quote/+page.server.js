@@ -90,6 +90,8 @@ export const actions = {
 
     fd.users = user.id;
 
+    delete fd.website;
+
     const { data: dataform, error: errform } = await supabase.from("forms").insert(fd).select().single();
     if (errform) {
       console.log("errform", errform);
