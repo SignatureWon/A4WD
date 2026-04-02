@@ -2,7 +2,7 @@ import { AuthApiError } from "@supabase/supabase-js"
 import { fail, redirect } from "@sveltejs/kit"
 
 export const actions = {
-	login: async ({ request, locals }) => {
+	default: async ({ request, locals }) => {
 		const body = Object.fromEntries(await request.formData())
 
 		const { data, error: err } = await locals.sb.auth.signInWithPassword({
