@@ -85,11 +85,6 @@
                   <a href="/password" class="font-medium inline-block">Forgot Password?</a>
                 </div>
               </form>
-
-              <div class="text-sm">
-                <span class="text-gray-500">Don’t have an account yet?</span>
-                <a href="/signup" class="font-medium">Join us today</a>
-              </div>
             </div>
           </div>
         </div>
