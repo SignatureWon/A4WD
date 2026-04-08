@@ -470,7 +470,8 @@ export const db = {
             let relation = {};
             relation[many[0]] = id;
             relation[many[1]] = item;
-            const { data: dataRelation, error: errRelation } = await locals.sb.from(table).insert(relation).select().single();
+            // const { data: dataRelation, error: errRelation } = await locals.sb.from(table).insert(relation).select().single();
+            const { data: dataRelation, error: errRelation } = await supabase.from(table).insert(relation).select().single();
             console.log("errRelation", errRelation);
           }
         });
