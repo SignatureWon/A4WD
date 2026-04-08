@@ -397,7 +397,6 @@ export const db = {
       slugifyName(fetch, newData);
       // newData = uploadFiles(newData, locals);
       let manyTables = {};
-      console.log("after newData", newData);
 
       for (const key in newData) {
         if (key.indexOf("fileUpload_") === 0) {
@@ -470,7 +469,8 @@ export const db = {
             let relation = {};
             relation[many[0]] = id;
             relation[many[1]] = item;
-            await locals.sb.from(table).insert(relation).select().single();
+            const { data: dataRelation, error: errRelation } = await locals.sb.from(table).insert(relation).select().single();
+            console.log("errRelation", errRelation);
           }
         });
         unselected.forEach(async (item) => {
