@@ -389,7 +389,7 @@ export const db = {
     update: async (request, url, locals, fetch) => {
       const formData = await request.formData();
       let newData = Object.fromEntries(formData.entries());
-      console.log("newData", newData);
+      // console.log("newData", newData);
 
       setNull(newData);
       convertToDate(newData);
@@ -465,6 +465,7 @@ export const db = {
         const unselected = manyTables[key].unselected ? manyTables[key].unselected.split(",") : [];
 
         newselected.forEach(async (item) => {
+          console.log("item", item);
           if (!selected.includes(item)) {
             let relation = {};
             relation[many[0]] = id;
