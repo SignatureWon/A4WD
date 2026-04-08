@@ -389,7 +389,7 @@ export const db = {
     update: async (request, url, locals, fetch) => {
       const formData = await request.formData();
       let newData = Object.fromEntries(formData.entries());
-      // console.log("newData", newData);
+      console.log("newData", newData);
 
       setNull(newData);
       convertToDate(newData);
@@ -397,7 +397,7 @@ export const db = {
       slugifyName(fetch, newData);
       // newData = uploadFiles(newData, locals);
       let manyTables = {};
-      // console.log("newData", newData);
+      console.log("after newData", newData);
 
       for (const key in newData) {
         if (key.indexOf("fileUpload_") === 0) {

@@ -7,6 +7,6 @@ export const handle = async ({ event, resolve }) => {
   event.locals.sb = supabaseClient;
   event.locals.session = session;
 
-  return resolve(event);
+  return await resolve(event);
 };
 // import '$lib/supabaseClient'
