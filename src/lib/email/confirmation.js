@@ -436,7 +436,7 @@ export const html = {
             <td class="col" width="100%">
                 <p style="margin: 0; font-size: 11px;">Thank you for choosing <a href="https://www.australia4wdrentals.com">Australia 4WD Rentals</a></p>
                 <p style="margin: 0; font-size: 11px;">
-                    <a href="https://www.australia4wdrentals.com/conditions-australia-4-wheel-drive-rentals">
+                    <a href="https://www.australia4wdrentals.com/files/australia4wheeldriverentals-terms-and-conditions">
                         Terms & Conditions of Australia 4 Wheel Drive Rentals
                     </a>
                 </p>

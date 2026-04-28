@@ -1128,7 +1128,7 @@ table, td{
   <div
     style="padding-bottom: 30px; text-align: center;"
   >
-    <a href="https://www.australia4wdrentals.com/conditions-australia-4-wheel-drive-rentals" style="color: #1d4ed8">
+    <a href="https://www.australia4wdrentals.com/files/australia4wheeldriverentals-terms-and-conditions" style="color: #1d4ed8">
       Terms & Conditions of Australia 4 Wheel Drive Rentals
     </a>
   </div>

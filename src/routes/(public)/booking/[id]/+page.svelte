@@ -87,8 +87,10 @@
                 I agree to a deposit or full payment, as quoted, being taken from the credit card specified above.
               </li>
               <li>
-                Click <a href="https://www.australia4wdrentals.com/conditions-australia-4-wheel-drive-rentals">here</a> to
-                view our terms and agreements.
+                Click <a
+                  href="https://www.australia4wdrentals.com/files/australia4wheeldriverentals-terms-and-conditions"
+                  >here</a
+                > to view our terms and agreements.
               </li>
             </ul>
           </div>

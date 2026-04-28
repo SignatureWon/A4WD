@@ -876,7 +876,7 @@ export const html = {
         <tr>
             <td class="col" width="100%" align="center" style="font-size: 11px">
                 <p>
-                    <a href="https://www.australia4wdrentals.com/conditions-australia-4-wheel-drive-rentals" style="color: ${
+                    <a href="https://www.australia4wdrentals.com/files/australia4wheeldriverentals-terms-and-conditions" style="color: ${
                       c.brand500
                     }">
                         Terms & Conditions of Australia 4 Wheel Drive Rentals
