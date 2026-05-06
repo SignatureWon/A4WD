@@ -1,9 +1,13 @@
 import "$lib/supabase";
+import ws from "ws";
 import { createServerClient } from "@supabase/ssr";
 import { env } from "$env/dynamic/public";
 
 export const handle = async ({ event, resolve }) => {
   event.locals.sb = createServerClient(env.PUBLIC_URL, env.PUBLIC_ANON, {
+    realtime: {
+      transport: ws,
+    },
     cookies: {
       getAll() {
         return event.cookies.getAll();

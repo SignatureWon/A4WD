@@ -50,6 +50,7 @@
 		"playwright-aws-lambda": "^0.10.0",
 		"playwright-core": "^1.43.1",
 		"tiptap-extension-font-size": "^1.2.0",
-		"uuid": "^9.0.0"
+		"uuid": "^9.0.0",
+		"ws": "^8.20.0"
 	}
 }
