@@ -8,11 +8,17 @@
   export let data;
   const c = theme.brandcolor(data.site.color);
 
+  $: {
+    data;
+  }
+
   onMount(() => {
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(() => {
-      invalidate("supabase:auth");
+    } = supabase.auth.onAuthStateChange((event, _session) => {
+      if (_session?.expires_at !== data.session?.expires_at) {
+        invalidate("supabase:auth");
+      }
     });
 
     return () => {

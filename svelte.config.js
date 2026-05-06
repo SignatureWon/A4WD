@@ -8,6 +8,7 @@ const config = {
     adapter: adapter({
       memory: 3008,
       maxDuration: 180,
+      runtime: "nodejs20.x",
     }),
   },
   preprocess: vitePreprocess(),

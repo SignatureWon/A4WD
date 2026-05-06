@@ -1,9 +1,9 @@
-import { getServerSession } from "@supabase/auth-helpers-sveltekit";
-import { supabase } from "$lib/supabaseClient";
 import { env } from "$env/dynamic/public";
 
 export const load = async (event) => {
-  const { data: constants } = await supabase
+  event.depends("supabase:auth");
+
+  const { data: constants } = await event.locals.sb
     .from("constants")
     .select("type, name, subtitle, description")
     .in("type", [
@@ -31,7 +31,7 @@ export const load = async (event) => {
     }
   });
 
-  const session = await getServerSession(event);
+  const session = event.locals.session;
   const baseUrl = env.PUBLIC_URL;
 
   return {

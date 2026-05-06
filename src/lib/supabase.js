@@ -1,4 +1,4 @@
-import { createClient } from "@supabase/auth-helpers-sveltekit";
+import { createClient } from "@supabase/supabase-js";
 import { PUBLIC_URL } from "$env/static/public";
 import { DB_SERVICE } from "$env/static/private";
 
