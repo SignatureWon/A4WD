@@ -13,22 +13,35 @@ export const handle = async ({ event, resolve }) => {
         return event.cookies.getAll();
       },
       setAll(cookiesToSet) {
-        try {
-          cookiesToSet.forEach(({ name, value, options }) => {
+        cookiesToSet.forEach(({ name, value, options }) => {
+          try {
             event.cookies.set(name, value, { ...options, path: "/" });
-          });
-        } catch (error) {
-          // Prevent the "Cannot use `cookies.set(...)`" error on Vercel
-        }
+          } catch (error) {
+            // This can happen on Vercel/SvelteKit when trying to set cookies
+            // after the response headers have been sent or in certain load contexts.
+            // We log it but don't let it crash the request.
+            console.error(`Error setting cookie ${name}:`, error);
+          }
+        });
       },
     },
   });
 
-  const {
-    data: { session },
-  } = await event.locals.sb.auth.getSession();
+  /**
+   * Optimization: Only call getSession if there are Supabase-related cookies.
+   * This prevents unnecessary API calls for users who are not logged in
+   * or for requests that don't carry session information.
+   */
+  const hasSupabaseCookie = event.cookies.getAll().some((c) => c.name.startsWith("sb-"));
 
-  event.locals.session = session;
+  if (hasSupabaseCookie) {
+    const {
+      data: { session },
+    } = await event.locals.sb.auth.getSession();
+    event.locals.session = session;
+  } else {
+    event.locals.session = null;
+  }
 
   return await resolve(event, {
     filterSerializedResponseHeaders(name) {

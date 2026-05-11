@@ -13,11 +13,16 @@
   }
 
   onMount(() => {
+    let lastInvalidate = 0;
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, _session) => {
       if (_session?.expires_at !== data.session?.expires_at) {
-        invalidate("supabase:auth");
+        const now = Date.now();
+        if (now - lastInvalidate > 3000) {
+          lastInvalidate = now;
+          invalidate("supabase:auth");
+        }
       }
     });
 
