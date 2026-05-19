@@ -17,6 +17,12 @@
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, _session) => {
+      if (event === "TOKEN_REFRESHED") {
+        // Ignore background token refreshes to prevent the full-screen loading spinner
+        // from interrupting the user. The client SDK already updated the browser cookie.
+        return;
+      }
+
       if (_session?.expires_at !== data.session?.expires_at) {
         const now = Date.now();
         if (now - lastInvalidate > 3000) {

@@ -66,6 +66,11 @@
                   search.date_end = dayjs(e.detail).format("YYYY-MM-DD");
                 }
               }}
+              on:keydown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                }
+              }}
             />
           </div>
           <div>
@@ -76,7 +81,16 @@
                 <SelectItem text={item.name} value={item.id} />
               {/each}
             </Select>
-            <TextInput name="date_end" type="date" bind:value={search.date_end} />
+            <TextInput
+              name="date_end"
+              type="date"
+              bind:value={search.date_end}
+              on:keydown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                }
+              }}
+            />
           </div>
           <div>
             <div class="label text-brand-500">Driver</div>
@@ -104,7 +118,17 @@
           </div>
           <div>
             <div class="label text-brand-500">No. of Passengers</div>
-            <TextInput name="pax" type="number" bind:value={search.pax} class="mt-2" />
+            <TextInput
+              name="pax"
+              type="number"
+              bind:value={search.pax}
+              class="mt-2"
+              on:keydown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                }
+              }}
+            />
           </div>
           <div>
             <Button type="submit" class="w-full flex justify-center items-center md:mt-6">

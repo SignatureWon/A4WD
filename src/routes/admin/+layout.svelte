@@ -21,9 +21,6 @@
 
   onMount(async () => {
     const { data, error } = await supabase.auth.getSession();
-    if (!data.session) {
-      goto(`/login`);
-    }
     const { data: constants } = await supabase
       .from("constants")
       .select("type, name, subtitle, description")

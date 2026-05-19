@@ -28,17 +28,25 @@ export const handle = async ({ event, resolve }) => {
   });
 
   /**
-   * Optimization: Only call getSession if there are Supabase-related cookies.
-   * This prevents unnecessary API calls for users who are not logged in
-   * or for requests that don't carry session information.
+   * Optimization: Only call getSession if there are Supabase-related cookies and the
+   * request is not for a static asset or standard media file.
+   * This prevents unnecessary API calls and avoids parallel token refresh race conditions.
    */
   const hasSupabaseCookie = event.cookies.getAll().some((c) => c.name.startsWith("sb-"));
+  
+  const isAsset = event.url.pathname.match(/\.(png|jpg|jpeg|gif|svg|webp|ico|css|js|woff|woff2|ttf|eot|otf|txt|map)$/) ||
+                  (event.url.pathname.endsWith('.json') && !event.url.pathname.endsWith('__data.json'));
 
-  if (hasSupabaseCookie) {
-    const {
-      data: { session },
-    } = await event.locals.sb.auth.getSession();
-    event.locals.session = session;
+  if (hasSupabaseCookie && !isAsset) {
+    try {
+      const {
+        data: { session },
+      } = await event.locals.sb.auth.getSession();
+      event.locals.session = session;
+    } catch (e) {
+      console.error("Error getting session in hooks.server.js:", e);
+      event.locals.session = null;
+    }
   } else {
     event.locals.session = null;
   }

@@ -1,7 +1,6 @@
 <script>
   import { format } from "$lib/format.js";
   export let data;
-  console.log(data.specials.items);
 </script>
 
 {#if data.specials.total > 0}
