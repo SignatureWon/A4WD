@@ -11,6 +11,7 @@
   export let bucket = "";
   export let fetch = {};
 
+  let uploading = false;
   let filePreview = false;
   if (value) {
     filePreview = f.extension(value);
@@ -19,11 +20,39 @@
   const removeFile = async () => {
     let updateFile = {};
     updateFile[name] = null;
-    await supabase.from(fetch.table).update(updateFile).eq("id", fetch.id);
-    await supabase.storage.from(bucket).remove([value]);
+    if (fetch?.table && fetch?.id) {
+      await supabase.from(fetch.table).update(updateFile).eq("id", fetch.id);
+    }
+    if (bucket && value) {
+      await supabase.storage.from(bucket).remove([value]);
+    }
 
     value = null;
     filePreview = false;
+  };
+
+  const handleUpload = async (event) => {
+    const files = event.detail;
+    if (!files || files.length === 0) return;
+
+    const file = files[0];
+    uploading = true;
+
+    const filename = `${uuidv4()}.${f.extension(file.name)}`;
+
+    const { data, error } = await supabase.storage
+      .from(bucket)
+      .upload(filename, file);
+
+    uploading = false;
+
+    if (error) {
+      alert(`File upload failed: ${error.message}`);
+      return;
+    }
+
+    value = filename;
+    filePreview = f.extension(filename);
   };
 </script>
 
@@ -46,17 +75,13 @@
     <Button kind="tertiary" on:click={() => removeFile()}>Remove</Button>
   {:else}
     <FileUploader
-      name="fileUpload_{name}"
-      buttonLabel="Upload"
+      buttonLabel={uploading ? "Uploading..." : "Upload"}
       kind="tertiary"
-      status="edit"
-      on:change={async (files) => {
-        const file = files.detail[0];
-        value = `${uuidv4()}.${f.extension(file.name)}`;
-      }}
+      status={uploading ? "uploading" : "edit"}
+      disabled={uploading}
+      on:change={handleUpload}
     />
-    <input type="hidden" name="fileName_{name}" bind:value />
-    <input type="hidden" name="fileBucket_{name}" bind:value={bucket} />
     <input type="hidden" {name} bind:value />
   {/if}
 </div>
+
