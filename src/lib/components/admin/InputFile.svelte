@@ -12,10 +12,7 @@
   export let fetch = {};
 
   let uploading = false;
-  let filePreview = false;
-  if (value) {
-    filePreview = f.extension(value);
-  }
+  $: filePreview = value ? f.extension(value) : false;
 
   const removeFile = async () => {
     let updateFile = {};
@@ -40,9 +37,7 @@
 
     const filename = `${uuidv4()}.${f.extension(file.name)}`;
 
-    const { data, error } = await supabase.storage
-      .from(bucket)
-      .upload(filename, file);
+    const { data, error } = await supabase.storage.from(bucket).upload(filename, file);
 
     uploading = false;
 
@@ -51,8 +46,13 @@
       return;
     }
 
+    if (fetch?.table && fetch?.id) {
+      let updateFile = {};
+      updateFile[name] = filename;
+      await supabase.from(fetch.table).update(updateFile).eq("id", fetch.id);
+    }
+
     value = filename;
-    filePreview = f.extension(filename);
   };
 </script>
 
@@ -81,7 +81,6 @@
       disabled={uploading}
       on:change={handleUpload}
     />
-    <input type="hidden" {name} bind:value />
   {/if}
+  <input type="hidden" {name} bind:value />
 </div>
-
